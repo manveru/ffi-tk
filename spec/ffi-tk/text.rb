@@ -63,10 +63,8 @@ describe Tk::Text do
     @text.cget(:undo).should == false
     @text.cget(:width).should == 80
     @text.cget(:wrap).should == :char
-
-    # TODO: they should be more... useful?
-    @text.cget(:xscrollcommand).should == :''
-    @text.cget(:yscrollcommand).should == :''
+    @text.cget(:xscrollcommand).should == nil
+    @text.cget(:yscrollcommand).should == nil
   end
 
   it 'configures a single option' do
@@ -125,7 +123,7 @@ describe Tk::Text do
   end
 
   should 'not be in debug mode' do
-    @text.should.not.be.debug
+    @text.debug?.should == false
   end
 
   it 'deletes at index' do

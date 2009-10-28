@@ -1,5 +1,22 @@
 module FFI
   module Tcl
+    # The following structure represents a type of object, which is a particular
+    # internal representation for an object plus a set of functions that provide
+    # standard operations on objects of that type.
+    class ObjType < FFI::Struct
+      layout(
+        :name, :string,
+        :free_internal_rep_proc, :pointer,
+        :dup_internal_rep_proc, :pointer,
+        :update_string_proc, :pointer,
+        :set_from_any_proc, :pointer
+      )
+
+      def inspect
+        "<Tcl::Obj %p>" % [Hash[members.zip(values)]]
+      end
+    end
+
     class Obj < FFI::Struct
       class InternalRep < FFI::Union
         class TwoPtrValue < FFI::Struct
@@ -26,16 +43,15 @@ module FFI
         )
 
         def inspect
-          "#<Tcl::Obj::InternalRep long_value=%p double_value=%p wide_value=%p>" % [
-            self[:longValue], self[:doubleValue], self[:wideValue]
-          ]
+          "<Tcl::Obj %p>" % [Hash[members.zip(values)]]
         end
       end
 
       layout(
-        :refCount, :int,
-        :bytes, :char,
-        :length, :int,
+        :refCount,    :int,
+        :bytes,       :string,
+        :length,      :int,
+        :type,     :pointer,
         :internalRep, InternalRep
       )
 
@@ -51,6 +67,10 @@ module FFI
         self[:length]
       end
 
+      def type
+        self[:type]
+      end
+
       def internal_rep
         self[:internalRep]
       end
@@ -60,9 +80,7 @@ module FFI
       end
 
       def inspect
-        "#<Tcl::Obj ref_count=%p bytes=%p length=%p internal_rep=%p>" % [
-          self[:refCount], self[:bytes], self[:length], self[:internalRep]
-        ]
+        "<Tcl::Obj %p>" % [Hash[members.zip(values)]]
       end
     end
   end

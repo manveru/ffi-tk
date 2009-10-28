@@ -17,14 +17,13 @@ module Tk
     # If the character is not visible on the screen then the return value is an
     # empty list.
     def bbox(index)
-      execute('bbox', index).to_list.map(&:to_i)
+      execute('bbox', index)
     end
 
     # Returns the current value of the configuration option given by option.
     # Option may have any of the values accepted by the text command.
     def cget(option)
-      result = execute('cget', tcl_option(option))
-      option_to_ruby(option, result)
+      option_to_ruby(option, execute('cget', tcl_option(option)))
     end
 
     # Compares the indices given by index1 and index2 according to the
@@ -35,7 +34,7 @@ module Tk
     # character, if op is < then 1 is returned if index1 refers to an earlier
     # character in the text than index2, and so on.
     def compare(index1, op, index2)
-      execute('compare', index1, op, index2).to_boolean
+      execute('compare', index1, op, index2) == 1
     end
 
     # Query or modify the configuration options of the widget.
@@ -56,13 +55,12 @@ module Tk
     #   text.configure
     def configure(*arguments)
       if arguments.empty?
-        execute('configure').to_list
+        execute('configure')
       elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
         execute_only('configure', arguments.first.to_hash)
       elsif arguments.size == 1
         argument = tcl_option(arguments.first)
-        value = execute('configure', argument)
-        option_to_ruby(argument, value)
+        execute('configure', argument)
       else
         raise ArgumentError, "Invalid arguments: %p" % [arguments]
       end
@@ -130,9 +128,7 @@ module Tk
     # elements.
     def count(*options, index1, index2)
       args = options.map{|option| tcl_option(option) }
-      result = execute('count', *args, index1, index2)
-      list = result.to_list
-      (args.size > 1 && list.size > 1) ? list.map(&:to_i) : list.first.to_i
+      execute('count', *args, index1, index2)
     end
 
     # If boolean is specified, then it must have one of the true or false values
@@ -153,14 +149,14 @@ module Tk
     # The values of these variables are tested by Tk's test suite.
     def debug(boolean = None)
       if boolean == None
-        execute('debug').to_boolean
+        execute('debug') == 1
       else
         execute_only('debug', boolean ? true : false)
       end
     end
 
     def debug?
-      execute('debug').to_boolean
+      execute('debug') == 1
     end
 
     # Delete a range of characters from the text.
@@ -204,7 +200,7 @@ module Tk
     # If the display line containing index is not visible on the screen then the
     # return value is an empty list.
     def dlineinfo(index)
-      execute('dlineinfo', index).to_list.map(&:to_i)
+      execute('dlineinfo', index).map(&:to_i)
     end
 
     # Return the contents of the text widget from index1 up to, but not
@@ -231,7 +227,7 @@ module Tk
         end
       end
 
-      execute('dump', *invocation, *indices).to_list
+      execute('dump', *invocation, *indices)
     end
 
     # If boolean is not specified, returns the modified flag of the widget.
@@ -240,14 +236,14 @@ module Tk
     # If boolean is specified, sets the modified flag of the widget to boolean.
     def edit_modified(boolean = None)
       if boolean == None
-        execute('edit', 'modified').to_boolean
+        execute('edit', 'modified')
       else
         execute_only('edit', 'modified', boolean ? true : false)
       end
     end
 
     def edit_modified?
-      execute('edit', 'modified').to_boolean
+      execute('edit', 'modified')
     end
 
     # When the -undo option is true, reapplies the last undone edits provided no
@@ -298,8 +294,7 @@ module Tk
     #
     # @see get_displaychars
     def get(index, *indices)
-      result = execute('get', index, *indices)
-      indices.size > 1 ? result.to_list : result.to_string
+      execute('get', index, *indices).to_s
     end
 
     # Same as [get], but within each range, only those characters which are not
@@ -307,12 +302,11 @@ module Tk
     # This may have the effect that some of the returned ranges are empty
     # strings.
     def get_displaychars(index, *indices)
-      result = execute('get', '-displaychars', index, *indices)
-      indices.size > 1 ? result.to_list : result.to_string
+      execute('get', '-displaychars', index, *indices)
     end
 
     def image_cget(index, option)
-      execute('image', 'cget', index, option).to_string
+      execute('image', 'cget', index, option)
     end
 
     # Query or modify the configuration options for an embedded image.
@@ -328,7 +322,7 @@ module Tk
     # See EMBEDDED IMAGES for information on the options that are supported.
     def image_configure(index, *arguments)
       if arguments.empty?
-        execute('image', 'configure', index).to_list
+        execute('image', 'configure', index)
       elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
         execute_only('image', 'configure', index, arguments.first.to_hash)
       elsif arguments.size == 1
@@ -349,18 +343,18 @@ module Tk
     # See EMBEDDED IMAGES for information on the options that are supported, and
     # a description of the identifier returned.
     def image_create(index, options = {})
-      execute('image', 'create', index, options).to_string
+      execute('image', 'create', index, options)
     end
 
     def image_names
-      execute('image', 'names').to_list
+      execute('image', 'names')
     end
 
     # Returns the position corresponding to index in the form line.char where
     # line is the line number and char is the character number. Index may have
     # any of the forms described under INDICES above.
     def index(index)
-      execute('index', index).to_index
+      execute('index', index)
     end
 
     # Inserts all of the chars arguments just before the character at index.
@@ -389,7 +383,7 @@ module Tk
     # markName is set to the given value.
     def mark_gravity(name, direction = None)
       if direction == None
-        execute('mark', 'gravity', name).to_symbol
+        execute('mark', 'gravity', name).to_sym
       else
         execute_only('mark', 'gravity', name, direction)
       end
@@ -398,7 +392,7 @@ module Tk
     # Returns a list whose elements are the names of all the marks that are
     # currently set.
     def mark_names
-      execute('mark', 'names').to_list.map(&:to_sym)
+      execute('mark', 'names').to_a.map(&:to_sym)
     end
 
     # Returns the name of the next mark at or after index.
@@ -415,8 +409,7 @@ module Tk
     # after end with respect to the pathName mark next operation.
     # nil is returned if there are no marks after index.
     def mark_next(index)
-      result = execute('mark', 'next', index).to_string
-      result == '' ? nil : result.to_sym
+      execute('mark', 'next', index).to_sym
     end
 
     # Returns the name of the mark at or before index.
@@ -431,8 +424,7 @@ module Tk
     # mark information returned by the pathName dump operation.
     # nil is returned if there are no marks before index.
     def mark_previous(index)
-      result = execute('mark', 'previous', index).to_string
-      result == '' ? nil : result.to_sym
+      execute('mark', 'previous', index).to_sym
     end
 
     # Sets the mark named markName to a position just before the character at
@@ -457,7 +449,7 @@ module Tk
     end
 
     def peer_names
-      execute('peer', 'names').to_list
+      execute('peer', 'names').to_a
     end
 
     private
@@ -478,17 +470,17 @@ module Tk
     def option_to_ruby(name, value)
       case tcl_option(name)
       when *INTEGER
-        value.to_integer
+        value.to_i
       when *SYMBOL
-        value.to_symbol
+        value.to_sym
       when *BOOLEAN
-        value.to_boolean
+        value == 1
       when *COLOR
-        value.to_color
+        value.to_s
       when *STRING
-        value.to_string
+        value.to_s
       when *FONT
-        value.to_string
+        value.to_s
       else
         raise "Unknown option: %p: %p" % [name, value]
       end

@@ -105,7 +105,7 @@ module Tk
   end
 
   def result
-    EvalResult.new(@interp.obj_result)
+    EvalResult.guess(@interp.obj_result)
   end
 
   def convert_arguments(*args)
