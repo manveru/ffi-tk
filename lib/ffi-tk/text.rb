@@ -1,30 +1,10 @@
 module Tk
   class Text < Widget
+    autoload :Peer, 'ffi-tk/text/peer'
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('text', assign_pathname, options)
-    end
-
-    # pathName insert index chars ?tagList chars tagList ...?
-    #
-    # Inserts all of the chars arguments just before the character at index.
-    #
-    # If index refers to the end of the text (the character after the last
-    # newline) then the new text is inserted just before the last newline
-    # instead.
-    # If there is a single chars argument and no tagList, then the new text will
-    # receive any tags that are present on both the character before and the
-    # character after the insertion point; if a tag is present on only one of
-    # these characters then it will not be applied to the new text.
-    # If tagList is specified then it consists of a list of tag names; the new
-    # characters will receive all of the tags in this list and no others,
-    # regardless of the tags present around the insertion point.
-    # If multiple chars-tagList argument pairs are present, they produce the
-    # same effect as if a separate pathName insert widget command had been
-    # issued for each pair, in order.
-    # The last tagList argument may be omitted.
-    def insert(index, string, taglist = nil, *rest)
-      execute_only('insert', index, *[string, taglist, *rest].compact)
     end
 
     # Returns a list of four elements describing the screen area of the
@@ -331,12 +311,153 @@ module Tk
       indices.size > 1 ? result.to_list : result.to_string
     end
 
+    def image_cget(index, option)
+      execute('image', 'cget', index, option).to_string
+    end
+
+    # Query or modify the configuration options for an embedded image.
+    # If no option is specified, returns a list describing all of the available
+    # options for the embedded image at index (see Tk_ConfigureInfo for
+    # information on the format of this list).
+    # If option is specified with no value, then the command returns a list
+    # describing the one named option (this list will be identical to the
+    # corresponding sublist of the value returned if no option is specified).
+    # If one or more option-value pairs are specified, then the command modifies
+    # the given option(s) to have the given value(s); in this case the command
+    # returns an empty string.
+    # See EMBEDDED IMAGES for information on the options that are supported.
+    def image_configure(index, *arguments)
+      if arguments.empty?
+        execute('image', 'configure', index).to_list
+      elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
+        execute_only('image', 'configure', index, arguments.first.to_hash)
+      elsif arguments.size == 1
+        argument = tcl_option(arguments.first)
+        value = execute('image', 'configure', index, argument)
+        option_to_ruby(argument, value)
+      else
+        raise ArgumentError, "Invalid arguments: %p" % [arguments]
+      end
+    end
+
+    # This command creates a new image annotation, which will appear in the text
+    # at the position given by index.
+    # Any number of option-value pairs may be specified to configure the
+    # annotation.
+    # Returns a unique identifier that may be used as an index to refer to this
+    # image.
+    # See EMBEDDED IMAGES for information on the options that are supported, and
+    # a description of the identifier returned.
+    def image_create(index, options = {})
+      execute('image', 'create', index, options).to_string
+    end
+
+    def image_names
+      execute('image', 'names').to_list
+    end
+
+    # Returns the position corresponding to index in the form line.char where
+    # line is the line number and char is the character number. Index may have
+    # any of the forms described under INDICES above.
     def index(index)
       execute('index', index).to_index
     end
 
-    def image_cget(index, option)
-      execute('image', 'cget', index, option)
+    # Inserts all of the chars arguments just before the character at index.
+    #
+    # If index refers to the end of the text (the character after the last
+    # newline) then the new text is inserted just before the last newline
+    # instead.
+    # If there is a single chars argument and no tagList, then the new text will
+    # receive any tags that are present on both the character before and the
+    # character after the insertion point; if a tag is present on only one of
+    # these characters then it will not be applied to the new text.
+    # If tagList is specified then it consists of a list of tag names; the new
+    # characters will receive all of the tags in this list and no others,
+    # regardless of the tags present around the insertion point.
+    # If multiple chars-tagList argument pairs are present, they produce the
+    # same effect as if a separate pathName insert widget command had been
+    # issued for each pair, in order.
+    # The last tagList argument may be omitted.
+    def insert(index, string, taglist = nil, *rest)
+      execute_only('insert', index, *[string, taglist, *rest].compact)
+    end
+
+    # If direction is not specified, returns left or right to indicate which of
+    # its adjacent characters markName is attached to.
+    # If direction is specified, it must be left or right; the gravity of
+    # markName is set to the given value.
+    def mark_gravity(name, direction = None)
+      if direction == None
+        execute('mark', 'gravity', name).to_symbol
+      else
+        execute_only('mark', 'gravity', name, direction)
+      end
+    end
+
+    # Returns a list whose elements are the names of all the marks that are
+    # currently set.
+    def mark_names
+      execute('mark', 'names').to_list.map(&:to_sym)
+    end
+
+    # Returns the name of the next mark at or after index.
+    # If index is specified in numerical form, then the search for the next mark
+    # begins at that index.
+    # If index is the name of a mark, then the search for the next mark begins
+    # immediately after that mark.
+    # This can still return a mark at the same position if there are multiple
+    # marks at the same index.
+    # These semantics mean that the mark next operation can be used to step
+    # through all the marks in a text widget in the same order as the mark
+    # information returned by the pathName dump operation.
+    # If a mark has been set to the special end index, then it appears to be
+    # after end with respect to the pathName mark next operation.
+    # nil is returned if there are no marks after index.
+    def mark_next(index)
+      result = execute('mark', 'next', index).to_string
+      result == '' ? nil : result.to_sym
+    end
+
+    # Returns the name of the mark at or before index.
+    # If index is specified in numerical form, then the search for the previous
+    # mark begins with the character just before that index.
+    # If index is the name of a mark, then the search for the next mark begins
+    # immediately before that mark.
+    # This can still return a mark at the same position if there are multiple
+    # marks at the same index.
+    # These semantics mean that the pathName mark previous operation can be used
+    # to step through all the marks in a text widget in the reverse order as the
+    # mark information returned by the pathName dump operation.
+    # nil is returned if there are no marks before index.
+    def mark_previous(index)
+      result = execute('mark', 'previous', index).to_string
+      result == '' ? nil : result.to_sym
+    end
+
+    # Sets the mark named markName to a position just before the character at
+    # index.
+    # If markName already exists, it is moved from its old position; if it does
+    # not exist, a new mark is created.
+    # This command returns nil.
+    def mark_set(name, index)
+      execute_only('mark', 'set', name, index)
+    end
+
+    # Remove the mark corresponding to each of the markName arguments.
+    # The removed marks will not be usable in indices and will not be returned
+    # by future calls to [mark_names].
+    # This command returns an empty string.
+    def mark_unset(*names)
+      execute_only('mark', 'unset', *names)
+    end
+
+    def peer_create(options = {})
+      Peer.new(self)
+    end
+
+    def peer_names
+      execute('peer', 'names').to_list
     end
 
     private
@@ -355,7 +476,7 @@ module Tk
     FONT    = %w[-font]
 
     def option_to_ruby(name, value)
-      case name
+      case tcl_option(name)
       when *INTEGER
         value.to_integer
       when *SYMBOL
@@ -369,7 +490,7 @@ module Tk
       when *FONT
         value.to_string
       else
-        raise "Unknown option: %p" % [option]
+        raise "Unknown option: %p: %p" % [name, value]
       end
     end
 

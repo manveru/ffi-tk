@@ -19,6 +19,8 @@ module Tk
   autoload :EvalResult, 'ffi-tk/eval_result'
   autoload :Root,       'ffi-tk/root'
 
+  None = Object.new
+
   module_function
 
   def interp
