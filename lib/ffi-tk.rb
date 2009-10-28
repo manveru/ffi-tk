@@ -8,19 +8,25 @@ require 'ffi-tk/tk'
 module Tk
   Error = Class.new(RuntimeError)
 
-  autoload :Widget,  'ffi-tk/widget'
-  autoload :Bind,    'ffi-tk/bind'
-  autoload :Destroy, 'ffi-tk/destroy'
-  autoload :Pack,    'ffi-tk/pack'
-  autoload :Button,  'ffi-tk/button'
-  autoload :Event,   'ffi-tk/event'
-  autoload :Text,    'ffi-tk/text'
-  autoload :Entry,   'ffi-tk/entry'
+  autoload :Widget,     'ffi-tk/widget'
+  autoload :Bind,       'ffi-tk/bind'
+  autoload :Destroy,    'ffi-tk/destroy'
+  autoload :Pack,       'ffi-tk/pack'
+  autoload :Button,     'ffi-tk/button'
+  autoload :Event,      'ffi-tk/event'
+  autoload :Text,       'ffi-tk/text'
+  autoload :Entry,      'ffi-tk/entry'
+  autoload :EvalResult, 'ffi-tk/eval_result'
+  autoload :Root,       'ffi-tk/root'
 
   module_function
 
   def interp
     @interp
+  end
+
+  def root
+    @root
   end
 
   def init
@@ -29,6 +35,7 @@ module Tk
     @mutex = Mutex.new
     FFI::Tcl.init(@interp)
     FFI::Tk.init(@interp)
+    @root = Root.new
 
     eval 'proc _esc {s} {format {"%s"} [regsub -all {"} [regsub -all {\\\\} $s {\\\\\\\\}] {\\"}]}'
     eval 'set _events {}'
@@ -88,6 +95,15 @@ module Tk
 
   def execute(*args)
     @interp.eval(convert_arguments(*args))
+  end
+
+  def execute_with_result(*args)
+    @interp.eval(convert_arguments(*args))
+    result
+  end
+
+  def result
+    EvalResult.new(@interp.string_result)
   end
 
   def convert_arguments(*args)

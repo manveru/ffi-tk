@@ -17,5 +17,9 @@ module Tk
     def execute(command, *args)
       Tk.execute(tk_pathname, command, *args)
     end
+
+    def execute_with_result(command, *args)
+      Tk.execute_with_result(tk_pathname, command, *args)
+    end
   end
 end

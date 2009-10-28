@@ -15,6 +15,10 @@ module FFI
         Tcl.get_string_result(self)
       end
 
+      def obj_result
+        Obj.new(Tcl.get_obj_result(self))
+      end
+
       def wait_for_event(seconds = 0.0)
         if seconds && seconds > 0.0
           seconds, microseconds = (seconds * 1000).divmod(1000)
@@ -32,7 +36,8 @@ module FFI
 
       def eval(string)
         p eval_ex: string unless string == '_get_ev'
-        result = FFI::Tcl.eval_ex(self, string, string.bytesize, 0x40000)
+        # result = FFI::Tcl.eval_ex(self, string, string.bytesize, 0x40000)
+        result = FFI::Tcl.eval(self, string)
 
         if result == 1
           message = string_result

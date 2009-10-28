@@ -26,5 +26,38 @@ module Tk
     def insert(index, string, taglist = nil, *rest)
       execute('insert', index, *[string, taglist, *rest].compact)
     end
+
+    def bbox(index)
+      execute_with_result('bbox', index).to_array(:to_i)
+    end
+
+    def cget(option)
+      option = option.to_s
+      option[0,0] = '-' unless option[0] == '-'
+      result = execute_with_result('cget', option)
+
+      case option
+      when '-height', '-width', '-maxundo', '-spacing1', '-spacing2', '-spacing3', '-borderwidth', '-bd', '-highlightthickness', '-insertborderwidth', '-insertofftime', '-insertontime', '-insertwidth', '-padx', '-pady', '-selectborderwidth'
+        result.to_i
+      when '-wrap', '-state', '-tabstyle', '-relief', '-xscrollcommand', '-yscrollcommand'
+        result.to_sym
+      when '-autoseparators', '-blockcursor', '-undo', '-exportselection', '-setgrid', '-takefocus'
+        result.to_boolean
+      when '-endline', '-startline'
+        result.empty? ? nil : result.to_i
+      when '-inactiveselectbackground', '-background', '-bg', '-foreground', '-fg', '-highlightbackground', '-highlightcolor', '-insertbackground', '-selectbackground', '-selectforeground'
+        result.to_color
+      when '-tabs', '-cursor'
+        result
+      when '-font'
+        result.to_font
+      else
+        raise "Unknown option: %p" % [option]
+      end
+    end
+
+    def index(index)
+      execute_with_result('index', index).to_index
+    end
   end
 end
