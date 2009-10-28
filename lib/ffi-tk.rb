@@ -93,17 +93,17 @@ module Tk
     @interp.eval(string)
   end
 
-  def execute(*args)
+  def execute_only(*args)
     @interp.eval(convert_arguments(*args))
   end
 
-  def execute_with_result(*args)
+  def execute(*args)
     @interp.eval(convert_arguments(*args))
     result
   end
 
   def result
-    EvalResult.new(@interp.string_result)
+    EvalResult.new(@interp.obj_result)
   end
 
   def convert_arguments(*args)
@@ -119,6 +119,8 @@ module Tk
         1
       when false
         0
+      when Numeric
+        arg
       else
         if arg.respond_to?(:to_tcl)
           arg.to_tcl

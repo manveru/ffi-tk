@@ -14,12 +14,12 @@ module Tk
       @tk_pathname = Tk.register_object(parent, self)
     end
 
-    def execute(command, *args)
-      Tk.execute(tk_pathname, command, *args)
+    def execute_only(command, *args)
+      Tk.execute_only(tk_pathname, command, *args)
     end
 
-    def execute_with_result(command, *args)
-      Tk.execute_with_result(tk_pathname, command, *args)
+    def execute(command, *args)
+      Tk.execute(tk_pathname, command, *args)
     end
   end
 end

@@ -2,13 +2,27 @@ module FFI
   module Tcl
     class Obj < FFI::Struct
       class InternalRep < FFI::Union
+        class TwoPtrValue < FFI::Struct
+          layout(
+            :ptr1, :pointer,
+            :ptr2, :pointer
+          )
+        end
+
+        class PtrAndLongRep < FFI::Struct
+          layout(
+            :ptr, :pointer,
+            :value, :ulong
+          )
+        end
+
         layout(
           :longValue,     :long,
           :doubleValue,   :double,
           :otherValuePtr, :pointer,
           :wideValue,     :int64,
-          :twoPtrValue,   :pointer,
-          :ptrAndLongRep, :pointer
+          :twoPtrValue,   TwoPtrValue,
+          :ptrAndLongRep, PtrAndLongRep
         )
 
         def inspect
