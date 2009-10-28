@@ -35,7 +35,7 @@ module FFI
       end
 
       def eval(string)
-        p eval_ex: string unless string == '_get_ev'
+        p eval_ex: string if $DEBUG && string != '_get_ev'
         # result = FFI::Tcl.eval_ex(self, string, string.bytesize, 0x40000)
         result = FFI::Tcl.eval(self, string)
 
