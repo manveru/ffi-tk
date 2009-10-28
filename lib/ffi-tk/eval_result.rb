@@ -1,10 +1,6 @@
 module Tk
   EvalResult = Struct.new(:obj)
   class EvalResult
-    def to_index
-      self
-    end
-
     def to_boolean
       boolean_pointer = FFI::MemoryPointer.new(:int)
       FFI::Tcl.get_boolean_from_obj(Tk.interp, obj, boolean_pointer)
@@ -22,17 +18,12 @@ module Tk
       length_pointer = FFI::MemoryPointer.new(:int)
       FFI::Tcl.get_string_from_obj(obj, length_pointer)
     end
+    alias to_index to_string
+    alias to_font to_string
+    alias to_color to_string
 
     def to_symbol
       to_string.to_sym
-    end
-
-    def to_color
-      self
-    end
-
-    def to_font
-      self
     end
 
     # FIXME:
