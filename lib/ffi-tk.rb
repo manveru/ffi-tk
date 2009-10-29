@@ -39,17 +39,36 @@ module Tk
     FFI::Tk.init(@interp)
     @root = Root.new
 
-    eval 'proc _esc {s} {format {"%s"} [regsub -all {"} [regsub -all {\\\\} $s {\\\\\\\\}] {\\"}]}'
-    eval 'set _events {}'
-    eval 'proc _ev {args} {global _events; foreach arg $args {append escaped [_esc $arg]}; lappend _events "([concat $escaped])"}'
-    eval 'proc _get_ev {} {global _events; set ret [lindex $_events 0]; set _events [lrange $_events 1 end]; set ret}'
+    event_tcl = <<-'TCL'
+namespace eval RubyFFI {
+  proc escape_string {s} {
+    format {"%s"} [regsub -all {"} [regsub -all {\\\\} $s {\\\\\\\\}] {\\"}]
+  }
+  set events {}
+  proc store_event {args} {
+    variable events
+    foreach arg $args {
+      append escaped [escape_string $arg]
+    }
+    lappend events "([concat $escaped])"
+  }
+  proc get_event {} {
+    variable events
+    set ret [lindex $events 0]
+    set events [lrange $events 1 end]
+    set ret
+  }
+}
+    TCL
+
+    eval(event_tcl)
   end
 
   def mainloop
     while @interp.wait_for_event(0.1)
       @interp.do_one_event(0)
 
-      eval('_get_ev')
+      eval('RubyFFI::get_event')
       result = @interp.string_result
 
       unless result.empty?
