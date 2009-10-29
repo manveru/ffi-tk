@@ -4,6 +4,11 @@ module FFI
     ffi_lib 'libtk8.5.so', 'libtk.so', 'Tk', 'libtk'
 
     attach_function :Tk_Init, [:pointer], :int
+    attach_function :Tk_MainLoop, [], :void
+
+    class << self
+      alias mainloop Tk_MainLoop
+    end
 
     module_function
 

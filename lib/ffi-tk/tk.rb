@@ -3,22 +3,36 @@ module Tk
     attr_reader :interp, :root, :callbacks
   end
 
+  @register = Hash.new(0)
+  @callbacks = {}
+  @mutex = Mutex.new
+
   module_function
 
   def init
     @interp = FFI::Tcl::Interp.create
-    @register = Hash.new(0)
-    @callbacks = {}
-    @mutex = Mutex.new
+
     FFI::Tcl.init(@interp)
     FFI::Tcl::EvalResult.reset_types(interp)
     FFI::Tk.init(@interp)
+
     @root = Root.new
 
     eval(<<-'TCL')
 namespace eval RubyFFI {
   proc escape_string {s} {
     format {"%s"} [regsub -all {"} [regsub -all {\\\\} $s {\\\\\\\\}] {\\"}]
+  }
+  set events {}
+  proc store_event {event} {
+    variable events
+    lappend events $event
+  }
+  proc get_event {} {
+    variable events
+    set ret [lindex $events 0]
+    set events [lrange $events 1 end]
+    set ret
   }
 }
     TCL
@@ -42,14 +56,18 @@ namespace eval RubyFFI {
   end
 
   def tcl_event(client_data, interp, objc, objv)
-    handle_event(*tcl_cmd_args(interp, objc, objv))
+    cmd, *args = tcl_cmd_args(interp, objc, objv)
+    Event.from_obj(*args)
     return OK
   end
 
   def tcl_cmd_args(interp, objc, objv)
     length = FFI::MemoryPointer.new(0)
     array = objv.read_array_of_pointer(objc)
-    array.map{|e| FFI::Tcl::EvalResult.guess(interp, e) }
+    array.map{|e|
+      obj = FFI::Tcl::EvalResult.guess(interp, e)
+      obj.respond_to?(:dup) ? obj.dup : obj
+    }
   end
 
   def mainloop
@@ -57,6 +75,7 @@ namespace eval RubyFFI {
 
     while @running && @interp.wait_for_event(0.1)
       @interp.do_one_event(0)
+      handle_events
     end
   end
 
@@ -64,24 +83,11 @@ namespace eval RubyFFI {
     @running = false
   end
 
-  def handle_event(*args)
-    p handle_event: string
-    values = string[2..-3].split
-
-    event_id = Integer(values.shift)
-    event_bind = values.shift
-    event = Event.new(event_id, event_bind)
-
-    Event::PROPERTIES.each do |code, conv, name|
-      value = values.shift
-      next if value == '??'
-      converted = __send__(conv, value)
-      event[name] = converted
+  def handle_events
+    event = execute('RubyFFI::get_event')
+    if event.respond_to?(:to_ary)
+      Event.handle(*event)
     end
-
-    event.invoke
-
-    true
   end
 
   def handle_callback(id, *args)
@@ -133,7 +139,7 @@ namespace eval RubyFFI {
   end
 
   def result
-    @interp.obj_result
+    @interp.guess_result
   end
 
   def convert_arguments(*args)

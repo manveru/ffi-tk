@@ -15,7 +15,7 @@ module FFI
         end
       end
 
-      def self.guess(interp, obj)
+      def self.guess(interp, obj, fallback = nil)
         unless obj.respond_to?(:type)
           obj = Obj.new(obj)
         end
@@ -28,12 +28,23 @@ module FFI
         when :int
           to_int(interp, obj)
         else
-          raise "Unknown type: %p" % [type] if type
-          new(interp, obj)
+          if fallback
+            __send__(fallback, interp, obj)
+          else
+            raise "Unknown type: %p" % [type] if type
+            new(interp, obj)
+          end
         end
       end
 
       def self.to_list(interp, obj)
+        map_list_core(interp, obj) do |pointer|
+          value = guess(interp, pointer, :to_string)
+          block_given? ? yield(value) : value
+        end
+      end
+
+      def self.map_list_core(interp, obj)
         result_pointer = MemoryPointer.new(:pointer)
         count_pointer  = MemoryPointer.new(:int)
         length_pointer = MemoryPointer.new(:int)
@@ -44,8 +55,7 @@ module FFI
         (0...count).map do |idx|
           Tcl.list_obj_index(interp, obj, idx, result_pointer)
           element_pointer = result_pointer.get_pointer(0)
-          value = guess(interp, element_pointer)
-          block_given? ? yield(value) : value
+          yield element_pointer
         end
       end
 
@@ -66,8 +76,8 @@ module FFI
         Tcl.get_string_from_obj(obj, length_pointer)
       end
 
-      def to_a
-        self.class.to_list(interp, obj)
+      def to_a(&block)
+        self.class.to_list(interp, obj, &block)
       end
 
       def to_sym

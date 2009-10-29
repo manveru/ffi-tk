@@ -1,5 +1,5 @@
 module Tk
-  Event = Struct.new(:ev_id, :ev_bind, :border_width, :button, :count, :detail,
+  Event = Struct.new(:ev_id, :ev_seq, :border_width, :button, :count, :detail,
                      :focus, :height, :keycode, :keysym, :keysym_number, :mode,
                      :mousewheel_delta, :override_redirect, :place, :property,
                      :root, :send_event, :serial, :state, :subwindow, :time,
@@ -40,9 +40,22 @@ module Tk
     ]
 
     @meta_string = PROPERTIES.transpose[0].join(' ').gsub(/%/, '%%')
-    @callback = "bind %s <%s> { ::RubyFFI::event %d %s #@meta_string }"
+    @callback = %(bind %s <%s> { ::RubyFFI::store_event [list %d %s #@meta_string ] })
     @store = []
     @mutex = Mutex.new
+
+    def self.handle(ev_id, ev_seq, *properties)
+      event = new(ev_id.to_i, ev_seq.to_s)
+
+      PROPERTIES.each do |code, conv, name|
+        property = properties.shift
+        next if property == '??'
+        converted = __send__(conv, property)
+        event[name] = converted
+      end
+
+      event.invoke
+    end
 
     def self.invoke(id, event)
       return unless found = @store.at(id)

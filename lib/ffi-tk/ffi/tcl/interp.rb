@@ -11,8 +11,12 @@ module FFI
         new(Tcl.create_interp)
       end
 
-      def obj_result
+      def guess_result
         EvalResult.guess(self, Obj.new(Tcl.get_obj_result(self)))
+      end
+
+      def obj_result
+        Obj.new(Tcl.get_obj_result(self))
       end
 
       def wait_for_event(seconds = 0.0)
@@ -28,6 +32,11 @@ module FFI
 
       def do_one_event(flag = 0)
         Tcl.do_one_event(flag)
+      end
+
+      def do_events_until
+        wait_for_event(0.1)
+        do_one_event until yield
       end
 
       def eval(string)
