@@ -102,7 +102,7 @@ namespace eval RubyFFI {
   end
 
   def register_proc(proc)
-    id = uuid(:proc){|id| @callbacks[id] = proc }
+    id = uuid(:proc){|uuid| @callbacks[uuid] = proc }
     return id, %(RubyFFI::callback #{id})
   end
 

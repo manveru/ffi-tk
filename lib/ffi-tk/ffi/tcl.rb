@@ -12,7 +12,6 @@ module FFI
     attach_function :Tcl_CreateInterp, [], Interp
     attach_function :Tcl_DeleteInterp, [Interp], :void
     attach_function :Tcl_DoOneEvent, [flags = :int], :int
-    # attach_function :Tcl_Eval, [Interp, script = :string], :int
     attach_function :Tcl_EvalEx, [Interp, script = :string, length = :int, flags = :int], :int
     attach_function :Tcl_GetBooleanFromObj, [Interp, Obj, boolean = :pointer], :int
     attach_function :Tcl_GetIntFromObj, [Interp, Obj, int = :pointer], :int
@@ -36,12 +35,11 @@ module FFI
       Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
     class << self
-      alias create_obj_command Tcl_CreateObjCommand
       alias append_all_obj_types Tcl_AppendAllObjTypes
       alias create_interp Tcl_CreateInterp
+      alias create_obj_command Tcl_CreateObjCommand
       alias delete_interp Tcl_DeleteInterp
       alias do_one_event Tcl_DoOneEvent
-      # alias eval Tcl_Eval
       alias eval_ex Tcl_EvalEx
       alias get_boolean_from_obj Tcl_GetBooleanFromObj
       alias get_int_from_obj Tcl_GetIntFromObj
@@ -51,7 +49,6 @@ module FFI
       alias get_string_from_obj Tcl_GetStringFromObj
       alias get_string_result Tcl_GetStringResult
       alias get_unicode Tcl_GetUnicode
-      alias init Tcl_Init
       alias list_obj_get_elements Tcl_ListObjGetElements
       alias list_obj_index Tcl_ListObjIndex
       alias list_obj_length Tcl_ListObjLength
