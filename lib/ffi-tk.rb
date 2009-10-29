@@ -24,6 +24,7 @@ module Tk
 
   # Don't autoload this, or find out why it segfaults
   require 'ffi-tk/command/cget'
+  require 'ffi-tk/command/focus'
 
   # require the real thing
   require 'ffi-tk/tk'
