@@ -5,6 +5,7 @@ module Tk
     # TODO: implement custom procs
     def initialize(parent, options = {}, &block)
       @parent = parent
+      block ||= options[:command]
 
       if block
         @tk_proc_id, command = Tk.register_proc(block)
