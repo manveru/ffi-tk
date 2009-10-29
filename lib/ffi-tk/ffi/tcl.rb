@@ -1,7 +1,8 @@
-require 'ffi-tk/tcl/obj'
-require 'ffi-tk/tcl/interp'
-require 'ffi-tk/tcl/cmd_proc'
-require 'ffi-tk/tcl/time'
+require 'ffi-tk/ffi/tcl/obj'
+require 'ffi-tk/ffi/tcl/interp'
+require 'ffi-tk/ffi/tcl/cmd_proc'
+require 'ffi-tk/ffi/tcl/time'
+require 'ffi-tk/ffi/tcl/eval_result'
 
 module FFI
   module Tcl

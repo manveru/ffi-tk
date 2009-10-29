@@ -1,6 +1,6 @@
 module Tk
   class Text < Widget
-    autoload :Peer, 'ffi-tk/text/peer'
+    autoload :Peer, 'ffi-tk/widget/text/peer'
     include Cget
 
     def initialize(parent, options = {})

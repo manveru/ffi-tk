@@ -2,29 +2,28 @@ require 'ffi'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
-require 'ffi-tk/tcl'
-require 'ffi-tk/tk'
+require 'ffi-tk/ffi/tcl'
+require 'ffi-tk/ffi/tk'
 
 module Tk
   Error = Class.new(RuntimeError)
+  None = Object.new
   OK = 0
   ERROR = 1
 
-  autoload :Widget,     'ffi-tk/widget'
-  autoload :Bind,       'ffi-tk/bind'
-  autoload :Destroy,    'ffi-tk/destroy'
-  autoload :Pack,       'ffi-tk/pack'
-  autoload :Button,     'ffi-tk/button'
-  autoload :Event,      'ffi-tk/event'
-  autoload :Text,       'ffi-tk/text'
-  autoload :Entry,      'ffi-tk/entry'
+  autoload :Bind,       'ffi-tk/command/bind'
+  autoload :Button,     'ffi-tk/widget/button'
+  autoload :Destroy,    'ffi-tk/command/destroy'
+  autoload :Entry,      'ffi-tk/widget/entry'
   autoload :EvalResult, 'ffi-tk/eval_result'
-  autoload :Root,       'ffi-tk/root'
+  autoload :Event,      'ffi-tk/event'
+  autoload :Pack,       'ffi-tk/command/pack'
+  autoload :Root,       'ffi-tk/widget/root'
+  autoload :Text,       'ffi-tk/widget/text'
+  autoload :Widget,     'ffi-tk/widget'
 
   # Don't autoload this, or find out why it segfaults
-  require 'ffi-tk/cget'
-
-  None = Object.new
+  require 'ffi-tk/command/cget'
 
   class << self
     attr_reader :interp, :root, :callbacks
@@ -38,6 +37,7 @@ module Tk
     @callbacks = {}
     @mutex = Mutex.new
     FFI::Tcl.init(@interp)
+    FFI::Tcl::EvalResult.reset_types(interp)
     FFI::Tk.init(@interp)
     @root = Root.new
 
@@ -63,19 +63,19 @@ namespace eval RubyFFI {
   end
 
   def tcl_callback(client_data, interp, objc, objv)
-    handle_callback(*tcl_cmd_args(objc, objv))
+    handle_callback(*tcl_cmd_args(interp, objc, objv))
     return OK
   end
 
   def tcl_event(client_data, interp, objc, objv)
-    handle_event(*tcl_cmd_args(objc, objv))
+    handle_event(*tcl_cmd_args(interp, objc, objv))
     return OK
   end
 
-  def tcl_cmd_args(objc, objv)
+  def tcl_cmd_args(interp, objc, objv)
     length = FFI::MemoryPointer.new(0)
     array = objv.read_array_of_pointer(objc)
-    array.map{|e| EvalResult.guess(FFI::Tcl::Obj.new(e)) }
+    array.map{|e| FFI::Tcl::EvalResult.guess(interp, e) }
   end
 
   def mainloop

@@ -12,7 +12,7 @@ module FFI
       end
 
       def obj_result
-        ::Tk::EvalResult.guess(Obj.new(Tcl.get_obj_result(self)))
+        EvalResult.guess(self, Obj.new(Tcl.get_obj_result(self)))
       end
 
       def wait_for_event(seconds = 0.0)
@@ -33,7 +33,7 @@ module FFI
       def eval(string)
         p eval_ex: string if $DEBUG
 
-        code = FFI::Tcl.eval_ex(self, string, string.bytesize, 0x40000)
+        code = Tcl.eval_ex(self, string, string.bytesize, 0x40000)
         return true if code == 0
 
         message = obj_result.to_s
