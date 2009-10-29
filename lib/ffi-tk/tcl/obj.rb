@@ -1,34 +1,56 @@
 module FFI
   module Tcl
-    # The following structure represents a type of object, which is a particular
-    # internal representation for an object plus a set of functions that provide
-    # standard operations on objects of that type.
-    class ObjType < FFI::Struct
-      layout(
-        :name, :string,
-        :free_internal_rep_proc, :pointer,
-        :dup_internal_rep_proc, :pointer,
-        :update_string_proc, :pointer,
-        :set_from_any_proc, :pointer
-      )
+    # Nicer introspection and some accessors.
+    class PrettyStruct < FFI::Struct
+      ACCESSOR_CODE = <<-CODE
+        def {name}; self[{sym}]; end
+        def {name}=(value) self[{sym}] = value; end
+      CODE
+
+      def self.layout(*kvs)
+        kvs.each_slice(2) do |key, value|
+          eval ACCESSOR_CODE.gsub(/\{(.*?)\}/, '{name}' => key, '{sym}' => ":#{key}")
+        end
+
+        super
+      end
 
       def inspect
-        "<Tcl::Obj %p>" % [Hash[members.zip(values)]]
+        kvs = members.zip(values)
+        kvs.map!{|key, value| "%s=%s" % [key, value.inspect] }
+        "<%s %s>" % [self.class, kvs.join(' ')]
       end
     end
 
-    class Obj < FFI::Struct
-      class InternalRep < FFI::Union
-        class TwoPtrValue < FFI::Struct
+    # The following structure represents a type of object, which is a particular
+    # internal representation for an object plus a set of functions that provide
+    # standard operations on objects of that type.
+    class ObjType < PrettyStruct
+      layout(
+        :name,                   :string,
+        :free_internal_rep_proc, :pointer,
+        :dup_internal_rep_proc,  :pointer,
+        :update_string_proc,     :pointer,
+        :set_from_any_proc,      :pointer
+      )
+
+      def to_i
+        pointer.get_pointer(0).to_i
+      end
+    end
+
+    class Obj < PrettyStruct
+      class InternalRep < Union
+        class TwoPtrValue < PrettyStruct
           layout(
             :ptr1, :pointer,
             :ptr2, :pointer
           )
         end
 
-        class PtrAndLongRep < FFI::Struct
+        class PtrAndLongRep < PrettyStruct
           layout(
-            :ptr, :pointer,
+            :ptr,   :pointer,
             :value, :ulong
           )
         end
@@ -41,47 +63,15 @@ module FFI
           :twoPtrValue,   TwoPtrValue,
           :ptrAndLongRep, PtrAndLongRep
         )
-
-        def inspect
-          "<Tcl::Obj %p>" % [Hash[members.zip(values)]]
-        end
       end
 
       layout(
         :refCount,    :int,
         :bytes,       :string,
         :length,      :int,
-        :type,     :pointer,
+        :type,        ObjType,
         :internalRep, InternalRep
       )
-
-      def ref_count
-        self[:refCount]
-      end
-
-      def bytes
-        self[:bytes]
-      end
-
-      def length
-        self[:length]
-      end
-
-      def type
-        self[:type]
-      end
-
-      def internal_rep
-        self[:internalRep]
-      end
-
-      def to_s
-        Tcl.get_unicode(self)
-      end
-
-      def inspect
-        "<Tcl::Obj %p>" % [Hash[members.zip(values)]]
-      end
     end
   end
 end

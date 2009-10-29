@@ -1,6 +1,6 @@
+require 'ffi-tk/tcl/obj'
 require 'ffi-tk/tcl/interp'
 require 'ffi-tk/tcl/time'
-require 'ffi-tk/tcl/obj'
 
 module FFI
   module Tcl

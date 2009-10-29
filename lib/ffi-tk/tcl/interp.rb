@@ -1,6 +1,6 @@
 module FFI
   module Tcl
-    class Interp < FFI::Struct
+    class Interp < PrettyStruct
       layout(
         :result, :string,
         :freeProc, :pointer,

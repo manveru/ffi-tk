@@ -1,8 +1,6 @@
-require 'ffi'
-
 module FFI
   module Tcl
-    class TclTime < FFI::Struct
+    class TclTime < PrettyStruct
       layout(
         :sec,  :long, # Seconds
         :usec, :long  # Microseconds
