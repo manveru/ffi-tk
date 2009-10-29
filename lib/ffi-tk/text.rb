@@ -1,6 +1,7 @@
 module Tk
   class Text < Widget
     autoload :Peer, 'ffi-tk/text/peer'
+    include Cget
 
     def initialize(parent, options = {})
       @parent = parent
@@ -18,12 +19,6 @@ module Tk
     # empty list.
     def bbox(index)
       execute('bbox', index)
-    end
-
-    # Returns the current value of the configuration option given by option.
-    # Option may have any of the values accepted by the text command.
-    def cget(option)
-      option_to_ruby(option, execute('cget', tcl_option(option)))
     end
 
     # Compares the indices given by index1 and index2 according to the
@@ -306,7 +301,8 @@ module Tk
     end
 
     def image_cget(index, option)
-      execute('image', 'cget', index, option)
+      option = tcl_option(option)
+      option_to_ruby(option, execute('image', 'cget', index))
     end
 
     # Query or modify the configuration options for an embedded image.
@@ -431,7 +427,6 @@ module Tk
     # index.
     # If markName already exists, it is moved from its old position; if it does
     # not exist, a new mark is created.
-    # This command returns nil.
     def mark_set(name, index)
       execute_only('mark', 'set', name, index)
     end
@@ -439,7 +434,6 @@ module Tk
     # Remove the mark corresponding to each of the markName arguments.
     # The removed marks will not be usable in indices and will not be returned
     # by future calls to [mark_names].
-    # This command returns an empty string.
     def mark_unset(*names)
       execute_only('mark', 'unset', *names)
     end
@@ -449,46 +443,7 @@ module Tk
     end
 
     def peer_names
-      execute('peer', 'names').to_a
-    end
-
-    private
-
-    INTEGER = %w[-height -width -maxundo -spacing1 -spacing2 -spacing3
-                 -borderwidth -bd -highlightthickness -insertborderwidth
-                 -insertofftime -insertontime -insertwidth -padx -pady
-                 -selectborderwidth -endline -startline]
-    SYMBOL  = %w[-wrap -state -tabstyle -relief -xscrollcommand -yscrollcommand]
-    BOOLEAN = %w[-autoseparators -blockcursor -undo -exportselection -setgrid
-                 -takefocus]
-    COLOR   = %w[-inactiveselectbackground -background -bg -foreground -fg
-                 -highlightbackground -highlightcolor -insertbackground
-                 -selectbackground -selectforeground]
-    STRING  = %w[-tabs -cursor]
-    FONT    = %w[-font]
-
-    def option_to_ruby(name, value)
-      case tcl_option(name)
-      when *INTEGER
-        value.to_i
-      when *SYMBOL
-        value.to_sym
-      when *BOOLEAN
-        value == 1
-      when *COLOR
-        value.to_s
-      when *STRING
-        value.to_s
-      when *FONT
-        value.to_s
-      else
-        raise "Unknown option: %p: %p" % [name, value]
-      end
-    end
-
-    def tcl_option(option)
-      option = option.to_s
-      option[0] == '-' ? option : "-#{option}"
+      execute('peer', 'names').to_a.map(&:to_s)
     end
   end
 end

@@ -7,6 +7,8 @@ require 'ffi-tk/tk'
 
 module Tk
   Error = Class.new(RuntimeError)
+  OK = 0
+  ERROR = 1
 
   autoload :Widget,     'ffi-tk/widget'
   autoload :Bind,       'ffi-tk/bind'
@@ -18,66 +20,76 @@ module Tk
   autoload :Entry,      'ffi-tk/entry'
   autoload :EvalResult, 'ffi-tk/eval_result'
   autoload :Root,       'ffi-tk/root'
+  autoload :Cget,       'ffi-tk/cget'
 
   None = Object.new
 
+  class << self
+    attr_reader :interp, :root, :callbacks
+  end
+
   module_function
-
-  def interp
-    @interp
-  end
-
-  def root
-    @root
-  end
 
   def init
     @interp = FFI::Tcl::Interp.create
     @register = Hash.new(0)
+    @callbacks = {}
     @mutex = Mutex.new
     FFI::Tcl.init(@interp)
     FFI::Tk.init(@interp)
     @root = Root.new
 
-    event_tcl = <<-'TCL'
+    eval(<<-'TCL')
 namespace eval RubyFFI {
   proc escape_string {s} {
     format {"%s"} [regsub -all {"} [regsub -all {\\\\} $s {\\\\\\\\}] {\\"}]
   }
-  set events {}
-  proc store_event {args} {
-    variable events
-    foreach arg $args {
-      append escaped [escape_string $arg]
-    }
-    lappend events "([concat $escaped])"
-  }
-  proc get_event {} {
-    variable events
-    set ret [lindex $events 0]
-    set events [lrange $events 1 end]
-    set ret
-  }
 }
     TCL
 
-    eval(event_tcl)
+    tcl_delete = method(:tcl_delete_callback)
+    callback   = method(:tcl_callback)
+    event      = method(:tcl_event)
+
+    FFI::Tcl.create_obj_command(interp, 'RubyFFI::callback', callback, 0, tcl_delete)
+    FFI::Tcl.create_obj_command(interp, 'RubyFFI::event', event, 0, tcl_delete)
+  end
+
+  # without our callbacks, nothing goes anymore, abort mission
+  def tcl_delete_callback(client_data)
+    raise RuntimeError, "tcl function is going to be removed"
+  end
+
+  def tcl_callback(client_data, interp, objc, objv)
+    handle_callback(*tcl_cmd_args(objc, objv))
+    return OK
+  end
+
+  def tcl_event(client_data, interp, objc, objv)
+    handle_event(*tcl_cmd_args(objc, objv))
+    return OK
+  end
+
+  def tcl_cmd_args(objc, objv)
+    length = FFI::MemoryPointer.new(0)
+    array = objv.read_array_of_pointer(objc)
+    array.map{|e| EvalResult.guess(FFI::Tcl::Obj.new(e)) }
   end
 
   def mainloop
-    while @interp.wait_for_event(0.1)
+    @running = true
+
+    while @running && @interp.wait_for_event(0.1)
       @interp.do_one_event(0)
-
-      eval('RubyFFI::get_event')
-      result = @interp.string_result
-
-      unless result.empty?
-        handle_event(result)
-      end
     end
   end
 
-  def handle_event(string)
+  def stop
+    @running = false
+  end
+
+  def handle_event(*args)
+    p handle_event: string
     values = string[2..-3].split
 
     event_id = Integer(values.shift)
@@ -92,21 +104,42 @@ namespace eval RubyFFI {
     end
 
     event.invoke
+
+    true
+  end
+
+  def handle_callback(id, *args)
+    callback = @callbacks.fetch(id.to_i)
+    callback.call(*args)
   end
 
   def register_object(parent, object)
     parent_name = parent.respond_to?(:tk_pathname) ? parent.tk_pathname : parent
     name = object.class.name.downcase
-    id = nil
-
-    @mutex.synchronize do
-      id = @register[name] += 1
-    end
+    id = uuid(name)
 
     if parent_name[-1] == '.'
       "#{parent_name}#{name}#{id}"
     else
       "#{parent_name}.#{name}#{id}"
+    end
+  end
+
+  def register_proc(proc)
+    id = uuid(:proc){|id| @callbacks[id] = proc }
+    return id, %(RubyFFI::callback #{id})
+  end
+
+  def unregister_proc(id)
+    @callbacks.delete(id)
+  end
+
+  def uuid(name)
+    @mutex.synchronize do
+      id = @register[name]
+      @register[name] += 1
+      yield id if block_given?
+      id
     end
   end
 
@@ -124,7 +157,7 @@ namespace eval RubyFFI {
   end
 
   def result
-    EvalResult.guess(@interp.obj_result)
+    @interp.obj_result
   end
 
   def convert_arguments(*args)

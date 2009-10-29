@@ -15,7 +15,7 @@ module Tk
       case type = TYPES[obj.type.to_i]
       when :list
         to_list(obj)
-      when :string, :pixel
+      when :string, :pixel, :cmdName
         to_string(obj)
       when :int
         to_int(obj)
@@ -37,7 +37,7 @@ module Tk
       (0...count).map do |idx|
         FFI::Tcl.list_obj_index(interp, obj, idx, result_pointer)
         element_pointer = result_pointer.get_pointer(0)
-        value = FFI::Tcl.get_string_from_obj(element_pointer, length_pointer)
+        value = guess(FFI::Tcl::Obj.new(element_pointer))
         block_given? ? yield(value) : value
       end
     end

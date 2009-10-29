@@ -1,7 +1,4 @@
-require 'bacon'
-Bacon.summary_at_exit
-
-require_relative '../../lib/ffi-tk'
+require_relative '../helper'
 
 Tk.init
 
@@ -172,22 +169,22 @@ describe Tk::Text do
   end
 
   it 'sets a mark' do
-    @text.mark_set('foo', '1.3').should.be.nil
+    @text.mark_set('foo', '1.3')
     @text.mark_names.sort.should == [:current, :foo, :insert]
   end
 
   it 'unsets a mark' do
-    @text.mark_unset('foo').should.be.nil
+    @text.mark_unset('foo')
     @text.mark_names.sort.should == [:current, :insert]
   end
 
   it 'creates a peer' do
     @peer = @text.peer_create
-    @peer.tk_pathname.should == '.tk::text1.tk::text::peer1'
+    @peer.tk_pathname.should == '.tk::text0.tk::text::peer0'
   end
 
   it 'lists the peer' do
-    @text.peer_names.should == ['.tk::text1.tk::text::peer1']
+    @text.peer_names.should == ['.tk::text0.tk::text::peer0']
   end
 
   it 'destroys the peer' do

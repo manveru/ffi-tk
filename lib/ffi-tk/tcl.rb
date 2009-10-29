@@ -1,5 +1,6 @@
 require 'ffi-tk/tcl/obj'
 require 'ffi-tk/tcl/interp'
+require 'ffi-tk/tcl/cmd_proc'
 require 'ffi-tk/tcl/time'
 
 module FFI
@@ -10,7 +11,7 @@ module FFI
     attach_function :Tcl_CreateInterp, [], Interp
     attach_function :Tcl_DeleteInterp, [Interp], :void
     attach_function :Tcl_DoOneEvent, [flags = :int], :int
-    attach_function :Tcl_Eval, [Interp, script = :string], :int
+    # attach_function :Tcl_Eval, [Interp, script = :string], :int
     attach_function :Tcl_EvalEx, [Interp, script = :string, length = :int, flags = :int], :int
     attach_function :Tcl_GetBooleanFromObj, [Interp, Obj, boolean = :pointer], :int
     attach_function :Tcl_GetIntFromObj, [Interp, Obj, int = :pointer], :int
@@ -28,16 +29,18 @@ module FFI
     attach_function :Tcl_WaitForEvent, [TclTime], :int
     attach_function :Tcl_AppendAllObjTypes, [Interp, Obj], :int
 
-#     callback :command_proc, 
-#     attach_function :Tcl_CreateObjCommand, [Interp, cmdName, Proc, ClientData, DeleteProc], :pointer
-#     Tcl_Command Tcl_CreateObjCommand(interp, cmdName, proc, clientData, deleteProc)
+    callback :obj_cmd_proc, [:int, Interp, :int, :pointer], :int
+    callback :obj_delete_proc, [:int], :void
+    attach_function :Tcl_CreateObjCommand, [
+      Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
     class << self
+      alias create_obj_command Tcl_CreateObjCommand
       alias append_all_obj_types Tcl_AppendAllObjTypes
       alias create_interp Tcl_CreateInterp
       alias delete_interp Tcl_DeleteInterp
       alias do_one_event Tcl_DoOneEvent
-      alias eval Tcl_Eval
+      # alias eval Tcl_Eval
       alias eval_ex Tcl_EvalEx
       alias get_boolean_from_obj Tcl_GetBooleanFromObj
       alias get_int_from_obj Tcl_GetIntFromObj

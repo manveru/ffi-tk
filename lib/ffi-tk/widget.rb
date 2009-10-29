@@ -21,5 +21,10 @@ module Tk
     def execute(command, *args)
       Tk.execute(tk_pathname, command, *args)
     end
+
+    def tcl_option(option)
+      option = option.to_s
+      option[0] == '-' ? option : "-#{option}"
+    end
   end
 end

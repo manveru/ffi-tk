@@ -1,5 +1,7 @@
 module Tk
   class Entry < Widget
+    include Cget
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('entry', assign_pathname, options)

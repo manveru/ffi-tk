@@ -11,12 +11,8 @@ module FFI
         new(Tcl.create_interp)
       end
 
-      def string_result
-        Tcl.get_string_result(self)
-      end
-
       def obj_result
-        Obj.new(Tcl.get_obj_result(self))
+        ::Tk::EvalResult.guess(Obj.new(Tcl.get_obj_result(self)))
       end
 
       def wait_for_event(seconds = 0.0)
@@ -35,14 +31,14 @@ module FFI
       end
 
       def eval(string)
-        p eval_ex: string if $DEBUG && string != '_get_ev'
-        result = FFI::Tcl.eval_ex(self, string, string.bytesize, 0x40000)
-        # result = FFI::Tcl.eval_ex(self, string)
+        p eval_ex: string if $DEBUG
 
-        if result == 1
-          message = string_result
-          raise message
-        end
+        code = FFI::Tcl.eval_ex(self, string, string.bytesize, 0x40000)
+        return true if code == 0
+
+        message = obj_result.to_s
+        message = 'Mysterious failure' if message.empty?
+        raise message
       end
     end
   end

@@ -1,7 +1,4 @@
-require 'bacon'
-Bacon.summary_at_exit
-
-require_relative '../../lib/ffi-tk'
+require_relative '../helper'
 
 Tk.init
 
