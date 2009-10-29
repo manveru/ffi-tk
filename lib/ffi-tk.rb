@@ -20,7 +20,9 @@ module Tk
   autoload :Entry,      'ffi-tk/entry'
   autoload :EvalResult, 'ffi-tk/eval_result'
   autoload :Root,       'ffi-tk/root'
-  autoload :Cget,       'ffi-tk/cget'
+
+  # Don't autoload this, or find out why it segfaults
+  require 'ffi-tk/cget'
 
   None = Object.new
 
