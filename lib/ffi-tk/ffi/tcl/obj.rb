@@ -37,6 +37,10 @@ module FFI
       def to_i
         pointer.get_pointer(0).to_i
       end
+
+      def inspect
+        "#<ObjType name=%p>" % [self[:name]]
+      end
     end
 
     class Obj < PrettyStruct
@@ -72,6 +76,10 @@ module FFI
         :type,        ObjType,
         :internalRep, InternalRep
       )
+
+      def inspect
+        "#<Obj bytes=%p type=%p>" % [self[:bytes], self[:type]]
+      end
     end
   end
 end
