@@ -45,9 +45,13 @@ module FFI
         code = Tcl.eval_ex(self, string, string.bytesize, 0x40000)
         return true if code == 0
 
-        message = obj_result.to_s
-        message = 'Mysterious failure' if message.empty?
-        raise message
+        message = guess_result.to_s
+
+        if message.empty?
+          raise 'Failure during eval of: %p' % [string]
+        else
+          raise '%s during eval of: %p' % [message, string]
+        end
       end
     end
   end
