@@ -1,6 +1,6 @@
 module Tk
   class Entry < Widget
-    include Cget
+    include Cget, Configure
 
     def initialize(parent, options = {})
       @parent = parent
@@ -9,6 +9,10 @@ module Tk
 
     def bbox(index)
       execute(:bbox, index).to_a.map(&:to_i)
+    end
+
+    def delete(first, last = None)
+      execute(:delete, first, last)
     end
 
     def insert(index, string)

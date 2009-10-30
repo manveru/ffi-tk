@@ -19,49 +19,49 @@ describe Tk::Text do
   end
 
   it 'gets all possible options with cget' do
-    @text.cget(:autoseparators).should == true
-    @text.cget(:background).should == '#ffffff'
-    @text.cget(:bd).should == 1
-    @text.cget(:bg).should == '#ffffff'
-    @text.cget(:blockcursor).should == false
-    @text.cget(:borderwidth).should == 1
-    @text.cget(:cursor).should == 'xterm'
-    @text.cget(:endline).should == 0
-    @text.cget(:exportselection).should == true
-    @text.cget(:fg).should == '#000000'
-    @text.cget(:font).should == 'TkFixedFont'
-    @text.cget(:foreground).should == '#000000'
-    @text.cget(:height).should == 24
-    @text.cget(:highlightbackground).should == '#d9d9d9'
-    @text.cget(:highlightcolor).should == '#000000'
-    @text.cget(:highlightthickness).should == 1
-    @text.cget(:inactiveselectbackground).should == '#c3c3c3'
-    @text.cget(:insertbackground).should == '#000000'
-    @text.cget(:insertborderwidth).should == 0
-    @text.cget(:insertofftime).should == 300
-    @text.cget(:insertontime).should == 600
-    @text.cget(:insertwidth).should == 2
-    @text.cget(:maxundo).should == 0
-    @text.cget(:padx).should == 1
-    @text.cget(:pady).should == 1
-    @text.cget(:relief).should == :sunken
-    @text.cget(:selectbackground).should == '#c3c3c3'
-    @text.cget(:selectborderwidth).should == 0
-    @text.cget(:selectforeground).should == '#000000'
-    @text.cget(:setgrid).should == false
-    @text.cget(:spacing1).should == 0
-    @text.cget(:spacing2).should == 0
-    @text.cget(:spacing3).should == 0
-    @text.cget(:startline).should == 0
-    @text.cget(:state).should == :normal
-    @text.cget(:tabs).should == ''
-    @text.cget(:tabstyle).should == :tabular
-    @text.cget(:takefocus).should == false
-    @text.cget(:undo).should == false
-    @text.cget(:width).should == 80
-    @text.cget(:wrap).should == :char
-    @text.cget(:xscrollcommand).should == nil
-    @text.cget(:yscrollcommand).should == nil
+    @text.cget(:autoseparators          ).should == true
+    @text.cget(:background              ).should == "#ffffff"
+    @text.cget(:bd                      ).should == 1
+    @text.cget(:bg                      ).should == "#ffffff"
+    @text.cget(:blockcursor             ).should == false
+    @text.cget(:borderwidth             ).should == 1
+    @text.cget(:cursor                  ).should == "xterm"
+    @text.cget(:endline                 ).should == 0
+    @text.cget(:exportselection         ).should == true
+    @text.cget(:fg                      ).should == "#000000"
+    @text.cget(:font                    ).should == "TkFixedFont"
+    @text.cget(:foreground              ).should == "#000000"
+    @text.cget(:height                  ).should == 24
+    @text.cget(:highlightbackground     ).should == "#d9d9d9"
+    @text.cget(:highlightcolor          ).should == "#000000"
+    @text.cget(:highlightthickness      ).should == 1
+    @text.cget(:inactiveselectbackground).should == "#c3c3c3"
+    @text.cget(:insertbackground        ).should == "#000000"
+    @text.cget(:insertborderwidth       ).should == 0
+    @text.cget(:insertofftime           ).should == 300
+    @text.cget(:insertontime            ).should == 600
+    @text.cget(:insertwidth             ).should == 2
+    @text.cget(:maxundo                 ).should == 0
+    @text.cget(:padx                    ).should == 1
+    @text.cget(:pady                    ).should == 1
+    @text.cget(:relief                  ).should == :sunken
+    @text.cget(:selectbackground        ).should == "#c3c3c3"
+    @text.cget(:selectborderwidth       ).should == 0
+    @text.cget(:selectforeground        ).should == "#000000"
+    @text.cget(:setgrid                 ).should == false
+    @text.cget(:spacing1                ).should == 0
+    @text.cget(:spacing2                ).should == 0
+    @text.cget(:spacing3                ).should == 0
+    @text.cget(:startline               ).should == 0
+    @text.cget(:state                   ).should == :normal
+    @text.cget(:tabs                    ).should == ""
+    @text.cget(:tabstyle                ).should == :tabular
+    @text.cget(:takefocus               ).should == false
+    @text.cget(:undo                    ).should == false
+    @text.cget(:width                   ).should == 80
+    @text.cget(:wrap                    ).should == :char
+    @text.cget(:xscrollcommand          ).should == nil
+    @text.cget(:yscrollcommand          ).should == nil
   end
 
   it 'configures a single option' do

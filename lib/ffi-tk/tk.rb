@@ -145,6 +145,8 @@ namespace eval RubyFFI {
   def convert_arguments(*args)
     args.map{|arg|
       case arg
+      when None
+        ''
       when Hash
         hash_to_tcl(arg)
       when String, Symbol
