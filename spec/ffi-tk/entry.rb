@@ -5,7 +5,7 @@ Tk.init
 describe Tk::Entry do
   @entry = Tk::Entry.new('.')
 
-  it 'gets content' do
+  it "returns the entry's string" do
     @entry.get.should == ''
   end
 
