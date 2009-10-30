@@ -165,7 +165,7 @@ module Tk
   end
 
   def array_to_tcl(array)
-    array.inspect
+    '{' << array.map{|element| convert_arguments(element) }.join(' ') << '}'
   end
 
   def exit
