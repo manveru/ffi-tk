@@ -40,7 +40,7 @@ module Tk
     ]
 
     @meta_string = PROPERTIES.transpose[0].join(' ').gsub(/%/, '%%')
-    @callback = %(bind %s <%s> { ::RubyFFI::store_event [list %d %s #@meta_string ] })
+    @callback = %(bind %s <%s> { ::RubyFFI::event %d %s #@meta_string })
     @store = []
     @mutex = Mutex.new
 

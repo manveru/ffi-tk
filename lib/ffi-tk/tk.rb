@@ -18,24 +18,7 @@ module Tk
 
     @root = Root.new
 
-    eval(<<-'TCL')
-namespace eval RubyFFI {
-  proc escape_string {s} {
-    format {"%s"} [regsub -all {"} [regsub -all {\\\\} $s {\\\\\\\\}] {\\"}]
-  }
-  set events {}
-  proc store_event {event} {
-    variable events
-    lappend events $event
-  }
-  proc get_event {} {
-    variable events
-    set ret [lindex $events 0]
-    set events [lrange $events 1 end]
-    set ret
-  }
-}
-    TCL
+    eval('namespace eval RubyFFI {}')
 
     FFI::Tcl.create_obj_command(interp, 'RubyFFI::callback', TCL_CALLBACK, 0, TCL_DELETE)
     FFI::Tcl.create_obj_command(interp, 'RubyFFI::event',    TCL_EVENT,    0, TCL_DELETE)
@@ -47,14 +30,16 @@ namespace eval RubyFFI {
   end
   TCL_DELETE = method(:tcl_delete)
 
+  # TODO: support for break and continue return status (by catch/throw)
   def tcl_callback(client_data, interp, objc, objv)
     handle_callback(*tcl_cmd_args(interp, objc, objv))
   end
   TCL_CALLBACK = method(:tcl_callback)
 
+  # TODO: support for break and continue return status (by catch/throw)
   def tcl_event(client_data, interp, objc, objv)
     cmd, *args = tcl_cmd_args(interp, objc, objv)
-    Event.from_obj(*args)
+    Event.handle(*args)
     return OK
   end
   TCL_EVENT = method(:tcl_event)
@@ -73,19 +58,11 @@ namespace eval RubyFFI {
 
     while @running && @interp.wait_for_event(0.1)
       @interp.do_one_event(0)
-      handle_events
     end
   end
 
   def stop
     @running = false
-  end
-
-  def handle_events
-    event = execute('RubyFFI::get_event')
-    if event.respond_to?(:to_ary)
-      Event.handle(*event)
-    end
   end
 
   def handle_callback(id, *args)

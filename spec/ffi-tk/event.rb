@@ -11,7 +11,7 @@ describe Tk::Event do
     button.pack
     Tk::Event.generate(button, 'Enter')
 
-    Tk.handle_events
+    Tk.interp.do_events_until{ entered }
 
     entered.should == true
   end
