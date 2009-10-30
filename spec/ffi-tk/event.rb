@@ -6,12 +6,15 @@ describe Tk::Event do
   it 'associates event with button and calls it' do
     entered = false
 
-    button = Tk::Button.new('.')
-    button.bind('Enter'){ entered = true; Tk.stop }
-    button.pack
-    Tk::Event.generate(button, 'Enter')
+    entry = Tk::Entry.new('.')
+    entry.bind('Key'){ entered = true; Tk.stop }
+    entry.pack
+    entry.focus
 
-    Tk.interp.do_events_until{ entered }
+    Tk.interp.do_events_until{
+      Tk::Event.generate(entry, 'KeyPress-a')
+      entered
+    }
 
     entered.should == true
   end
