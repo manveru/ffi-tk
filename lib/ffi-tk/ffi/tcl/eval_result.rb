@@ -1,5 +1,6 @@
 module FFI
   module Tcl
+    # This whole class feels very awkward, maybe it should be merged with Obj.
     class EvalResult < ::Struct.new(:interp, :obj)
       TYPES = {}
 
@@ -16,11 +17,10 @@ module FFI
       end
 
       def self.guess(interp, obj, fallback = nil)
-        unless obj.respond_to?(:type)
-          obj = Obj.new(obj)
-        end
+        obj = Obj.new(obj) unless obj.respond_to?(:type)
+        type = TYPES[obj.type.to_i]
 
-        case type = TYPES[obj.type.to_i]
+        case type
         when :list
           to_list(interp, obj)
         when :string, :pixel, :cmdName
