@@ -141,10 +141,11 @@ describe Tk::Entry do
   end
 
   it 'validates the entry with validation command' do
-    command = lambda{|*args| p validate: args; 0 }
-    @entry.configure validate: :all
-    @entry.configure validatecommand: command
+    @entry.configure validatecommand: lambda{|*args| true }
     @entry.validate.should == true
+
+    @entry.configure validatecommand: lambda{|*args| false }
+    @entry.validate.should == false
   end
 end
 

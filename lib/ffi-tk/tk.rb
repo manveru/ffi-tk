@@ -31,8 +31,12 @@ module Tk
   TCL_DELETE = method(:tcl_delete)
 
   # TODO: support for break and continue return status (by catch/throw)
+  # 1 means true, 0 means false.
   def tcl_callback(client_data, interp, objc, objv)
-    handle_callback(*tcl_cmd_args(interp, objc, objv))
+    cmd, id, *args = tcl_cmd_args(interp, objc, objv)
+    result = handle_callback(id, *args)
+    FFI::Tcl::Interp.new(interp).obj_result = result
+    return OK
   end
   TCL_CALLBACK = method(:tcl_callback)
 

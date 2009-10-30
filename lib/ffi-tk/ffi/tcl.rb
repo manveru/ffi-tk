@@ -9,6 +9,7 @@ module FFI
     extend FFI::Library
     ffi_lib 'libtcl8.5.so', 'tcl85.dll', 'Tcl', 'libtcl'
 
+    attach_function :Tcl_AppendAllObjTypes, [Interp, Obj], :int
     attach_function :Tcl_CreateInterp, [], Interp
     attach_function :Tcl_DeleteInterp, [Interp], :void
     attach_function :Tcl_DoOneEvent, [flags = :int], :int
@@ -25,9 +26,12 @@ module FFI
     attach_function :Tcl_ListObjGetElements, [Interp, Obj, count = :pointer, list = :pointer], :int
     attach_function :Tcl_ListObjIndex, [Interp, list = :pointer, index = :int, result = :pointer], :int
     attach_function :Tcl_ListObjLength, [Interp, list = :pointer, int = :pointer], :int
+    attach_function :Tcl_NewBooleanObj, [:int], Obj
+    attach_function :Tcl_NewIntObj, [:int], Obj
     attach_function :Tcl_NewListObj, [count = :int, values = :pointer], Obj
+    attach_function :Tcl_NewStringObj, [:string, :int], Obj
+    attach_function :Tcl_SetObjResult, [Interp, Obj], :void
     attach_function :Tcl_WaitForEvent, [TclTime], :int
-    attach_function :Tcl_AppendAllObjTypes, [Interp, Obj], :int
 
     callback :obj_cmd_proc, [:int, Interp, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
@@ -52,7 +56,11 @@ module FFI
       alias list_obj_get_elements Tcl_ListObjGetElements
       alias list_obj_index Tcl_ListObjIndex
       alias list_obj_length Tcl_ListObjLength
+      alias new_boolean_obj Tcl_NewBooleanObj
+      alias new_int_obj Tcl_NewIntObj
       alias new_list_obj Tcl_NewListObj
+      alias new_string_obj Tcl_NewStringObj
+      alias set_obj_result Tcl_SetObjResult
       alias wait_for_event Tcl_WaitForEvent
     end
 

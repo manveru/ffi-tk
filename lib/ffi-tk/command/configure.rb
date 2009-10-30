@@ -32,26 +32,19 @@ module Tk
     private
 
     def register_command(name, &block)
-      @commands ||= {}
-
-      if id = @commands[name]
-        Tk.unregister_proc(id)
-      end
-
       case name
       when :validatecommand
         arg = '%d %i %P %s %S %v %V %W'
-        wrap = lambda{|xx, action, index, current, previous, diff, type_set, trigger, name|
-          p xx: xx
-          p action: action
-          p index: index
-          p current: current
-          p previous: previous
-          p diff: diff
-          p type_set: type_set
-          p trigger: trigger
-          p name: name
-          block.call(obj)
+        wrap = lambda{|action, index, current, previous, diff, type_set, trigger, name|
+          # p action: action
+          # p index: index
+          # p current: current
+          # p previous: previous
+          # p diff: diff
+          # p type_set: type_set
+          # p trigger: trigger
+          # p name: name
+          block.call(action, index, current, previous, diff, type_set, trigger, name)
         }
         # %d Type of action: 1 for insert, 0 for delete, or -1 for focus, forced
         #    or textvariable validation.
@@ -67,6 +60,12 @@ module Tk
         # %W The name of the entry widget.
       else
         wrap = block
+      end
+
+      @commands ||= {}
+
+      if id = @commands[name]
+        Tk.unregister_proc(id)
       end
 
       id, command = Tk.register_proc(wrap, arg.to_s)

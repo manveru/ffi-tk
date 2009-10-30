@@ -19,6 +19,24 @@ module FFI
         Obj.new(Tcl.get_obj_result(self))
       end
 
+      def obj_result=(ruby_obj)
+        obj =
+          case ruby_obj
+          when true
+            Tcl.new_boolean_obj(1)
+          when false
+            Tcl.new_boolean_obj(0)
+          when String
+            Tcl.new_string_obj(ruby_obj, ruby_obj.bytesize)
+          when Fixnum
+            Tcl.new_int_obj(ruby_obj)
+          else
+            raise "Don't know how to set %p automatically" % [ruby_obj]
+          end
+
+        Tcl.set_obj_result(self, obj)
+      end
+
       def wait_for_event(seconds = 0.0)
         if seconds && seconds > 0.0
           seconds, microseconds = (seconds * 1000).divmod(1000)
