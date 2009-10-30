@@ -74,14 +74,77 @@ describe Tk::Entry do
     @entry.cget(:justify).should == :left
   end
 
-  it 'deletes character at index' do
+  it "deletes character at index" do
     @entry.delete(5)
-    @entry.get.should == 'Hello World!'
+    @entry.get.should == "Hello World!"
   end
 
-  it 'deletes character between indices' do
+  it "deletes character between indices" do
     @entry.delete(5, 11)
-    @entry.get.should == 'Hello!'
+    @entry.get.should == "Hello!"
+  end
+
+  it "Puts the insertion cursor just before the character given by index" do
+    @entry.icursor(5)
+    @entry.insert(:insert, ", World")
+    @entry.get.should == "Hello, World!"
+  end
+
+  it "Returns the numerical index corresponding to index" do
+    @entry.index(:insert).should == 12
+  end
+
+  it "Insert the string just before the character indicated by index" do
+    @entry.insert(0, 'OHAI ')
+    @entry.get.should == 'OHAI Hello, World!'
+  end
+
+  it 'uses the scan commands' do
+    lambda{
+      @entry.scan_mark(0)
+      @entry.scan_dragto(10)
+    }.should.not.raise
+  end
+
+  it 'Returns whether a selection is present' do
+    @entry.selection_present.should == false
+  end
+
+  it 'adjusts the selection' do
+    @entry.selection_adjust(0)
+    @entry.index('sel.first').should == 0
+    @entry.selection_adjust(5)
+    @entry.index('sel.last').should == 5
+  end
+
+  it 'Clears the selection' do
+    @entry.selection_present.should == true
+    @entry.selection_clear
+    @entry.selection_present.should == false
+  end
+
+  it 'Selects the characters at start ending with the one just before end' do
+    @entry.selection_range(1, 4)
+    @entry.index('sel.first').should == 1
+    @entry.index('sel.last').should == 4
+  end
+
+  it 'Adjusts selection with the from and to commands' do
+    @entry.selection_from(2)
+    @entry.selection_to(5)
+    @entry.index('sel.first').should == 2
+    @entry.index('sel.last').should == 5
+  end
+
+  it 'validates the entry without validation command' do
+    @entry.validate.should == true
+  end
+
+  it 'validates the entry with validation command' do
+    command = lambda{|*args| p validate: args; 0 }
+    @entry.configure validate: :all
+    @entry.configure validatecommand: command
+    @entry.validate.should == true
   end
 end
 
