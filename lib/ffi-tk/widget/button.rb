@@ -1,22 +1,17 @@
 module Tk
   class Button < Widget
-    include Cget
+    include Cget, Configure
 
     # TODO: implement custom procs
     def initialize(parent, options = {}, &block)
       @parent = parent
-      block ||= options[:command]
+      options[:command] = block if block
 
-      if block
-        @tk_proc_id, command = Tk.register_proc(block)
-        options[:command] = command
-      end
-
-      Tk.execute('button', assign_pathname, options)
+      Tk.execute('button', assign_pathname, option_hash_to_tcl(options))
     end
 
     def destroy
-      Tk.unregister_proc(@tk_proc_id) if @tk_proc_id
+      unregister_commands
       super
     end
 

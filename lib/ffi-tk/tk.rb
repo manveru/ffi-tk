@@ -53,7 +53,12 @@ module Tk
     array = objv.read_array_of_pointer(objc)
     array.map{|e|
       obj = FFI::Tcl::EvalResult.guess(interp, e)
-      obj.respond_to?(:dup) ? obj.dup : obj
+      case obj
+      when Fixnum, Float
+        obj
+      else
+        obj.respond_to?(:dup) ? obj.dup : obj
+      end
     }
   end
 

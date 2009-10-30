@@ -64,14 +64,21 @@ module Tk
 
       @commands ||= {}
 
-      if id = @commands[name]
-        Tk.unregister_proc(id)
-      end
-
+      unregister_command(name)
       id, command = Tk.register_proc(wrap, arg.to_s)
       @commands[name] = id
 
       return command
+    end
+
+    def unregister_command(name, id = @commands[name])
+      return unless id
+      @commands.delete(id)
+      Tk.unregister_proc(id)
+    end
+
+    def unregister_commands
+      @commands.each{|name, id| unregister_command(name, id) }
     end
   end
 end

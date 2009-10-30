@@ -66,6 +66,7 @@ module Tk
                   -yscrollcommand
                   -xscrollcommand
                   -validatecommand
+                  -command
                   -vcmd
                   ]
     VARIABLE = %w[-textvariable]
