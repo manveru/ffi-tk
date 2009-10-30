@@ -37,29 +37,27 @@ namespace eval RubyFFI {
 }
     TCL
 
-    tcl_delete = method(:tcl_delete_callback)
-    callback   = method(:tcl_callback)
-    event      = method(:tcl_event)
-
-    FFI::Tcl.create_obj_command(interp, 'RubyFFI::callback', callback, 0, tcl_delete)
-    FFI::Tcl.create_obj_command(interp, 'RubyFFI::event', event, 0, tcl_delete)
+    FFI::Tcl.create_obj_command(interp, 'RubyFFI::callback', TCL_CALLBACK, 0, TCL_DELETE)
+    FFI::Tcl.create_obj_command(interp, 'RubyFFI::event',    TCL_EVENT,    0, TCL_DELETE)
   end
 
   # without our callbacks, nothing goes anymore, abort mission
-  def tcl_delete_callback(client_data)
+  def tcl_delete(client_data)
     raise RuntimeError, "tcl function is going to be removed"
   end
+  TCL_DELETE = method(:tcl_delete)
 
   def tcl_callback(client_data, interp, objc, objv)
     handle_callback(*tcl_cmd_args(interp, objc, objv))
-    return OK
   end
+  TCL_CALLBACK = method(:tcl_callback)
 
   def tcl_event(client_data, interp, objc, objv)
     cmd, *args = tcl_cmd_args(interp, objc, objv)
     Event.from_obj(*args)
     return OK
   end
+  TCL_EVENT = method(:tcl_event)
 
   def tcl_cmd_args(interp, objc, objv)
     length = FFI::MemoryPointer.new(0)
