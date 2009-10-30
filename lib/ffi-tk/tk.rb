@@ -107,9 +107,9 @@ namespace eval RubyFFI {
     end
   end
 
-  def register_proc(proc)
+  def register_proc(proc, argument_string = '')
     id = uuid(:proc){|uuid| @callbacks[uuid] = proc }
-    return id, %(RubyFFI::callback #{id})
+    return id, %(RubyFFI::callback #{id} #{argument_string})
   end
 
   def unregister_proc(id)
@@ -172,7 +172,7 @@ namespace eval RubyFFI {
   def hash_to_tcl(hash)
     hash.map{|key, value|
       tcl = convert_arguments(value)
-      "-#{key} #{tcl}"
+      "#{key} #{tcl}"
     }.join(' ')
   end
 
