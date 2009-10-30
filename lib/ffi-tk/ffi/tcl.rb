@@ -32,6 +32,7 @@ module FFI
     attach_function :Tcl_NewStringObj, [:string, :int], Obj
     attach_function :Tcl_SetObjResult, [Interp, Obj], :void
     attach_function :Tcl_WaitForEvent, [TclTime], :int
+    attach_function :Tcl_GetBoolean, [Interp, :string, :pointer], :int
 
     callback :obj_cmd_proc, [:int, Interp, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
@@ -68,23 +69,29 @@ module FFI
 
     def init(interp)
       if Tcl_Init(interp) == 1
-        message = FFI::Tcl.Tcl_GetStringResult(interp)
+        message = get_string_result(interp)
         raise RuntimeError, message
       end
     end
 
-    def list_map_string(interp, list)
-      result_pointer = FFI::MemoryPointer.new(:pointer)
-      count_pointer  = FFI::MemoryPointer.new(:int)
-      length_pointer = FFI::MemoryPointer.new(:int)
+    def get_boolean(interp, ruby_object)
+      boolean_pointer = MemoryPointer.new(:int)
+      Tcl_GetBoolean(interp, ruby_object.to_s, boolean_pointer)
+      boolean_pointer.get_int(0) == 1
+    end
 
-      FFI::Tcl.list_obj_length(interp, list, count_pointer)
+    def list_map_string(interp, list)
+      result_pointer = MemoryPointer.new(:pointer)
+      count_pointer  = MemoryPointer.new(:int)
+      length_pointer = MemoryPointer.new(:int)
+
+      list_obj_length(interp, list, count_pointer)
       count = count_pointer.get_int(0)
 
       (0...count).map do |idx|
-        FFI::Tcl.list_obj_index(interp, list, idx, result_pointer)
+        list_obj_index(interp, list, idx, result_pointer)
         element_pointer = result_pointer.get_pointer(0)
-        value = FFI::Tcl.get_string_from_obj(element_pointer, length_pointer)
+        value = get_string_from_obj(element_pointer, length_pointer)
         block_given? ? yield(value) : value
       end
     end

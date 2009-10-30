@@ -26,13 +26,28 @@ module Tk
       Tk.execute_only('pack', 'forget', *slaves)
     end
 
-    # Returns a list whose elements are the current configuration state of the
+    # Returns a hash whose elements are the current configuration state of the
     # +slave+ given by in the same option-value form that might be specified
     # to pack configure.
-    # The first two elements of the list are `in: master` where master is the
-    # +slave+'s master.
+    # The hash contains`in: master` where master is the +slave+'s master.
     def self.info(slave)
-      Tk.execute('pack', 'info', slave)
+      info = Tk.execute('pack', 'info', slave).split
+      array = info.each_slice(2).map{|key, value|
+        case key = key[1..-1].to_sym
+        when :expand
+          [key, Tk.boolean(value)]
+        when :ipadx, :ipady, :padx, :pady
+          [key, value.to_i]
+        when :fill, :side
+          [key, value.to_sym]
+        when :after, :anchor, :before, :in
+          [key, value]
+        else
+          raise "Unknown info pair: %p => %p" % [key, value]
+        end
+      }
+
+      Hash[array]
     end
 
     # If +boolean+ is true then propagation is enabled for +master+, which must

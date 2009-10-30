@@ -133,6 +133,10 @@ module Tk
     @interp.guess_result
   end
 
+  def boolean(obj)
+    FFI::Tcl.get_boolean(@interp, obj)
+  end
+
   def convert_arguments(*args)
     args.map{|arg|
       case arg
