@@ -7,6 +7,13 @@ module Tk
   @callbacks = {}
   @mutex = Mutex.new
 
+  # A little something so people know what they have to do.
+  # Might simply call Tk.init in it instead (and issue a warning)?
+  @interp = BasicObject.new
+  def @interp.method_missing(*args)
+    Kernel.raise "Call Tk.init before using Tk"
+  end
+
   module_function
 
   def init
