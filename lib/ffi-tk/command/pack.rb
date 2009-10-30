@@ -31,8 +31,9 @@ module Tk
     # to pack configure.
     # The hash contains`in: master` where master is the +slave+'s master.
     def self.info(slave)
-      info = Tk.execute('pack', 'info', slave).split
-      array = info.each_slice(2).map{|key, value|
+      info = Tk.execute('pack', 'info', slave)
+
+      array = info.split.each_slice(2).map{|key, value|
         case key = key[1..-1].to_sym
         when :expand
           [key, Tk.boolean(value)]
