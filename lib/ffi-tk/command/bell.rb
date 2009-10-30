@@ -21,7 +21,7 @@ module Tk
       nice = options[:nice]
 
       args = []
-      args << '-displayof', displayof if displayof
+      args << '-displayof' << displayof if displayof
       args << '-nice' if nice
       Tk.execute_only('bell', *args)
     end
