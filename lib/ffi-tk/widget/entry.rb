@@ -128,5 +128,44 @@ module Tk
     def validate
       execute(:validate) == 1
     end
+
+    # Adjusts the view in the window so that the character given by index is
+    # displayed at the left edge of the window.
+    #
+    # If no index is given, it returns a list containing two elements.
+    # Each element is a real fraction between 0 and 1; together they describe
+    # the horizontal span that is visible in the window.
+    # For example, if the first element is 0.2 and the second element is 0.6,
+    # 20% of the entry's text is off-screen to the left, the middle 40% is
+    # visible in the window, and 40% of the text is off-screen to the right.
+    # These are the same values passed to scrollbars via the :xscrollcommand
+    # option.
+    def xview(index = None)
+      if index == None
+        execute(:xview)
+      else
+        execute_only(:xview, index)
+      end
+    end
+
+    # Adjusts the view in the window so that the character fraction of the way
+    # through the text appears at the left edge of the window.
+    # Fraction must be a fraction between 0 and 1.
+    def xview_moveto(fraction)
+      execute_only(:xview, :moveto, fraction)
+    end
+
+    # This command shifts the view in the window left or right according to
+    # number and what.
+    # Number must be an integer.
+    # What must be either units or pages or an abbreviation of one of these.
+    # If what is units, the view adjusts left or right by number average-width
+    # characters on the display; if it is pages then the view adjusts by number
+    # screenfuls.
+    # If number is negative then characters farther to the left become visible;
+    # if it is positive then characters farther to the right become visible.
+    def xview_scroll(number, what)
+      execute_only(:xview, :scroll, number, what)
+    end
   end
 end
