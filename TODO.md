@@ -16,13 +16,13 @@ An item is marked as done when:
 Commands that operate on any widget as argument have highest priority.
 
 [x] pack
-[ ] event
+[x] event
 [x] place
+[ ] clipboard
 [ ] grid
 [ ] font
 [ ] raise
 [ ] lower
-[ ] clipboard
 [ ] selection
 [ ] tk
 [ ] wm
