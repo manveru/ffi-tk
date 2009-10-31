@@ -78,6 +78,7 @@ module Tk
     end
 
     def unregister_commands
+      return unless @commands
       @commands.each{|name, id| unregister_command(name, id) }
     end
   end

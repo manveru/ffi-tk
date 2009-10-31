@@ -49,8 +49,8 @@ module Tk
 
   # TODO: support for break and continue return status (by catch/throw)
   def tcl_event(client_data, interp, objc, objv)
-    cmd, *args = tcl_cmd_args(interp, objc, objv)
-    Event.handle(*args)
+    cmd, id, sequence, *args = tcl_cmd_args(interp, objc, objv)
+    Event::Data.new(id.to_i, sequence.to_s, *args).call
     return OK
   end
   TCL_EVENT = method(:tcl_event)

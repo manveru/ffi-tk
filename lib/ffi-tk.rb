@@ -11,14 +11,15 @@ module Tk
   OK = 0
   ERROR = 1
 
-  autoload :Button,     'ffi-tk/widget/button'
-  autoload :Entry,      'ffi-tk/widget/entry'
-  autoload :Event,      'ffi-tk/event'
-  autoload :Root,       'ffi-tk/widget/root'
-  autoload :Text,       'ffi-tk/widget/text'
-  autoload :Widget,     'ffi-tk/widget'
+  autoload :Button,       'ffi-tk/widget/button'
+  autoload :Entry,        'ffi-tk/widget/entry'
+  autoload :Root,         'ffi-tk/widget/root'
+  autoload :Text,         'ffi-tk/widget/text'
+  autoload :Widget,       'ffi-tk/widget'
 
   # Don't autoload this, or find out why it segfaults
+  require 'ffi-tk/event/data'
+  require 'ffi-tk/event/handler'
   require 'ffi-tk/command'
 
   # require the real thing
