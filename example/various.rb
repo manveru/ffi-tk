@@ -4,13 +4,12 @@ require_relative '../lib/ffi-tk'
 
 Tk.init
 
-Tk::Event.register_in_tk('.', 'Control-c'){|event| p event }
-Tk::Event.register_in_tk('.', 'Control-q'){|event| exit }
+Tk.root.bind('Control-c'){|event| p event }
+Tk.root.bind('Control-q'){|event| exit }
 
 hello = Tk::Button.new('.', text: 'Push me'){
   Tk::MessageBox.new(message: 'Hello, World!')
-}
-hello.pack
+}.pack
 
 button = Tk::Button.new('.', text: 'Destroy me!').pack
 button.bind('Enter'){|event| button.destroy }
