@@ -144,6 +144,21 @@ module Tk
       def to_tcl
         TclString.new('{' << map(&:to_tcl).compact.join(' ') << '}')
       end
+
+      def tcl_options_to_hash(hints = {})
+        ::Hash[each_slice(2).map{|key, value|
+          key = key.sub(/^-/, '').to_sym
+
+          case hint = hints[key]
+          when :boolean
+            [key, Tk.boolean(value)]
+          when :symbol
+            [key, value.to_sym]
+          else
+            [key, value]
+          end
+        }]
+      end
     end
 
     module Hash
@@ -153,9 +168,10 @@ module Tk
       end
 
       def to_tcl_options
-        pairs = map{|key, val| "#{key.to_tcl_option} #{val.to_tcl_option}" }
+        pairs = map{|key, val| "#{key.to_tcl_option} #{val.to_tcl}" }
         TclString.new(pairs.join(' '))
       end
+
     end
 
     module String
