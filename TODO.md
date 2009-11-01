@@ -20,8 +20,8 @@ Commands that operate on any widget as argument have highest priority.
 [x] place
 [x] clipboard
 [x] selection
+[x] font
 [ ] grid
-[ ] font
 [ ] raise
 [ ] lower
 [ ] tk
