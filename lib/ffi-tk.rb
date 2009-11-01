@@ -7,9 +7,10 @@ require 'ffi-tk/ffi/tk'
 
 module Tk
   Error = Class.new(RuntimeError)
-  None = Object.new
   OK = 0
   ERROR = 1
+  None = Object.new
+  def None.to_tcl; nil; end
 
   autoload :Button,       'ffi-tk/widget/button'
   autoload :Entry,        'ffi-tk/widget/entry'

@@ -5,7 +5,7 @@ module Tk
 
     def initialize(parent, options = {})
       @parent = parent
-      Tk.execute('text', assign_pathname, options)
+      Tk.execute('text', assign_pathname, options.to_tcl_options)
     end
 
     # Returns a list of four elements describing the screen area of the
@@ -93,7 +93,7 @@ module Tk
     # :xpixels, :ypixels` is perfectly valid and will return a list of two
     # elements.
     def count(*options, index1, index2)
-      args = options.map{|option| tcl_option(option) }
+      args = options.map{|option| option.to_tcl_option }
       execute('count', *args, index1, index2)
     end
 
@@ -182,11 +182,11 @@ module Tk
       indices = [given_index]
 
       while arg = arguments.shift
-        case arg.to_s
-        when /^-?command$/
+        case arg.to_tcl
+        when '-command'
           command = arguments.shift
           invocation << ['-command', command]
-        when /^-?(all|image|mark|tag|text|window)$/
+        when /^-(all|image|mark|tag|text|window)$/
           invocation << tcl_option(arg)
         else
           indices.unshift(arg)
@@ -291,9 +291,10 @@ module Tk
       if arguments.empty?
         execute('image', 'configure', index)
       elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
-        execute_only('image', 'configure', index, arguments.first.to_hash)
+        arguments = arguments.first.to_hash.to_tcl_options
+        execute_only('image', 'configure', index, arguments)
       elsif arguments.size == 1
-        argument = tcl_option(arguments.first)
+        argument = arguments.first.to_tcl_option
         value = execute('image', 'configure', index, argument)
         option_to_ruby(argument, value)
       else
@@ -310,7 +311,7 @@ module Tk
     # See EMBEDDED IMAGES for information on the options that are supported, and
     # a description of the identifier returned.
     def image_create(index, options = {})
-      execute('image', 'create', index, options)
+      execute('image', 'create', index, options.to_tcl_options)
     end
 
     def image_names
@@ -410,7 +411,7 @@ module Tk
     end
 
     def peer_create(options = {})
-      Peer.new(self)
+      Peer.new(self, options)
     end
 
     def peer_names

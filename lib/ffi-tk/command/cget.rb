@@ -1,7 +1,7 @@
 module Tk
   module Cget
     def cget(option)
-      option = tcl_option(option)
+      option = option.to_tcl_option
       option_to_ruby(option, execute('cget', option))
     end
 
@@ -72,7 +72,7 @@ module Tk
     VARIABLE = %w[-textvariable]
 
     def option_to_ruby(name, value)
-      case tcl_option(name)
+      case name.to_tcl_option
       when *INTEGER
         value.to_i
       when *SYMBOL
@@ -99,7 +99,7 @@ module Tk
       result = {}
 
       hash.each do |key, value|
-        case option = tcl_option(key)
+        case option = key.to_tcl_option
         when *COMMAND
           command = register_command(key, &value)
           result[option] = command

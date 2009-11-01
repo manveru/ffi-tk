@@ -133,53 +133,95 @@ module Tk
     @interp.guess_result
   end
 
+  def exit
+    execute('exit')
+  end
+
+  # A lot of conversion helpers...
+
+  module CoreExtensions
+    module Array
+      def to_tcl
+        TclString.new('{' << map(&:to_tcl).compact.join(' ') << '}')
+      end
+    end
+
+    module Hash
+      def to_tcl
+        pairs = map{|key, val| "#{key.to_tcl} #{val.to_tcl}" }
+        TclString.new(pairs.join(' '))
+      end
+
+      def to_tcl_options
+        pairs = map{|key, val| "#{key.to_tcl_option} #{val.to_tcl_option}" }
+        TclString.new(pairs.join(' '))
+      end
+    end
+
+    module String
+      def to_tcl
+        TclString.new(self =~ /\A\w+\Z/ ? dup : dump)
+      end
+
+      def to_tcl_option
+        TclString.new(sub(/\A(?=[^-])/, '-'))
+      end
+    end
+
+    module Symbol
+      def to_tcl
+        TclString.new(to_s.dump)
+      end
+
+      def to_tcl_option
+        TclString.new(to_s.sub(/\A(?=[^-])/, '-'))
+      end
+    end
+
+    module Numeric
+      def to_tcl
+        TclString.new(to_s)
+      end
+    end
+
+    module TrueClass
+      def to_tcl
+        TclString.new('1')
+      end
+    end
+
+    module FalseClass
+      def to_tcl
+        TclString.new('0')
+      end
+    end
+
+    constants.each do |const|
+      ext = const_get(const)
+      into = Module.const_get(const)
+
+      collisions = ext.instance_methods & into.instance_methods
+
+      if collisions.empty?
+        into.__send__(:include, ext)
+      else
+        warn "Won't include %p with %p, %p exists" % [into, ext, collisions] if $DEBBUG
+      end
+    end
+  end
+
+  # Already converted statement, don't process again
+  class TclString < String
+    def to_tcl
+      self
+    end
+  end
+
   def boolean(obj)
     FFI::Tcl.get_boolean(@interp, obj)
   end
 
   def convert_arguments(*args)
-    args.map{|arg|
-      case arg
-      when None
-        ''
-      when Hash
-        hash_to_tcl(arg)
-      when String, Symbol
-        string_to_tcl(arg)
-      when Array
-        array_to_tcl(arg)
-      when true
-        1
-      when false
-        0
-      when Numeric
-        arg
-      else
-        if arg.respond_to?(:to_tcl)
-          arg.to_tcl
-        else
-          raise ArgumentError, "Unknown argument: %p" % [arg]
-        end
-      end
-    }.join(' ')
-  end
-
-  def hash_to_tcl(hash)
-    hash.map{|key, value|
-      tcl = convert_arguments(value)
-      "#{key} #{tcl}"
-    }.join(' ')
-  end
-
-  def string_to_tcl(string)
-    string.to_s.dump
-  end
-
-  def array_to_tcl(array)
-    '{' << array.map{|element| convert_arguments(element) }.join(' ') << '}'
-  end
-
-  def exit
-    execute('exit')
+    args.map(&:to_tcl).compact.join(' ')
   end
 end
