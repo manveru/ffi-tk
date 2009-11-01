@@ -19,7 +19,7 @@ Commands that operate on any widget as argument have highest priority.
 [x] event
 [x] place
 [x] clipboard
-[ ] selection
+[x] selection
 [ ] grid
 [ ] font
 [ ] raise

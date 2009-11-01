@@ -4,6 +4,7 @@ module Tk
   require 'ffi-tk/command/bindtags'
   require 'ffi-tk/command/bindtags'
   require 'ffi-tk/command/cget'
+  require 'ffi-tk/command/clipboard'
   require 'ffi-tk/command/configure'
   require 'ffi-tk/command/destroy'
   require 'ffi-tk/command/event'
@@ -11,5 +12,5 @@ module Tk
   require 'ffi-tk/command/image'
   require 'ffi-tk/command/pack'
   require 'ffi-tk/command/place'
-  require 'ffi-tk/command/clipboard'
+  require 'ffi-tk/command/selection'
 end
