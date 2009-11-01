@@ -21,9 +21,9 @@ Commands that operate on any widget as argument have highest priority.
 [x] clipboard
 [x] selection
 [x] font
+[x] raise
+[x] lower
 [ ] grid
-[ ] raise
-[ ] lower
 [ ] tk
 [ ] wm
 [ ] winfo
