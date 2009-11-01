@@ -11,4 +11,5 @@ module Tk
   require 'ffi-tk/command/image'
   require 'ffi-tk/command/pack'
   require 'ffi-tk/command/place'
+  require 'ffi-tk/command/clipboard'
 end

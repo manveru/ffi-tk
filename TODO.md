@@ -18,12 +18,12 @@ Commands that operate on any widget as argument have highest priority.
 [x] pack
 [x] event
 [x] place
-[ ] clipboard
+[x] clipboard
+[ ] selection
 [ ] grid
 [ ] font
 [ ] raise
 [ ] lower
-[ ] selection
 [ ] tk
 [ ] wm
 [ ] winfo
