@@ -73,7 +73,8 @@ module FFI
 
       def self.to_string(interp, obj)
         length_pointer = MemoryPointer.new(:int)
-        Tcl.get_string_from_obj(obj, length_pointer)
+        string = Tcl.get_string_from_obj(obj, length_pointer)
+        string.force_encoding(Encoding.default_external)
       end
 
       def to_a(&block)
