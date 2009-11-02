@@ -351,7 +351,7 @@ module Tk
     # markName is set to the given value.
     def mark_gravity(name, direction = None)
       if direction == None
-        execute('mark', 'gravity', name).to_sym
+        execute('mark', 'gravity', name).to_sym?
       else
         execute_only('mark', 'gravity', name, direction)
       end
@@ -377,7 +377,7 @@ module Tk
     # after end with respect to the pathName mark next operation.
     # nil is returned if there are no marks after index.
     def mark_next(index)
-      execute('mark', 'next', index).to_sym
+      execute('mark', 'next', index).to_sym?
     end
 
     # Returns the name of the mark at or before index.
@@ -392,7 +392,7 @@ module Tk
     # mark information returned by the pathName dump operation.
     # nil is returned if there are no marks before index.
     def mark_previous(index)
-      execute('mark', 'previous', index).to_sym
+      execute('mark', 'previous', index).to_sym?
     end
 
     # Sets the mark named markName to a position just before the character at
