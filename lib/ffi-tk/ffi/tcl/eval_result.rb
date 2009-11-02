@@ -99,8 +99,12 @@ module FFI
       end
 
       def to_sym
-        string = self.class.to_string(interp, obj)
-        string.empty? ? nil : string.to_sym
+        self.class.to_string(interp, obj).to_sym
+      end
+
+      def to_sym?
+        value = self.class.to_string(interp, obj).to_sym
+        value.empty? ? nil : value.to_sym
       end
 
       def to_i
