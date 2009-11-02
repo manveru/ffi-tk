@@ -15,6 +15,7 @@ module Tk
 
   autoload :Button,       'ffi-tk/widget/button'
   autoload :Entry,        'ffi-tk/widget/entry'
+  autoload :Frame,        'ffi-tk/widget/frame'
   autoload :Root,         'ffi-tk/widget/root'
   autoload :Text,         'ffi-tk/widget/text'
   autoload :Widget,       'ffi-tk/widget'
