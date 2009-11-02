@@ -14,7 +14,9 @@ module FFI
     attach_function :Tcl_DeleteInterp, [Interp], :void
     attach_function :Tcl_DoOneEvent, [flags = :int], :int
     attach_function :Tcl_EvalEx, [Interp, script = :string, length = :int, flags = :int], :int
+    attach_function :Tcl_GetBoolean, [Interp, :string, :pointer], :int
     attach_function :Tcl_GetBooleanFromObj, [Interp, Obj, boolean = :pointer], :int
+    attach_function :Tcl_GetDoubleFromObj, [Interp, Obj, :pointer], :int
     attach_function :Tcl_GetIntFromObj, [Interp, Obj, int = :pointer], :int
     attach_function :Tcl_GetObjResult, [Interp], Obj
     attach_function :Tcl_GetObjType, [:string], ObjType
@@ -32,7 +34,6 @@ module FFI
     attach_function :Tcl_NewStringObj, [:string, :int], Obj
     attach_function :Tcl_SetObjResult, [Interp, Obj], :void
     attach_function :Tcl_WaitForEvent, [TclTime], :int
-    attach_function :Tcl_GetBoolean, [Interp, :string, :pointer], :int
 
     callback :obj_cmd_proc, [:int, Interp, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
@@ -40,6 +41,7 @@ module FFI
       Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
     class << self
+      alias get_double_from_obj Tcl_GetDoubleFromObj
       alias append_all_obj_types Tcl_AppendAllObjTypes
       alias create_interp Tcl_CreateInterp
       alias create_obj_command Tcl_CreateObjCommand

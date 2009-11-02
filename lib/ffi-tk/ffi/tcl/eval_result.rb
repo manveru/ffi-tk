@@ -27,6 +27,8 @@ module FFI
           to_string(interp, obj)
         when :int
           to_int(interp, obj)
+        when :double
+          to_double(interp, obj)
         else
           if fallback
             __send__(fallback, interp, obj)
@@ -34,6 +36,16 @@ module FFI
             raise "Unknown type: %p" % [type] if type
             new(interp, obj)
           end
+        end
+      end
+
+      def self.to_double(interp, obj)
+        double_pointer = MemoryPointer.new(:double)
+
+        if Tcl.get_double_from_obj(interp, obj, double_pointer) == 0
+          double_pointer.get_double(0)
+        else
+          raise "Couldn't get double from %p" % [obj]
         end
       end
 

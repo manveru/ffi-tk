@@ -154,6 +154,8 @@ module Tk
             [key, Tk.boolean(value)]
           when :symbol
             [key, value.to_sym]
+          when :float
+            [key, Float(value)]
           else
             [key, value]
           end
@@ -171,7 +173,6 @@ module Tk
         pairs = map{|key, val| "#{key.to_tcl_option} #{val.to_tcl}" }
         TclString.new(pairs.join(' '))
       end
-
     end
 
     module String
@@ -197,6 +198,27 @@ module Tk
     module Numeric
       def to_tcl
         TclString.new(to_s)
+      end
+    end
+
+    module Float
+      def tcl_to_ruby(option, hints)
+        self
+      end
+    end
+
+    module Fixnum
+      def tcl_to_ruby(option, hints)
+        name = option.sub(/^-/, '').to_sym
+
+        if type = hints[name]
+          case type
+          when :boolean
+            Tk.boolean(self)
+          else
+            self
+          end
+        end
       end
     end
 

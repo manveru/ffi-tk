@@ -16,4 +16,5 @@ module Tk
   require 'ffi-tk/command/place'
   require 'ffi-tk/command/raise'
   require 'ffi-tk/command/selection'
+  require 'ffi-tk/command/wm'
 end
