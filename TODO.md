@@ -23,10 +23,10 @@ Commands that operate on any widget as argument have highest priority.
 [x] font
 [x] raise
 [x] lower
+[x] winfo
 [ ] grid
 [ ] tk
 [ ] wm
-[ ] winfo
 [ ] option
 [x] options
 [x] bell

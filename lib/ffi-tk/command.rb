@@ -10,11 +10,11 @@ module Tk
   require 'ffi-tk/command/event'
   require 'ffi-tk/command/focus'
   require 'ffi-tk/command/font'
-  require 'ffi-tk/command/image'
   require 'ffi-tk/command/lower'
   require 'ffi-tk/command/pack'
   require 'ffi-tk/command/place'
   require 'ffi-tk/command/raise'
   require 'ffi-tk/command/selection'
+  require 'ffi-tk/command/winfo'
   require 'ffi-tk/command/wm'
 end

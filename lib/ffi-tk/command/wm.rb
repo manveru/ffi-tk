@@ -553,14 +553,7 @@ module Tk
     # revert to the size requested internally by its widgets.
     def geometry(window, new_geometry = None)
       if new_geometry == None
-        value = Tk.execute(:wm, :geometry, window).to_s
-        # => "1280x597+0+21"
-
-        if value =~ /(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)/
-          $~.captures.map{|capture| Integer(capture) }
-        else
-          value
-        end
+        TkGeometry.new(Tk.execute(:wm, :geometry, window))
       else
         Tk.execute_only(:wm, :geometry, window, new_geometry)
       end

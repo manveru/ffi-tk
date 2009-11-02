@@ -1,6 +1,6 @@
 module Tk
   class Widget
-    include Pack, Destroy, Bind, Focus, WM
+    include Pack, Destroy, Bind, Focus, WM, Winfo
 
     attr_reader :parent, :tk_pathname
 
