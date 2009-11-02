@@ -234,6 +234,12 @@ module Tk
       end
     end
 
+    module NilClass
+      def to_tcl
+        TclString.new('""')
+      end
+    end
+
     constants.each do |const|
       ext = const_get(const)
       into = Module.const_get(const)

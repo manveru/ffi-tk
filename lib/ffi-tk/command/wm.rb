@@ -7,8 +7,13 @@ module Tk
   # must be the path name of a top-level window.
   module WM
     # @see WM::aspect
-    def wm_aspect(min_numer = None, min_denom = None, max_numer = None, max_denom = None)
-      WM.aspect(self, min_numer, min_denom, max_numer, max_denom)
+    def wm_aspect
+      WM.aspect(self)
+    end
+
+    # @see WM::aspect
+    def wm_aspect=(aspects)
+      WM.aspect(self, *[aspects].flatten)
     end
 
     # @see WM::attributes
@@ -17,17 +22,30 @@ module Tk
     end
 
     # @see WM::client
-    def wm_client(name = None)
+    def wm_client
+      WM.client(self)
+    end
+
+    def wm_client=(name)
       WM.client(self, name)
     end
 
     # @see WM::colormapwindows
-    def wm_colormapwindows(*windows)
+    def wm_colormapwindows
+      WM.colormapwindows(self)
+    end
+
+    def wm_colormapwindows=(windows)
       WM.colormapwindows(self, *windows)
     end
 
     # @see WM::command
-    def wm_command(value = None)
+    def wm_command
+      WM.command(self)
+    end
+
+    # @see WM::command
+    def wm_command=(value)
       WM.command(self, value)
     end
 
@@ -37,7 +55,12 @@ module Tk
     end
 
     # @see WM::focusmodel
-    def wm_focusmodel(model = None)
+    def wm_focusmodel
+      WM.focusmodel(self)
+    end
+
+    # @see WM::focusmodel
+    def wm_focusmodel=(model)
       WM.focusmodel(self, model)
     end
 
@@ -52,27 +75,51 @@ module Tk
     end
 
     # @see WM::geometry
-    def wm_geometry(new_geometry = None)
+    def wm_geometry
+      WM.geometry(self)
+    end
+
+    # @see WM::geometry
+    def wm_geometry=(new_geometry)
       WM.geometry(self, new_geometry)
     end
 
     # @see WM::grid
-    def wm_grid(base_width, base_height, width_inc, height_inc)
-      WM.grid(self, base_width, base_height, width_inc, height_inc)
+    def wm_grid
+      WM.grid(self)
+    end
+
+    def wm_grid=(grid_info)
+      WM.grid(self, *[grid_info].flatten)
     end
 
     # @see WM::group
-    def wm_group(pathname)
+    def wm_group
+      WM.group(self)
+    end
+
+    # @see WM::group
+    def wm_group=(pathname)
       WM.group(self, pathname)
     end
 
     # @see WM::iconbitmap
-    def wm_iconbitmap(bitmap = None)
+    def wm_iconbitmap
+      WM.iconbitmap(self)
+    end
+
+    # @see WM::iconbitmap
+    def wm_iconbitmap=(bitmap)
       WM.iconbitmap(self, bitmap)
     end
 
     # @see WM::iconbitmap_default
-    def wm_iconbitmap_default(image = None)
+    def wm_iconbitmap_default
+      WM.iconbitmap_default(self)
+    end
+
+    # @see WM::iconbitmap_default
+    def wm_iconbitmap_default=(image)
       WM.iconbitmap_default(self, image)
     end
 
@@ -82,7 +129,12 @@ module Tk
     end
 
     # @see WM::iconmask
-    def wm_iconmask(bitmap = None)
+    def wm_iconmask
+      WM.iconmask(self)
+    end
+
+    # @see WM::iconmask
+    def wm_iconmask=(bitmap)
       WM.iconmask(self, bitmap)
     end
 
@@ -91,9 +143,19 @@ module Tk
       WM.iconname(self, new_name)
     end
 
+    # @see WM::iconname
+    def wm_iconname=(new_name)
+      WM.iconname(self, new_name)
+    end
+
     # @see WM::iconphoto
     def wm_iconphoto(image, *images)
       WM.iconphoto(self, image, *images)
+    end
+
+    # @see WM::iconphoto
+    def wm_iconphoto=(*images)
+      WM.iconphoto(self, *images)
     end
 
     # @see WM::iconphoto_default
@@ -101,19 +163,34 @@ module Tk
       WM.iconphoto_default(self, image, *images)
     end
 
+    # @see WM::iconphoto_default
+    def wm_iconphoto_default=(*images)
+      WM.iconphoto_default(self, *images)
+    end
+
     # @see WM::iconposition
     def wm_iconposition(y = None, x = None)
       WM.iconposition(self, y, x)
     end
 
+    # @see WM::iconposition
+    def wm_iconposition=(yx)
+      WM.iconposition(self, *yx)
+    end
+
     # @see WM::iconwindow
-    def wm_iconwindow(pathname = None)
+    def wm_iconwindow
+      WM.iconwindow(self)
+    end
+
+    # @see WM::iconwindow
+    def wm_iconwindow=(pathname)
       WM.iconwindow(self, pathname)
     end
 
     # @see WM::manage
     def wm_manage
-      Wm.manage(self)
+      WM.manage(self)
     end
 
     # @see WM::maxsize
@@ -132,7 +209,12 @@ module Tk
     end
 
     # @see WM::positionfrom
-    def wm_positionfrom(who = None)
+    def wm_positionfrom
+      WM.positionfrom(self)
+    end
+
+    # @see WM::positionfrom
+    def wm_positionfrom=(who)
       WM.positionfrom(self, who)
     end
 
@@ -147,7 +229,12 @@ module Tk
     end
 
     # @see WM::sizefrom
-    def wm_sizefrom(who = None)
+    def wm_sizefrom
+      WM.sizefrom(self)
+    end
+
+    # @see WM::sizefrom
+    def wm_sizefrom=(who)
       WM.sizefrom(self, who)
     end
 
@@ -157,17 +244,31 @@ module Tk
     end
 
     # @see WM::state
-    def wm_state(new_state = None)
+    def wm_state
+      WM.state(self)
+    end
+
+    # @see WM::state
+    def wm_state=(new_state)
       WM.state(self, new_state)
     end
 
     # @see WM::title
-    def wm_title(string = None)
+    def wm_title
+      WM.title(self)
+    end
+
+    def wm_title=(string)
       WM.title(self, string)
     end
 
     # @see WM::transient
-    def wm_transient(master = None)
+    def wm_transient
+      WM.transient(self)
+    end
+
+    # @see WM::transient
+    def wm_transient=(master)
       WM.transient(self, master)
     end
 
@@ -185,10 +286,10 @@ module Tk
     # between minNumer/minDenom and maxNumer/maxDenom.
     # If minNumer etc. are all specified as empty strings, then any existing
     # aspect ratio restrictions are removed.
-    # If minNumer etc. are specified, then the command returns an empty string.
+    # If minNumer etc. are specified, then the command returns nil.
     # Otherwise, it returns a Tcl list containing four elements, which are the
     # current values of minNumer, minDenom, maxNumer, and maxDenom (if no aspect
-    # restrictions are in effect, then an empty string is returned).
+    # restrictions are in effect, then nil is returned).
     def aspect(window, min_numer = None, min_denom = None, max_numer = None, max_denom = None)
       if min_numer == None
         result = Tk.execute(:wm, :aspect, window)
@@ -309,13 +410,17 @@ module Tk
     # If name is specified, this command stores name (which should be the name
     # of the host on which the application is executing) in window's
     # WM_CLIENT_MACHINE property for use by the window manager or session
-    # manager. The command returns an empty string in this case.
+    # manager. The command returns nil in this case.
     # If name is not specified, the command returns the last name set in a wm
     # client command for window.
-    # If name is specified as an empty string, the command deletes the
+    # If name is specified as nil, the command deletes the
     # WM_CLIENT_MACHINE property from window.
     def client(window, name = None)
-      Tk.execute(:wm, :client, window, name)
+      if name == None
+        Tk.execute(:wm, :client, window).to_s?
+      else
+        Tk.execute_only(:wm, :client, window, name)
+      end
     end
 
     # This command is used to manipulate the WM_COLORMAP_WINDOWS property, which
@@ -326,7 +431,7 @@ module Tk
     # are the names of the windows in the WM_COLORMAP_WINDOWS property.
     # If windowList is specified, it consists of a list of window path names;
     # the command overwrites the WM_COLORMAP_WINDOWS property with the given
-    # windows and returns an empty string.
+    # windows and returns nil.
     # The WM_COLORMAP_WINDOWS property should normally contain a list of the
     # internal windows within window whose colormaps differ from their parents.
     #
@@ -343,7 +448,11 @@ module Tk
     # See the ICCCM documentation for more information on the
     # WM_COLORMAP_WINDOWS property.
     def colormapwindows(window, *windows)
-      Tk.execute(:wm, :colormapwindows, window, *windows)
+      if windows.empty?
+        Tk.execute(:wm, :colormapwindows, window).to_a
+      else
+        Tk.execute_only(:wm, :colormapwindows, window, *windows)
+      end
     end
 
     # If value is specified, this command stores value in window's WM_COMMAND
@@ -353,11 +462,11 @@ module Tk
     # words of the command used to invoke the application.
     # If value is not specified then the command returns the last value set in a
     # wm command command for window.
-    # If value is specified as an empty string, the command deletes the
+    # If value is specified as nil, the command deletes the
     # WM_COMMAND property from window.
     def command(window, value = None)
       if value == None
-        Tk.execute(:wm, :command, window)
+        Tk.execute(:wm, :command, window).to_a
       else
         Tk.execute_only(:wm, :command, window, value)
       end
@@ -369,17 +478,17 @@ module Tk
     # window, but it will ensure that when the window is first mapped it will be
     # displayed in de-iconified form.
     # On Windows, a deiconified window will also be raised and be given the
-    # focus (made the active win? dow).
+    # focus (made the active window).
     def deiconify(window)
       Tk.execute_only(:wm, :deiconify, window)
     end
 
     # If active or passive is supplied as an optional argument to the command,
     # then it specifies the focus model for window.
-    # In this case the command returns an empty string.
+    # In this case the command returns nil.
     # If no additional argument is supplied, then the command returns the
     # current focus model for window.
-
+    #
     # An active focus model means that window will claim the input focus for
     # itself or its descendants, even at times when the focus is currently in
     # some other application.
@@ -390,7 +499,11 @@ module Tk
     # The focus model defaults to passive, and Tk's focus command assumes a
     # passive model of focusing.
     def focusmodel(window, model = None)
-      Tk.execute(:wm, :focusmodel, window, model)
+      if model == None
+        Tk.execute(:wm, :focusmodel, window).to_sym
+      else
+        Tk.execute_only(:wm, :focusmodel, window, model)
+      end
     end
 
     # The window will be unmapped from the screen and will no longer be managed
@@ -405,12 +518,12 @@ module Tk
 
     # If window has been reparented by the window manager into a decorative
     # frame, the command returns the platform specific window identifier for the
-    # outermost frame that contains window (the win? dow whose parent is the
+    # outermost frame that contains window (the window whose parent is the
     # root or virtual root).
     # If window has not been reparented by the window manager then the command
     # returns the platform specific window identifier for window.
     def frame(window)
-      Tk.execute(:wm, :frame, window)
+      Tk.execute(:wm, :frame, window).to_s
     end
 
     # If newGeometry is specified, then the geometry of window is changed and an
@@ -424,7 +537,7 @@ module Tk
     # If window is gridded (see GRIDDED GEOMETRY MANAGEMENT below) then the
     # dimensions are specified in grid units; otherwise they are specified in
     # pixel units.
-
+    #
     # X and y specify the desired location of window on the screen, in pixels.
     # If x is preceded by +, it specifies the number of pixels between the left
     # edge of the screen and the left edge of win? dow's border; if preceded by
@@ -434,15 +547,22 @@ module Tk
     # top of the screen and the top of window's border; if y is preceded by -
     # then it specifies the number of pixels between the bottom of window's
     # border and the bot? tom of the screen.
-
-    # If newGeometry is specified as an empty string then any existing
+    #
+    # If newGeometry is specified as nil then any existing
     # user-specified geometry for window is cancelled, and the window will
     # revert to the size requested internally by its widgets.
     def geometry(window, new_geometry = None)
       if new_geometry == None
-        Tk.execute(:wm, :geometry)
+        value = Tk.execute(:wm, :geometry, window).to_s
+        # => "1280x597+0+21"
+
+        if value =~ /(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)/
+          $~.captures.map{|capture| Integer(capture) }
+        else
+          value
+        end
       else
-        Tk.execute_only(:wm, :geometry, new_geometry)
+        Tk.execute_only(:wm, :geometry, window, new_geometry)
       end
     end
 
@@ -457,53 +577,65 @@ module Tk
     # integers. Tk will pass this information to the window manager; during
     # manual resizing, the window manager will restrict the window's size to one
     # of these acceptable sizes.
-
+    #
     # Furthermore, during manual resizing the window manager will display the
     # window's current size in terms of grid units rather than pixels.
     # If baseWidth etc.
     # are all specified as empty strings, then window will no longer be managed
     # as a gridded window.
     # If baseWidth etc.
-    # are specified then the return value is an empty string.
-
+    # are specified then the return value is nil.
+    #
     # Otherwise the return value is a Tcl list containing four elements
     # corresponding to the current baseWidth, baseHeight, widthInc, and
-    # heightInc; if window is not currently gridded, then an empty string is
+    # heightInc; if window is not currently gridded, then nil is
     # returned.
-
+    #
     # Note: this command should not be needed very often, since the Tk_SetGrid
     # library procedure and the setGrid option provide easier access to the same
     # functionality.
-    def grid(window, base_width, base_height, width_inc, height_inc)
-      Tk.execute(:wm, :grid, window, base_width, base_height, width_inc, height_inc)
+    def grid(window, base_width = None, base_height = None, width_inc = None, height_inc = None)
+      if base_width == None
+        Tk.execute(:wm, :grid, window).to_a?(&:to_i)
+      else
+        Tk.execute_only(:wm, :grid, window, base_width, base_height, width_inc, height_inc)
+      end
     end
 
     # If pathName is specified, it gives the path name for the leader of a group
     # of related windows.
     # The window manager may use this information, for example, to unmap all of
     # the windows in a group when the group's leader is iconified.
-    # PathName may be specified as an empty string to remove window from any
+    # PathName may be specified as nil to remove window from any
     # group association.
-    # If pathName is specified then the command returns an empty string;
-    # otherwise it returns the path name of window's current group leader, or an
-    # empty string if window is not part of any group.
-    def group(window, pathname)
-      Tk.execute(:wm, :group, window, pathname)
+    # If pathName is specified then the command returns nil;
+    # otherwise it returns the path name of window's current group leader, or nil
+    # if window is not part of any group.
+    def group(window, pathname = None)
+      if None == pathname
+        Tk.execute(:wm, :group, window).to_s?
+      else
+        Tk.execute_only(:wm, :group, window, pathname)
+      end
     end
 
     #wm iconbitmap window ?bitmap?
     # If bitmap is specified, then it names a bitmap in the standard forms
     # accepted by Tk (see the Tk_GetBitmap manual entry for details).
     # This bitmap is passed to the window manager to be dis? played in window's
-    # icon, and the command returns an empty string.
-    # If an empty string is specified for bitmap, then any current icon bitmap
+    # icon, and the command returns nil.
+    # If nil is specified for bitmap, then any current icon bitmap
     # is cancelled for window.
-    # If bitmap is specified then the command returns an empty string.
+    # If bitmap is specified then the command returns nil.
     # Otherwise it returns the name of the current icon bitmap associated with
-    # window, or an empty string if window has no icon bitmap.
+    # window, or nil if window has no icon bitmap.
     # On the Windows operating system, an additional flag is supported:
     def iconbitmap(window, bitmap = None)
-      Tk.execute(:wm, :iconbitmap, window, bitmap)
+      if None == bitmap
+        Tk.execute(:wm, :iconbitmap, window).to_s?
+      else
+        Tk.execute_only(:wm, :iconbitmap, window, bitmap)
+      end
     end
 
     # If the -default flag is given, the icon is applied to all toplevel windows
@@ -523,7 +655,7 @@ module Tk
     # arrange for it to appear in the iconified state when it is eventually
     # mapped.
     def iconify(window)
-      Tk.execute(:wm, :iconify, window)
+      Tk.execute_only(:wm, :iconify, window)
     end
 
     # If bitmap is specified, then it names a bitmap in the standard forms
@@ -532,25 +664,29 @@ module Tk
     # conjunction with the iconbitmap option: where the mask has zeroes no icon
     # will be displayed; where it has ones, the bits from the icon bitmap will
     # be displayed.
-    # If an empty string is specified for bitmap then any current icon mask is
+    # If nil is specified for bitmap then any current icon mask is
     # cancelled for window (this is equivalent to specifying a bitmap of all
-    # ones). If bitmap is specified then the command returns an empty string.
+    # ones). If bitmap is specified then the command returns nil.
     # Otherwise it returns the name of the current icon mask associated with
-    # window, or an empty string if no mask is in effect.
+    # window, or nil if no mask is in effect.
     def iconmask(window, bitmap = None)
-      Tk.execute(:wm, :iconmask, window, bitmap)
+      if None == bitmap
+        Tk.execute(:wm, :iconmask, window).to_s?
+      else
+        Tk.execute_only(:wm, :iconmask, window, bitmap)
+      end
     end
 
     # If newName is specified, then it is passed to the window manager; the
     # window manager should display newName inside the icon associated with
-    # window. In this case an empty string is returned as result.
+    # window. In this case nil is returned as result.
     # If newName is not specified then the command returns the current icon name
-    # for window, or an empty string if no icon name has been specified (in this
+    # for window, or nil if no icon name has been specified (in this
     # case the window manager will normally display the window's title, as
     # specified with the wm title command).
     def iconname(window, new_name = None)
-      if new_name == None
-        Tk.execute(:wm, :iconname, window)
+      if None == new_name
+        Tk.execute(:wm, :iconname, window).to_s?
       else
         Tk.execute_only(:wm, :iconname, window, new_name)
       end

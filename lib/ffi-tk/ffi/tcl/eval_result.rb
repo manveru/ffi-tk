@@ -93,6 +93,11 @@ module FFI
         self.class.to_list(interp, obj, &block)
       end
 
+      def to_a?(&block)
+        value = self.class.to_list(interp, obj, &block)
+        value.empty? ? nil : value
+      end
+
       def to_sym
         string = self.class.to_string(interp, obj)
         string.empty? ? nil : string.to_sym
@@ -104,6 +109,11 @@ module FFI
 
       def to_s
         self.class.to_string(interp, obj)
+      end
+
+      def to_s?
+        value = self.class.to_string(interp, obj)
+        value.empty? ? nil : value
       end
 
       def to_bool

@@ -11,6 +11,7 @@ module Tk
   ERROR = 1
   None = Object.new
   def None.to_tcl; nil; end
+  def None.inspect; '#<None>'; end
 
   autoload :Button,       'ffi-tk/widget/button'
   autoload :Entry,        'ffi-tk/widget/entry'
