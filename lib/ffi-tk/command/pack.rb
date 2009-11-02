@@ -70,7 +70,7 @@ module Tk
     end
 
     def pack(options = {})
-      Pack.pack(self, option_hash_to_tcl(options))
+      Pack.pack(self, options.to_tcl_options)
       self
     end
 
