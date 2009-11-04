@@ -69,11 +69,11 @@ Some widgets don't have a tile equivalent, they have highes priority.
 [ ] text
 [x] entry
 [ ] listbox
-[ ] frame
+[x] frame
 [ ] label
 [ ] scrollbar
 [ ] toplevel
-[ ] canvas
+[x] canvas
 [ ] message
 [ ] button
 [ ] checkbutton
