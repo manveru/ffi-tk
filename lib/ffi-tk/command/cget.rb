@@ -30,7 +30,7 @@ module Tk
 
     def cget(option)
       option = option.to_tcl_option
-      self.class.option_to_ruby(option, execute('cget', option))
+      Cget.option_to_ruby(option, execute('cget', option))
     end
 
     module_function

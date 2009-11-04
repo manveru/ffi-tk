@@ -275,7 +275,7 @@ module Tk
 
     def image_cget(index, option)
       option = tcl_option(option)
-      option_to_ruby(option, execute('image', 'cget', index))
+      Cget.option_to_ruby(option, execute('image', 'cget', index))
     end
 
     # Query or modify the configuration options for an embedded image.
@@ -298,7 +298,7 @@ module Tk
       elsif arguments.size == 1
         argument = arguments.first.to_tcl_option
         value = execute('image', 'configure', index, argument)
-        option_to_ruby(argument, value)
+        Cget.option_to_ruby(argument, value)
       else
         raise ArgumentError, "Invalid arguments: %p" % [arguments]
       end
