@@ -2,6 +2,17 @@ module Tk
   class Canvas < Widget
     include Cget, Configure
 
+    require "ffi-tk/widget/canvas/item.rb"
+    require "ffi-tk/widget/canvas/arc.rb"
+    require "ffi-tk/widget/canvas/bitmap.rb"
+    require "ffi-tk/widget/canvas/image.rb"
+    require "ffi-tk/widget/canvas/line.rb"
+    require "ffi-tk/widget/canvas/oval.rb"
+    require "ffi-tk/widget/canvas/polygon.rb"
+    require "ffi-tk/widget/canvas/rectangle.rb"
+    require "ffi-tk/widget/canvas/text.rb"
+    require "ffi-tk/widget/canvas/window.rb"
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('canvas', assign_pathname, options.to_tcl_options)
@@ -180,170 +191,6 @@ module Tk
       else
         execute_only(:coords, tag_or_id, *coord_list.flatten)
       end
-    end
-
-    class Item < Struct.new(:canvas, :id)
-      OPTION_MAP = {
-        activebackground:       :bitmap,
-        activebitmap:           :bitmap,
-        activedash:             :integer,
-        activefill:             :color,
-        activeforeground:       :bitmap,
-        activeimage:            :string,
-        activeoutline:          :color,
-        activeoutlinestipple:   :bitmap,
-        activestipple:          :bitmap,
-        activewidth:            :integer,
-        anchor:                 :string,
-        arrow:                  :symbol,
-        arrowshape:             :list,
-        background:             :color,
-        bitmap:                 :bitmap,
-        capstyle:               :symbol,
-        dash:                   :integer,
-        dashoffset:             :integer,
-        disabledbackground:     :bitmap,
-        disabledbitmap:         :bitmap,
-        disableddash:           :integer,
-        disabledfill:           :color,
-        disabledforeground:     :bitmap,
-        disabledimage:          :string,
-        disabledoutline:        :color,
-        disabledoutlinestipple: :bitmap,
-        disabledstipple:        :bitmap,
-        disabledwidth:          :integer,
-        extent:                 :float,
-        fill:                   :color,
-        font:                   :font,
-        foreground:             :color,
-        height:                 :integer,
-        image:                  :string,
-        joinstyle:              :symbol,
-        justify:                :symbol,
-        offset:                 :string,
-        outline:                :color,
-        outlineoffset:          :integer,
-        outlinestipple:         :bitmap,
-        smooth:                 :boolean,
-        splinesteps:            :integer,
-        start:                  :float,
-        state:                  :symbol,
-        stipple:                :bitmap,
-        style:                  :symbol,
-        tags:                   :list,
-        text:                   :string,
-        underline:              :integer,
-        width:                  :integer,
-        width:                  :integer,
-        window:                 :pathname
-      }
-
-      def self.create(canvas, type, id)
-        klass = Canvas.const_get(type.to_s.capitalize)
-        klass.new(canvas, id)
-      end
-
-      def self.options(*names)
-        names.each do |name|
-          # p name
-          type = OPTION_MAP.fetch(name)
-          class_eval(<<-'RUBY' % [name, type, name], __FILE__, __LINE__)
-def %s
-  Cget.type_to_ruby(%p, canvas.itemcget(id, %p))
-end
-          RUBY
-        end
-      end
-
-      def cget(option)
-        canvas.itemcget(self, option)
-      end
-
-      def to_tcl
-        TclString.new(id.to_s)
-      end
-
-      def inspect
-        "#<%s %d>" % [self.class.name, id]
-      end
-    end
-
-    class Arc < Item
-      options(
-        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
-        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
-        :outlineoffset, :outlinestipple, :activeoutlinestipple,
-        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
-        :state, :tags, :width, :activewidth, :disabledwidth, :extent, :start,
-        :style
-      )
-    end
-
-    class Bitmap < Item
-      options(
-        :state, :tags, :anchor, :background, :activebackground,
-        :disabledbackground, :bitmap, :activebitmap, :disabledbitmap,
-        :foreground, :activeforeground, :disabledforeground
-      )
-    end
-
-    class Image < Item
-      options(
-        :state, :tags, :anchor, :image, :activeimage, :disabledimage
-      )
-    end
-
-    class Line < Item
-      options(
-        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
-        :disabledfill, :stipple, :activestipple, :disabledstipple, :state,
-        :tags, :width, :activewidth, :disabledwidth, :arrow, :arrowshape,
-        :capstyle, :joinstyle, :smooth, :splinesteps
-      )
-    end
-
-    class Oval < Item
-      options(
-        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
-        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
-        :outlineoffset, :outlinestipple, :activeoutlinestipple,
-        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
-        :state, :tags, :width, :activewidth, :disabledwidth
-      )
-    end
-
-    class Polygon < Item
-      options(
-        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
-        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
-        :outlinestipple, :activeoutlinestipple, :disabledoutlinestipple,
-        :stipple, :activestipple, :disabledstipple, :state, :tags, :width,
-        :activewidth, :disabledwidth, :joinstyle, :smooth, :splinesteps
-      )
-    end
-
-    class Rectangle < Item
-      options(
-        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
-        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
-        :outlineoffset, :outlinestipple, :activeoutlinestipple,
-        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
-        :state, :tags, :width, :activewidth, :disabledwidth
-      )
-    end
-
-    class Text < Item
-      options(
-        :activefill, :activestipple, :anchor, :disabledfill, :disabledstipple,
-        :fill, :font, :justify, :state, :stipple, :tags, :text, :underline,
-        :width
-      )
-    end
-
-    class Window < Item
-      options(
-        :state, :tags, :anchor, :height, :width, :window
-      )
     end
 
     # Create a new item in pathName of type type.
