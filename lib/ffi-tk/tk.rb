@@ -188,6 +188,21 @@ module Tk
       end
     end
 
+    module Regexp
+      def to_tcl
+        embed = []
+        embed << 'i' if options & ::Regexp::IGNORECASE != 0
+        embed << 'x' if options & ::Regexp::EXTENDED != 0
+        embed << 'n' if options & ::Regexp::MULTILINE != 0
+
+        if embed.empty?
+          TclString.new("{#{source}}")
+        else
+          TclString.new("{(?#{embed.join})#{source}}")
+        end
+      end
+    end
+
     module String
       def to_tcl
         TclString.new(self =~ /\A\w+\Z/ ? dup : dump)

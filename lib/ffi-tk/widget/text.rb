@@ -3,6 +3,8 @@ module Tk
     autoload :Peer, 'ffi-tk/widget/text/peer'
     include Cget, Configure
 
+    SEARCH_MUTEX = Mutex.new
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('text', assign_pathname, options.to_tcl_options)
@@ -410,12 +412,212 @@ module Tk
       execute_only('mark', 'unset', *names)
     end
 
+    # Creates a peer text widget, and any optional standard configuration
+    # options (as for the text command).
+    # By default the peer will have the same start and end line as the parent
+    # widget, but these can be overridden with the standard configuration
+    # options.
     def peer_create(options = {})
       Peer.new(self, options)
     end
 
+    # Returns a list of peers of this widget (this does not include the widget
+    # itself). The order within this list is undefined.
     def peer_names
       execute('peer', 'names').to_a.map(&:to_s)
+    end
+
+    # Replaces the range of characters between +index1+ and +index2+ with the
+    # given characters and tags.
+    # See the section on [insert] for an explanation of the handling of taglist
+    # arguments, and the docs of [delete] for an explanation of the handling of
+    # the indices.
+    # If +index2+ corresponds to an index earlier in the text than +index1+, an
+    # error will be generated.
+    # The deletion and insertion are arranged so that no unnecessary scrolling
+    # of the window or movement of insertion cursor occurs.
+    # In addition the undo/redo stack are correctly modified, if undo operations
+    # are active in the text widget.
+    # The command returns nil.
+    def replace(index1, index2, chars, *taglists_and_chars)
+      execute_only(:replace, index1, index2, chars, *taglists_and_chars)
+    end
+
+    # Records +x+ and +y+ and the current view in the text window, for use in
+    # conjunction with later pathName scan dragto commands.
+    # Typically this command is associated with a mouse button press in the
+    # widget.
+    # It returns nil.
+    def scan_mark(x, y)
+      execute_only(:scan, :mark, x, y)
+    end
+
+    # This command computes the difference between its +x+ and +y+ arguments and
+    # the +x+ and +y+ arguments to the last pathName scan mark command for the
+    # widget. It then adjusts the view by 10 times the difference in
+    # coordinates. This command is typically associated with mouse motion events
+    # in the widget, to produce the effect of dragging the text at high speed
+    # through the window.
+    # The return value is nil.
+    def scan_dargto(x, y)
+      execute_only(:scan, :dragto, x, y)
+    end
+
+    # Searches the text starting at index for a range of characters that matches
+    # pattern.
+    # If a match is found, the index of the first character in the match is
+    # returned as result; otherwise an empty string is returned.
+    # One or more of the following switches may be specified to control the
+    # search:
+    #
+    #   :forwards
+    #     The search will proceed forward through the text, finding the first
+    #     matching range starting at or after the position given by index.
+    #     This is the default.
+    #
+    #   :backwards
+    #     The search will proceed backward through the text, finding the
+    #     matching range closest to index whose first character is before index
+    #     (it is not allowed to be at index).
+    #     Note that, for a variety of reasons, backwards searches can be
+    #     substantially slower than forwards searches (particularly when using
+    #     :regexp), so it is recommended that performance-critical code use
+    #     forward searches.
+    #
+    #   :exact
+    #     Use exact matching: the characters in the matching range must be
+    #     identical to those in pattern.
+    #     This is the default.
+    #
+    #   :regexp
+    #     Treat pattern as a regular expression and match it against the text
+    #     using the rules for regular expressions (see the regexp command for
+    #     details). The default matching automatically passes both the
+    #     :lineanchor and :linestop options to the regexp engine (unless
+    #     :nolinestop is used), so that "^", "$" match beginning and end of
+    #     line, and ".", "[^" sequences will never match the newline character
+    #     "\n".
+    #
+    #   :nolinestop
+    #     This allows "." and "[^" sequences to match the newline character "\n",
+    #     which they will otherwise not do (see the regexp command for details).
+    #     This option is only meaningful if :regexp is also given, and an error
+    #     will be thrown otherwise.
+    #     For example, to match the entire text, use `text.search(/.*/m)`.
+    #
+    #   :nocase
+    #     Ignore case differences between the pattern and the text.
+    #
+    #   :count varName
+    #     The argument following :count gives the name of a variable; if a match
+    #     is found, the number of index positions between beginning and end of
+    #     the matching range will be stored in the variable.
+    #     If there are no embedded images or windows in the matching range (and
+    #     there are no elided characters if :elide is not given), this is
+    #     equivalent to the number of characters matched.
+    #     In either case, the range matchIdx to matchIdx + $count chars will
+    #     return the entire matched text.
+    #
+    #   :all
+    #     Find all matches in the given range and return a list of the indices of
+    #     the first character of each match.
+    #
+    #     If a :count switch is given, then the returned array has two elements
+    #     in the form of `[index, count]` for each successful match.
+    #     Note that, even for exact searches, the elements of this list may be
+    #     different, if there are embedded images, windows or hidden text.
+    #     Searches with :all behave very similarly to the Tcl command regexp
+    #     :all, in that overlapping matches are not normally returned.
+    #     For example, applying an :all search of the pattern `\w+` against
+    #     "hello there" will just match twice, once for each word, and
+    #     matching `Z[a-z]+Z` against "ZooZooZoo" will just match once.
+    #
+    #   :overlap
+    #     When performing :all searches, the normal behaviour is that matches
+    #     which overlap an already-found match will not be returned.
+    #     This switch changes that behaviour so that all matches which are not
+    #     totally enclosed within another match are returned.
+    #     For example, applying an :overlap search of the pattern `\w+`
+    #     against "hello there" will just match twice (i.e.
+    #     no different to just :all), but matching `Z[a-z]+Z` against
+    #     "ZooZooZoo" will now match twice.
+    #     An error will be thrown if this switch is used without :all.
+    #
+    #   :strictlimits
+    #     When performing any search, the normal behaviour is that the start and
+    #     stop limits are checked with respect to the start of the matching
+    #     text. With the :strictlimits flag, the entire matching range must lie
+    #     inside the start and stop limits specified for the match to be valid.
+    #
+    #   :elide
+    #     Find elided (hidden) text as well.
+    #     By default only displayed text is searched.
+    #
+    #   --
+    #     This switch has no effect except to terminate the list of switches:
+    #     the next argument will be treated as pattern even if it starts with -.
+    #
+    # The matching range may be within a single line of text, or run across
+    # multiple lines (if parts of the pattern can match a new-line).
+    # For regular expression matching one can use the various newline-matching
+    # features such as $ to match the end of a line, "^" to match the beginning
+    # of a line, and to control whether "." is allowed to match a new-line.
+    # If stop_index is specified, the search stops at that index: for forward
+    # searches, no match at or after stop_index will be considered; for backward
+    # searches, no match earlier in the text than stop_index will be considered.
+    # If stop_index is omitted, the entire text will be searched: when the
+    # beginning or end of the text is reached, the search continues at the other
+    # end until the starting location is reached again; if stop_index is
+    # specified, no wrap-around will occur.
+    # This means that, for example, if the search is :forwards but stop_index is
+    # earlier in the text than start_index, nothing will ever be found.
+    # See KNOWN BUGS in [Text] for a number of minor limitations of [search] method.
+    #
+    # pathName search ?switches? pattern index ?stopIndex?
+    #
+    # FUNNY: stdlib tk simply gets the text into the ruby side and performs
+    #        matches using the core regexp methods, but doesn't give any way to
+    #        call the tcl/tk search function, this is new land!
+    def search(pattern, from, *arguments)
+      switches, rest = arguments.partition{|arg| arg.respond_to?(:to_sym) }
+      to = rest.first || None
+
+      if pattern.class < CoreExtensions::Regexp
+        switches << :regexp
+      else
+        # switches << :exact
+      end
+
+      switches.map!{|switch| switch.to_sym.to_tcl_option }
+      switches.uniq!
+
+      if switches.include?('-all') && switches.delete('-count')
+        count_all = 'RubyFFI::Text_search_count'
+        switches << '-count' << count_all
+      elsif switches.delete('-count')
+        count = 'RubyFFI::Text_search_count'
+        switches << '-count' << count
+      end
+
+      if count
+        SEARCH_MUTEX.synchronize do
+          list = execute(:search, *switches, '--', pattern, from, to).to_a
+          count_value = Tk.execute('set', count)
+          [*list, count_value]
+        end
+      elsif count_all
+        SEARCH_MUTEX.synchronize do
+          list = execute(:search, *switches, '--', pattern, from, to).to_a
+          count_list = Tk.execute('set', count_all)
+          list.zip(count_list)
+        end
+      else
+        execute(:search, *switches, '--', pattern, from, to).to_a
+      end
+    end
+
+    def rsearch(pattern, from, *arguments)
+      search(pattern, from, *arguments, :backwards)
     end
   end
 end
