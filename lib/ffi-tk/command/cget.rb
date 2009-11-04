@@ -1,97 +1,69 @@
 module Tk
   module Cget
+    CGET_MAP = {}
+
+    insert = lambda{|type, array|
+      array.each{|option| CGET_MAP["-#{option}"] = type } }
+
+    insert[:integer, %w[
+      height width maxundo spacing1 spacing2 spacing3 borderwidth bd
+      highlightthickness insertborderwidth insertofftime insertontime
+      insertwidth padx pady selectborderwidth endline startline
+    ]]
+    insert[:boolean, %w[
+      autoseparators blockcursor undo exportselection setgrid takefocus
+    ]]
+    insert[:color, %w[
+      inactiveselectbackground disabledbackground disabledforeground background
+      bg foreground fg highlightbackground highlightcolor insertbackground
+      selectbackground selectforeground readonlybackground
+    ]]
+    insert[:command, %w[
+      invalidcommand invcmd yscrollcommand xscrollcommand validatecommand
+      command vcmd
+    ]]
+    insert[:string, %w[ tabs cursor text show ]]
+    insert[:font, %w[ font ]]
+    insert[:symbol, %w[ wrap state tabstyle relief justify validate ]]
+    insert[:variable, %w[ textvariable ]]
+    insert[:bitmap, %w[ stipple ]]
+
     def cget(option)
       option = option.to_tcl_option
-      option_to_ruby(option, execute('cget', option))
+      self.class.option_to_ruby(option, execute('cget', option))
     end
 
-    private
-
-    INTEGER  = %w[
-                  -height
-                  -width
-                  -maxundo
-                  -spacing1
-                  -spacing2
-                  -spacing3
-                  -borderwidth
-                  -bd
-                  -highlightthickness
-                  -insertborderwidth
-                  -insertofftime
-                  -insertontime
-                  -insertwidth
-                  -padx
-                  -pady
-                  -selectborderwidth
-                  -endline
-                  -startline
-                 ]
-    SYMBOL   = %w[
-                  -wrap
-                  -state
-                  -tabstyle
-                  -relief
-                  -justify
-                  -validate
-                 ]
-    BOOLEAN  = %w[
-                  -autoseparators
-                  -blockcursor
-                  -undo
-                  -exportselection
-                  -setgrid
-                  -takefocus
-                 ]
-    COLOR    = %w[
-                  -inactiveselectbackground
-                  -disabledbackground
-                  -disabledforeground
-                  -background
-                  -bg
-                  -foreground
-                  -fg
-                  -highlightbackground
-                  -highlightcolor
-                  -insertbackground
-                  -selectbackground
-                  -selectforeground
-                  -readonlybackground
-                 ]
-    STRING   = %w[-tabs -cursor -text -show]
-    FONT     = %w[-font]
-    COMMAND  = %w[
-                  -invalidcommand
-                  -invcmd
-                  -yscrollcommand
-                  -xscrollcommand
-                  -validatecommand
-                  -command
-                  -vcmd
-                  ]
-    VARIABLE = %w[-textvariable]
+    module_function
 
     def option_to_ruby(name, value)
-      case name.to_tcl_option
-      when *INTEGER
+      if type = CGET_MAP[name.to_tcl_option]
+        type_to_ruby(type, value)
+      else
+        raise "Unknown type for %p: %p" % [name, value]
+      end
+    end
+
+    def type_to_ruby(type, value)
+      case type
+      when :integer
         value.to_i
-      when *SYMBOL
-        value.to_sym
-      when *BOOLEAN
-        value == 1
-      when *COLOR
-        value.to_s
-      when *STRING
-        value.to_s
-      when *FONT
-        value.to_s
-      when *COMMAND
+      when :symbol
+        value.to_sym?
+      when :boolean
+        Tk.boolean(value)
+      when :color, :string, :font, :variable, :bitmap
+        value.to_s?
+      when :list
+        value.to_a
+      when :float
+        value.to_f
+      when :pathname
+        Tk.pathname_to_widget(value.to_s)
+      when :command
         string = value.to_s
         string unless string.empty?
-      when *VARIABLE
-        value.to_s
       else
-        raise "Unknown option: %p: %p" % [name, value]
+        raise "Unknown type: %p: %p" % [type, value]
       end
     end
 
@@ -99,8 +71,8 @@ module Tk
       result = {}
 
       hash.each do |key, value|
-        case option = key.to_tcl_option
-        when *COMMAND
+        case type = CGET_MAP[option = key.to_tcl_option]
+        when :command
           command = register_command(key, &value)
           result[option] = command
         else

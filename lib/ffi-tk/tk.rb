@@ -4,6 +4,7 @@ module Tk
   end
 
   @register = Hash.new(0)
+  @widgets = {}
   @callbacks = {}
   @mutex = Mutex.new
 
@@ -92,10 +93,22 @@ module Tk
     id = uuid(name)
 
     if parent_name[-1] == '.'
-      "#{parent_name}#{name}#{id}"
+      pathname = "#{parent_name}#{name}#{id}"
     else
-      "#{parent_name}.#{name}#{id}"
+      pathname = "#{parent_name}.#{name}#{id}"
     end
+
+    @widgets[pathname] = object
+
+    return pathname
+  end
+
+  def unregister_object(object)
+    @widgets.delete_if{|path, obj| obj == object }
+  end
+
+  def unregister_objects(*objects)
+    @widgets.delete_if{|path, obj| objects.include?(obj) }
   end
 
   def register_proc(proc, argument_string = '')
@@ -302,5 +315,9 @@ module Tk
 
   def convert_arguments(*args)
     args.map(&:to_tcl).compact.join(' ')
+  end
+
+  def pathname_to_widget(pathname)
+    @widgets[pathname]
   end
 end

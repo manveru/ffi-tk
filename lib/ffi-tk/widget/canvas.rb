@@ -1,5 +1,5 @@
 module Tk
-  class Canvas
+  class Canvas < Widget
     include Cget, Configure
 
     def initialize(parent, options = {})
@@ -182,14 +182,181 @@ module Tk
       end
     end
 
+    class Item < Struct.new(:canvas, :id)
+      OPTION_MAP = {
+        activebackground:       :bitmap,
+        activebitmap:           :bitmap,
+        activedash:             :integer,
+        activefill:             :color,
+        activeforeground:       :bitmap,
+        activeimage:            :string,
+        activeoutline:          :color,
+        activeoutlinestipple:   :bitmap,
+        activestipple:          :bitmap,
+        activewidth:            :integer,
+        anchor:                 :string,
+        arrow:                  :symbol,
+        arrowshape:             :list,
+        background:             :color,
+        bitmap:                 :bitmap,
+        capstyle:               :symbol,
+        dash:                   :integer,
+        dashoffset:             :integer,
+        disabledbackground:     :bitmap,
+        disabledbitmap:         :bitmap,
+        disableddash:           :integer,
+        disabledfill:           :color,
+        disabledforeground:     :bitmap,
+        disabledimage:          :string,
+        disabledoutline:        :color,
+        disabledoutlinestipple: :bitmap,
+        disabledstipple:        :bitmap,
+        disabledwidth:          :integer,
+        extent:                 :float,
+        fill:                   :color,
+        font:                   :font,
+        foreground:             :color,
+        height:                 :integer,
+        image:                  :string,
+        joinstyle:              :symbol,
+        justify:                :symbol,
+        offset:                 :string,
+        outline:                :color,
+        outlineoffset:          :integer,
+        outlinestipple:         :bitmap,
+        smooth:                 :boolean,
+        splinesteps:            :integer,
+        start:                  :float,
+        state:                  :symbol,
+        stipple:                :bitmap,
+        style:                  :symbol,
+        tags:                   :list,
+        text:                   :string,
+        underline:              :integer,
+        width:                  :integer,
+        width:                  :integer,
+        window:                 :pathname
+      }
+
+      def self.create(canvas, type, id)
+        klass = Canvas.const_get(type.to_s.capitalize)
+        klass.new(canvas, id)
+      end
+
+      def self.options(*names)
+        names.each do |name|
+          # p name
+          type = OPTION_MAP.fetch(name)
+          class_eval(<<-'RUBY' % [name, type, name], __FILE__, __LINE__)
+def %s
+  Cget.type_to_ruby(%p, canvas.itemcget(id, %p))
+end
+          RUBY
+        end
+      end
+
+      def cget(option)
+        canvas.itemcget(self, option)
+      end
+
+      def to_tcl
+        TclString.new(id.to_s)
+      end
+
+      def inspect
+        "#<%s %d>" % [self.class.name, id]
+      end
+    end
+
+    class Arc < Item
+      options(
+        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
+        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
+        :outlineoffset, :outlinestipple, :activeoutlinestipple,
+        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
+        :state, :tags, :width, :activewidth, :disabledwidth, :extent, :start,
+        :style
+      )
+    end
+
+    class Bitmap < Item
+      options(
+        :state, :tags, :anchor, :background, :activebackground,
+        :disabledbackground, :bitmap, :activebitmap, :disabledbitmap,
+        :foreground, :activeforeground, :disabledforeground
+      )
+    end
+
+    class Image < Item
+      options(
+        :state, :tags, :anchor, :image, :activeimage, :disabledimage
+      )
+    end
+
+    class Line < Item
+      options(
+        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
+        :disabledfill, :stipple, :activestipple, :disabledstipple, :state,
+        :tags, :width, :activewidth, :disabledwidth, :arrow, :arrowshape,
+        :capstyle, :joinstyle, :smooth, :splinesteps
+      )
+    end
+
+    class Oval < Item
+      options(
+        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
+        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
+        :outlineoffset, :outlinestipple, :activeoutlinestipple,
+        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
+        :state, :tags, :width, :activewidth, :disabledwidth
+      )
+    end
+
+    class Polygon < Item
+      options(
+        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
+        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
+        :outlinestipple, :activeoutlinestipple, :disabledoutlinestipple,
+        :stipple, :activestipple, :disabledstipple, :state, :tags, :width,
+        :activewidth, :disabledwidth, :joinstyle, :smooth, :splinesteps
+      )
+    end
+
+    class Rectangle < Item
+      options(
+        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
+        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
+        :outlineoffset, :outlinestipple, :activeoutlinestipple,
+        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
+        :state, :tags, :width, :activewidth, :disabledwidth
+      )
+    end
+
+    class Text < Item
+      options(
+        :activefill, :activestipple, :anchor, :disabledfill, :disabledstipple,
+        :fill, :font, :justify, :state, :stipple, :tags, :text, :underline,
+        :width
+      )
+    end
+
+    class Window < Item
+      options(
+        :state, :tags, :anchor, :height, :width, :window
+      )
+    end
+
     # Create a new item in pathName of type type.
     # The exact format of the arguments after type depends on type, but usually
-    # they consist of the coordinates for one or more points, followed by specifications for zero or more item options.
+    # they consist of the coordinates for one or more points, followed by
+    # specifications for zero or more item options.
     # See the subsections on individual item types below for more on the syntax
     # of this command.
     # This command returns the id for the new item.
     def create(type, coord_list, options = {})
-      execute(:create, type, coord_list, options.to_tcl_options)
+      options = options ? options.to_tcl_options : None
+      id = execute(:create, type, coord_list, options).to_i
+      Item.create(self, type, id)
     end
 
     # Items of type arc appear on the display as arc-shaped regions.
@@ -216,11 +383,12 @@ module Tk
     # Line items support coordinate indexing operations using the methods
     # [dchars], [index], and [insert].
     def create_line(*arguments)
-      coords, options = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
-      create(:line, coords, (options.first || {}).to_tcl_options)
+      options, coords = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
+      create(:line, coords, options.first)
     end
 
-    # Items of type oval appear as circular or oval regions on the display. Each oval may have an outline, a fill, or both.
+    # Items of type oval appear as circular or oval regions on the display.
+    # Each oval may have an outline, a fill, or both.
     def create_oval(x1, y1, x2, y2, options = {})
       create(:oval, [x1, y1, x2, y2], options)
     end
@@ -229,8 +397,8 @@ module Tk
     # display. Polygon items support coordinate indexing operations using the
     # methods [dchars], [index], or [insert].
     def create_polygon(*arguments)
-      coords, options = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
-      create(:polygon, coords, (options.first || {}).to_tcl_options)
+      options, coords = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
+      create(:polygon, coords, options.first)
     end
 
     # Items of type rectangle appear as rectangular regions on the display.
@@ -400,7 +568,8 @@ module Tk
     # If +tag_or_id+ is a tag that refers to more than one item, the first (lowest)
     # such item is used.
     def itemcget(tag_or_id, option)
-      execute(:itemcget, tag_or_id, option.to_tcl_option)
+      option = option.to_tcl_option
+      execute(:itemcget, tag_or_id, option)
     end
 
     # This command is similar to the configure widget command except that it

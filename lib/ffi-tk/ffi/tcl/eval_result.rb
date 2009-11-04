@@ -111,6 +111,10 @@ module FFI
         self.class.to_int(interp, obj)
       end
 
+      def to_f
+        self.class.to_double(interp, obj)
+      end
+
       def to_s
         self.class.to_string(interp, obj)
       end

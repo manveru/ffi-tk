@@ -14,6 +14,7 @@ module Tk
   def None.inspect; '#<None>'; end
 
   autoload :Button,       'ffi-tk/widget/button'
+  autoload :Canvas,       'ffi-tk/widget/canvas'
   autoload :Entry,        'ffi-tk/widget/entry'
   autoload :Frame,        'ffi-tk/widget/frame'
   autoload :Root,         'ffi-tk/widget/root'
