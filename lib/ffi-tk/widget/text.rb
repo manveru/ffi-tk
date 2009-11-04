@@ -619,5 +619,16 @@ module Tk
     def rsearch(pattern, from, *arguments)
       search(pattern, from, *arguments, :backwards)
     end
+
+    # Adjusts the view in the window so that the character given by +index+ is
+    # completely visible.
+    # If +index+ is already visible then the command does nothing.
+    # If +index+ is a short distance out of view, the command adjusts the view
+    # just enough to make +index+ visible at the edge of the window.
+    # If +index+ is far out of view, then the command centers +index+ in the
+    # window.
+    def see(index)
+      execute_only(:see, index)
+    end
   end
 end
