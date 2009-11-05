@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+if File.symlink?(__FILE__)
+  lib = File.expand_path('../../lib/ffi-tk', File.readlink(__FILE__))
+else
+  lib = File.expand_path('../../lib/ffi-tk', __FILE__)
+end
+
+require lib
+
+Tk.init
+
+begin
+  require 'readline'
+
+  while line = Readline.readline('> ', true)
+    begin
+      p eval(line)
+    rescue => ex
+      puts "#{ex.class}: #{ex}", *ex.backtrace
+    end
+  end
+rescue LoadError
+  while line = $stdin.gets
+    line.strip!
+
+    begin
+      p eval(line)
+    rescue => ex
+      puts "#{ex.class}: #{ex}", *ex.backtrace
+    end
+  end
+end
