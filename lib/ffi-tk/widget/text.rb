@@ -7,6 +7,7 @@ module Tk
 
     def initialize(parent, options = {})
       @parent = parent
+      @tag_commands = {}
       Tk.execute('text', assign_pathname, options.to_tcl_options)
     end
 
@@ -289,19 +290,8 @@ module Tk
     # the given option(s) to have the given value(s); in this case the command
     # returns an empty string.
     # See EMBEDDED IMAGES for information on the options that are supported.
-    def image_configure(index, *arguments)
-      if arguments.empty?
-        execute('image', 'configure', index)
-      elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
-        arguments = arguments.first.to_hash.to_tcl_options
-        execute_only('image', 'configure', index, arguments)
-      elsif arguments.size == 1
-        argument = arguments.first.to_tcl_option
-        value = execute('image', 'configure', index, argument)
-        Cget.option_to_ruby(argument, value)
-      else
-        raise ArgumentError, "Invalid arguments: %p" % [arguments]
-      end
+    def image_configure(index, options = None)
+      common_configure(:image, :configure, index, options)
     end
 
     # This command creates a new image annotation, which will appear in the text
@@ -629,6 +619,337 @@ module Tk
     # window.
     def see(index)
       execute_only(:see, index)
+    end
+
+    # Associate the tag tagName with all of the characters starting with index1
+    # and ending just before index2 (the character at index2 is not tagged).
+    # A single command may contain any number of index1-index2 pairs.
+    # If the last index2 is omitted then the single character at index1 is
+    # tagged. If there are no characters in the specified range (e.g.
+    # index1 is past the end of the file or index2 is less than or equal to
+    # index1) then the command has no effect.
+    def tag_add(tag_name, index1, index2 = None, *indices)
+      execute_only(:tag, :add, tag_name, index1, index2, *indices)
+    end
+
+    # This command associates script with the tag given by tagName.
+    # Whenever the event sequence given by sequence occurs for a character that
+    # has been tagged with tagName, the script will be invoked.
+    # This widget command is similar to the bind command except that it
+    # operates on characters in a text rather than entire widgets.
+    # See the bind manual entry for complete details on the syntax of sequence
+    # and the substitutions performed on script before invoking it.
+    # If all arguments are specified then a new binding is created, replacing
+    # any existing binding for the same sequence and tagName (if the first
+    # character of script is “+” then script augments an existing binding
+    # rather than replacing it).
+    # In this case the return value is an empty string.
+    # If script is omitted then the command returns the script associated
+    # with tagName and sequence (an error occurs if there is no such binding).
+    # If both script and sequence are omitted then the command returns a list
+    # of all the sequences for which bindings have been defined for tagName.
+    # The only events for which bindings may be specified are those related to
+    # the mouse and keyboard (such as Enter, Leave, ButtonPress, Motion, and
+    # KeyPress) or virtual events.
+    # Event bindings for a text widget use the current mark described under
+    # MARKS above.
+    # An Enter event triggers for a tag when the tag first becomes present on
+    # the current character, and a Leave event triggers for a tag when it
+    # ceases to be present on the current character.
+    # Enter and Leave events can happen either because the current mark moved
+    # or because the character at that position changed.
+    # Note that these events are different than Enter and Leave events for
+    # windows. Mouse and keyboard events are directed to the current character.
+    # If a virtual event is used in a binding, that binding can trigger only if
+    # the virtual event is defined by an underlying mouse-related or
+    # keyboard-related event.
+    # It is possible for the current character to have multiple tags, and for
+    # each of them to have a binding for a particular event sequence.
+    # When this occurs, one binding is invoked for each tag, in order from
+    # lowest-priority to highest priority.
+    # If there are multiple matching bindings for a single tag, then the most
+    # specific binding is chosen (see the manual entry for the bind command
+    # for details).
+    # continue and break commands within binding scripts are processed in the
+    # same way as for bindings created with the bind command.
+    # If bindings are created for the widget as a whole using the bind command,
+    # then those bindings will supplement the tag bindings.
+    # The tag bindings will be invoked first, followed by bindings for the
+    # window as a whole.
+    def tag_bind(tag_name, sequence = None, &script)
+      execute(:tag, :bind, tag_name, sequence, command)
+    end
+
+    # This command returns the current value of the option named option
+    # associated with the tag given by tagName.
+    # Option may have any of the values accepted by the pathName tag
+    # configure widget command.
+    def tag_cget(tag_name, option)
+      execute(:tag, :cget, tag_name, option.to_tcl_option)
+    end
+
+    # This command is similar to the pathName configure widget command except
+    # that it modifies options associated with the tag given by tagName instead
+    # of modifying options for the overall text widget.
+    # If no option is specified, the command returns a list describing all of
+    # the available options for tagName (see Tk_ConfigureInfo for information
+    # on the format of this list).
+    # If option is specified with no value, then the command returns a list
+    # describing the one named option (this list will be identical to the
+    # corresponding sublist of the value returned if no option is specified).
+    # If one or more option-value pairs are specified, then the command
+    # modifies the given option(s) to have the given value(s) in tagName; in
+    # this case the command returns an empty string.
+    # See TAGS above for details on the options available for tags.
+    def tag_configure(tag_name, options = None)
+      common_configure(:tag, :configure, tag_name, options)
+    end
+
+    # Deletes all tag information for each of the tagName arguments.
+    # The command removes the tags from all characters in the file and also
+    # deletes any other information associated with the tags, such as
+    # bindings and display information.
+    # The command returns an empty string.
+    def tag_delete(tag_name, *tag_names)
+      execute_only(:tag, :delete, tag_name, *tag_names)
+    end
+
+    # Changes the priority of tag tagName so that it is just lower in priority
+    # than the tag whose name is belowThis.
+    # If belowThis is omitted, then tagName's priority is changed to make it
+    # lowest priority of all tags.
+    def tag_lower(tag_name, below = None)
+      execute_only(:tag, :lower, tag_name, below)
+    end
+
+    # Returns a list whose elements are the names of all the tags that are
+    # active at the character position given by index.
+    # If index is omitted, then the return value will describe all of the tags
+    # that exist for the text (this includes all tags that have been named in a
+    # “pathName tag” widget command but have not been deleted by a “pathName
+    # tag delete” widget command, even if no characters are currently marked
+    # with the tag).
+    # The list will be sorted in order from lowest priority to highest
+    # priority.
+    def tag_names(index = None)
+      execute(:tag, :names, index).to_a
+    end
+
+    # This command searches the text for a range of characters tagged with
+    # tagName where the first character of the range is no earlier than the
+    # character at index1 and no later than the character just before index2 (a
+    # range starting at index2 will not be considered).
+    # If several matching ranges exist, the first one is chosen.
+    # The command's return value is a list containing two elements, which are
+    # the index of the first character of the range and the index of the
+    # character just after the last one in the range.
+    # If no matching range is found then the return value is an empty string.
+    # If index2 is not given then it defaults to the end of the text.
+    def tag_nextrange(tag_name, index1, index2 = None)
+      execute(:tag, :nextrange, tag_name, index1, index2)
+    end
+
+    # This command searches the text for a range of characters tagged with
+    # tagName where the first character of the range is before the character at
+    # index1 and no earlier than the character at index2 (a range starting at
+    # index2 will be considered).
+    # If several matching ranges exist, the one closest to index1 is chosen.
+    # The command's return value is a list containing two elements, which are
+    # the index of the first character of the range and the index of the
+    # character just after the last one in the range.
+    # If no matching range is found then the return value is an empty string.
+    # If index2 is not given then it defaults to the beginning of the text.
+    def tag_prevrange(tag_name, index1, index2 = None)
+      execute(:tag, :prevrange, tag_name, index1, index2)
+    end
+
+    # Changes the priority of tag tagName so that it is just higher in priority
+    # than the tag whose name is aboveThis.
+    # If aboveThis is omitted, then tagName's priority is changed to make it
+    # highest priority of all tags.
+    def tag_raise(tag_name, above = None)
+      execute(:tag, :raise, tag_name, above)
+    end
+
+    # Returns a list describing all of the ranges of text that have been tagged
+    # with tagName.
+    # The first two elements of the list describe the first tagged range in the
+    # text, the next two elements describe the second range, and so on.
+    # The first element of each pair contains the index of the first character
+    # of the range, and the second element of the pair contains the index of
+    # the character just after the last one in the range.
+    # If there are no characters tagged with tag then an empty string is
+    # returned.
+    def tag_ranges(tag_name)
+      execute(:tag, :ranges, tag_name).to_a?
+    end
+
+    # Remove the tag tagName from all of the characters starting at index1 and
+    # ending just before index2 (the character at index2 is not affected).
+    # A single command may contain any number of index1-index2 pairs.
+    # If the last index2 is omitted then the tag is removed from the single
+    # character at index1.
+    # If there are no characters in the specified range (e.g.
+    # index1 is past the end of the file or index2 is less than or equal to
+    # index1) then the command has no effect.
+    # This command returns an empty string.
+    def tag_remove(tag_name, index1, index2 = None, *indices)
+      execute(:tag, :remove, tag_name, index1, index2, *indices)
+    end
+
+    # Returns the value of a configuration option for an embedded window.
+    # Index identifies the embedded window, and option specifies a particular
+    # configuration option, which must be one of the ones listed in the section
+    # EMBEDDED WINDOWS.
+    def window_cget(index, option)
+      execute(:window, :cget, index, option.to_tcl_option)
+    end
+
+    # Query or modify the configuration options for an embedded window.
+    # If no option is specified, returns a list describing all of the available
+    # options for the embedded window at index (see Tk_ConfigureInfo for
+    # information on the format of this list).
+    # If option is specified with no value, then the command returns a list
+    # describing the one named option (this list will be identical to the
+    # corresponding sublist of the value returned if no option is specified).
+    # If one or more option-value pairs are specified, then the command
+    # modifies the given option(s) to have the given value(s); in this case the
+    # command returns an empty string.
+    # See EMBEDDED WINDOWS for information on the options that are supported.
+    def window_configure(index, options = None)
+      common_configure(:window, :configure, index, options)
+    end
+
+    # This command creates a new window annotation, which will appear in the
+    # text at the position given by index.
+    # Any number of option-value pairs may be specified to configure the
+    # annotation. See EMBEDDED WINDOWS for information on the options that are
+    # supported. Returns an empty string.
+    def window_create(index, options = None)
+      if None == argument
+        execute(:window, :create, index)
+      else
+        execute(:window, :create, index, options.to_tcl_options)
+      end
+    end
+
+    # Returns a list whose elements are the names of all windows currently
+    # embedded in window.
+    def window_names
+      execute(:window, :names).to_a
+    end
+
+    # Returns a list containing two elements.
+    # Each element is a real fraction between 0 and 1; together they describe
+    # the portion of the document's horizontal span that is visible in the
+    # window. For example, if the first element is .2 and the second element is
+    # .6, 20% of the text is off-screen to the left, the middle 40% is visible
+    # in the window, and 40% of the text is off-screen to the right.
+    # The fractions refer only to the lines that are actually visible in the
+    # window: if the lines in the window are all very short, so that they are
+    # entirely visible, the returned fractions will be 0 and 1, even if there
+    # are other lines in the text that are much wider than the window.
+    # These are the same values passed to scrollbars via the -xscrollcommand
+    # option.
+    def xview
+      execute(:xview)
+    end
+
+    # Adjusts the view in the window so that fraction of the horizontal span of
+    # the text is off-screen to the left.
+    # Fraction is a fraction between 0 and 1.
+    def xview_moveto(fraction)
+      execute(:xview, :moveto, fraction)
+    end
+
+    # This command shifts the view in the window left or right according to
+    # number and what.
+    # What must be units, pages or pixels.
+    # If what is units or pages then number │ must be an integer, otherwise
+    # number may be specified in any of the forms accept│ able to
+    # Tk_GetPixels, such as “2.0c” or “1i” (the result is rounded to the
+    # nearest │ integer value.
+    # If no units are given, pixels are assumed).
+    # If what is units, the │ view adjusts left or right by number
+    # average-width characters on the display; if │ it is pages then the view
+    # adjusts by number screenfuls; if it is pixels then the │ view adjusts by
+    # number pixels.
+    # If number is negative then characters farther to the left become visible;
+    # if it is positive then characters farther to the right become visible.
+    def xview_scroll(number, what)
+      execute(:xview, :scroll, number, what)
+    end
+
+    # Returns a list containing two elements, both of which are real fractions
+    # between 0 and 1.
+    # The first element gives the position of the first visible pixel of the
+    # first character (or image, etc) in the top line in the window, relative
+    # to the text as a whole (0.5 means it is halfway through the text, for
+    # example). The second element gives the position of the first pixel just
+    # after the last visible one in the bottom line of the window, relative to
+    # the text as a whole.
+    # These are the same values passed to scrollbars via the -yscrollcommand
+    # option.
+    def yview
+      execute(:yview)
+    end
+
+    # Adjusts the view in the window so that the pixel given by fraction
+    # appears at the top of the top line of the window.
+    # Fraction is a fraction between 0 and 1; 0 indicates the first pixel of
+    # the first character in the text, 0.33 indicates the pixel that is
+    # one-third the way through the text; and so on.
+    # Values close to 1 │ will indicate values close to the last pixel in the
+    # text (1 actually refers to one │ pixel beyond the last pixel), but in
+    # such cases the widget will never scroll │ beyond the last pixel, and so a
+    # value of 1 will effectively be rounded back to │ whatever fraction
+    # ensures the last pixel is at the bottom of the window, and some │ other
+    # pixel is at the top.
+    def yview_moveto(fraction)
+      execute(:yview, :moveto, fraction)
+    end
+
+    # This command adjust the view in the window up or down according to number
+    # and what.
+    # What must be units, pages or pixels.
+    # If what is units or pages then number │ must be an integer, otherwise
+    # number may be specified in any of the forms accept│ able to
+    # Tk_GetPixels, such as “2.0c” or “1i” (the result is rounded to the
+    # nearest │ integer value.
+    # If no units are given, pixels are assumed).
+    # If what is units, the │ view adjusts up or down by number lines on the
+    # display; if it is pages then the │ view adjusts by number screenfuls; if
+    # it is pixels then the view adjusts by number │ pixels.
+    # If number is negative then earlier positions in the text become visible;
+    # if it is positive then later positions in the text become visible.
+    def yview_scroll(number, what)
+      execute(:yview, :scroll, number, what)
+    end
+
+    # Changes the view in the widget's window to make index visible.
+    #
+    # The widget chooses where index appears in the window:
+    # [1] If index is already visible somewhere in the window then the command
+    #     does nothing.
+    # [2] If index is only a few lines off-screen above the window then it will
+    #     be positioned at the top of the window.
+    # [3] If index is only a few lines off-screen below the window then it will
+    #     be positioned at the bottom of the window.
+    # [4] Otherwise, index will be centered in the window.
+    #
+    # The [yview_pickplace] method has been obsoleted by the [see] method.
+    # [see] handles both x- and y-motion to make a location visible, whereas the
+    # [yview_pickplace] mode only handles motion in y).
+    def yview_pickplace(index)
+      execute(:yview, '-pickplace', index)
+    end
+
+    # This command makes the first character on the line after the one given by
+    # number visible at the top of the window.
+    # Number must be an integer.
+    # This command used to be used for scrolling, but now it is obsolete.
+    def yview(number)
+      execute(:yview, number)
     end
   end
 end

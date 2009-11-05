@@ -1,48 +1,30 @@
 module Tk
   class PanedWindow
+    include Cget, Configure
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('panedwindow', assign_pathname, options.to_tcl_options)
-    end
-
-
-    def option(?arg arg ...?)
-      execute(:option, ?arg arg ...?)
     end
 
     # Add one or more windows to the panedwindow, each in a separate pane.
     # The arguments consist of the names of one or more windows followed by
     # pairs of arguments that specify how to manage the windows.
     # Option may have any of the values accepted by the configure subcommand.
-    def add(window ?window ...? ?option value ...?)
-      execute(:add, window ?window ...? ?option value ...?)
-    end
+    def add(window, *arguments)
+      options, windows = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
 
-    # Returns the current value of the configuration option given by option.
-    # Option may have any of the values accepted by the panedwindow command.
-    def cget(option)
-      execute(:cget, option)
-    end
-
-    # Query or modify the configuration options of the widget.
-    # If no option is specified, returns a list describing all of the available
-    # options for pathName (see Tk_ConfigureInfo for information on the format
-    # of this list).
-    # If option is specified with no value, then the command returns a list
-    # describing the one named option (this list will be identical to the
-    # corresponding sublist of the value returned if no option is specified).
-    # If one or more option-value pairs are specified, then the command
-    # modifies the given widget option(s) to have the given value(s); in this
-    # case the command returns an empty string.
-    # Option may have any of the values accepted by the panedwindow command.
-    def configure(?option? ?value option value ...?)
-      execute(:configure, ?option? ?value option value ...?)
+      if option = options.first
+        execute(:add, window, *windows, option.to_tcl_options)
+      else
+        execute(:add, window, *windows)
+      end
     end
 
     # Remove the pane containing window from the panedwindow.
     # All geometry management options for window will be forgotten.
-    def forget(window ?window ...?)
-      execute(:forget, window ?window ...?)
+    def forget(window, *windows)
+      execute_only(:forget, window, *windows)
     end
 
     # Identify the panedwindow component underneath the point given by x and y,
@@ -52,37 +34,24 @@ module Tk
     # whether it is over a sash or a handle, such as {0 sash} or {2 handle}.
     # If the point is over any other part of the panedwindow, the result is an
     # empty list.
-    def identify(x y)
-      execute(:identify, x y)
-    end
-
-    # This command is used to query and change the position of the sash proxy,
-    # used for rubberband-style pane resizing.
-    # It can take any of the following forms:
-    def proxy(?args?)
-      execute(:proxy, ?args?)
+    def identify(x, y)
+      execute(:identify, x, y)
     end
 
     # Return a list containing the x and y coordinates of the most recent proxy
     # location.
-    def proxy(coord)
-      execute(:proxy, coord)
+    def proxy_coord
+      execute(:proxy, :coord).to_a
     end
 
     # Remove the proxy from the display.
-    def proxy(forget)
-      execute(:proxy, forget)
+    def proxy_forget
+      execute(:proxy, :forget)
     end
 
     # Place the proxy at the given x and y coordinates.
-    def proxy(place x y)
-      execute(:proxy, place x y)
-    end
-
-    # This command is used to query and change the position of sashes in the
-    # panedwindow. It can take any of the following forms:
-    def sash(?args?)
-      execute(:sash, ?args?)
+    def proxy_place(x, y)
+      execute(:proxy, :place, x, y)
     end
 
     # Return the current x and y coordinate pair for the sash given by index.
@@ -90,33 +59,32 @@ module Tk
     # the panedwindow.
     # The coordinates given are those of the top left corner of the region
     # containing the sash.
-    def sash(coord index)
-      execute(:sash, coord index)
+    def sash_coord(index)
+      execute(:sash, :coord, index)
     end
 
     # This command computes the difference between the given coordinates and
     # the coordinates given to the last sash mark command for the given sash.
     # It then moves that sash the computed dif‐ ference.
-    # The return value is the empty string.
-    def sash(dragto index x y)
-      execute(:sash, dragto index x y)
+    def sash_dragto(index, x, y)
+      execute_only(:sash, :dragto, index, x, y)
     end
 
     # Records x and y for the sash given by index; used in conjunction with
     # later sash dragto commands to move the sash.
-    def sash(mark index x y)
-      execute(:sash, mark index x y)
+    def sash_mark(index, x, y)
+      execute(:sash, :mark, index, x, y)
     end
 
     # Place the sash given by index at the given coordinates.
-    def sash(place index x y)
-      execute(:sash, place index x y)
+    def sash_place(index, x, y)
+      execute(:sash, :place, index, x, y)
     end
 
     # Query a management option for window.
     # Option may be any value allowed by the paneconfigure subcommand.
-    def panecget(window option)
-      execute(:panecget, window option)
+    def panecget(window, option)
+      execute(:panecget, window, option.to_tcl_option)
     end
 
     # Query or modify the management options for window.
@@ -187,13 +155,13 @@ module Tk
     # requested internally by the window will be used initially; the width may
     # later be adjusted by the movement of sashes in the panedwindow.
     # Size may be any value accepted by Tk_Get‐ Pixels.
-    def paneconfigure(window ?option? ?value option value ...?)
-      execute(:paneconfigure, window ?option? ?value option value ...?)
+    def paneconfigure(window, options = None)
+      common_configure(:paneconfigure, window, options)
     end
 
     # Returns an ordered list of the widgets managed by pathName.
     def panes
-      execute(:panes)
+      execute(:panes).to_a
     end
   end
 end

@@ -415,8 +415,7 @@ module Tk
     # If +tag_or_id+ is a tag that refers to more than one item, the first (lowest)
     # such item is used.
     def itemcget(tag_or_id, option)
-      option = option.to_tcl_option
-      execute(:itemcget, tag_or_id, option)
+      execute(:itemcget, tag_or_id, option.to_tcl_option)
     end
 
     # This command is similar to the configure widget command except that it
@@ -434,16 +433,8 @@ module Tk
     # string. The options and values are the same as those permissible in the
     # create widget command when the item(s) were created; see the sections
     # describing individual item types below for details on the legal options.
-    def itemconfigure(tag_or_id, *arguments)
-      if arguments.empty?
-        execute('itemconfigure', tag_or_id)
-      elsif arguments.size == 1 && arguments.first.respond_to?(:to_tcl_options)
-        execute_only('itemconfigure', tag_or_id, arguments.first.to_tcl_options)
-      elsif arguments.size == 1
-        execute('itemconfigure', tag_or_id, arguments.first.to_tcl_option)
-      else
-        raise ArgumentError, "Invalid arguments: %p" % [arguments]
-      end
+    def itemconfigure(tag_or_id, options = None)
+      common_configure(:itemconfigure, tag_or_id, options)
     end
 
     # Move all of the items given by +tag_or_id+ to a new position in the display

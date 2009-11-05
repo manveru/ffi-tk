@@ -102,16 +102,8 @@ module Tk
     # -selectforeground color color specifies the foreground color to use when
     # displaying the item while it is selected.
     # It may have any of the forms accepted by Tk_GetColor.
-    def itemconfigure(index, *arguments)
-      if arguments.empty?
-        execute('itemconfigure', index)
-      elsif arguments.size == 1 && arguments.first.respond_to?(:to_tcl_options)
-        execute_only('itemconfigure', index, arguments.first.to_tcl_options)
-      elsif arguments.size == 1
-        execute('itemconfigure', index, arguments.first.to_tcl_option)
-      else
-        raise ArgumentError, "Invalid arguments: %p" % [arguments]
-      end
+    def itemconfigure(index, options = None)
+      common_configure(:itemconfigure, index, options)
     end
 
     # Given a y-coordinate within the listbox window, this command returns the
@@ -173,7 +165,7 @@ module Tk
     # Selects all of the elements in the range between first and last,
     # inclusive, without affecting the selection state of elements outside that
     # range.
-    def selection_set, first, last = None)
+    def selection_set(first, last = None)
       execute(:selection, :set, first, last)
     end
 

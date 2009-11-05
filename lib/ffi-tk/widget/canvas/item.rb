@@ -130,8 +130,8 @@ end
         canvas.index(self, index)
       end
 
-      def configure(*arguments)
-        canvas.itemconfigure(self, *arguments)
+      def configure(options = None)
+        canvas.itemconfigure(self, options)
       end
 
       def lower(below = None)

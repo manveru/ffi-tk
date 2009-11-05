@@ -1,13 +1,10 @@
 module Tk
   class Menu
+    include Cget, Configure
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('menu', assign_pathname, options.to_tcl_options)
-    end
-
-
-    def option(?arg arg ...?)
-      execute(:option, ?arg arg ...?)
     end
 
     # Change the state of the entry indicated by index to active and redisplay
@@ -148,14 +145,12 @@ module Tk
     # deselected. For radiobutton entries, changing the variable causes the
     # currently-selected entry to deselect itself.
     # The add widget command returns an empty string.
-    def add(type ?option value option value ...?)
-      execute(:add, type ?option value option value ...?)
-    end
-
-    # Returns the current value of the configuration option given by option.
-    # Option may have any of the values accepted by the menu command.
-    def cget(option)
-      execute(:cget, option)
+    def add(type, options = None)
+      if None == options
+        execute(:add, type)
+      else
+        execute(:add, type, options.to_tcl_options)
+      end
     end
 
     # Makes a clone of the current menu named newPathName.
@@ -164,38 +159,23 @@ module Tk
     # cloneType can be normal, menubar, or tearoff.
     # Should not normally be called outside of the Tk library.
     # See the CLONES section for more information.
-    def clone(newPathname ?cloneType?)
-      execute(:clone, newPathname ?cloneType?)
-    end
-
-    # Query or modify the configuration options of the widget.
-    # If no option is specified, returns a list describing all of the available
-    # options for pathName (see Tk_ConfigureInfo for information on the format
-    # of this list).
-    # If option is specified with no value, then the command returns a list
-    # describing the one named option (this list will be identical to the
-    # corresponding sublist of the value returned if no option is specified).
-    # If one or more option-value pairs are specified, then the command
-    # modifies the given widget option(s) to have the given value(s); in this
-    # case the command returns an empty string.
-    # Option may have any of the values accepted by the menu command.
-    def configure(?option? ?value option value ...?)
-      execute(:configure, ?option? ?value option value ...?)
+    def clone(newPathname, cloneType = None)
+      execute(:clone, newPathname, cloneType)
     end
 
     # Delete all of the menu entries between index1 and index2 inclusive.
     # If index2 is omitted then it defaults to index1.
     # Attempts to delete a tear-off menu entry are ignored (instead, you should
     # change the tearOff option to remove the tear-off entry).
-    def delete(index1 ?index2?)
-      execute(:delete, index1 ?index2?)
+    def delete(index1, index2 = None)
+      execute(:delete, index1, index2)
     end
 
     # Returns the current value of a configuration option for the entry given
     # by index.
     # Option may have any of the values accepted by the add widget command.
-    def entrycget(index option)
-      execute(:entrycget, index option)
+    def entrycget(index, option)
+      execute(:entrycget, index, option)
     end
 
     # This command is similar to the configure command, except that it applies
@@ -207,8 +187,8 @@ module Tk
     # If no options are specified, returns a list describing the current
     # options for entry index (see Tk_ConfigureInfo for information on the
     # format of this list).
-    def entryconfigure(index ?options?)
-      execute(:entryconfigure, index ?options?)
+    def entryconfigure(index, options = None)
+      common_configure(:entryconfigure, index, options)
     end
 
     # Returns the numerical index corresponding to index, or none if index was
@@ -223,8 +203,12 @@ module Tk
     # as for the add widget command.
     # It is not possible to insert new menu entries before the tear-off entry,
     # if the menu has one.
-    def insert(index type ?option value option value ...?)
-      execute(:insert, index type ?option value option value ...?)
+    def insert(index, type, options = None)
+      if None == options
+        execute(:insert, index, type)
+      else
+        execute(:insert, index, type, options.to_tcl_options)
+      end
     end
 
     # Invoke the action of the menu entry.
@@ -250,8 +234,8 @@ module Tk
     # returned as the result of the post widget command.
     # If an error returns while executing the command, then the error is
     # returned without posting the menu.
-    def post(x y)
-      execute(:post, x y)
+    def post(x, y)
+      execute(:post, x, y).to_s?
     end
 
     # Posts the submenu associated with the cascade entry given by index, and

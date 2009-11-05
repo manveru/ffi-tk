@@ -1,5 +1,7 @@
 module Tk
   class Scrollbar
+    include Cget, Configure
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('scrollbar', assign_pathname, options.to_tcl_options)
@@ -10,32 +12,11 @@ module Tk
     # The only element values understood by this command are arrow1, slider, or
     # arrow2. If any other value is specified then no element of the scrollbar
     # will be active.
-    # If element is not specified, the command returns the name of the ele‐
-    # ment that is currently active, or an empty string if no element is
+    # If element is not specified, the command returns the name of the element
+    # that is currently active, or an empty string if no element is
     # active.
-    def activate(?element?)
-      execute(:activate, ?element?)
-    end
-
-    # Returns the current value of the configuration option given by option.
-    # Option may have any of the values accepted by the scrollbar command.
-    def cget(option)
-      execute(:cget, option)
-    end
-
-    # Query or modify the configuration options of the widget.
-    # If no option is specified, returns a list describing all of the available
-    # options for pathName (see Tk_ConfigureInfo for information on the format
-    # of this list).
-    # If option is specified with no value, then the command returns a list
-    # describing the one named option (this list will be identical to the
-    # corresponding sublist of the value returned if no option is specified).
-    # If one or more option-value pairs are specified, then the command
-    # modifies the given widget option(s) to have the given value(s); in this
-    # case the command returns an empty string.
-    # Option may have any of the values accepted by the scrollbar command.
-    def configure(?option? ?value option value ...?)
-      execute(:configure, ?option? ?value option value ...?)
+    def activate(element = None)
+      execute(:activate, element).to_s?
     end
 
     # Returns a real number indicating the fractional change in the scrollbar
@@ -46,8 +27,8 @@ module Tk
     # If the scrollbar is vertical, the result indicates how much the scrollbar
     # setting must change to move the slider deltaY pixels down.
     # The arguments and the result may be zero or negative.
-    def delta(deltaX deltaY)
-      execute(:delta, deltaX deltaY)
+    def delta(delta_x, delta_y)
+      execute(:delta, delta_x, delta_y)
     end
 
     # Returns a real number between 0 and 1 indicating where the point given by
@@ -57,8 +38,8 @@ module Tk
     # on. X and y must be pixel coordinates relative to the scrollbar widget.
     # If x and y refer to a point outside the trough, the closest point in the
     # trough is used.
-    def fraction(x y)
-      execute(:fraction, x y)
+    def fraction(x, y)
+      execute(:fraction, x, y)
     end
 
     # Returns the scrollbar settings in the form of a list whose elements are
@@ -70,9 +51,9 @@ module Tk
     # Returns the name of the element under the point given by x and y (such as
     # arrow1), or an empty string if the point does not lie in any element of
     # the scrollbar.
-    # X and y must be pixel coordi‐ nates relative to the scrollbar widget.
-    def identify(x y)
-      execute(:identify, x y)
+    # X and y must be pixel coordinates relative to the scrollbar widget.
+    def identify(x, y)
+      execute(:identify, x, y)
     end
 
     # This command is invoked by the scrollbar's associated widget to tell the
@@ -102,10 +83,7 @@ module Tk
     # overlap between the old and new views.
     # Number is either 1, which means the next page should become visible, or
     # -1, which means that the previous page should become visible.
-    def set(first last)
-      execute(:set, first last)
-    end
-
+    #
     # In this form the arguments are all integers.
     # TotalUnits gives the total size of the object being displayed in the
     # associated widget.
@@ -132,8 +110,8 @@ module Tk
     # toplevel .tl text .tl.t -yscrollcommand {.tl.s set} scrollbar .tl.s
     # -command {.tl.t yview} grid .tl.t .tl.s -sticky nsew grid columnconfigure
     # .tl 0 -weight 1 grid rowconfigure .tl 0 -weight 1
-    def set(totalUnits windowUnits firstUnit lastUnit)
-      execute(:set, totalUnits windowUnits firstUnit lastUnit)
+    def set(first, second, third = None, fourth = None)
+      execute(:set, first, second, third, fourth)
     end
   end
 end
