@@ -1,4 +1,5 @@
 module Tk
+  # Create and manipulate checkbutton widgets
   class CheckButton
     include Cget, Configure
 

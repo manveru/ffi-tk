@@ -1,5 +1,7 @@
 module Tk
   class Canvas
+    # Items of type oval appear as circular or oval regions on the display.
+    # Each oval may have an outline, a fill, or both.
     class Oval < Item
       options(
         :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,

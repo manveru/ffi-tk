@@ -1,5 +1,7 @@
 module Tk
   class Canvas
+    # Items of type rectangle appear as rectangular regions on the display.
+    # Each rectangle may have an outline, a fill, or both.
     class Rectangle < Item
       options(
         :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
