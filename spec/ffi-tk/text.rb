@@ -85,35 +85,35 @@ describe Tk::Text do
   end
 
   it 'counts chars' do
-    text.count(:chars, 1.0, :end).should == 14
+    text.count('1.0', 'end', :chars).should == 14
   end
 
   it 'counts displaychars' do
-    text.count(:displaychars, 1.0, :end).should == 14
+    text.count(1.0, :end, :displaychars).should == 14
   end
 
   it 'counts displayindices' do
-    text.count(:displayindices, 1.0, :end).should == 14
+    text.count(1.0, :end, :displayindices).should == 14
   end
 
   it 'counts displaylines' do
-    text.count(:displaylines, 1.0, :end).should == 13
+    text.count(1.0, :end, :displaylines).should == 13
   end
 
   it 'counts indices' do
-    text.count(:indices, 1.0, :end).should == 14
+    text.count(1.0, :end, :indices).should == 14
   end
 
   it 'counts lines' do
-    text.count(:lines, 1.0, :end).should == 1
+    text.count(1.0, :end, :lines).should == 1
   end
 
   it 'counts xpixels' do
-    text.count(:xpixels, 1.0, :end).should == 0
+    text.count(1.0, :end, :xpixels).should == 0
   end
 
   it 'counts ypixels' do
-    text.count(:ypixels, 1.0, :end).should == 195
+    text.count(1.0, :end, :ypixels).should == 195
   end
 
   should 'not be in debug mode' do

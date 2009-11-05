@@ -1,3 +1,7 @@
+class Object
+  undef :type if respond_to?(:type)
+end
+
 module Tk
   class << self
     attr_reader :interp, :root, :callbacks
@@ -10,7 +14,7 @@ module Tk
 
   # A little something so people know what they have to do.
   # Might simply call Tk.init in it instead (and issue a warning)?
-  @interp = BasicObject.new
+  @interp = Object.new
   def @interp.method_missing(*args)
     Kernel.raise "Call Tk.init before using Tk"
   end

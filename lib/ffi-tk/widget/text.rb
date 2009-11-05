@@ -94,7 +94,7 @@ module Tk
     # than one option was supplied. For example `text.count('1.3', '4.5',
     # :xpixels, :ypixels` is perfectly valid and will return a list of two
     # elements.
-    def count(*options, index1, index2)
+    def count(index1, index2, *options)
       args = options.map{|option| option.to_tcl_option }
       execute('count', *args, index1, index2)
     end
