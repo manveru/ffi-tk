@@ -1,5 +1,5 @@
 module Tk
-  class Label
+  class Label < Widget
     include Cget, Configure
 
     def initialize(parent, options = {})

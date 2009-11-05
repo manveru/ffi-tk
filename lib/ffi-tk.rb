@@ -10,8 +10,12 @@ module Tk
   OK = 0
   ERROR = 1
   None = Object.new
-  def None.to_tcl; nil; end
-  def None.inspect; '#<None>'; end
+  class << None
+    def to_tcl; nil; end
+    def to_tcl_options?; self; end
+    def to_tcl_option?; self; end
+    def inspect; '#<None>'; end
+  end
 
   autoload :Button,       'ffi-tk/widget/button'
   autoload :Canvas,       'ffi-tk/widget/canvas'
@@ -20,6 +24,7 @@ module Tk
   autoload :Root,         'ffi-tk/widget/root'
   autoload :Text,         'ffi-tk/widget/text'
   autoload :Widget,       'ffi-tk/widget'
+  autoload :Label,        'ffi-tk/widget/label'
 
   # Don't autoload this, or find out why it segfaults
   require 'ffi-tk/event/data'

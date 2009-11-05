@@ -31,7 +31,11 @@ module FFI
           when Fixnum
             Tcl.new_int_obj(ruby_obj)
           else
-            raise "Don't know how to set %p automatically" % [ruby_obj]
+            if ruby_obj.respond_to?(:to_tcl)
+              ruby_obj.to_tcl
+            else
+              raise ArgumentError, "Don't know how to set %p automatically" % [ruby_obj]
+            end
           end
 
         Tcl.set_obj_result(self, obj)

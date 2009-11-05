@@ -1,6 +1,9 @@
 module Tk
   require 'ffi-tk/command/bell'
+  require 'ffi-tk/command/dialog'
+  require 'ffi-tk/command/choose_directory'
   require 'ffi-tk/command/bind'
+  require 'ffi-tk/command/choose_color'
   require 'ffi-tk/command/bindtags'
   require 'ffi-tk/command/bindtags'
   require 'ffi-tk/command/cget'

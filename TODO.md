@@ -41,14 +41,14 @@ Commands that operate on any widget as argument have highest priority.
 [ ] loadTk
 [ ] send
 [ ] tk_bisque
-[ ] tk_chooseColor
-[ ] tk_chooseDirectory
-[ ] tk_dialog
-[ ] tk_focusFollowsMouse
-[ ] tk_focusNext
-[ ] tk_focusPrev
-[ ] tk_getOpenFile
-[ ] tk_getSaveFile
+[x] tk_chooseColor
+[x] tk_chooseDirectory
+[x] tk_dialog
+[x] tk_focusFollowsMouse
+[x] tk_focusNext
+[x] tk_focusPrev
+[x] tk_getOpenFile
+[x] tk_getSaveFile
 [ ] tk_menuSetFocus
 [ ] tk_messageBox
 [ ] tk_optionMenu

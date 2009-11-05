@@ -190,6 +190,7 @@ module Tk
         pairs = map{|key, val| "#{key.to_tcl_option} #{val.to_tcl}" }
         TclString.new(pairs.join(' '))
       end
+      alias to_tcl_options? to_tcl_options
     end
 
     module Regexp
@@ -209,7 +210,7 @@ module Tk
 
     module String
       def to_tcl
-        TclString.new(self =~ /\A\w+\Z/ ? dup : dump)
+        TclString.new(self =~ /\A\w+\Z/ ? dup : "{#{self}}")
       end
 
       def to_tcl_option
