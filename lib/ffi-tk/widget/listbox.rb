@@ -1,13 +1,10 @@
 module Tk
   class Listbox
+    include Cget, Configure
+
     def initialize(parent, options = {})
       @parent = parent
       Tk.execute('listbox', assign_pathname, options.to_tcl_options)
-    end
-
-
-    def option(?arg arg ...?)
-      execute(:option, ?arg arg ...?)
     end
 
     # Sets the active element to the one indicated by index.
@@ -17,7 +14,7 @@ module Tk
     # widget has the input focus, and its index may be retrieved with the index
     # active.
     def activate(index)
-      execute(:activate, index)
+      execute_only(:activate, index)
     end
 
     # Returns a list of four numbers describing the bounding box of the text in
@@ -31,28 +28,7 @@ module Tk
     # string; if the element is partially visible, the result gives the full
     # area of the element, including any parts that are not visible.
     def bbox(index)
-      execute(:bbox, index)
-    end
-
-    # Returns the current value of the configuration option given by option.
-    # Option may have any of the values accepted by the listbox command.
-    def cget(option)
-      execute(:cget, option)
-    end
-
-    # Query or modify the configuration options of the widget.
-    # If no option is specified, returns a list describing all of the available
-    # options for pathName (see Tk_ConfigureInfo for information on the format
-    # of this list).
-    # If option is specified with no value, then the command returns a list
-    # describing the one named option (this list will be identical to the
-    # corresponding sublist of the value returned if no option is specified).
-    # If one or more option-value pairs are specified, then the command
-    # modifies the given widget option(s) to have the given value(s); in this
-    # case the command returns an empty string.
-    # Option may have any of the values accepted by the listbox command.
-    def configure(?option? ?value option value ...?)
-      execute(:configure, ?option? ?value option value ...?)
+      execute(:bbox, index).to_a(&:to_i)
     end
 
     # Returns a list containing the numerical indices of all of the elements in
@@ -60,7 +36,7 @@ module Tk
     # If there are no elements selected in the listbox then an empty string is
     # returned.
     def curselection
-      execute(:curselection)
+      execute(:curselection).to_a(&:to_i)
     end
 
     # Deletes one or more elements of the listbox.
@@ -68,8 +44,8 @@ module Tk
     # range to delete.
     # If last is not specified it defaults to first, i.e.
     # a single element is deleted.
-    def delete(first ?last?)
-      execute(:delete, first ?last?)
+    def delete(first, last = None)
+      execute(:delete, first, last)
     end
 
     # If last is omitted, returns the contents of the listbox element indicated
@@ -77,8 +53,8 @@ module Tk
     # If last is specified, the command returns a list whose elements are all
     # of the listbox elements between first and last, inclusive.
     # Both first and last may have any of the standard forms for indices.
-    def get(first ?last?)
-      execute(:get, first ?last?)
+    def get(first, last = None)
+      execute(:get, first, last)
     end
 
     # Returns the integer index value that corresponds to index.
@@ -93,15 +69,15 @@ module Tk
     # If index is specified as end then the new elements are added to the end
     # of the list.
     # Returns an empty string.
-    def insert(index ?element element ...?)
-      execute(:insert, index ?element element ...?)
+    def insert(index, *elements)
+      execute_only(:insert, index, *elements)
     end
 
     # Returns the current value of the item configuration option given by
     # option. Option may have any of the values accepted by the listbox
     # itemconfigure command.
-    def itemcget(index option)
-      execute(:itemcget, index option)
+    def itemcget(index, option)
+      execute(:itemcget, index, option.to_tcl_option)
     end
 
     # Query or modify the configuration options of an item in the listbox.
@@ -126,8 +102,16 @@ module Tk
     # -selectforeground color color specifies the foreground color to use when
     # displaying the item while it is selected.
     # It may have any of the forms accepted by Tk_GetColor.
-    def itemconfigure(index ?option? ?value? ?option value ...?)
-      execute(:itemconfigure, index ?option? ?value? ?option value ...?)
+    def itemconfigure(index, *arguments)
+      if arguments.empty?
+        execute('itemconfigure', index)
+      elsif arguments.size == 1 && arguments.first.respond_to?(:to_tcl_options)
+        execute_only('itemconfigure', index, arguments.first.to_tcl_options)
+      elsif arguments.size == 1
+        execute('itemconfigure', index, arguments.first.to_tcl_option)
+      else
+        raise ArgumentError, "Invalid arguments: %p" % [arguments]
+      end
     end
 
     # Given a y-coordinate within the listbox window, this command returns the
@@ -136,18 +120,12 @@ module Tk
       execute(:nearest, y)
     end
 
-    # This command is used to implement scanning on listboxes.
-    # It has two forms, depending on option:
-    def scan(option args)
-      execute(:scan, option args)
-    end
-
     # Records x and y and the current view in the listbox window; used in
     # conjunction with later scan dragto commands.
     # Typically this command is associated with a mouse button press in the
     # widget. It returns an empty string.
-    def scan(mark x y)
-      execute(:scan, mark x y)
+    def scan_mark(x, y)
+      execute_only(:scan, :mark, x, y)
     end
 
     # This command computes the difference between its x and y arguments and
@@ -157,8 +135,8 @@ module Tk
     # widget, to produce the effect of dragging the list at high speed through
     # the window.
     # The return value is an empty string.
-    def scan(dragto x y.)
-      execute(:scan, dragto x y.)
+    def scan_dragto(x, y)
+      execute_only(:scan, :dragto, x, y)
     end
 
     # Adjust the view in the listbox so that the element given by index is
@@ -170,52 +148,39 @@ module Tk
       execute(:see, index)
     end
 
-    # This command is used to adjust the selection within a listbox.
-    # It has several forms, depending on option:
-    def selection(option arg)
-      execute(:selection, option arg)
-    end
-
     # Sets the selection anchor to the element given by index.
     # If index refers to a non-existent element, then the closest element is
     # used. The selection anchor is the end of the selection that is fixed
     # while dragging out a selection with the mouse.
     # The index anchor may be used to refer to the anchor element.
-    def selection(anchor index)
-      execute(:selection, anchor index)
+    def selection_anchor(index)
+      execute(:selection, :anchor, index)
     end
 
     # If any of the elements between first and last (inclusive) are selected,
     # they are deselected.
     # The selection state is not changed for elements outside this range.
-    def selection(clear first ?last?)
-      execute(:selection, clear first ?last?)
+    def selection(clear, first, last = None)
+      execute(:selection, :clear, first, last)
     end
 
     # Returns 1 if the element indicated by index is currently selected, 0 if
     # it is not.
-    def selection(includes index)
-      execute(:selection, includes index)
+    def selection_includes(index)
+      execute(:selection, :includes, index)
     end
 
     # Selects all of the elements in the range between first and last,
     # inclusive, without affecting the selection state of elements outside that
     # range.
-    def selection(set first ?last?)
-      execute(:selection, set first ?last?)
+    def selection_set, first, last = None)
+      execute(:selection, :set, first, last)
     end
 
     # Returns a decimal string indicating the total number of elements in the
     # listbox.
     def size
       execute(:size)
-    end
-
-    # This command is used to query and change the horizontal position of the
-    # information in the widget's window.
-    # It can take any of the following forms:
-    def xview(args)
-      execute(:xview, args)
     end
 
     # Returns a list containing two elements.
@@ -226,22 +191,23 @@ module Tk
     # visible in the window, and 40% of the text is off-screen to the right.
     # These are the same values passed to scrollbars via the -xscrollcommand
     # option.
-    def xview
-      execute(:xview)
-    end
-
+    #
     # Adjusts the view in the window so that the character position given by
     # index is displayed at the left edge of the window.
     # Character positions are defined by the width of the character 0.
-    def xview(index)
-      execute(:xview, index)
+    def xview(index = None)
+      if None == index
+        execute(:xview).to_a(&:to_f)
+      else
+        execute_only(:xview, index)
+      end
     end
 
     # Adjusts the view in the window so that fraction of the total width of the
     # listbox text is off-screen to the left.
     # fraction must be a fraction between 0 and 1.
-    def xview(moveto fraction)
-      execute(:xview, moveto fraction)
+    def xview_moveto(fraction)
+      execute_only(:xview, :moveto, fraction)
     end
 
     # This command shifts the view in the window left or right according to
@@ -253,15 +219,8 @@ module Tk
     # the view adjusts by number screen‐ fuls.
     # If number is negative then characters farther to the left become visible;
     # if it is positive then characters farther to the right become visible.
-    def xview(scroll number what)
-      execute(:xview, scroll number what)
-    end
-
-    # This command is used to query and change the vertical position of the
-    # text in the widget's window.
-    # It can take any of the following forms:
-    def yview(?args?)
-      execute(:yview, ?args?)
+    def xview_scroll(number, what)
+      execute(:xview, :scroll, number, what)
     end
 
     # Returns a list containing two elements, both of which are real fractions
@@ -273,14 +232,15 @@ module Tk
     # the last one in the win‐ dow, relative to the listbox as a whole.
     # These are the same values passed to scrollbars via the -yscrollcommand
     # option.
-    def yview
-      execute(:yview)
-    end
-
+    #
     # Adjusts the view in the window so that the element given by index is
     # displayed at the top of the window.
-    def yview(index)
-      execute(:yview, index)
+    def yview(index = None)
+      if None == index
+        execute(:yview).to_a(&:to_f)
+      else
+        execute(:yview, index)
+      end
     end
 
     # Adjusts the view in the window so that the element given by fraction
@@ -288,8 +248,8 @@ module Tk
     # Fraction is a fraction between 0 and 1; 0 indicates the first element in
     # the listbox, 0.33 indicates the element one-third the way through the
     # listbox, and so on.
-    def yview(moveto fraction)
-      execute(:yview, moveto fraction)
+    def yview_moveto(fraction)
+      execute_only(:yview, :moveto, fraction)
     end
 
     # This command adjusts the view in the window up or down according to
@@ -300,8 +260,8 @@ module Tk
     # pages then the view adjusts by number screenfuls.
     # If number is negative then earlier elements become visible; if it is
     # positive then later ele‐ ments become visible.
-    def yview(scroll number what)
-      execute(:yview, scroll number what)
+    def yview_scroll(number, what)
+      execute_only(:yview, :scroll, number, what)
     end
   end
 end
