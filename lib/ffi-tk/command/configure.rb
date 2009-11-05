@@ -16,20 +16,35 @@ module Tk
     #   text.configure(width: 100, height: 200)
     #   text.configure(:width)
     #   text.configure
-    def configure(*arguments)
-      if arguments.empty?
-        execute('configure')
-      elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
-        execute_only('configure', option_hash_to_tcl(arguments.first.to_hash))
-      elsif arguments.size == 1
-        argument = tcl_option(arguments.first)
-        execute('configure', argument)
-      else
-        raise ArgumentError, "Invalid arguments: %p" % [arguments]
-      end
+    def configure(argument = None)
+      common_configure(:configure, argument)
     end
 
     private
+
+    def self.configure_helper(receiver, argument = None)
+      if None == argument
+        receiver.execute(*yield(argument))
+      elsif argument.respond_to?(:to_tcl_options)
+        receiver.execute_only(*yield(argument.to_tcl_options))
+      elsif argument.respond_to?(:to_tcl_option)
+        recevier.execute(*yield(argument.to_tcl_option))
+      else
+        raise ArgumentError, "Invalid argument: %p" % [argument]
+      end
+    end
+
+    def common_configure(*invocation, argument)
+      if None == argument
+        execute(*invocation)
+      elsif argument.respond_to?(:to_tcl_options)
+        execute_only(*invocation, argument.to_tcl_options)
+      elsif argument.respond_to?(:to_tcl_option)
+        execute(*invocation, argument.to_tcl_option)
+      else
+        raise ArgumentError, "Invalid argument: %p" % [argument]
+      end
+    end
 
     def register_command(name, &block)
       case name
