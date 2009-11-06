@@ -3,9 +3,10 @@ module Tk
   class Variable
     attr_reader :name, :tcl_name, :bytesize
 
-    def initialize(name)
+    def initialize(name, value = None)
       @name = name.freeze
       @tcl_name = "$#{name}".freeze
+      set(value) unless None == value
     end
 
     def get
