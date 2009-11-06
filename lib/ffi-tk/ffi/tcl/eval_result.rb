@@ -124,7 +124,7 @@ module FFI
         value.empty? ? nil : value
       end
 
-      def to_bool
+      def to_boolean
         self.class.to_boolean(interp, obj)
       end
     end
