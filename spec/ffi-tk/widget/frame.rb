@@ -1,4 +1,4 @@
-require_relative '../helper'
+require_relative '../../helper'
 
 describe Tk::Frame do
   it 'creates a new frame' do
