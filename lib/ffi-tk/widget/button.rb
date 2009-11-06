@@ -15,7 +15,11 @@ module Tk
 
     # TODO: implement custom procs
     def initialize(parent = Tk.root, options = None, &block)
-      options[:command] = block if block
+      if block
+        options = {} unless options.respond_to?(:[]=)
+        options[:command] = register_command(:command, &block)
+      end
+
       super
     end
 

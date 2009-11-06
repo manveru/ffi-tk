@@ -8,6 +8,10 @@ module Tk
   @callbacks = {}
   @mutex = Mutex.new
 
+  class << self
+    attr_reader :callbacks, :widgets
+  end
+
   module_function
 
   def init
