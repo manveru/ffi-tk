@@ -6,7 +6,4 @@ describe Tk::Root do
     instance.class.should == Tk::Root
     instance.parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end
