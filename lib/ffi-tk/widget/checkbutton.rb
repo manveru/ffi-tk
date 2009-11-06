@@ -3,6 +3,16 @@ module Tk
   class CheckButton < Widget
     include Cget, Configure
 
+    def initialize(parent = Tk.root, options = None)
+      if block_given?
+        super do |options|
+          options[:command] = register_command(:command, &Proc.new)
+        end
+      else
+        super
+      end
+    end
+
     # Deselects the checkbutton and sets the associated variable to its “off”
     # value.
     def deselect

@@ -9,6 +9,12 @@ module Tk
         parent, options = Tk.root, parent
       end
 
+      if !options || None == options
+        options = {}
+      else
+        options = options.dup
+      end
+
       @parent = parent
 
       command =
@@ -17,6 +23,8 @@ module Tk
         else
           self.class.name[/(\w+)$/].downcase
         end
+
+      yield(options) if block_given?
 
       Tk.execute(command, assign_pathname, options.to_tcl_options?)
     end
