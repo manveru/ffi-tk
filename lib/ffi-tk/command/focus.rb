@@ -1,27 +1,6 @@
 module Tk
   # Utility methods for managing the input focus.
   module Focus
-    def focus(option = None)
-      case option
-      when None
-        Tk.execute('focus', self)
-      when :displayof
-        Tk.execute('focus', '-displayof', self)
-      when :force
-        Tk.execute_only('focus', '-force', self)
-      when :lastfor
-        Tk.execute('focus', '-lastfor', self)
-      end
-    end
-
-    def focus_next
-      Focus.next(self)
-    end
-
-    def focus_prev
-      Focus.prev(self)
-    end
-
     module_function
 
     def focus(window = None, option = None)
@@ -37,6 +16,8 @@ module Tk
           Tk.execute_only('focus', '-force', window)
         when :lastfor
           Tk.execute('focus', '-lastfor', window)
+        else
+          raise ArgumentError, "option must be one of: None, :displayof, :force, :lastfor"
         end
       end
     end

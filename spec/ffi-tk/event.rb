@@ -1,7 +1,5 @@
 require_relative '../helper'
 
-Tk.init
-
 describe Tk::Event do
   it 'gives a list of defined virtual events' do
     Tk::Event.info.sort.should ==  [

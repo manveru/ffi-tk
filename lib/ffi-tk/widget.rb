@@ -1,6 +1,6 @@
 module Tk
   class Widget
-    include Pack, Destroy, Bind, Focus, WM, Winfo
+    include Pack, Destroy, Bind, WM, Winfo
 
     attr_reader :parent, :tk_pathname
 
@@ -23,6 +23,18 @@ module Tk
 
     def to_tcl
       tk_pathname.dump
+    end
+
+    def focus(option = None)
+      Focus.focus(self, option)
+    end
+
+    def focus_next
+      Focus.next(self)
+    end
+
+    def focus_prev
+      Focus.prev(self)
     end
 
     private
