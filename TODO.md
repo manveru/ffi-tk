@@ -15,25 +15,9 @@ An item is marked as done when:
 
 Commands that operate on any widget as argument have highest priority.
 
-[x] pack
-[x] event
-[x] place
-[x] clipboard
-[x] selection
-[x] font
-[x] raise
-[x] lower
-[x] winfo
 [ ] grid
 [ ] tk
-[ ] wm
 [ ] option
-[x] options
-[x] bell
-[x] bind
-[x] bindtags
-[x] destroy
-[x] focus
 [ ] grab
 [ ] image
     [ ] photo
@@ -41,25 +25,6 @@ Commands that operate on any widget as argument have highest priority.
 [ ] loadTk
 [ ] send
 [ ] tk_bisque
-[x] tk_chooseColor
-[x] tk_chooseDirectory
-[x] tk_dialog
-[x] tk_focusFollowsMouse
-[x] tk_focusNext
-[x] tk_focusPrev
-[x] tk_getOpenFile
-[x] tk_getSaveFile
-[ ] tk_menuSetFocus
-[ ] tk_messageBox
-[ ] tk_optionMenu
-[ ] tk_popup
-[ ] tk_setPalette
-[ ] tk_textCopy
-[ ] tk_textCut
-[ ] tk_textPaste
-[ ] tkerror
-[ ] tkvars
-[ ] tkwait
 
 ## Widgets
 
