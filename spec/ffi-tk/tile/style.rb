@@ -146,8 +146,8 @@ describe Tk::Tile::Style do
     Style.theme_create('spec-theme2', parent: 'default').should == true
 
     # If -settings is present, script is evaluated in the context of the new theme
-    res = Style.theme_create('spec-theme-block', parent: 'default') do 
-      Style.configure('.', :background=>'#FCB64F', 
+    res = Style.theme_create('spec-theme-block', parent: 'default') do
+      Style.configure('.', :background=>'#FCB64F',
                               :troughcolor=>'#F8C278', :borderwidth=>1)
       Style.configure(:font=>Tk::Tile::Font::Default, :borderwidth=>1)
 

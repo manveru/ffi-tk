@@ -7,13 +7,13 @@ Tk.init
 Tk::Tile::Style.theme_use 'alt'
 
 THEMELIST = [
-  ['default', 'Default'], 
-  ['classic', 'Classic'], 
-  ['alt', 'Revitalized'], 
-  ['clam', 'Clam'], 
-  ['winnative', 'Windows native'], 
-  ['xpnative', 'XP Native'], 
-  ['aqua', 'Aqua'], 
+  ['default', 'Default'],
+  ['classic', 'Classic'],
+  ['alt', 'Revitalized'],
+  ['clam', 'Clam'],
+  ['winnative', 'Windows native'],
+  ['xpnative', 'XP Native'],
+  ['aqua', 'Aqua'],
 ]
 RUBY_THEMELIST = []
 RUBY_THEMELIST << ['kroc-rb', 'Kroc (by Ruby)', false]
@@ -22,14 +22,14 @@ def makeThemeControl(parent)
   frame = Tk::Tile::LabelFrame.new parent, text: 'Theme'
 
   THEMELIST.each{|theme, name|
-    b = Tk::Tile::RadioButton.new(frame, text: name, value: theme, 
+    b = Tk::Tile::RadioButton.new(frame, text: name, value: theme,
                                   command: proc{ Tk::Tile::Style.theme_use(theme) } )
 
     b.grid sticky: 'ew'
     b.state(:disabled) unless Tk::Tile::Style.theme_names.include?(theme)
   }
   RUBY_THEMELIST.each{|theme, name, available|
-    b = Tk::Tile::RadioButton.new(frame, text: name, value: theme, 
+    b = Tk::Tile::RadioButton.new(frame, text: name, value: theme,
                                   command: proc{ Tk::Tile::Style.theme_use(theme) } )
 
     b.grid sticky: 'ew'
@@ -68,23 +68,23 @@ def makeToolbars(parent)
   BUTTONS.each{|icon|
     i += 1
     Tk::Tile::Button.new(tb, text: icon,
-                        # :image=>$ICON[icon], 
-                        # :compound=>$V[:COMPOUND], 
-                         :style=>:Toolbutton).grid(:row=>0, :column=>i, 
+                        # :image=>$ICON[icon],
+                        # :compound=>$V[:COMPOUND],
+                         :style=>:Toolbutton).grid(:row=>0, :column=>i,
                                                    :sticky=>:news)
   }
   CHECKBOXES.each{|icon|
     i += 1
     Tk::Tile::CheckButton.new(tb, text: icon,
-                              #:image=>$ICON[icon], 
-                              #:variable=>$V.ref(icon), 
-                              #:compound=>$V[:COMPOUND], 
-                              :style=>:Toolbutton).grid(:row=>0, :column=>i, 
+                              #:image=>$ICON[icon],
+                              #:variable=>$V.ref(icon),
+                              #:compound=>$V[:COMPOUND],
+                              :style=>:Toolbutton).grid(:row=>0, :column=>i,
                                                         :sticky=>:news)
   }
 
   mb = Tk::Tile::MenuButton.new(tb, text: 'toolbar',
-                                #:image=>$ICON['file'], 
+                                #:image=>$ICON['file'],
                                 #:compound=>$V[:COMPOUND]
                                )
   mb.configure menu: makeCompoundMenu(mb)
@@ -104,9 +104,9 @@ end
 def makeCompoundMenu(mb)
   menu = Tk::Menu.new(mb)
   %w(text image none top bottom left right center).each{|str|
-    #menu.add(:radiobutton, :label=> Tk.tk_call('string', 'totitle', str), 
-    menu.add(:radiobutton, :label=> str, 
-             :value=>str, 
+    #menu.add(:radiobutton, :label=> Tk.tk_call('string', 'totitle', str),
+    menu.add(:radiobutton, :label=> str,
+             :value=>str,
              #:variable=>$V.ref(:COMPOUND),
              :command=> proc{ puts "foo"; true } )
   }

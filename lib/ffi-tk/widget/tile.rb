@@ -99,7 +99,7 @@ __END__
       }
       images = Hash[*Tk.execute('array', 'get', 'images')]
       images.keys.each{|k|
-        images[k] = TkPhotoImage.new(:imagename=>images[k], 
+        images[k] = TkPhotoImage.new(:imagename=>images[k],
                                      :without_creating=>true)
       }
 

@@ -19,7 +19,7 @@ module Tk::Tile
     end
 
     # Temporarily sets the current theme to themeName, evaluate script,
-    # then restore the previous theme. Typically script simply defines 
+    # then restore the previous theme. Typically script simply defines
     # styles and elements, though arbitrary Tcl code may appear.
     def self.theme_settings(name, &block)
       return unless block
@@ -103,7 +103,7 @@ module Tk::Tile
     # state, using the standard lookup rules for element options.
     # state is a list of state names; if omitted, it defaults to all
     # bits off (the “normal” state). If the default argument is present,
-    # it is used as a fallback value in case no specification 
+    # it is used as a fallback value in case no specification
     # for -option is found.
     def self.lookup(style, option, state=Tk::None, default=Tk::None)
       Tk.execute('ttk::style', 'lookup', style, option.to_tcl_option, state, default).to_s
