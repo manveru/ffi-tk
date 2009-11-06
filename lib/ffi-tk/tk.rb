@@ -12,11 +12,11 @@ module Tk
   @callbacks = {}
   @mutex = Mutex.new
 
-  # A little something so people know what they have to do.
-  # Might simply call Tk.init in it instead (and issue a warning)?
+  # A little something so people don't have to call Tk.init
+  # This will simply init the first time the interp is needed.
   @interp = Object.new
   def @interp.method_missing(*args)
-    Kernel.raise "Call Tk.init before using Tk"
+    Tk.init
   end
 
   module_function
@@ -34,6 +34,8 @@ module Tk
 
     FFI::Tcl.create_obj_command(interp, 'RubyFFI::callback', TCL_CALLBACK, 0, TCL_DELETE)
     FFI::Tcl.create_obj_command(interp, 'RubyFFI::event',    TCL_EVENT,    0, TCL_DELETE)
+
+    return @interp
   end
 
   # without our callbacks, nothing goes anymore, abort mission
