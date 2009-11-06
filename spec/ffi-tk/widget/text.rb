@@ -48,7 +48,7 @@ describe Tk::Text do
     text.cget(:spacing2                ).should == 0
     text.cget(:spacing3                ).should == 0
     text.cget(:startline               ).should == 0
-    text.cget(:state                   ).should == :normal
+    text.cget(:state                   ).should == ['normal']
     text.cget(:tabs                    ).should == nil
     text.cget(:tabstyle                ).should == :tabular
     text.cget(:takefocus               ).should == false

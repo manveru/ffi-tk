@@ -45,7 +45,7 @@ describe Tk::Entry do
     @entry.cget(:selectborderwidth  ).should == 0
     @entry.cget(:selectforeground   ).should == "#000000"
     @entry.cget(:show               ).should == nil
-    @entry.cget(:state              ).should == :normal
+    @entry.cget(:state              ).should == ['normal']
     @entry.cget(:takefocus          ).should == false
     @entry.cget(:textvariable       ).should == nil
     @entry.cget(:validate           ).should == :none
