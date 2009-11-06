@@ -123,8 +123,11 @@ describe Tk::WM do
   describe 'WM.geometry' do
     it 'queries geometry' do
       geometry = root.wm_geometry
-      geometry.size.should == 4
-      geometry.all?{|value| Integer === value }.should.be.true
+      geometry.should.not.be.nil
+      geometry.width.should.respond_to :to_int
+      geometry.height.should.respond_to :to_int
+      geometry.x.should.respond_to :to_int
+      geometry.y.should.respond_to :to_int
     end
 
     it 'sets geometry' do
