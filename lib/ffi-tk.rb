@@ -30,6 +30,7 @@ module Tk
   require 'ffi-tk/event/data'
   require 'ffi-tk/event/handler'
   require 'ffi-tk/command'
+  require 'ffi-tk/variable'
 
   # require the real thing
   require 'ffi-tk/tk'

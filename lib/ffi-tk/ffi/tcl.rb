@@ -32,6 +32,9 @@ module FFI
     attach_function :Tcl_NewIntObj, [:int], Obj
     attach_function :Tcl_NewListObj, [count = :int, values = :pointer], Obj
     attach_function :Tcl_NewStringObj, [:string, :int], Obj
+    attach_function :Tcl_ObjGetVar2, [Interp, :pointer, :pointer, :int], Obj
+    attach_function :Tcl_ObjSetVar2, [Interp, Obj, Obj, Obj, :int], Obj
+    attach_function :Tcl_ParseVar, [Interp, :pointer, :pointer], :pointer
     attach_function :Tcl_SetObjResult, [Interp, Obj], :void
     attach_function :Tcl_WaitForEvent, [TclTime], :int
 
@@ -41,7 +44,6 @@ module FFI
       Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
     class << self
-      alias get_double_from_obj Tcl_GetDoubleFromObj
       alias append_all_obj_types Tcl_AppendAllObjTypes
       alias create_interp Tcl_CreateInterp
       alias create_obj_command Tcl_CreateObjCommand
@@ -49,6 +51,7 @@ module FFI
       alias do_one_event Tcl_DoOneEvent
       alias eval_ex Tcl_EvalEx
       alias get_boolean_from_obj Tcl_GetBooleanFromObj
+      alias get_double_from_obj Tcl_GetDoubleFromObj
       alias get_int_from_obj Tcl_GetIntFromObj
       alias get_obj_result Tcl_GetObjResult
       alias get_obj_type Tcl_GetObjType
@@ -63,6 +66,9 @@ module FFI
       alias new_int_obj Tcl_NewIntObj
       alias new_list_obj Tcl_NewListObj
       alias new_string_obj Tcl_NewStringObj
+      alias obj_get_var2 Tcl_ObjGetVar2
+      alias obj_set_var2 Tcl_ObjSetVar2
+      alias parse_var Tcl_ParseVar
       alias set_obj_result Tcl_SetObjResult
       alias wait_for_event Tcl_WaitForEvent
     end
