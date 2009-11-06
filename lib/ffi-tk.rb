@@ -30,8 +30,8 @@ module Tk
   # Don't autoload this, or find out why it segfaults
   require 'ffi-tk/event/data'
   require 'ffi-tk/event/handler'
-  require 'ffi-tk/command'
   require 'ffi-tk/variable'
+  require 'ffi-tk/command'
 
   # require the real thing
   require 'ffi-tk/tk'

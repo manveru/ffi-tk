@@ -9,7 +9,9 @@ module Tk
     end
 
     def get
-      Tk.execute('set', name).to_s
+      Tk.execute('set', name)
+    rescue RuntimeError
+      raise NameError, "can't read %p: no such variable" % [name]
     end
 
     def set(value)
@@ -22,6 +24,22 @@ module Tk
 
     def to_tcl
       TclString.new(name)
+    end
+
+    def to_s
+      get.to_s
+    end
+
+    def to_i
+      get.to_i
+    end
+
+    def to_boolean
+      get.to_boolean
+    end
+
+    def to_f
+      get.to_f
     end
   end
 end

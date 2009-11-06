@@ -24,6 +24,7 @@ module Tk
   require 'ffi-tk/command/raise'
   require 'ffi-tk/command/selection'
   require 'ffi-tk/command/set_palette'
+  require 'ffi-tk/command/vars'
   require 'ffi-tk/command/winfo'
   require 'ffi-tk/command/wm'
 end
