@@ -76,11 +76,7 @@ end
 path = "lib/ffi-tk/widget/#{widget}.rb"
 File.open(path, 'w+') do |io|
   io.puts 'module Tk'
-  io.puts "  class #{klass}"
-  io.puts "    def initialize(parent, options = {})"
-  io.puts "      @parent = parent"
-  io.puts "      Tk.execute('#{widget}', assign_pathname, options.to_tcl_options)"
-  io.puts "    end"
+  io.puts "  class #{klass} < Widget"
   instance_methods.each do |lines|
     io.puts
     io.puts lines
