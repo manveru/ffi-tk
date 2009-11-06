@@ -951,5 +951,17 @@ module Tk
     def yview(number)
       execute(:yview, number)
     end
+
+    def copy
+      Tk.execute(:tk_textCopy, self)
+    end
+
+    def cut
+      Tk.execute(:tk_textCut, self)
+    end
+
+    def paste
+      Tk.execute(:tk_textPaste, self)
+    end
   end
 end
