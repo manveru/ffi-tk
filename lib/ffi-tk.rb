@@ -28,6 +28,8 @@ module Tk
   autoload :Widget,       'ffi-tk/widget'
 
   # Don't autoload this, or find out why it segfaults
+  require 'ffi-tk/core_extensions'
+  require 'ffi-tk/geometry'
   require 'ffi-tk/event/data'
   require 'ffi-tk/event/handler'
   require 'ffi-tk/variable'
