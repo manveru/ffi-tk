@@ -1,14 +1,13 @@
 module Tk
   class Text < Widget
-    autoload :Peer, 'ffi-tk/widget/text/peer'
     include Cget, Configure
+    autoload :Peer, 'ffi-tk/widget/text/peer'
 
     SEARCH_MUTEX = Mutex.new
 
-    def initialize(parent, options = {})
-      @parent = parent
+    def initialize(parent = Tk.root, options = None)
       @tag_commands = {}
-      Tk.execute('text', assign_pathname, options.to_tcl_options)
+      super
     end
 
     # Returns a list of four elements describing the screen area of the
@@ -28,11 +27,11 @@ module Tk
     # relational operator given by op, and returns 1 if the relationship is
     # satisfied and 0 if it is not.
     # Op must be one of the operators <, <=, ==, >=, >, or !=.
-    # If op is == then 1 is returned if the two indices refer to the same
-    # character, if op is < then 1 is returned if index1 refers to an earlier
+    # If op is == then true is returned if the two indices refer to the same
+    # character, if op is < then true is returned if index1 refers to an earlier
     # character in the text than index2, and so on.
     def compare(index1, op, index2)
-      execute('compare', index1, op, index2) == 1
+      execute('compare', index1, op, index2).to_boolean
     end
 
     # Counts the number of relevant things between the two indices.

@@ -1,11 +1,6 @@
 module Tk
-  class Scrollbar
+  class Scrollbar < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('scrollbar', assign_pathname, options.to_tcl_options)
-    end
 
     # Marks the element indicated by element as active, which causes it to be
     # displayed as specified by the activeBackground and activeRelief options.

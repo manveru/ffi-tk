@@ -1,11 +1,6 @@
 module Tk
-  class PanedWindow
+  class PanedWindow < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('panedwindow', assign_pathname, options.to_tcl_options)
-    end
 
     # Add one or more windows to the panedwindow, each in a separate pane.
     # The arguments consist of the names of one or more windows followed by

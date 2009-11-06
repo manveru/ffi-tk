@@ -1,11 +1,6 @@
 module Tk
-  class Scale
+  class Scale < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('scale', assign_pathname, options.to_tcl_options)
-    end
 
     # Returns a list whose elements are the x and y coordinates of the point
     # along the centerline of the trough that corresponds to value.

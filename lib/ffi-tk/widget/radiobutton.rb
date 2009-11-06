@@ -1,11 +1,6 @@
 module Tk
-  class RadioButton
+  class RadioButton < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('radiobutton', assign_pathname, options.to_tcl_options)
-    end
 
     # Deselects the radiobutton and sets the associated variable to an empty
     # string. If this radiobutton was not currently selected, the command has

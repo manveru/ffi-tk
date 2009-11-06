@@ -1,11 +1,6 @@
 module Tk
-  class Spinbox
+  class Spinbox < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('spinbox', assign_pathname, options.to_tcl_options)
-    end
 
     # Returns a list of four numbers describing the bounding box of the
     # character given by index.

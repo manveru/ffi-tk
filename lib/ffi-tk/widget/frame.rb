@@ -6,10 +6,5 @@ module Tk
   # optional 3-D border to make the frame appear raised or sunken.
   class Frame < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('frame', assign_pathname, options.to_tcl_options)
-    end
   end
 end

@@ -1,11 +1,25 @@
 module Tk
+  # An entry is a widget that displays a one-line text string and allows that
+  # string to be edited using widget methods described below, which are
+  # typically bound to keystrokes and mouse actions.
+  # When first created, an entry's string is empty.
+  # A portion of the entry may be selected as described below.
+  # If an entry is exporting its selection (see the exportSelection option),
+  # then it will observe the standard X11 protocols for handling the selection;
+  # entry selections are available as type STRING.
+  # Entries also observe the standard Tk rules for dealing with the input focus.
+  # When an entry has the input focus it displays an insertion cursor to
+  # indicate where new characters will be inserted.
+  #
+  # Entries are capable of displaying strings that are too long to fit entirely
+  # within the widget's window.
+  # In this case, only a portion of the string will be displayed; methods
+  # described below may be used to change the view in the window.
+  # Entries use the standard xScrollCommand mechanism for interacting with
+  # scrollbars (see the description of the xScrollCommand option for details).
+  # They also support scanning, as described below.
   class Entry < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('entry', assign_pathname, options)
-    end
 
     # Returns a list of four numbers describing the bounding box of the
     # character given by index.

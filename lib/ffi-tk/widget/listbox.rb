@@ -1,11 +1,6 @@
 module Tk
-  class Listbox
+  class Listbox < Widget
     include Cget, Configure
-
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('listbox', assign_pathname, options.to_tcl_options)
-    end
 
     # Sets the active element to the one indicated by index.
     # If index is outside the range of elements in the listbox then the closest

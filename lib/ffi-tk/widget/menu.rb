@@ -2,11 +2,6 @@ module Tk
   class Menu < Widget
     include Cget, Configure
 
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('menu', assign_pathname, options.to_tcl_options)
-    end
-
     # Change the state of the entry indicated by index to active and redisplay
     # it using its active colors.
     # Any previously-active entry is deactivated.

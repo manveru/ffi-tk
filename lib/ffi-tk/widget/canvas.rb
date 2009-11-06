@@ -1,7 +1,16 @@
 module Tk
+  # Canvas widgets implement structured graphics.
+  #
+  # A canvas displays any number of items, which may be things like rectangles,
+  # circles, lines, and text.
+  # Items may be manipulated (e.g. moved or re-colored) and commands may be
+  # associated with items in much the same way that the bind command allows
+  # commands to be bound to widgets.
+  # For example, a particular command may be associated with the <Button-1>
+  # event so that the command is invoked whenever button 1 is pressed with the
+  # mouse cursor over an item.
+  # This means that items in a canvas can have behaviors defined.
   class Canvas < Widget
-    include Cget, Configure
-
     require "ffi-tk/widget/canvas/item.rb"
     require "ffi-tk/widget/canvas/arc.rb"
     require "ffi-tk/widget/canvas/bitmap.rb"
@@ -13,10 +22,7 @@ module Tk
     require "ffi-tk/widget/canvas/text.rb"
     require "ffi-tk/widget/canvas/window.rb"
 
-    def initialize(parent, options = {})
-      @parent = parent
-      Tk.execute('canvas', assign_pathname, options.to_tcl_options)
-    end
+    include Cget, Configure
 
     # For each item that meets the constraints specified by +search_spec+ and
     # the +args+, add +tag+ to the list of tags associated with the item if it
