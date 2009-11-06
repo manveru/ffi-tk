@@ -22,11 +22,12 @@ module Tk
       invalidcommand invcmd yscrollcommand xscrollcommand validatecommand
       command vcmd
     ]]
-    insert[:string, %w[ tabs cursor text show ]]
+    insert[:string, %w[ tabs cursor text show default class ]]
     insert[:font, %w[ font ]]
-    insert[:symbol, %w[ wrap state tabstyle relief justify validate ]]
+    insert[:symbol, %w[ wrap tabstyle relief justify validate ]]
     insert[:variable, %w[ textvariable ]]
     insert[:bitmap, %w[ stipple ]]
+    insert[:list, %w[ padding state ]]
 
     def cget(option)
       option = option.to_tcl_option

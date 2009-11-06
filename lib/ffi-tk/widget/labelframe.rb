@@ -1,5 +1,5 @@
 module Tk
-  class LabelFrame < Widget
+  class LabelFrame < Frame
     include Cget, Configure
   end
 end

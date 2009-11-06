@@ -1,5 +1,5 @@
 module Tk
-  class RadioButton < Widget
+  class RadioButton < Button
     include Cget, Configure
 
     # Deselects the radiobutton and sets the associated variable to an empty

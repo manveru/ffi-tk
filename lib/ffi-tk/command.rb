@@ -13,6 +13,7 @@ module Tk
   require 'ffi-tk/command/event'
   require 'ffi-tk/command/focus'
   require 'ffi-tk/command/font'
+  require 'ffi-tk/command/grid'
   require 'ffi-tk/command/grab'
   require 'ffi-tk/command/grid'
   require 'ffi-tk/command/image'

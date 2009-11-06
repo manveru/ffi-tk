@@ -193,7 +193,7 @@ module Tk
 
     # @see Grid::columnconfigure
     def grid_columnconfigure(index, options = {})
-      Grid.columnconfigure(self, index, options)
+      Grid.columnconfigure(self, index, options.to_tcl_options)
     end
 
     # @see Grid::configure

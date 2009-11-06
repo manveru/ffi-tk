@@ -1,5 +1,5 @@
 module Tk
-  class MenuButton < Widget
+  class MenuButton < Button
     include Cget, Configure
   end
 end

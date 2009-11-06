@@ -144,7 +144,7 @@ module Tk
       if None == options
         execute(:add, type)
       else
-        execute(:add, type, options.to_tcl_options)
+        execute(:add, type, option_hash_to_tcl(options))
       end
     end
 

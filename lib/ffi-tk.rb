@@ -38,6 +38,8 @@ module Tk
   autoload :Text,        'ffi-tk/widget/text'
   autoload :Toplevel,    'ffi-tk/widget/toplevel'
 
+  autoload :Tile,         'ffi-tk/widget/tile'
+
   require 'ffi-tk/core_extensions'
   require 'ffi-tk/geometry'
   require 'ffi-tk/event/data'

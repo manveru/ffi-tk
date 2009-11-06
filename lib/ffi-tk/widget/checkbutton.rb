@@ -1,6 +1,6 @@
 module Tk
   # Create and manipulate checkbutton widgets
-  class CheckButton < Widget
+  class CheckButton < Button
     include Cget, Configure
 
     def initialize(parent = Tk.root, options = None)
