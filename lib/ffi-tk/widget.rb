@@ -15,7 +15,7 @@ module Tk
         if self.class.const_defined?(:INITIALIZE_COMMAND)
           self.class::INITIALIZE_COMMAND
         else
-          self.class.name.downcase
+          self.class.name[/(\w+)$/].downcase
         end
 
       Tk.execute(command, assign_pathname, options.to_tcl_options?)
