@@ -17,6 +17,7 @@ module Tk
   require 'ffi-tk/command/image'
   require 'ffi-tk/command/lower'
   require 'ffi-tk/command/message_box'
+  require 'ffi-tk/command/option_menu'
   require 'ffi-tk/command/pack'
   require 'ffi-tk/command/place'
   require 'ffi-tk/command/raise'
