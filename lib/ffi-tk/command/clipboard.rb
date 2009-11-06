@@ -66,7 +66,6 @@ module Tk
       displayof, format, type, data =
         options.values_at(:displayof, :format, :type, :data)
 
-      displayof = displayof.to_tcl if displayof.respond_to?(:to_tcl)
       format = format.to_s.upcase if format
 
       args << "-displayof" << displayof if displayof
