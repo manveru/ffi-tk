@@ -21,10 +21,11 @@ module Tk
   autoload :Canvas,       'ffi-tk/widget/canvas'
   autoload :Entry,        'ffi-tk/widget/entry'
   autoload :Frame,        'ffi-tk/widget/frame'
+  autoload :Label,        'ffi-tk/widget/label'
+  autoload :Menu,         'ffi-tk/widget/menu'
   autoload :Root,         'ffi-tk/widget/root'
   autoload :Text,         'ffi-tk/widget/text'
   autoload :Widget,       'ffi-tk/widget'
-  autoload :Label,        'ffi-tk/widget/label'
 
   # Don't autoload this, or find out why it segfaults
   require 'ffi-tk/event/data'

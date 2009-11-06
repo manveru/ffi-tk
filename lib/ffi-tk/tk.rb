@@ -193,6 +193,13 @@ module Tk
       alias to_tcl_options? to_tcl_options
     end
 
+    module Proc
+      def to_tcl
+        @id, @command = Tk.register_proc(self)
+        @command.to_tcl
+      end
+    end
+
     module Regexp
       def to_tcl
         embed = []

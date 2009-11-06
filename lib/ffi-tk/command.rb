@@ -20,6 +20,7 @@ module Tk
   require 'ffi-tk/command/option_menu'
   require 'ffi-tk/command/pack'
   require 'ffi-tk/command/place'
+  require 'ffi-tk/command/popup'
   require 'ffi-tk/command/raise'
   require 'ffi-tk/command/selection'
   require 'ffi-tk/command/winfo'

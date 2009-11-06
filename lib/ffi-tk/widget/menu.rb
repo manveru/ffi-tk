@@ -1,5 +1,5 @@
 module Tk
-  class Menu
+  class Menu < Widget
     include Cget, Configure
 
     def initialize(parent, options = {})
