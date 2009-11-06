@@ -1,9 +1,7 @@
-require_relative '../helper'
-
-Tk.init
+require_relative '../../helper'
 
 describe Tk::Text do
-  text = Tk::Text.new('.')
+  text = Tk::Text.new
   text.insert :end, 'Hello, World!'
 
   it 'gets the text at index' do

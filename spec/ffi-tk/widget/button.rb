@@ -1,13 +1,11 @@
-require_relative '../helper'
-
-Tk.init
+require_relative '../../helper'
 
 describe Tk::Button do
   it 'handles -command' do
     ran = false
     Tk.callbacks.size.should == 0
 
-    button = Tk::Button.new('.'){
+    button = Tk::Button.new{
       ran = true
       button.destroy
     }
@@ -18,7 +16,7 @@ describe Tk::Button do
   end
 
   it 'sets the text of the button' do
-    button = Tk::Button.new('.', text: 'Hello, World!')
+    button = Tk::Button.new(text: 'Hello, World!')
     button.cget(:text).should == 'Hello, World!'
   end
 end
