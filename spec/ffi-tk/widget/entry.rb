@@ -1,9 +1,7 @@
 require_relative '../../helper'
 
-Tk.init
-
 describe Tk::Entry do
-  @entry = Tk::Entry.new('.')
+  @entry = Tk::Entry.new
 
   it "returns the entry's string" do
     @entry.get.should == ''
@@ -46,10 +44,10 @@ describe Tk::Entry do
     @entry.cget(:selectbackground   ).should == "#c3c3c3"
     @entry.cget(:selectborderwidth  ).should == 0
     @entry.cget(:selectforeground   ).should == "#000000"
-    @entry.cget(:show               ).should == ""
+    @entry.cget(:show               ).should == nil
     @entry.cget(:state              ).should == :normal
     @entry.cget(:takefocus          ).should == false
-    @entry.cget(:textvariable       ).should == ""
+    @entry.cget(:textvariable       ).should == nil
     @entry.cget(:validate           ).should == :none
     @entry.cget(:validatecommand    ).should == nil
     @entry.cget(:vcmd               ).should == nil

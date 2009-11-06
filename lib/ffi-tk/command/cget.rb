@@ -51,8 +51,12 @@ module Tk
         value.to_sym?
       when :boolean
         Tk.boolean(value)
-      when :color, :string, :font, :variable, :bitmap
+      when :color, :string, :font, :bitmap
         value.to_s?
+      when :variable
+        if name = value.to_s?
+          Variable.new(name)
+        end
       when :list
         value.to_a
       when :float
