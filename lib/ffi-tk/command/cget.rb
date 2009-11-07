@@ -27,7 +27,7 @@ module Tk
     insert[:symbol, %w[ wrap tabstyle relief justify validate ]]
     insert[:variable, %w[ textvariable ]]
     insert[:bitmap, %w[ stipple ]]
-    insert[:list, %w[ padding state ]]
+    insert[:list, %w[ padding state style ]]
 
     def cget(option)
       option = option.to_tcl_option
