@@ -598,7 +598,6 @@ module Tk
           list = execute(:search, *switches, sep, pattern, from, to).to_a
           return list if list.empty?
           count_value = Tk.execute('set', count)
-          p list: list, count_value: count_value
           [*list, count_value]
         end
       elsif count_all
