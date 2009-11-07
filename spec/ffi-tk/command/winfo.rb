@@ -15,7 +15,8 @@ describe Tk::Winfo do
   end
 
   it 'gives info about cells' do
-    root.winfo_cells.should == 256
+    root.winfo_cells.should >= 2
+    root.winfo_cells.should.be.even?
   end
 
   it 'gives info about children' do
@@ -37,7 +38,8 @@ describe Tk::Winfo do
   end
 
   it 'tells us the depth of the window' do
-    root.winfo_depth.should == 24
+    root.winfo_depth.should >= 8
+    root.winfo_depth.should.even?
   end
 
   it 'tells us whether the window exists' do
@@ -130,42 +132,44 @@ describe Tk::Winfo do
     entry.winfo_rooty.should == 0
   end
 
-  # NOTE: this is... fragile?
   it 'knows which screen it is on' do
-    root.winfo_screen.should == ':0.0'
+    root.winfo_screen.should.match(/\:(.+)\.\d/) # :0.0
   end
 
   it 'knows the number of cells in the default color map' do
-    root.winfo_screencells.should == 256
+    root.winfo_screencells.should >= 2
+    root.winfo_screencells.should.be.even?
   end
 
   it 'knows the depth of the screen' do
-    root.winfo_screendepth.should == 24
+    root.winfo_screendepth.should >= 2
+    root.winfo_screendepth.should.be.even?
   end
 
   it 'knows the height of the screen' do
-    root.winfo_screenheight.should == 768
+    root.winfo_screenheight.should >= 200
+    root.winfo_screenheight.should.be.even?
   end
 
   it 'knows the width of the screen' do
-    root.winfo_screenwidth.should == 1280
+    root.winfo_screenwidth.should >= 320
+    root.winfo_screenwidth.should.be.even?
   end
 
   it 'knows the height of the screen in millimeter' do
-    root.winfo_screenmmheight.should == 203
+    root.winfo_screenmmheight.should >= 2
   end
 
   it 'knows the width of the screen in millimeter' do
-    root.winfo_screenmmwidth.should == 338
+    root.winfo_screenmmwidth.should >= 2
   end
 
   it 'shows the default visual class for the screen' do
     root.winfo_screenvisual.should == :truecolor
   end
 
-  # FIXME: this will break for everybody else.
   it 'knows its server' do
-    root.winfo_server.should == "X11R0 The X.Org Foundation 10603901"
+    root.winfo_server.should.not.be.empty?
   end
 
   it 'knows its toplevel window' do
@@ -190,12 +194,13 @@ describe Tk::Winfo do
     root.winfo_visualsavailable(:directcolor).should.not.be.empty
   end
 
+
   it 'knows the height of the virtual root window' do
-    root.winfo_vrootheight.should == 768
+    root.winfo_vrootheight.should >= 200
   end
 
   it 'knows the width of the virtual root window' do
-    root.winfo_vrootwidth.should == 1280
+    root.winfo_vrootwidth.should >= 320
   end
 
   it 'knows the x coordinate of the virtual root window' do
@@ -217,4 +222,12 @@ describe Tk::Winfo do
   it 'knows the y coordinate of the window' do
     root.winfo_y.should == 0
   end
+
+  # TODO check real screen values? (xrandr only)
+  # For now it checks for a minimum of 320 x 200
+  #
+  # matcher = /Screen (.+?)\: (.+), current (.+) x (.+), /
+  # %x{xrandr -q}.scan(matcher).collect{|i|
+  #   {name: i[0], width: i[2].to_i, height: i[3].to_i}
+  # }.first
 end

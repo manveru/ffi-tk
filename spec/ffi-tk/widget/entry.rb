@@ -13,7 +13,9 @@ describe Tk::Entry do
   end
 
   it 'returns a list of four numbers describing the bounding box of the character given by index' do
-    @entry.bbox(0).should == [3, -7, 6, 15]
+    index_bbox = @entry.bbox(0)
+    index_bbox.should.be.kind_of? Array
+    index_bbox.size.should == 4
   end
 
   it 'Returns the current value of the configuration option given' do
