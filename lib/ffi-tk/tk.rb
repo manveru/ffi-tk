@@ -78,6 +78,14 @@ module Tk
     execute('exit')
   end
 
+  def callback_break
+    throw :callback_break
+  end
+
+  def callback_continue
+    throw :callback_continue
+  end
+
   # without our callbacks, nothing goes anymore, abort mission
   def tcl_delete(client_data)
     raise RuntimeError, "tcl function is going to be removed"
@@ -88,17 +96,37 @@ module Tk
   # 1 means true, 0 means false.
   def tcl_callback(client_data, interp, objc, objv)
     cmd, id, *args = tcl_cmd_args(interp, objc, objv)
-    result = handle_callback(id, *args)
-    FFI::Tcl::Interp.new(interp).obj_result = result
-    return OK
+
+    catch :callback_break do
+      catch :callback_continue do
+        result = handle_callback(id, *args)
+        FFI::Tcl::Interp.new(interp).obj_result = result
+
+        return OK
+      end
+
+      return CONTINUE
+    end
+
+    return BREAK
   end
   TCL_CALLBACK = method(:tcl_callback)
 
   # TODO: support for break and continue return status (by catch/throw)
   def tcl_event(client_data, interp, objc, objv)
     cmd, id, sequence, *args = tcl_cmd_args(interp, objc, objv)
-    Event::Data.new(id.to_i, sequence.to_s, *args).call
-    return OK
+
+    catch :callback_break do
+      catch :callback_continue do
+        Event::Data.new(id.to_i, sequence.to_s, *args).call
+
+        return OK
+      end
+
+      return CONTINUE
+    end
+
+    return BREAK
   end
   TCL_EVENT = method(:tcl_event)
 

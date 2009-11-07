@@ -7,8 +7,13 @@ require 'ffi-tk/ffi/tk'
 
 module Tk
   Error = Class.new(RuntimeError)
-  OK = 0
-  ERROR = 1
+
+  OK       = 0
+  ERROR    = 1
+  RETURN   = 2
+  BREAK    = 3
+  CONTINUE = 4
+
   None = Object.new
 
   class << None
