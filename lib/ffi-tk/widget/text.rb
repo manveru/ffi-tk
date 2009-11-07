@@ -590,20 +590,25 @@ module Tk
         switches << '-count' << count
       end
 
+      sep = TclString.new('--')
+
       if count
         SEARCH_MUTEX.synchronize do
-          list = execute(:search, *switches, '--', pattern, from, to).to_a
+          list = execute(:search, *switches, sep, pattern, from, to).to_a
+          return list if list.empty?
           count_value = Tk.execute('set', count)
+          p list: list, count_value: count_value
           [*list, count_value]
         end
       elsif count_all
         SEARCH_MUTEX.synchronize do
-          list = execute(:search, *switches, '--', pattern, from, to).to_a
+          list = execute(:search, *switches, sep, pattern, from, to).to_a
+          return list if list.empty?
           count_list = Tk.execute('set', count_all)
           list.zip(count_list)
         end
       else
-        execute(:search, *switches, '--', pattern, from, to).to_a
+        execute(:search, *switches, sep, pattern, from, to).to_a
       end
     end
 
