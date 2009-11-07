@@ -747,7 +747,7 @@ module Tk
     # If no matching range is found then the return value is an empty string.
     # If index2 is not given then it defaults to the end of the text.
     def tag_nextrange(tag_name, index1, index2 = None)
-      execute(:tag, :nextrange, tag_name, index1, index2)
+      execute(:tag, :nextrange, tag_name, index1, index2).to_a
     end
 
     # This command searches the text for a range of characters tagged with
@@ -761,7 +761,7 @@ module Tk
     # If no matching range is found then the return value is an empty string.
     # If index2 is not given then it defaults to the beginning of the text.
     def tag_prevrange(tag_name, index1, index2 = None)
-      execute(:tag, :prevrange, tag_name, index1, index2)
+      execute(:tag, :prevrange, tag_name, index1, index2).to_a
     end
 
     # Changes the priority of tag tagName so that it is just higher in priority
@@ -769,7 +769,7 @@ module Tk
     # If aboveThis is omitted, then tagName's priority is changed to make it
     # highest priority of all tags.
     def tag_raise(tag_name, above = None)
-      execute(:tag, :raise, tag_name, above)
+      execute_only(:tag, :raise, tag_name, above)
     end
 
     # Returns a list describing all of the ranges of text that have been tagged
@@ -782,7 +782,7 @@ module Tk
     # If there are no characters tagged with tag then an empty string is
     # returned.
     def tag_ranges(tag_name)
-      execute(:tag, :ranges, tag_name).to_a?
+      execute_only(:tag, :ranges, tag_name).to_a?
     end
 
     # Remove the tag tagName from all of the characters starting at index1 and

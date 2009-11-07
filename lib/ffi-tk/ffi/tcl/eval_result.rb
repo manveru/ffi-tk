@@ -127,6 +127,14 @@ module FFI
       def to_boolean
         self.class.to_boolean(interp, obj)
       end
+
+      def to_tcl
+        to_s.to_tcl
+      end
+
+      def inspect
+        "#<EvalResult #{to_s}>"
+      end
     end
   end
 end
