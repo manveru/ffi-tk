@@ -13,7 +13,18 @@ module Tk
     end
 
     # TileWidget module shared common tile methods
-    module Tk::Tile::TileWidget
+    module TileWidget
+      def initialize(parent = Tk.root, options = None)
+        if options.respond_to?(:values_at)
+          style_spec = options.values_at(:style)
+          options.delete(:style)
+        end
+
+        super
+
+        Tk::Tile::Style.layout(style_spec, tk_pathname) if style_spec
+      end
+
       def ttk_state(new_state = None)
         if new_state == None
           execute(:state).to_a
@@ -31,21 +42,12 @@ module Tk
       #  (ret.empty?)? nil: ret
       #end
 
-      def style(layout_spec, name=tk_pathname)
+      def style(layout_spec, name = tk_pathname)
         Tk::Tile::Style.layout(name, layout_spec)
       end
 
-      def init_ttk_widget(parent, options, block, _ttk_name)
-        @parent = parent
-        options[:command] = block if block
-        style_spec = options.values_at(:style); options.delete(:style)
-
-        res = Tk.execute( _ttk_name, assign_pathname, option_hash_to_tcl(options))
-        style(style_spec) if style_spec
-        res
-      end
-
       include Tk::Grid
+
       def grid(options)
         grid_configure options.to_tcl_options
       end

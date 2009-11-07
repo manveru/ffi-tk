@@ -21,6 +21,23 @@ module Tk
   class Entry < Widget
     include Cget, Configure
 
+    def value
+      get
+    end
+
+    def value=(string)
+      delete 0, :end
+      insert 0, string
+    end
+
+    def cursor
+      index(:insert)
+    end
+
+    def cursor=(index)
+      icursor(index)
+    end
+
     # Returns a list of four numbers describing the bounding box of the
     # character given by index.
     # The first two elements of the list give the x and y coordinates of the

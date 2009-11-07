@@ -80,7 +80,9 @@ module Tk
     # The characters -, x and ^, can be specified instead of a window name to
     # alter the default location of a slave.
     def self.configure(*arguments)
-      Tk.execute('grid', 'configure', *arguments)
+      options, slaves = arguments.partition{|arg| arg.respond_to?(:to_tcl_options?) }
+      options = options.first
+      Tk.execute('grid', 'configure', *slaves, options.to_tcl_options?)
     end
 
     # Removes each of the slaves from grid for its master and unmaps their
@@ -147,8 +149,8 @@ module Tk
     # option is returned.
     # If only the master window and index is specified, all the current settings
     # are returned in a list of â-option valueâ pairs.
-    def self.rowconfigure(master, index, options = {})
-      Tk.execute('grid', 'rowconfigure', master, index, options)
+    def self.rowconfigure(master, index, options = None)
+      Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_options?)
     end
 
     # Removes each of the slaves from grid for its master and unmaps their
@@ -197,7 +199,7 @@ module Tk
     end
 
     # @see Grid::configure
-    def grid_configure(options = {})
+    def grid_configure(options = None)
       Grid.configure(self, options)
     end
 
@@ -222,7 +224,7 @@ module Tk
     end
 
     # @see grid::rowconfigure
-    def grid_rowconfigure(master, index, options = {})
+    def grid_rowconfigure(index, options = None)
       Grid.rowconfigure(self, index, options)
     end
 

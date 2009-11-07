@@ -2,6 +2,18 @@ module Tk
   class Listbox < Widget
     include Cget, Configure
 
+    def clear
+      delete 0, :end
+    end
+
+    def value
+    end
+
+    def value=(enumerable)
+      clear
+      enumerable.each{|element| insert(:end, element) }
+    end
+
     # Sets the active element to the one indicated by index.
     # If index is outside the range of elements in the listbox then the closest
     # element is activated.
@@ -147,7 +159,7 @@ module Tk
     # If any of the elements between first and last (inclusive) are selected,
     # they are deselected.
     # The selection state is not changed for elements outside this range.
-    def selection(clear, first, last = None)
+    def selection_clear(first, last = None)
       execute(:selection, :clear, first, last)
     end
 

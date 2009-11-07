@@ -5,6 +5,7 @@ module Tk
   # layouts. The only features of a frame are its background color and an
   # optional 3-D border to make the frame appear raised or sunken.
   class Frame < Widget
+    INITIALIZE_COMMAND = 'frame'.freeze
     include Cget, Configure
   end
 end

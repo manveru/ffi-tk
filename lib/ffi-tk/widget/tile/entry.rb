@@ -1,10 +1,8 @@
 module Tk::Tile
   class Entry < Tk::Entry
-    include Tk::Tile::TileWidget
+    INITIALIZE_COMMAND = 'ttk::entry'
 
-    def initialize(parent, options = {}, &block)
-      init_ttk_widget(parent, options, block, 'ttk::entry')
-    end
+    include Tk::Tile::TileWidget
   end
 end
 

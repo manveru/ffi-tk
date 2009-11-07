@@ -10,6 +10,15 @@ module Tk
       super
     end
 
+    def value
+      get '1.0', :end
+    end
+
+    def value=(string)
+      clear
+      insert :end, string
+    end
+
     # Returns a list of four elements describing the screen area of the
     # character given by index.
     # The first two elements of the list give the x and y coordinates of the
@@ -567,17 +576,10 @@ module Tk
     # FUNNY: stdlib tk simply gets the text into the ruby side and performs
     #        matches using the core regexp methods, but doesn't give any way to
     #        call the tcl/tk search function, this is new land!
-    def search(pattern, from, *arguments)
-      switches, rest = arguments.partition{|arg| arg.respond_to?(:to_sym) }
-      to = rest.first || None
+    def search(pattern, from, to, *switches)
+      switches << :regexp if pattern.class < CoreExtensions::Regexp
 
-      if pattern.class < CoreExtensions::Regexp
-        switches << :regexp
-      else
-        # switches << :exact
-      end
-
-      switches.map!{|switch| switch.to_sym.to_tcl_option }
+      switches.map!{|switch| switch.to_s.to_tcl_option }
       switches.uniq!
 
       if switches.include?('-all') && switches.delete('-count')
@@ -605,8 +607,8 @@ module Tk
       end
     end
 
-    def rsearch(pattern, from, *arguments)
-      search(pattern, from, *arguments, :backwards)
+    def rsearch(pattern, from, to, *switches)
+      search(pattern, from, to, *switches, :backwards)
     end
 
     # Adjusts the view in the window so that the character given by +index+ is
@@ -889,8 +891,13 @@ module Tk
     # the text as a whole.
     # These are the same values passed to scrollbars via the -yscrollcommand
     # option.
-    def yview
-      execute(:yview)
+    #
+    # This command makes the first character on the line after the one given by
+    # number visible at the top of the window.
+    # Number must be an integer.
+    # This command used to be used for scrolling, but now it is obsolete.
+    def yview(number = None)
+      execute(:yview, number)
     end
 
     # Adjusts the view in the window so that the pixel given by fraction
@@ -941,14 +948,6 @@ module Tk
     # [yview_pickplace] mode only handles motion in y).
     def yview_pickplace(index)
       execute(:yview, '-pickplace', index)
-    end
-
-    # This command makes the first character on the line after the one given by
-    # number visible at the top of the window.
-    # Number must be an integer.
-    # This command used to be used for scrolling, but now it is obsolete.
-    def yview(number)
-      execute(:yview, number)
     end
 
     def copy

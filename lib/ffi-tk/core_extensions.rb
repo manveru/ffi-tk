@@ -69,7 +69,12 @@ module Tk
 
     module String
       def to_tcl
-        TclString.new(self =~ /\A\w+\Z/ ? dup : "{#{self}}")
+        if self =~ /\A[\w.:_-]+\Z/
+          TclString.new(dup)
+        else
+          sane = gsub(/(\{|\})/, '\\\1')
+          TclString.new("{#{sane}}")
+        end
       end
 
       def to_tcl_option

@@ -2,15 +2,53 @@ module Tk
   # Create and inspect fonts.
   # The font command provides several facilities for dealing with fonts, such as
   # defining named fonts and inspecting the actual attributes of a font.
-  module Font
+  class Font
+    def initialize(string_or_hash)
+      if string_or_hash.respond_to?(:to_str)
+        string_or_hash =~ /^(.*)\s+(\d+)?$/
+
+        params = {}
+        params[:family] = $1.to_s
+        params[:size] = $2.to_i if $2
+
+        @font = Font.create(params)
+      elsif string_or_hash.respond_to?(:to_hash)
+        @font = Font.create(string_or_hash)
+      else
+        raise ArgumentError
+      end
+    end
+
+    def actual(options = {})
+      Font.actual(@font, options)
+    end
+
+    def actual_hash(options = {})
+      Font.actual(@font, options)
+    end
+
+    def measure(text, options = {})
+      Font.measure(@font, text, options)
+    end
+
+    def metrics(option, options = {})
+      Font.metrics(@font, option, options)
+    end
+
+    def configure(argument = None)
+      Font.configure(@font, argument)
+    end
+
+    def to_tcl
+      TclString.new(@font)
+    end
+
     FONT_CONFIGURE_HINTS = {
       underline:  :boolean,
       overstrike: :boolean,
       weight:     :symbol,
       slant:      :symbol,
     }
-
-    module_function
 
     # NOTE:
     #   the signature has been simplified to a required +font+ argument and a
@@ -22,7 +60,7 @@ module Tk
     #  :displayof window
     #  :char char
     #  :option name
-    def actual(font, options = {})
+    def self.actual(font, options = {})
       window = options.fetch(:displayof, None)
       option = options.fetch(:option, None)
       char = options.fetch(:char, None)
@@ -36,47 +74,40 @@ module Tk
       array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
     end
 
-    def configure(fontname, *arguments)
-      if arguments.empty?
-        array = Tk.execute(:font, :configure, fontname)
-        array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
-      elsif arguments.size == 1 && arguments.first.respond_to?(:to_hash)
-        argument = arguments.first.to_hash
-        Tk.execute_only(:font, :configure, fontname, argument.to_tcl_options)
-      elsif arguments.size == 1
-        option = arguments.first.to_tcl_option
-        Tk.execute(:font, :configure, fontname, option)
-      else
-        raise ArgumentError, "Invalid arguments: %p" % [arguments]
-      end
+    def self.configure(fontname, argument = None)
+      Configure.common_configure(:font, :configure, fontname, argument)
     end
 
-    def create(fontname, options = {})
+    def self.create(fontname, options = None)
+      if fontname.respond_to?(:to_tcl_options)
+        fontname, options = None, fontname
+      end
+
       Tk.execute(:font, :create, fontname, options.to_tcl_options)
     end
 
-    def delete(*fontnames)
+    def self.delete(*fontnames)
       Tk.execute(:font, :delete, *fontnames)
     end
 
     # The return value is a list of the case-insensitive names of all font
     # families that exist on window's display.
     # If the window argument is omitted, it defaults to the main window.
-    def families(options = {})
+    def self.families(options = {})
       Tk.execute(:font, :families, options.to_tcl_options)
     end
 
-    def measure(font, text, options = {})
+    def self.measure(font, text, options = {})
       Tk.execute(:font, :measure, font, options.to_tcl_options, text)
     end
 
-    def metrics(font, option, options = {})
+    def self.metrics(font, option, options = {})
       Tk.execute(:font, :metrics, font, options.to_tcl_options, option.to_tcl_option)
     end
 
     # The return value is a list of all the named fonts that are currently
     # defined.
-    def names
+    def self.names
       Tk.execute(:font, :names).to_a
     end
   end

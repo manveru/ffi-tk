@@ -20,13 +20,22 @@ module Tk
       Clipboard.get(self, type)
     end
 
+    def clipboard_set(string, options = {})
+      clipboard_clear
+      clipboard_append(options.merge(data: string))
+    end
+
     module_function
 
     # Claims ownership of the clipboard on window's display and removes any
     # previous contents.
     # Window defaults to ".".
     def clear(window = None)
-      Tk.execute_only(:clipboard, :clear, window)
+      if None == window
+        Tk.execute_only(:clipboard, :clear)
+      else
+        Tk.execute_only(:clipboard, :clear, '-displayof', window)
+      end
     end
 
     # Appends data to the clipboard on window's display in the form given by

@@ -35,7 +35,7 @@ module Tk
     #
     # @example reversing order for .b
     #   tags = Bindtags.bindtags('.b')
-    #   Bindtag.bindtags('.b', *tags.reverse)
+    #   Bindtags.bindtags('.b', *tags.reverse)
     #
     # The above example reverses the order in which binding scripts will be
     # evaluated for a button named `.b` so that all bindings are invoked first,
@@ -50,6 +50,20 @@ module Tk
         taglist = taglist.flatten
         Tk.execute(:bindtags, window, taglist)
       end
+    end
+
+    def bindtags(*taglist)
+      Bindtags.bindtags(self, *taglist)
+    end
+  end
+
+  class BindTag < Struct.new(:name)
+    def bind(sequence, &block)
+      Bind.bind(name, sequence, &block)
+    end
+
+    def to_tcl
+      TclString.new(name)
     end
   end
 end
