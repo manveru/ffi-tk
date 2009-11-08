@@ -60,6 +60,7 @@ module Tk
     # processed. Certain events, such as key events, require that the window has
     # focus to receive the event properly.
     def self.generate(window = None, event = None, options = {})
+      window.respond_to?(:focus) && window.focus
       Tk.execute_only(:event, :generate, window, event, options)
     end
 

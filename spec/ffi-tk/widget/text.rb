@@ -177,11 +177,11 @@ describe Tk::Text do
 
   it 'creates a peer' do
     @peer = text.peer_create
-    @peer.tk_pathname.should == '.tk::text0.tk::text::peer0'
+    @peer.tk_pathname.should == '.tk::text0.tk::text1'
   end
 
   it 'lists the peer' do
-    text.peer_names.should == ['.tk::text0.tk::text::peer0']
+    text.peer_names.should == ['.tk::text0.tk::text1']
   end
 
   it 'destroys the peer' do

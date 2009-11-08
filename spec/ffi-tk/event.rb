@@ -10,7 +10,8 @@ describe Tk::Event do
 
   it 'shows what sequences invoke a specific virtual event' do
     Tk::Event.info('<<Paste>>').should ==  [
-      "<Control-Key-v>", "<Key-F18>", "<Control-Lock-Key-V>", "<Control-Key-y>"
+      "<Control-Key-v>", "<Key-F18>", "<Control-Key-y>"
+      #"<Control-Key-v>", "<Key-F18>", "<Control-Lock-Key-V>", "<Control-Key-y>"
     ]
   end
 
@@ -26,7 +27,29 @@ describe Tk::Event do
     Tk::Event.info('<<Spec>>').should == []
   end
 
-  it 'generates a virtual event' do
+  it 'generates a virtual event and calls it' do
+    Tk::Event.add('<<Clear>>', '<BackSpace>')
+
+    entry = Tk::Entry.new('.')
+    entry.bind('<<Clear>>'){ entry.delete(0, :end) }
+    entry.bind('<Map>'){
+      Tk::Event.generate(entry, '<<Clear>>')
+      Tk.interp.do_one_event
+    }
+    entry.insert 0, 'Hello, World!'
+    entry.get.should == 'Hello, World!'
+
+    entry.pack
+    entry.focus
+
+    Tk.interp.do_events_until{
+      entry.get.empty?
+    }
+
+    entry.get.should == ''
+  end
+
+  it 'generates a virtual event and calls normal event' do
     Tk::Event.add('<<Clear>>', '<BackSpace>')
 
     entry = Tk::Entry.new('.')
