@@ -221,7 +221,7 @@ module Tk
     end
 
     def edit_modified?
-      execute('edit', 'modified')
+      execute('edit', 'modified').to_boolean
     end
 
     # When the -undo option is true, reapplies the last undone edits provided no
