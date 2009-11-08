@@ -1,5 +1,6 @@
 module Tk
   class RadioButton < Button
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # Deselects the radiobutton and sets the associated variable to an empty

@@ -22,6 +22,7 @@ module Tk
     require "ffi-tk/widget/canvas/text.rb"
     require "ffi-tk/widget/canvas/window.rb"
 
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # For each item that meets the constraints specified by +search_spec+ and

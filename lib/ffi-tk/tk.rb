@@ -151,15 +151,10 @@ module Tk
 
   def register_object(parent, object)
     parent_name = parent.respond_to?(:tk_pathname) ? parent.tk_pathname : parent
-    name = object.class.name.downcase
-    id = uuid(name)
+    cmd = object.class::INITIALIZE_COMMAND
 
-    if parent_name[-1] == '.'
-      pathname = "#{parent_name}#{name}#{id}"
-    else
-      pathname = "#{parent_name}.#{name}#{id}"
-    end
-
+    id = "#{cmd}#{uuid(cmd)}"
+    pathname = [parent_name, id].join('.').squeeze('.')
     @widgets[pathname] = object
 
     return pathname

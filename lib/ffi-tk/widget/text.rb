@@ -1,5 +1,6 @@
 module Tk
   class Text < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
     autoload :Peer, 'ffi-tk/widget/text/peer'
 

@@ -19,6 +19,7 @@ module Tk
   # scrollbars (see the description of the xScrollCommand option for details).
   # They also support scanning, as described below.
   class Entry < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     def value

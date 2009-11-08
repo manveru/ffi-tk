@@ -1,5 +1,6 @@
 module Tk
   class Scrollbar < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # Marks the element indicated by element as active, which causes it to be

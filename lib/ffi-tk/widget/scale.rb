@@ -1,5 +1,6 @@
 module Tk
   class Scale < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # Returns a list whose elements are the x and y coordinates of the point

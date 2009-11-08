@@ -29,6 +29,7 @@ module Tk
   # "0123456789abcdef\x" then control characters and undefined characters
   # are not displayed at all.
   class Message < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
   end
 end

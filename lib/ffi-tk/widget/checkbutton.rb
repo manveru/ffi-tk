@@ -1,6 +1,7 @@
 module Tk
   # Create and manipulate checkbutton widgets
   class CheckButton < Button
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     def initialize(parent = Tk.root, options = None)

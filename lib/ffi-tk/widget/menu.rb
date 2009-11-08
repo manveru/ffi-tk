@@ -1,5 +1,6 @@
 module Tk
   class Menu < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # Change the state of the entry indicated by index to active and redisplay

@@ -1,5 +1,6 @@
 module Tk
   class Spinbox < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # Returns a list of four numbers describing the bounding box of the

@@ -1,5 +1,6 @@
 module Tk
   class PanedWindow < Widget
+    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
 
     # Add one or more windows to the panedwindow, each in a separate pane.
