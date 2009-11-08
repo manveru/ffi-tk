@@ -62,7 +62,13 @@ module FFI
       end
 
       def eval(string)
-        p eval_ex: string if $DEBUG
+        if $DEBUG
+          if string =~ /\n/
+            puts "eval: %p" % [string]
+          else
+            puts "eval: %s" % [string]
+          end
+        end
 
         code = Tcl.eval_ex(self, string, string.bytesize, 0x40000)
         return true if code == 0
