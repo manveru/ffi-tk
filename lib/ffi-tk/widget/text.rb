@@ -788,7 +788,7 @@ module Tk
     # If there are no characters tagged with tag then an empty string is
     # returned.
     def tag_ranges(tag_name)
-      execute_only(:tag, :ranges, tag_name).to_a?
+      execute(:tag, :ranges, tag_name).to_a?
     end
 
     # Remove the tag tagName from all of the characters starting at index1 and
@@ -801,7 +801,7 @@ module Tk
     # index1) then the command has no effect.
     # This command returns an empty string.
     def tag_remove(tag_name, index1, index2 = None, *indices)
-      execute(:tag, :remove, tag_name, index1, index2, *indices)
+      execute_only(:tag, :remove, tag_name, index1, index2, *indices)
     end
 
     # Returns the value of a configuration option for an embedded window.
