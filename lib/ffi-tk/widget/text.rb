@@ -683,7 +683,26 @@ module Tk
     # The tag bindings will be invoked first, followed by bindings for the
     # window as a whole.
     def tag_bind(tag_name, sequence = None, &script)
-      execute(:tag, :bind, tag_name, sequence, command)
+      # create name for command
+      name = "#{tk_pathname}_#{tag_name}".scan(/\w+/).join('_')
+      @events ||= {}
+      unregister_event(name)
+
+      Event::Handler.register_custom(script) do |id|
+        code = "%s tag bind %s %s { ::RubyFFI::event %d '' %s }"
+        props = Event::Data::PROPERTIES.transpose[0].join(' ')
+        tcl = code % [tk_pathname, tag_name, sequence, id, props]
+        Tk.interp.eval(tcl)
+        @events[name] = id
+      end
+
+      # execute(:tag, :bind, tag_name, sequence, command)
+    end
+
+    def unregister_event(name, id = @events[name])
+      return unless id
+      @events.delete(id)
+      Event::Handler.unregister(id)
     end
 
     # This command returns the current value of the option named option

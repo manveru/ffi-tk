@@ -29,6 +29,16 @@ module Tk
         Tk.interp.eval(@callback % [tag, sequence, id, sequence])
         id
       end
+
+      def register_custom(block)
+        id = register_block(block)
+        yield id
+        id
+      end
+
+      def unregister(id)
+        @store[id] = nil
+      end
     end
   end
 end
