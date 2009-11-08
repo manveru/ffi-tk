@@ -1,10 +1,7 @@
 module Tk::Tile
   class MenuButton < Tk::MenuButton
+    INITIALIZE_COMMAND = 'ttk::menubutton'
     include Tk::Tile::TileWidget
-
-    def initialize(parent, options = {}, &block)
-      init_ttk_widget(parent, options, block, 'ttk::menubutton')
-    end
   end
 end
 

@@ -1,10 +1,7 @@
 module Tk::Tile
   class Button < Tk::Button
+    INITIALIZE_COMMAND = 'ttk::button'
     include Tk::Tile::TileWidget
-
-    def initialize(parent, options = {}, &block)
-      init_ttk_widget(parent, options, block, 'ttk::button')
-    end
   end
 end
 
