@@ -75,15 +75,29 @@ module Tk
     end
 
     def self.configure(fontname, argument = None)
-      Configure.common_configure(:font, :configure, fontname, argument)
+      array = common_configure(:font, :configure, fontname, argument).to_a
+      array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
+    end
+
+    def self.common_configure(*invocation, argument)
+      if None == argument
+        Tk.execute(*invocation)
+      elsif argument.respond_to?(:to_tcl_options)
+        Tk.execute(*invocation, argument.to_tcl_options)
+      elsif argument.respond_to?(:to_tcl_option)
+        Tk.execute(*invocation, argument.to_tcl_option)
+      else
+        raise ArgumentError, "Invalid argument: %p" % [argument]
+      end
     end
 
     def self.create(fontname, options = None)
       if fontname.respond_to?(:to_tcl_options)
         fontname, options = None, fontname
+        options = options.to_tcl_options
       end
 
-      Tk.execute(:font, :create, fontname, options.to_tcl_options)
+      Tk.execute(:font, :create, fontname, options)
     end
 
     def self.delete(*fontnames)

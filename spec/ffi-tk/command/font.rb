@@ -12,7 +12,7 @@ describe Tk::Font do
   end
 
   it 'measures a character' do
-    Tk::Font.measure('TkDefaultFont', '0').should == 6
+    Tk::Font.measure('TkDefaultFont', '0').should >= 4
   end
 
   it 'shows metrics of a font' do
