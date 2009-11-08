@@ -1,29 +1,44 @@
+# Manipulate Tk internal state
 module Tk
   module TkCmd
+    # @see TkCmd.appname
+    def tk_appname
+      TkCmd.appname(self)
+    end
 
     # @see TkCmd.appname
-    def tk_appname(?newName?)
-      TkCmd.appname(self, ?newName?)
+    def tk_appname=(new_name)
+      TkCmd.appname(self, new_name)
     end
 
     # @see TkCmd.caret
-    def tk_caret(?-x x? ?-y y? ?-height height?)
-      TkCmd.caret(self, ?-x x? ?-y y? ?-height height?)
+    def tk_caret(options = None)
+      TkCmd.caret(self, options)
     end
 
     # @see TkCmd.scaling
-    def tk_scaling(?-displayof window? ?number?)
-      TkCmd.scaling(self, ?-displayof window? ?number?)
+    def tk_scaling
+      TkCmd.scaling(None, self)
+    end
+
+    # @see TkCmd.scaling
+    def tk_scaling=(number)
+      TkCmd.scaling(number, self)
     end
 
     # @see TkCmd.inactive
-    def tk_inactive(?-displayof window? ?reset?)
-      TkCmd.inactive(self, ?-displayof window? ?reset?)
+    def tk_inactive(reset = None)
+      TkCmd.inactive(reset, self)
     end
 
     # @see TkCmd.useinputmethods
-    def tk_useinputmethods(?-displayof window? ?boolean?)
-      TkCmd.useinputmethods(self, ?-displayof window? ?boolean?)
+    def tk_useinputmethods
+      TkCmd.useinputmethods(None, self)
+    end
+
+    # @see TkCmd.useinputmethods
+    def tk_useinputmethods=(boolean)
+      TkCmd.useinputmethods(boolean, self)
     end
 
     module_function
@@ -40,9 +55,9 @@ module Tk
     # capitals are assumed to be classes; as a result, Tk may not be able to
     # find some options for the application.
     # If sends have been disabled by deleting the send command, this command
-    # will reenable them and recreate the send com‐ mand.
-    def appname(?newName?)
-      Tk.execute(:tk, :appname, ?newName?)
+    # will reenable them and recreate the send command.
+    def appname(new_name = None)
+      Tk.execute(:tk, :appname, new_name)
     end
 
     # Sets and queries the caret location for the display of the specified Tk
@@ -56,13 +71,17 @@ module Tk
     # -x and -y represent window-relative coordinates, and -height is the
     # height of the current cursor location, or the height of the specified
     # window if none is given.
-    def caret(window ?-x x? ?-y y? ?-height height?)
-      Tk.execute(:tk, :caret, window ?-x x? ?-y y? ?-height height?)
+    def caret(window, options = None)
+      if None == options
+        Tk.execute(:tk, :caret, window).tcl_options_to_hash
+      else
+        Tk.execute_only(:tk, :caret, window, options.to_tcl_options)
+      end
     end
 
     # Sets and queries the current scaling factor used by Tk to convert between
     # physical units (for example, points, inches, or millimeters) and pixels.
-    # The number argument is a floating point num‐ ber that specifies the
+    # The number argument is a floating point number that specifies the
     # number of pixels per point on window's display.
     # If the window argument is omitted, it defaults to the main window.
     # If the number argument is omitted, the current value of the scaling
@@ -80,8 +99,12 @@ module Tk
     # Measurements made after the scaling factor is changed will use the new
     # scaling factor, but it is undefined whether existing widgets will resize
     # themselves dynamically to accommodate the new scaling factor.
-    def scaling(?-displayof window? ?number?)
-      Tk.execute(:tk, :scaling, ?-displayof window? ?number?)
+    def scaling(number = None, window = None)
+      if None == window
+        Tk.execute(:tk, :scaling, number)
+      else
+        Tk.execute(:tk, :scaling, '-displayof', window, number)
+      end
     end
 
     # Returns a positive integer, the number of milliseconds since the last
@@ -95,22 +118,30 @@ module Tk
     # is reset and an empty string is returned.
     # Resetting the inactivity time is forbidden in safe interpreters and will
     # throw and error if tried.
-    def inactive(?-displayof window? ?reset?)
-      Tk.execute(:tk, :inactive, ?-displayof window? ?reset?)
+    def inactive(reset = None, window = None)
+      if None == window
+        Tk.execute(:tk, :inactive, reset)
+      else
+        Tk.execute(:tk, :inactive, '-displayof', window, reset)
+      end
     end
 
     # Sets and queries the state of whether Tk should use XIM (X Input Methods)
     # for filtering events.
     # The resulting state is returned.
-    # XIM is used in some locales (i.e., Japanese, Korean), to han‐ dle special
+    # XIM is used in some locales (i.e., Japanese, Korean), to handle special
     # input devices.
     # This feature is only significant on X.
     # If XIM support is not available, this will always return 0.
-    # If the window argument is omitted, it defaults to the main win‐ dow.
+    # If the window argument is omitted, it defaults to the main window.
     # If the boolean argument is omitted, the current state is returned.
     # This is turned on by default for the main display.
-    def useinputmethods(?-displayof window? ?boolean?)
-      Tk.execute(:tk, :useinputmethods, ?-displayof window? ?boolean?)
+    def useinputmethods(boolean = None, window = None)
+      if None == window
+        Tk.execute(:tk, :useinputmethods, boolean ? true : false)
+      else
+        Tk.execute(:tk, :useinputmethods, '-displayof', window, boolean ? true : false)
+      end
     end
   end
 end

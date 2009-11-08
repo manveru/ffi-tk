@@ -28,6 +28,7 @@ module Tk
   autoload :Place,     'ffi-tk/command/place'
   autoload :Raise,     'ffi-tk/command/raise'
   autoload :Selection, 'ffi-tk/command/selection'
+  autoload :TkCmd,     'ffi-tk/command/tk_cmd'
   autoload :Wait,      'ffi-tk/command/wait'
   autoload :Winfo,     'ffi-tk/command/winfo'
   autoload :WM,        'ffi-tk/command/wm'
