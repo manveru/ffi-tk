@@ -49,7 +49,7 @@ module Tk
       include Tk::Grid
 
       def grid(options)
-        grid_configure options.to_tcl_options
+        grid_configure options
       end
     end
 

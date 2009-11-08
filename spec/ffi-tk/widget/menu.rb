@@ -7,6 +7,6 @@ describe Tk::Menu do
     instance.parent.should == Tk.root
   end
 
-  it 'needs more specs' do
-  end
+  #it 'needs more specs' do
+  #end
 end
