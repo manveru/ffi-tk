@@ -41,6 +41,10 @@ module Tk
       TkCmd.useinputmethods(boolean, self)
     end
 
+    def tk_windowingsystem
+      TkCmd.windowingsystem
+    end
+
     module_function
 
     # If newName is not specified, this command returns the name of the
@@ -142,6 +146,10 @@ module Tk
       else
         Tk.execute(:tk, :useinputmethods, '-displayof', window, boolean ? true : false)
       end
+    end
+
+    def windowingsystem
+      Tk.execute(:tk, :windowingsystem).to_sym
     end
   end
 end

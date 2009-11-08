@@ -204,7 +204,12 @@ module Tk
     end
 
     # @see WM::overrideredirect
-    def wm_overrideredirect(boolean = None)
+    def wm_overrideredirect
+      WM.overrideredirect(self)
+    end
+
+    # @see WM::overrideredirect
+    def wm_overrideredirect=(boolean)
       WM.overrideredirect(self, boolean)
     end
 
