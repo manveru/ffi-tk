@@ -96,6 +96,7 @@ module Tk
   # 1 means true, 0 means false.
   def tcl_callback(client_data, interp, objc, objv)
     cmd, id, *args = tcl_cmd_args(interp, objc, objv)
+    id = id.first if id.is_a?(Array)
 
     catch :callback_break do
       catch :callback_continue do
