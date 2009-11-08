@@ -60,10 +60,12 @@ module Tk
         embed << 'n' if options & ::Regexp::MULTILINE != 0
 
         if embed.empty?
-          TclString.new(source.to_tcl)
+          pattern = source
         else
-          TclString.new("(?#{embed.join})#{source}".to_tcl)
+          pattern = "(?#{embed.join})#{source}"
         end
+
+        TclString.new('{' << source.gsub(/[{}]/, '\\\\\&') << '}')
       end
     end
 
