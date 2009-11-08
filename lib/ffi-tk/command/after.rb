@@ -19,5 +19,18 @@ module Tk
         Tk.execute_only(:after, ms)
       end
     end
+
+    def idle(&block)
+      id = nil
+    
+      wrap = lambda{|*args|
+        block.call
+        Tk.unregister_proc(id)
+        true
+      }
+
+      id, command = Tk.register_proc(wrap, 'after_idle')
+      Tk.execute_only(:after, :idle, command)
+    end
   end
 end
