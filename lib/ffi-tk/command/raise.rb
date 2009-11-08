@@ -4,7 +4,7 @@ module Tk
   # FIXME: this will shadow Kernel#raise, alternatives?
   module Raise
     def raise(above = None)
-      Raise.raise(above)
+      Raise.raise(self, above)
     end
 
     module_function
@@ -18,8 +18,8 @@ module Tk
     # In this case the raise command will insert window into the stacking order
     # just above +above+ or the ancestor of +above+ that is a sibling of
     # window); this could end up either raising or lowering window.
-    def raise(above = None)
-      Tk.execute_only(:raise, above)
+    def raise(window, above = None)
+      Tk.execute_only(:raise, window, above)
     end
   end
 end

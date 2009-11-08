@@ -45,6 +45,14 @@ module Tk
       Focus.prev(self)
     end
 
+    def raise(above = None)
+      Raise.raise(self, above)
+    end
+
+    def lower(below = None)
+      Lower.lower(self, below)
+    end
+
     private
 
     def assign_pathname

@@ -2,7 +2,7 @@ module Tk
   # Change a window's position in the stacking order
   module Lower
     def lower(below = None)
-      Lower.lower(below)
+      Lower.lower(self, below)
     end
 
     module_function
@@ -17,7 +17,7 @@ module Tk
     # just below +below+ or the ancestor of +below+ that is a sibling of
     # window); this could end up either raising or lowering window.
     def lower(below = None)
-      Tk.execute_only(:lower, below)
+      Tk.execute_only(:lower, window, below)
     end
   end
 end
