@@ -788,7 +788,7 @@ module Tk
     # If there are no characters tagged with tag then an empty string is
     # returned.
     def tag_ranges(tag_name)
-      execute(:tag, :ranges, tag_name).to_a?
+      [*execute(:tag, :ranges, tag_name)].each_slice(2).to_a
     end
 
     # Remove the tag tagName from all of the characters starting at index1 and
