@@ -24,7 +24,7 @@ module Tk
           self.class.name[/(\w+)$/].downcase
         end
 
-      yield(options) if block_given?
+      yield(options) if block_given? && !options[:command]
 
       Tk.execute(command, assign_pathname, options.to_tcl_options?)
     end
