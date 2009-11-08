@@ -10,6 +10,7 @@ module Tk
   require 'ffi-tk/command/set_palette'
   require 'ffi-tk/command/vars'
 
+  autoload :After,     'ffi-tk/command/after'
   autoload :Bell,      'ffi-tk/command/bell'
   autoload :Bind,      'ffi-tk/command/bind'
   autoload :BindTag,   'ffi-tk/command/bindtags'
