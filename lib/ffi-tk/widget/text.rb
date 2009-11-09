@@ -577,8 +577,9 @@ module Tk
     # FUNNY: stdlib tk simply gets the text into the ruby side and performs
     #        matches using the core regexp methods, but doesn't give any way to
     #        call the tcl/tk search function, this is new land!
-    def search(pattern, from, to, *switches)
+    def search(pattern, from, to = None, *switches)
       switches << :regexp if pattern.class < CoreExtensions::Regexp
+      to = :end if None == to
 
       switches.map!{|switch| switch.to_s.to_tcl_option }
       switches.uniq!

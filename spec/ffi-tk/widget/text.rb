@@ -216,23 +216,23 @@ Voluptates dicta labore impedit deserunt quod. Vero sint rerum at asperiores eos
 
   describe 'Text#search' do
     it 'searches by exact match' do
-      text.search("et", '1.0').should == ['1.13']
-      text.search("labore", '1.0').should == ['20.17']
+      text.search("et", '1.0', :end).should == ['1.13']
+      text.search("labore", '1.0', :end).should == ['20.17']
     end
 
     it 'searches by regular expression' do
-      text.search(/e[t]/, '1.0').should == ['1.13']
-      text.search(/E[T]/i, '1.0').should == ['1.13']
-      text.search(/DOLORE\.\nEA/i, '1.0').should == ['1.240']
+      text.search(/e[t]/,          '1.0', :end).should == ['1.13']
+      text.search(/E[T]/i,         '1.0', :end).should == ['1.13']
+      text.search(/DOLORE\.\nEA/i, '1.0', :end).should == ['1.240']
     end
 
     it 'searches with regexp and switches' do
-      text.search(/DOLORE\..EA/i, '1.0', :nolinestop).should == ['1.240']
+      text.search(/DOLORE\..EA/i, '1.0', :end, :nolinestop).should == ['1.240']
     end
 
     it 'searches with :count' do
-      text.search('et', '1.0', :count).should == ['1.13', 2]
-      text.search('velit', '1.0', :all, :count).should == [['6.134', 5], ['20.168', 5]]
+      text.search('et', '1.0', :end, :count).should == ['1.13', 2]
+      text.search('velit', '1.0', :end, :all, :count).should == [['6.134', 5], ['20.168', 5]]
     end
   end
 
