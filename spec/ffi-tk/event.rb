@@ -55,6 +55,7 @@ describe Tk::Event do
     entry = Tk::Entry.new('.')
     entry.bind('<<Clear>>'){ entry.delete(0, :end) }
     entry.bind('<Map>'){
+      entry.focus
       Tk::Event.generate(entry, '<BackSpace>')
       Tk.interp.do_one_event
     }
@@ -77,6 +78,7 @@ describe Tk::Event do
     entry = Tk::Entry.new('.')
     entry.bind('<Key>'){ entered = true; Tk.stop }
     entry.bind('<Map>'){
+      entry.focus
       Tk::Event.generate(entry, '<KeyPress-a>')
     }
 
