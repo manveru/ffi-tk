@@ -22,8 +22,9 @@ module Tk
     require "ffi-tk/widget/canvas/text.rb"
     require "ffi-tk/widget/canvas/window.rb"
 
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'canvas'; end
 
     # For each item that meets the constraints specified by +search_spec+ and
     # the +args+, add +tag+ to the list of tags associated with the item if it

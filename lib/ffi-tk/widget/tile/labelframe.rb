@@ -1,6 +1,6 @@
 module Tk::Tile
   class LabelFrame < Tk::LabelFrame
-    INITIALIZE_COMMAND = 'ttk::labelframe'
+    def self.tk_command; 'ttk::labelframe'; end
     include Tk::Tile::TileWidget
   end
 end

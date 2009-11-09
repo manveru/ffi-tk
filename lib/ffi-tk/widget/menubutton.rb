@@ -1,6 +1,7 @@
 module Tk
   class MenuButton < Button
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'menubutton'; end
   end
 end

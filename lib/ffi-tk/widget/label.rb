@@ -11,7 +11,8 @@ module Tk
   # Additional options may be specified to configure aspects of the label such
   # as its colors, font, text, and initial relief.
   class Label < Widget
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'label'; end
   end
 end

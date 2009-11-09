@@ -1,6 +1,6 @@
 module Tk::Tile
   class Entry < Tk::Entry
-    INITIALIZE_COMMAND = 'ttk::entry'
+    def self.tk_command; 'ttk::entry'; end
     include Tk::Tile::TileWidget
   end
 end

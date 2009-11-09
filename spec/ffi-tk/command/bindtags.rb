@@ -7,7 +7,7 @@ describe Tk::Bindtags do
   @entry.pack # only placed widgets have bindtags?
 
   it 'lists bindtags of a widget' do
-    Tk::Bindtags.bindtags(@entry).should == [".tk::entry0", "Entry", ".", "all"]
+    Tk::Bindtags.bindtags(@entry).should == [".entry0", "Entry", ".", "all"]
   end
 
   it 'reverses bindtags of a widget' do

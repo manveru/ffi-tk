@@ -1,7 +1,8 @@
 module Tk
   class Scale < Widget
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'scale'; end
 
     # Returns a list whose elements are the x and y coordinates of the point
     # along the centerline of the trough that corresponds to value.

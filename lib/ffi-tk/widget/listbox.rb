@@ -1,7 +1,8 @@
 module Tk
   class Listbox < Widget
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'listbox'; end
 
     def clear
       delete 0, :end

@@ -11,8 +11,9 @@ module Tk
   # over the button), then the command specified in the -command option is
   # invoked.
   class Button < Widget
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'button'; end
 
     # TODO: implement custom procs
     def initialize(parent = Tk.root, options = None, &block)

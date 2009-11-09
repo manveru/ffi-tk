@@ -1,6 +1,6 @@
 module Tk::Tile
   class Scrollbar < Tk::Scrollbar
-    INITIALIZE_COMMAND = 'ttk::scrollbar'
+    def self.tk_command; 'ttk::scrollbar'; end
     include Tk::Tile::TileWidget
 
     def initialize(parent = Tk.root, options = None)

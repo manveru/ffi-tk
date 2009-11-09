@@ -1,6 +1,7 @@
 module Tk
   class LabelFrame < Frame
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'labelframe'; end
   end
 end

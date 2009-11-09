@@ -1,6 +1,6 @@
 module Tk::Tile
   class Button < Tk::Button
-    INITIALIZE_COMMAND = 'ttk::button'
+    def self.tk_command; 'ttk::button'; end
     include Tk::Tile::TileWidget
   end
 end

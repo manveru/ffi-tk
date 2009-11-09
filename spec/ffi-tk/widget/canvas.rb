@@ -3,7 +3,7 @@ require_relative '../../helper'
 describe Tk::Canvas do
   it 'creates a canvas' do
     @canvas = Tk::Canvas.new
-    @canvas.tk_pathname.should == '.tk::canvas0'
+    @canvas.tk_pathname.should == '.canvas0'
     @canvas.pack fill: :both, expand: true
   end
 

@@ -1,6 +1,6 @@
 module Tk::Tile
   class RadioButton < Tk::RadioButton
-    INITIALIZE_COMMAND = 'ttk::radiobutton'
+    def self.tk_command; 'ttk::radiobutton'; end
     include Tk::Tile::TileWidget
   end
 end

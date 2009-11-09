@@ -1,6 +1,6 @@
 module Tk::Tile
   class Frame < Tk::Frame
-    INITIALIZE_COMMAND = 'ttk::frame'
+    def self.tk_command; 'ttk::frame'; end
     include Tk::Tile::TileWidget
 
     def initialize(parent = Tk.root, options = {})

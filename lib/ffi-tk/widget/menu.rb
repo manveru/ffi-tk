@@ -1,7 +1,8 @@
 module Tk
   class Menu < Widget
-    INITIALIZE_COMMAND = 'menu'.freeze
     include Cget, Configure
+
+    def self.tk_command; 'menu'; end
 
     # Change the state of the entry indicated by index to active and redisplay
     # it using its active colors.

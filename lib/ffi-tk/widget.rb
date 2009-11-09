@@ -4,6 +4,10 @@ module Tk
 
     attr_reader :parent, :tk_pathname
 
+    def self.tk_command
+      raise "Implement in subclass"
+    end
+
     def initialize(parent = Tk.root, options = None)
       if parent.respond_to?(:to_tcl_options?)
         parent, options = Tk.root, parent
@@ -17,15 +21,9 @@ module Tk
 
       @parent = parent
 
-      command =
-        if self.class.const_defined?(:INITIALIZE_COMMAND)
-          self.class::INITIALIZE_COMMAND
-        else
-          self.class.name[/(\w+)$/].downcase
-        end
-
       yield(options) if block_given? && !options[:command]
 
+      command = self.class.tk_command
       Tk.execute(command, assign_pathname, options.to_tcl_options?)
     end
 

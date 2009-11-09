@@ -1,12 +1,12 @@
 module Tk::Tile
   class Scale < Tk::Scale
-    INITIALIZE_COMMAND = 'ttk::scale'
+    def self.tk_command; 'ttk::scale'; end
     include Tk::Tile::TileWidget
   end
 
   class Progress < Tk::Progess
     def initialize(parent, options = {}, &block)
-      INITIALIZE_COMMAND = 'ttk::progess'
+      def self.tk_command; 'ttk::progess'; end
       include Tk::Tile::TileWidget
     end
   end

@@ -1,7 +1,8 @@
 module Tk
   class PanedWindow < Widget
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'panedwindow'; end
 
     # Add one or more windows to the panedwindow, each in a separate pane.
     # The arguments consist of the names of one or more windows followed by

@@ -1,6 +1,6 @@
 module Tk::Tile
   class CheckButton < Tk::CheckButton
-    INITIALIZE_COMMAND = 'ttk::checkbutton'
+    def self.tk_command; 'ttk::checkbutton'; end
     include Tk::Tile::TileWidget
   end
 end

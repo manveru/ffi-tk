@@ -152,7 +152,7 @@ module Tk
 
   def register_object(parent, object)
     parent_name = parent.respond_to?(:tk_pathname) ? parent.tk_pathname : parent
-    cmd = object.class::INITIALIZE_COMMAND
+    cmd = object.class.tk_command
 
     id = "#{cmd}#{uuid(cmd)}"
     pathname = [parent_name, id].join('.').squeeze('.')

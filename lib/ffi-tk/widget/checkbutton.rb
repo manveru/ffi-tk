@@ -1,8 +1,9 @@
 module Tk
   # Create and manipulate checkbutton widgets
   class CheckButton < Button
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'checkbutton'; end
 
     def initialize(parent = Tk.root, options = None)
       if block_given?

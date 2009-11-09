@@ -1,7 +1,9 @@
 module Tk
   class Text < Widget
-    INITIALIZE_COMMAND = name.downcase.freeze
     include Cget, Configure
+
+    def self.tk_command; 'text'; end
+
     autoload :Peer, 'ffi-tk/widget/text/peer'
 
     SEARCH_MUTEX = Mutex.new
