@@ -54,7 +54,7 @@ module Tk
     # If last is not specified it defaults to first, i.e.
     # a single element is deleted.
     def delete(first, last = None)
-      execute(:delete, first, last)
+      execute_only(:delete, first, last)
     end
 
     # If last is omitted, returns the contents of the listbox element indicated
@@ -63,7 +63,7 @@ module Tk
     # of the listbox elements between first and last, inclusive.
     # Both first and last may have any of the standard forms for indices.
     def get(first, last = None)
-      execute(:get, first, last)
+      execute(:get, first, last).to_s
     end
 
     # Returns the integer index value that corresponds to index.
