@@ -308,7 +308,7 @@ module Tk
 
     # For each of the items given by +tag_or_id+, delete the tag given by
     # +tag_to_delete+ from the list of those associated with the item.
-    # If an item does not have the tag +tag_or_delete+ then the item is
+    # If an item does not have the tag +tag_to_delete+ then the item is
     # unaffected by the command.
     # If +tag_to_delete+ is omitted then it defaults to +tag_or_id+.
     # This command returns nil.
