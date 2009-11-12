@@ -160,13 +160,25 @@ module Tk
     # items using the bind widget command.
     # The bindings for items will be invoked before any of the bindings for
     # the window as a whole.
-    def bind(tag_or_id, sequence = None, &command)
-      if None == sequence
-        execute(:bind, tag_or_id).to_a
-      elsif sequence && command
-        execute_only(:bind, tag_or_id, sequence, command)
-      elsif sequence
-        execute(:bind, tag_or_id, sequence)
+    def bind(tag_or_id, sequence = None, &script)
+      unless script
+        if None == sequence
+          return Tk.execute(:bind, tag_or_id)
+        else
+          return Tk.execute(:bind, tag_or_id, sequence)
+        end
+      end
+
+      name = "#{tag_or_id}_#{tag_name}".scan(/\w+/).join('_')
+      @events ||= {}
+      unregister_event(name)
+
+      Event::Handler.register_custom(script) do |id|
+        code = "%s bind %s %s { ::RubyFFI::event %d '' %s }"
+        props = Event::Data::PROPERTIES.transpose[0].join(' ')
+        tcl = code % [tk_pathname, tag_or_id, sequence, id, props]
+        Tk.interp.eval(tcl)
+        @events[name] = id
       end
     end
 

@@ -686,6 +686,14 @@ module Tk
     # The tag bindings will be invoked first, followed by bindings for the
     # window as a whole.
     def tag_bind(tag_name, sequence = None, &script)
+      unless script
+        if None == sequence
+          return Tk.execute(:tag, :bind, tag_name)
+        else
+          return Tk.execute(:tag, :bind, tag_name, sequence)
+        end
+      end
+
       # create name for command
       name = "#{tk_pathname}_#{tag_name}".scan(/\w+/).join('_')
       @events ||= {}
@@ -698,8 +706,6 @@ module Tk
         Tk.interp.eval(tcl)
         @events[name] = id
       end
-
-      # execute(:tag, :bind, tag_name, sequence, command)
     end
 
     def unregister_event(name, id = @events[name])
