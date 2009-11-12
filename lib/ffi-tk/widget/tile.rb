@@ -14,17 +14,6 @@ module Tk
 
     # TileWidget module shared common tile methods
     module TileWidget
-      def initialize(parent = Tk.root, options = None)
-        if options.respond_to?(:values_at)
-          style_spec = options.values_at(:style)
-          options.delete(:style)
-        end
-
-        super
-
-        Tk::Tile::Style.layout(style_spec, tk_pathname) if style_spec
-      end
-
       def ttk_state(new_state = None)
         if new_state == None
           execute(:state).to_a
