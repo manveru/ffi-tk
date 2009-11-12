@@ -19,10 +19,6 @@ describe Tk::Tile::Frame do
 
     frame = Frame.new(Tk.root)
     frame.style(layout_style).should == true
-
-    frame2 = Frame.new(Tk.root, style: layout_style)
-
-    #? @frame.cget(:style).should.to_s == ''
   end
 
   it 'sets borderwidth default 0' do
