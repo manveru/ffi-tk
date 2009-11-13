@@ -69,6 +69,7 @@ module Tk
     autoload :Scrollbar,     'ffi-tk/widget/tile/scrollbar'
     autoload :YScrollbar,    'ffi-tk/widget/tile/scrollbar'
     autoload :XScrollbar,    'ffi-tk/widget/tile/scrollbar'
+    autoload :Notebook,      'ffi-tk/widget/tile/notebook'
 
     autoload :Style,         'ffi-tk/widget/tile/style'
 
