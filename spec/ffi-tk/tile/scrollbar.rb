@@ -7,7 +7,11 @@ describe Tk::Tile::Scrollbar do
     instance.parent.should == Tk.root
   end
 
-  it 'needs more specs' do
+  it 'sets orientation' do
+    s = Tk::Tile::YScrollbar.new
+    s.orient.should == :vertical
+    s.orient :horizontal
+    s.orient.should == :horizontal
   end
 end
 
@@ -18,7 +22,7 @@ describe Tk::Tile::YScrollbar do
     instance.parent.should == Tk.root
   end
 
-  it 'sets orient' do
+  it 'sets orientation' do
     s = Tk::Tile::YScrollbar.new
     s.cget(:orient).should == :vertical
   end
@@ -31,7 +35,7 @@ describe Tk::Tile::XScrollbar do
     instance.parent.should == Tk.root
   end
 
-  it 'sets orient' do
+  it 'sets orientation' do
     s = Tk::Tile::XScrollbar.new
     s.cget(:orient).should == :horizontal
   end

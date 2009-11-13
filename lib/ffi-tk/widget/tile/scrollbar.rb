@@ -8,6 +8,20 @@ module Tk::Tile
       scrollbar_default
     end
 
+    # Specifies the orientation of the scrollbar.
+    # horizontal or vertical
+    def orient(orientation = Tk::None)
+      if Tk::None == orientation
+        cget(:orient)
+      else
+        configure orient: orientation
+      end
+    end
+
+    def command(&block)
+      configure(:command => block) if block
+    end
+
     def scrollbar_default; end
   end
 

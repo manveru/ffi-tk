@@ -35,4 +35,5 @@ module Tk
   autoload :WM,        'ffi-tk/command/wm'
   autoload :Wait,      'ffi-tk/command/wait'
   autoload :Winfo,     'ffi-tk/command/winfo'
+  autoload :Scrollable,'ffi-tk/command/scrollable'
 end

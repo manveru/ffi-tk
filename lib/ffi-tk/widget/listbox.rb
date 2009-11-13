@@ -1,6 +1,6 @@
 module Tk
   class Listbox < Widget
-    include Cget, Configure
+    include Cget, Configure, Scrollable
 
     def self.tk_command; 'listbox'; end
 
@@ -182,87 +182,6 @@ module Tk
     # listbox.
     def size
       execute(:size)
-    end
-
-    # Returns a list containing two elements.
-    # Each element is a real fraction between 0 and 1; together they describe
-    # the horizontal span that is visible in the window.
-    # For example, if the first element is .2 and the second element is .6, 20%
-    # of the listbox's text is off-screen to the left, the middle 40% is
-    # visible in the window, and 40% of the text is off-screen to the right.
-    # These are the same values passed to scrollbars via the -xscrollcommand
-    # option.
-    #
-    # Adjusts the view in the window so that the character position given by
-    # index is displayed at the left edge of the window.
-    # Character positions are defined by the width of the character 0.
-    def xview(index = None)
-      if None == index
-        execute(:xview).to_a(&:to_f)
-      else
-        execute_only(:xview, index)
-      end
-    end
-
-    # Adjusts the view in the window so that fraction of the total width of the
-    # listbox text is off-screen to the left.
-    # fraction must be a fraction between 0 and 1.
-    def xview_moveto(fraction)
-      execute_only(:xview, :moveto, fraction)
-    end
-
-    # This command shifts the view in the window left or right according to
-    # number and what.
-    # Number must be an integer.
-    # What must be either units or pages or an abbreviation of one of these.
-    # If what is units, the view adjusts left or right by number character
-    # units (the width of the 0 character) on the display; if it is pages then
-    # the view adjusts by number screen‐ fuls.
-    # If number is negative then characters farther to the left become visible;
-    # if it is positive then characters farther to the right become visible.
-    def xview_scroll(number, what)
-      execute(:xview, :scroll, number, what)
-    end
-
-    # Returns a list containing two elements, both of which are real fractions
-    # between 0 and 1.
-    # The first element gives the position of the listbox element at the top of
-    # the window, relative to the listbox as a whole (0.5 means it is halfway
-    # through the listbox, for example).
-    # The second element gives the position of the listbox element just after
-    # the last one in the win‐ dow, relative to the listbox as a whole.
-    # These are the same values passed to scrollbars via the -yscrollcommand
-    # option.
-    #
-    # Adjusts the view in the window so that the element given by index is
-    # displayed at the top of the window.
-    def yview(index = None)
-      if None == index
-        execute(:yview).to_a(&:to_f)
-      else
-        execute(:yview, index)
-      end
-    end
-
-    # Adjusts the view in the window so that the element given by fraction
-    # appears at the top of the window.
-    # Fraction is a fraction between 0 and 1; 0 indicates the first element in
-    # the listbox, 0.33 indicates the element one-third the way through the
-    # listbox, and so on.
-    def yview_moveto(fraction)
-      execute_only(:yview, :moveto, fraction)
-    end
-
-    # This command adjusts the view in the window up or down according to
-    # number and what.
-    # Number must be an integer.
-    # What must be either units or pages.
-    # If what is units, the view adjusts up or down by number lines; if it is
-    # pages then the view adjusts by number screenfuls.
-    # If number is negative then earlier elements become visible; if it is
-    # positive then later ele‐ ments become visible.
-    def yview_scroll(number, what)
-      execute_only(:yview, :scroll, number, what)
     end
   end
 end
