@@ -63,6 +63,12 @@ module Tk
     autoload :CheckButton,   'ffi-tk/widget/tile/checkbutton'
     autoload :RadioButton,   'ffi-tk/widget/tile/radiobutton'
     autoload :MenuButton,    'ffi-tk/widget/tile/menubutton'
+    autoload :PanedWindow,   'ffi-tk/widget/tile/panedwindow'
+    autoload :Label,         'ffi-tk/widget/tile/label'
+    autoload :Scale,         'ffi-tk/widget/tile/scale'
+    autoload :Scrollbar,     'ffi-tk/widget/tile/scrollbar'
+    autoload :YScrollbar,    'ffi-tk/widget/tile/scrollbar'
+    autoload :XScrollbar,    'ffi-tk/widget/tile/scrollbar'
 
     autoload :Style,         'ffi-tk/widget/tile/style'
 
@@ -70,41 +76,3 @@ module Tk
 end
 
 #Ttk = Tk::Tile
-__END__
-
-    def self.load_images(imgdir, pat=nil)
-      pat ||= '*.gif'
-      pat = pat.kind_of?(Array) ? pat : [pat]
-
-      Dir.chdir(imgdir){
-        pat_list.each{|pat|
-          Dir.glob(pat).each{|f|
-            img = File.basename(f, '.*')
-            #unless TkComm.bool(Tk.info('exists', "images(#{img})"))
-            unless Tk.execute('info', 'exists', "images(#{img})")
-              tk_image = Tk.execute('image', 'create', 'photo', '-file', f)
-              Tk.execute('set', "images(#{img})", tk_image)
-            end
-          }
-        }
-      }
-      images = Hash[*Tk.execute('array', 'get', 'images')]
-      images.keys.each{|k|
-        images[k] = TkPhotoImage.new(:imagename=>images[k],
-                                     :without_creating=>true)
-      }
-
-      images
-    end
-
-
-    def self.themes(glob_ptn = nil)
-      glob_ptn = '*' unless glob_ptn
-      cmd = ['::ttk::themes', glob_ptn]
-      begin
-        Tk.execute(*cmd)
-      rescue
-        Tk.execute('lsearch', '-all', '-inline', Style.theme_names, glob_ptn)
-      end
-    end
-

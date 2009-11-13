@@ -24,7 +24,7 @@ module Tk
     ]]
     insert[:string, %w[ tabs cursor text show default class ]]
     insert[:font, %w[ font ]]
-    insert[:symbol, %w[ wrap tabstyle relief justify validate ]]
+    insert[:symbol, %w[ wrap tabstyle relief justify validate orient]]
     insert[:variable, %w[ textvariable ]]
     insert[:bitmap, %w[ stipple ]]
     insert[:list, %w[ padding state style ]]
