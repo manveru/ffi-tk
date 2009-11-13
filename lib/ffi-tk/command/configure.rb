@@ -49,18 +49,6 @@ module Tk
     def register_command(name, &block)
       case name
       when :validatecommand
-        arg = '%d %i %P %s %S %v %V %W'
-        wrap = lambda{|action, index, current, previous, diff, type_set, trigger, name|
-          # p action: action
-          # p index: index
-          # p current: current
-          # p previous: previous
-          # p diff: diff
-          # p type_set: type_set
-          # p trigger: trigger
-          # p name: name
-          block.call(action, index, current, previous, diff, type_set, trigger, name)
-        }
         # %d Type of action: 1 for insert, 0 for delete, or -1 for focus, forced
         #    or textvariable validation.
         # %i Index of char string to be inserted/deleted, if any, otherwise -1.
@@ -73,14 +61,15 @@ module Tk
         # %V The type of validation that triggered the callback (key, focusin,
         #    focusout, forced).
         # %W The name of the entry widget.
+        arg = '%d %i %P %s %S %v %V %W'
       else
-        wrap = block
+        arg = ''
       end
 
       @commands ||= {}
 
       unregister_command(name)
-      id, command = Tk.register_proc(wrap, arg.to_s)
+      id, command = Tk.register_proc(block, arg)
       @commands[name] = id
 
       return command
