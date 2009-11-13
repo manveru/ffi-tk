@@ -85,7 +85,7 @@ describe Tk::Winfo do
   end
 
   it "knows its name" do
-    root.winfo_name.should == 'tk'
+    root.winfo_name.should =~ /^tk/
   end
 
   it 'knows its parent' do
