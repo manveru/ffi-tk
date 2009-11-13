@@ -22,6 +22,10 @@ module Tk
       insert :end, string
     end
 
+    def clear
+      delete '0.0', :end
+    end
+
     # Returns a list of four elements describing the screen area of the
     # character given by index.
     # The first two elements of the list give the x and y coordinates of the
