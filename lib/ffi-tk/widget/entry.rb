@@ -32,6 +32,10 @@ module Tk
       insert 0, string
     end
 
+    def clear
+      delete 0, :end
+    end
+
     def cursor
       index(:insert)
     end
