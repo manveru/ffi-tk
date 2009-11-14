@@ -64,6 +64,13 @@ module FFI
         begin
           wait_for_event(0.1)
           Tcl.do_one_event(flag)
+        end until yield
+      end
+
+      def do_events_while(flag = 0)
+        begin
+          wait_for_event(0.1)
+          Tcl.do_one_event(flag)
         end while yield
       end
 
