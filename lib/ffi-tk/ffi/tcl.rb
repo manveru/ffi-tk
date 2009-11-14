@@ -43,49 +43,57 @@ module FFI
     attach_function :Tcl_CreateObjCommand, [
       Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
-    class << self
-      alias append_all_obj_types Tcl_AppendAllObjTypes
-      alias create_interp Tcl_CreateInterp
-      alias create_obj_command Tcl_CreateObjCommand
-      alias delete_interp Tcl_DeleteInterp
-      alias do_one_event Tcl_DoOneEvent
-      alias eval_ex Tcl_EvalEx
-      alias get_boolean_from_obj Tcl_GetBooleanFromObj
-      alias get_double_from_obj Tcl_GetDoubleFromObj
-      alias get_int_from_obj Tcl_GetIntFromObj
-      alias get_obj_result Tcl_GetObjResult
-      alias get_obj_type Tcl_GetObjType
-      alias get_string Tcl_GetString
-      alias get_string_from_obj Tcl_GetStringFromObj
-      alias get_string_result Tcl_GetStringResult
-      alias get_unicode Tcl_GetUnicode
-      alias list_obj_get_elements Tcl_ListObjGetElements
-      alias list_obj_index Tcl_ListObjIndex
-      alias list_obj_length Tcl_ListObjLength
-      alias new_boolean_obj Tcl_NewBooleanObj
-      alias new_int_obj Tcl_NewIntObj
-      alias new_list_obj Tcl_NewListObj
-      alias new_string_obj Tcl_NewStringObj
-      alias obj_get_var2 Tcl_ObjGetVar2
-      alias obj_set_var2 Tcl_ObjSetVar2
-      alias parse_var Tcl_ParseVar
-      alias set_obj_result Tcl_SetObjResult
-      alias wait_for_event Tcl_WaitForEvent
+    debug_code = <<-RUBY
+def self.%s(*args, &block)
+  @thread_sender.thread_send{
+    p Thread.current.object_id => [:%s, args]
+    %s(*args, &block)
+  }
+end
+    RUBY
+
+    fast_code = <<-RUBY
+def self.%s(*args, &block)
+  @thread_sender.thread_send{ %s(*args, &block) }
+end
+    RUBY
+
+    singleton_methods.grep(/^Tcl_/).each do |function|
+      ruby_name = function.to_s.gsub(/([A-Z][a-z]+)/, '_\1').sub('_Tcl__', '').downcase
+      if $DEBUG
+        eval(debug_code % [ruby_name, function, function])
+      else
+        eval(fast_code % [ruby_name, function])
+      end
     end
 
     module_function
 
+    @thread_sender = ThreadSender.new
+
+    def thread_send(&block)
+      @thread_sender.thread_send(&block)
+    end
+
+    def create_interp
+      thread_send{ Tcl.Tcl_CreateInterp }
+    end
+
     def init(interp)
-      if Tcl_Init(interp) == 1
-        message = get_string_result(interp)
-        raise RuntimeError, message
+      thread_send do
+        if Tcl_Init(interp) == 1
+          message = get_string_result(interp)
+          raise RuntimeError, message
+        end
       end
     end
 
     def get_boolean(interp, ruby_object)
-      boolean_pointer = MemoryPointer.new(:int)
-      Tcl_GetBoolean(interp, ruby_object.to_s, boolean_pointer)
-      boolean_pointer.get_int(0) == 1
+      thread_send do
+        boolean_pointer = MemoryPointer.new(:int)
+        Tcl_GetBoolean(interp, ruby_object.to_s, boolean_pointer)
+        boolean_pointer.get_int(0) == 1
+      end
     end
 
     def list_map_string(interp, list)
@@ -93,14 +101,16 @@ module FFI
       count_pointer  = MemoryPointer.new(:int)
       length_pointer = MemoryPointer.new(:int)
 
-      list_obj_length(interp, list, count_pointer)
-      count = count_pointer.get_int(0)
+      thread_send do
+        Tcl_ListObjLength(interp, list, count_pointer)
+        count = count_pointer.get_int(0)
 
-      (0...count).map do |idx|
-        list_obj_index(interp, list, idx, result_pointer)
-        element_pointer = result_pointer.get_pointer(0)
-        value = get_string_from_obj(element_pointer, length_pointer)
-        block_given? ? yield(value) : value
+        (0...count).map do |idx|
+          Tcl_ListObjIndex(interp, list, idx, result_pointer)
+          element_pointer = result_pointer.get_pointer(0)
+          value = Tcl_GetStringFromObj(element_pointer, length_pointer)
+          block_given? ? yield(value) : value
+        end
       end
     end
   end

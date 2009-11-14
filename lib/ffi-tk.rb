@@ -1,7 +1,9 @@
+require 'thread'
 require 'ffi'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
+require 'ffi-tk/thread_sender'
 require 'ffi-tk/ffi/tcl'
 require 'ffi-tk/ffi/tk'
 

@@ -11,6 +11,10 @@ module FFI
         new(Tcl.create_interp)
       end
 
+      def inspect
+        "Interp"
+      end
+
       def guess_result
         EvalResult.guess(self, Obj.new(Tcl.get_obj_result(self)))
       end

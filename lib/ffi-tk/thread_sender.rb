@@ -1,7 +1,7 @@
 class ThreadSender
   def initialize
     @queue = Queue.new
-    
+
     @thread = Thread.new do
       loop do
         block, response_queue = *@queue.pop
@@ -9,23 +9,17 @@ class ThreadSender
       end
     end
   end
-  
-  def thread_send(&block)
-    response_queue = Queue.new
-    @queue.push([block, response_queue])
-    response_queue.pop
+
+  # If callbacks are invoked within a thread_send, we process them inside the
+  # same thread.
+  # Calling pop on the queue would cause deadlocks.
+  def thread_send
+    if @thread == Thread.current
+      yield
+    else
+      response_queue = Queue.new
+      @queue.push([Proc.new, response_queue])
+      response_queue.pop
+    end
   end
 end
-  
-ts = ThreadSender.new
-
-ts.thread_send do
-  puts "testing 1: #{Thread.current.inspect}"
-end
-
-ts.thread_send do
-  puts "testing 2: #{Thread.current.inspect}"
-end
-
-puts Thread.current.inspect
-nil

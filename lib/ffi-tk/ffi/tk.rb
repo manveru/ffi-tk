@@ -6,16 +6,18 @@ module FFI
     attach_function :Tk_Init, [:pointer], :int
     attach_function :Tk_MainLoop, [], :void
 
-    class << self
-      alias mainloop Tk_MainLoop
-    end
-
     module_function
 
+    def mainloop
+      Tcl.thread_send{ Tk_MainLoop() }
+    end
+
     def init(interp)
-      if Tk_Init(interp) == 1
-        message = FFI::Tcl.Tcl_GetStringResult(interp)
-        raise RuntimeError, message
+      Tcl.thread_send do
+        if Tk_Init(interp) == 1
+          message = Tcl.Tcl_GetStringResult(interp)
+          raise RuntimeError, message
+        end
       end
     end
   end

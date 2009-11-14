@@ -77,8 +77,12 @@ module FFI
         :internalRep, InternalRep
       )
 
+      def pretty_type
+        EvalResult::TYPES[type.to_i]
+      end
+
       def inspect
-        "#<Obj bytes=%p type=%p>" % [self[:bytes], self[:type]]
+        "#<Obj bytes=%p type=%p>" % [self[:bytes], pretty_type]
       end
     end
   end
