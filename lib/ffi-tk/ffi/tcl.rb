@@ -47,7 +47,7 @@ module FFI
 def self.%s(*args, &block)
   @thread_sender.thread_send{
     p Thread.current.object_id => [:%s, args]
-    %s(*args, &block)
+    p %s(*args, &block)
   }
 end
     RUBY

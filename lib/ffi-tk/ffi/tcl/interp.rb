@@ -60,9 +60,11 @@ module FFI
         Tcl.do_one_event(flag)
       end
 
-      def do_events_until
-        wait_for_event(0.1)
-        do_one_event until yield
+      def do_events_until(flag = 0)
+        begin
+          wait_for_event(0.1)
+          Tcl.do_one_event(flag)
+        end while yield
       end
 
       def eval(string)
