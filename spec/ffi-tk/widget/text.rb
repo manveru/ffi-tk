@@ -189,6 +189,12 @@ describe Tk::Text do
     text.peer_names.should == []
   end
 
+   it 'searches for {}' do
+     text.insert :end, '{ now some text in here}'
+     text.search(/\{/, '1.0', 'end', :all).should == ['1.10']
+     text.search(/\}/, '1.0', 'end', :all).should == ['1.33']
+     text.search(/[{}]/, '1.0', 'end', :all).should == ['1.10', '1.33']
+   end
 
   text.delete '1.0', 'end'
   text.insert(:end, <<-TEXT)

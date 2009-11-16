@@ -65,7 +65,7 @@ module Tk
           pattern = "(?#{embed.join})#{source}"
         end
 
-        TclString.new('{' << pattern.gsub(/[{}]/, '\\\\\&') << '}')
+        TclString.new('{' << pattern.gsub(/([^\\])(?=[{}])/, '\1\\\\\2') << '}')
       end
     end
 
