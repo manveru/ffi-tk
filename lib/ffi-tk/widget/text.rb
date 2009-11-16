@@ -184,7 +184,8 @@ module Tk
     # If the display line containing index is not visible on the screen then the
     # return value is an empty list.
     def dlineinfo(index)
-      execute('dlineinfo', index).map(&:to_i)
+      info = execute('dlineinfo', index).to_a
+      info.empty? ? nil : info.map(&:to_i)
     end
 
     # Return the contents of the text widget from index1 up to, but not
