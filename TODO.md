@@ -15,10 +15,6 @@ An item is marked as done when:
 
 Commands that operate on any widget as argument have highest priority.
 
-[ ] grid
-[ ] tk
-[ ] option
-[ ] grab
 [ ] image
     [ ] photo
     [ ] bitmap
@@ -31,24 +27,6 @@ Commands that operate on any widget as argument have highest priority.
 The Tile widgets should have priority, as they will be needed most.
 Some widgets don't have a tile equivalent, they have highes priority.
 
-[ ] text
-[x] entry
-[ ] listbox
-[x] frame
-[ ] label
-[ ] scrollbar
-[ ] toplevel
-[x] canvas
-[ ] message
-[ ] button
-[ ] checkbutton
-[ ] spinbox
-[ ] labelframe
-[ ] menu
-[ ] menubutton
-[ ] panedwindow
-[ ] radiobutton
-[ ] scale
 [ ] console
 
 ### Tile Widgets
