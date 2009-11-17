@@ -8,7 +8,8 @@ module Tk
     insert[:integer, %w[
       height width maxundo spacing1 spacing2 spacing3 borderwidth bd
       highlightthickness insertborderwidth insertofftime insertontime
-      insertwidth padx pady selectborderwidth endline startline
+      insertwidth padx pady selectborderwidth endline startline length
+      maximum
     ]]
     insert[:boolean, %w[
       autoseparators blockcursor undo exportselection setgrid takefocus
@@ -24,7 +25,7 @@ module Tk
     ]]
     insert[:string, %w[ tabs cursor text show default class ]]
     insert[:font, %w[ font ]]
-    insert[:symbol, %w[ wrap tabstyle relief justify validate orient]]
+    insert[:symbol, %w[ wrap tabstyle relief justify validate orient mode]]
     insert[:variable, %w[ textvariable ]]
     insert[:bitmap, %w[ stipple ]]
     insert[:list, %w[ padding state style ]]

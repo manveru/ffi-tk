@@ -72,6 +72,8 @@ module Tk
     autoload :Notebook,      'ffi-tk/widget/tile/notebook'
     autoload :Separator,     'ffi-tk/widget/tile/separator'
     autoload :Sizegrip,      'ffi-tk/widget/tile/sizegrip'
+    autoload :ComboBox,      'ffi-tk/widget/tile/combobox'
+    autoload :Progressbar,   'ffi-tk/widget/tile/progressbar'
 
     autoload :Style,         'ffi-tk/widget/tile/style'
 
