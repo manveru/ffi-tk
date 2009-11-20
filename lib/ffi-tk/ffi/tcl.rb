@@ -43,75 +43,50 @@ module FFI
     attach_function :Tcl_CreateObjCommand, [
       Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
-    debug_code = <<-RUBY
-def self.%s(*args, &block)
-  @thread_sender.thread_send{
-    p Thread.current.object_id => [:%s, args]
-    p %s(*args, &block)
-  }
-end
-    RUBY
+    module_function
 
-    fast_code = <<-RUBY
+    ATTACHED_FUNCTIONS = {}
+    singleton_methods.grep(/^Tcl_/).each do |function|
+      ruby_name = function.to_s.
+        gsub(/([A-Z][a-z]+)/, '_\1').sub('_Tcl__', '').downcase
+      ATTACHED_FUNCTIONS[function] = ruby_name
+    end
+    BINDING = binding
+
+    def setup_eventloop_on_new_thread
+      puts "Run eventloop on new thread" if $DEBUG
+
+      code = <<-RUBY.strip
 def self.%s(*args, &block)
   @thread_sender.thread_send{ %s(*args, &block) }
 end
-    RUBY
+      RUBY
 
-    singleton_methods.grep(/^Tcl_/).each do |function|
-      ruby_name = function.to_s.gsub(/([A-Z][a-z]+)/, '_\1').sub('_Tcl__', '').downcase
-      if $DEBUG
-        eval(debug_code % [ruby_name, function, function])
-      else
-        eval(fast_code % [ruby_name, function])
+      binding, file, line = BINDING, __FILE__, __LINE__ - 5
+      ATTACHED_FUNCTIONS.each do |function, ruby_name|
+        eval(code % [ruby_name, function, function], binding, file, line)
       end
+
+      @thread_sender = ThreadSender.new
+      class << self; attr_reader :thread_sender; end
+      @thread_sender.thread_send{ Interp.new(create_interp) }
     end
 
-    module_function
+    def setup_eventloop_on_main_thread
+      puts "Run eventloop on main thread" if $DEBUG
 
-    @thread_sender = ThreadSender.new
+      code = <<-'RUBY'.strip
+def self.%s(*args, &block)
+  %s(*args, &block)
+end
+      RUBY
 
-    def thread_send(&block)
-      @thread_sender.thread_send(&block)
-    end
-
-    def create_interp
-      thread_send{ Tcl.Tcl_CreateInterp }
-    end
-
-    def init(interp)
-      thread_send do
-        if Tcl_Init(interp) == 1
-          message = get_string_result(interp)
-          raise RuntimeError, message
-        end
+      binding, file, line = BINDING, __FILE__, __LINE__ - 5
+      ATTACHED_FUNCTIONS.each do |function, ruby_name|
+        eval(code % [ruby_name, function], binding, file, line)
       end
-    end
 
-    def get_boolean(interp, ruby_object)
-      thread_send do
-        boolean_pointer = MemoryPointer.new(:int)
-        Tcl_GetBoolean(interp, ruby_object.to_s, boolean_pointer)
-        boolean_pointer.get_int(0) == 1
-      end
-    end
-
-    def list_map_string(interp, list)
-      result_pointer = MemoryPointer.new(:pointer)
-      count_pointer  = MemoryPointer.new(:int)
-      length_pointer = MemoryPointer.new(:int)
-
-      thread_send do
-        Tcl_ListObjLength(interp, list, count_pointer)
-        count = count_pointer.get_int(0)
-
-        (0...count).map do |idx|
-          Tcl_ListObjIndex(interp, list, idx, result_pointer)
-          element_pointer = result_pointer.get_pointer(0)
-          value = Tcl_GetStringFromObj(element_pointer, length_pointer)
-          block_given? ? yield(value) : value
-        end
-      end
+      Interp.new(create_interp)
     end
   end
 end

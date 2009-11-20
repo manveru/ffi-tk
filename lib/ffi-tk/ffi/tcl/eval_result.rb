@@ -8,9 +8,18 @@ module FFI
         TYPES.clear
         list = Tcl.new_list_obj(0, nil)
         Tcl.append_all_obj_types(interp, list)
-        types_names = Tcl.list_map_string(interp, list)
 
-        types_names.each do |name|
+        result_pointer = MemoryPointer.new(:pointer)
+        count_pointer  = MemoryPointer.new(:int)
+        length_pointer = MemoryPointer.new(:int)
+
+        Tcl.list_obj_length(interp, list, count_pointer)
+        count = count_pointer.get_int(0)
+
+        (0...count).each do |idx|
+          Tcl.list_obj_index(interp, list, idx, result_pointer)
+          element_pointer = result_pointer.get_pointer(0)
+          name = Tcl.get_string_from_obj(element_pointer, length_pointer)
           type = Tcl.get_obj_type(name)
           TYPES[type.to_i] = name.to_sym
         end

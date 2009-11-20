@@ -7,10 +7,6 @@ module FFI
         :errorLine, :int
       )
 
-      def self.create
-        new(Tcl.create_interp)
-      end
-
       def inspect
         "Interp"
       end

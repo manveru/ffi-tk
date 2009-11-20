@@ -1,12 +1,13 @@
 class ThreadSender
   def initialize
     @queue = Queue.new
+    @thread = Thread.new{ reaper }
+  end
 
-    @thread = Thread.new do
-      loop do
-        block, response_queue = *@queue.pop
-        response_queue.push(block.call)
-      end
+  def reaper
+    loop do
+      block, response_queue = *@queue.pop
+      response_queue.push(block.call)
     end
   end
 

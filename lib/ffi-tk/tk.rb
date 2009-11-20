@@ -14,8 +14,21 @@ module Tk
 
   module_function
 
+  unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
+    # In some cases Tk has trouble running, this seems to happen on windows and
+    # OSX/TkAqua mostly.
+    # In these cases please use:
+    #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
+    # before you require 'tk'
+    RUN_EVENTLOOP_ON_MAIN_THREAD = false # true
+  end
+
   def init
-    @interp = FFI::Tcl::Interp.create
+    if RUN_EVENTLOOP_ON_MAIN_THREAD
+      @interp = FFI::Tcl.setup_eventloop_on_main_thread
+    else
+      @interp = FFI::Tcl.setup_eventloop_on_new_thread
+    end
 
     FFI::Tcl.init(@interp)
     FFI::Tcl::EvalResult.reset_types(@interp)
@@ -194,7 +207,9 @@ module Tk
   end
 
   def boolean(obj)
-    FFI::Tcl.get_boolean(interp, obj)
+    boolean_pointer = FFI::MemoryPointer.new(:int)
+    FFI::Tcl.get_boolean(interp, obj.to_s, boolean_pointer)
+    boolean_pointer.get_int(0) == 1
   end
 
   def convert_arguments(*args)
