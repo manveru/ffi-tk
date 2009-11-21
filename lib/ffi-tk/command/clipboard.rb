@@ -92,8 +92,14 @@ module Tk
     # +type+ defaults to STRING.
     # This is equivalent to `Selection.get(selection: :clipboard)`.
     def get(window = None, type = None)
-      type = type.to_s.upcase unless type == None
-      Tk.execute(:clipboard, :get, window, type).to_s
+      options = {}
+      options[:displayof] = window unless None == window
+      options[:type] = type.to_s.upcase unless None == type
+
+      Tk.execute(:clipboard, :get, options.to_tcl_options)
+    end
+
+    def set
     end
   end
 end
