@@ -98,8 +98,5 @@ module Tk
 
       Tk.execute(:clipboard, :get, options.to_tcl_options)
     end
-
-    def set
-    end
   end
 end

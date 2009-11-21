@@ -75,8 +75,7 @@ module FFI
 
         (0...count).map do |idx|
           Tcl.list_obj_index(interp, obj, idx, result_pointer)
-          element_pointer = result_pointer.get_pointer(0)
-          yield element_pointer
+          yield result_pointer.get_pointer(0)
         end
       end
 

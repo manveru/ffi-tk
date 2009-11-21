@@ -20,7 +20,7 @@ module Tk
     # In these cases please use:
     #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
     # before you require 'tk'
-    RUN_EVENTLOOP_ON_MAIN_THREAD = false # true
+    RUN_EVENTLOOP_ON_MAIN_THREAD = false
   end
 
   def init
