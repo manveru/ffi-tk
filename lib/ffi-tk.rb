@@ -3,6 +3,22 @@ require 'ffi'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
+module Tk
+  LIBPATH = { tcl: [], tk: [] }
+
+  if ENV['Apple_PubSub_Socket_Render']
+    RUN_EVENTLOOP_ON_MAIN_THREAD = true
+
+    if ENV['NO_AQUA'] || ENV['USE_X11'] # macports-x11 libtk
+      LIBPATH[:tcl] << '/opt/local/lib/libtcl8.5.dylib'
+      LIBPATH[:tk] << '/opt/local/lib/libtk8.5.dylib'
+    else # Tcl/Tk Aqua >= 8.5
+      LIBPATH[:tcl] << '/Library/Frameworks/Tcl.framework/Tcl'
+      LIBPATH[:tk] << '/Library/Frameworks/Tk.framework/Tk'
+    end
+  end
+end
+
 require 'ffi-tk/thread_sender'
 require 'ffi-tk/ffi/tcl'
 require 'ffi-tk/ffi/tk'

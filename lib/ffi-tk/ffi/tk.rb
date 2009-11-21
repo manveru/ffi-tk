@@ -1,7 +1,7 @@
 module FFI
   module Tk
     extend FFI::Library
-    ffi_lib 'libtk8.5.so', 'libtk.so', 'Tk', 'libtk'
+    ffi_lib 'libtk8.5.so', 'libtk.so', *::Tk::LIBPATH[:tk]
 
     attach_function :Tk_Init, [:pointer], :int
     attach_function :Tk_MainLoop, [], :void

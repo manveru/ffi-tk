@@ -96,7 +96,7 @@ module Tk
       options[:displayof] = window unless None == window
       options[:type] = type.to_s.upcase unless None == type
 
-      Tk.execute(:clipboard, :get, options.to_tcl_options)
+      Tk.execute(:clipboard, :get, options.to_tcl_options).to_s
     end
   end
 end
