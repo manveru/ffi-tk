@@ -8,5 +8,9 @@ describe Tk::Label do
   end
 
   it 'needs more specs' do
+    label = Tk::Label.new
+    label.value.should == nil
+    label.value = 'Hello, World!'
+    label.value.should == 'Hello, World!'
   end
 end

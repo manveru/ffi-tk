@@ -14,5 +14,13 @@ module Tk
     include Cget, Configure
 
     def self.tk_command; 'label'; end
+
+    def value=(string)
+      configure(text: string)
+    end
+
+    def value
+      cget(:text)
+    end
   end
 end

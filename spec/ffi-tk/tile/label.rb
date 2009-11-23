@@ -7,7 +7,11 @@ describe Tk::Tile::Label do
     instance.tk_parent.should == Tk.root
   end
 
-  it 'needs more specs' do
+  it 'assigns a value' do
+    label = Tk::Tile::Label.new
+    label.value.should == nil
+    label.value = 'Hello, World!'
+    label.value.should == 'Hello, World!'
   end
 end
 
