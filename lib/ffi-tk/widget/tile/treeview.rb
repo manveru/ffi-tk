@@ -40,7 +40,7 @@ module Tk
       # None of the items in newchildren may be an ancestor of item.
       def children(item, *new_children)
         if new_children.empty?
-          execute(:children, item).to_a{|child| Item.new(self, child) }
+          execute(:children, item).to_a.map{|child| Item.new(self, child) }
         else
           execute(:children, item, *new_children.flatten)
         end
