@@ -1,7 +1,8 @@
-module Tk::Tile
-  class LabelFrame < Tk::LabelFrame
-    def self.tk_command; 'ttk::labelframe'; end
-    include Tk::Tile::TileWidget
+module Tk
+  module Tile
+    class LabelFrame < Tk::LabelFrame
+      def self.tk_command; 'ttk::labelframe'; end
+      include TileWidget
+    end
   end
 end
-

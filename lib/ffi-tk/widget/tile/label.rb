@@ -1,7 +1,9 @@
-module Tk::Tile
-  class Label < Tk::Label
-    def self.tk_command; 'ttk::label'; end
-    include Tk::Tile::TileWidget
+module Tk
+  module Tile
+    class Label < Tk::Label
+      def self.tk_command; 'ttk::label'; end
+      include TileWidget
+    end
   end
 end
 

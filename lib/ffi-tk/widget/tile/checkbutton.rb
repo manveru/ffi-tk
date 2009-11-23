@@ -1,7 +1,8 @@
-module Tk::Tile
-  class CheckButton < Tk::CheckButton
-    def self.tk_command; 'ttk::checkbutton'; end
-    include Tk::Tile::TileWidget
+module Tk
+  module Tile
+    class CheckButton < Tk::CheckButton
+      def self.tk_command; 'ttk::checkbutton'; end
+      include TileWidget
+    end
   end
 end
-
