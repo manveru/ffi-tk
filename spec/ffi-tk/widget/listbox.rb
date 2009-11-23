@@ -14,5 +14,6 @@ describe Tk::Listbox do
     list.insert 1, "second line"
     list.get(1).should == "second line"
     list.get(0, 1).should == ['first line', 'second line']
+    list.value.should == ['first line', 'second line']
   end
 end

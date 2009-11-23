@@ -9,6 +9,7 @@ module Tk
     end
 
     def value
+      get(0, size)
     end
 
     def value=(enumerable)
