@@ -307,7 +307,7 @@ module Tk
     # returns an empty string.
     # See EMBEDDED IMAGES for information on the options that are supported.
     def image_configure(index, options = None)
-      common_configure(:image, :configure, index, options)
+      common_configure([:image, :configure, index], options)
     end
 
     # This command creates a new image annotation, which will appear in the text
@@ -741,7 +741,7 @@ module Tk
     # this case the command returns an empty string.
     # See TAGS above for details on the options available for tags.
     def tag_configure(tag_name, options = None)
-      common_configure(:tag, :configure, tag_name, options)
+      common_configure([:tag, :configure, tag_name], options)
     end
 
     # Deletes all tag information for each of the tagName arguments.
@@ -856,7 +856,7 @@ module Tk
     # command returns an empty string.
     # See EMBEDDED WINDOWS for information on the options that are supported.
     def window_configure(index, options = None)
-      common_configure(:window, :configure, index, options)
+      common_configure([:window, :configure, index], options)
     end
 
     # This command creates a new window annotation, which will appear in the

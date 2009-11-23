@@ -454,7 +454,7 @@ module Tk
     # create widget command when the item(s) were created; see the sections
     # describing individual item types below for details on the legal options.
     def itemconfigure(tag_or_id, options = None)
-      common_configure(:itemconfigure, tag_or_id, options)
+      common_configure([:itemconfigure, tag_or_id], options)
     end
 
     # Move all of the items given by +tag_or_id+ to a new position in the display

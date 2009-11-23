@@ -50,6 +50,14 @@ module Tk
       slant:      :symbol,
     }
 
+    def self.execute(command, *args)
+      Tk.execute(:font, command, *args)
+    end
+
+    def self.execute_only(command, *args)
+      Tk.execute_only(:font, command, *args)
+    end
+
     # NOTE:
     #   the signature has been simplified to a required +font+ argument and a
     #   simple +options+ hash.
@@ -70,25 +78,13 @@ module Tk
       args << option.to_tcl_option unless option == None
       args << "--" << char.to_tcl unless char == None
 
-      array = Tk.execute(:font, :actual, font, *args)
+      array = execute(:actual, font, *args)
       array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
     end
 
     def self.configure(fontname, argument = None)
-      array = common_configure(:font, :configure, fontname, argument).to_a
-      array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
-    end
-
-    def self.common_configure(*invocation, argument)
-      if None == argument
-        Tk.execute(*invocation)
-      elsif argument.respond_to?(:to_tcl_options)
-        Tk.execute(*invocation, argument.to_tcl_options)
-      elsif argument.respond_to?(:to_tcl_option)
-        Tk.execute(*invocation, argument.to_tcl_option)
-      else
-        raise ArgumentError, "Invalid argument: %p" % [argument]
-      end
+      Configure.common(
+        self, [:configure, fontname], argument, FONT_CONFIGURE_HINTS)
     end
 
     def self.create(fontname, options = None)
@@ -97,32 +93,32 @@ module Tk
         options = options.to_tcl_options
       end
 
-      Tk.execute(:font, :create, fontname, options)
+      execute(:create, fontname, options)
     end
 
     def self.delete(*fontnames)
-      Tk.execute(:font, :delete, *fontnames)
+      execute(:delete, *fontnames)
     end
 
     # The return value is a list of the case-insensitive names of all font
     # families that exist on window's display.
     # If the window argument is omitted, it defaults to the main window.
     def self.families(options = {})
-      Tk.execute(:font, :families, options.to_tcl_options)
+      execute(:families, options.to_tcl_options)
     end
 
     def self.measure(font, text, options = {})
-      Tk.execute(:font, :measure, font, options.to_tcl_options, text)
+      execute(:measure, font, options.to_tcl_options, text)
     end
 
     def self.metrics(font, option, options = {})
-      Tk.execute(:font, :metrics, font, options.to_tcl_options, option.to_tcl_option)
+      execute(:metrics, font, options.to_tcl_options, option.to_tcl_option)
     end
 
     # The return value is a list of all the named fonts that are currently
     # defined.
     def self.names
-      Tk.execute(:font, :names).to_a
+      execute(:names).to_a
     end
   end
 end

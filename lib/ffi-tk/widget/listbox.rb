@@ -116,7 +116,7 @@ module Tk
     # displaying the item while it is selected.
     # It may have any of the forms accepted by Tk_GetColor.
     def itemconfigure(index, options = None)
-      common_configure(:itemconfigure, index, options)
+      common_configure([:itemconfigure, index], options)
     end
 
     # Given a y-coordinate within the listbox window, this command returns the

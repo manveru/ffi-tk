@@ -153,7 +153,7 @@ module Tk
     # later be adjusted by the movement of sashes in the panedwindow.
     # Size may be any value accepted by Tk_Get‐ Pixels.
     def paneconfigure(window, options = None)
-      common_configure(:paneconfigure, window, options)
+      common_configure([:paneconfigure, window], options)
     end
 
     # Returns an ordered list of the widgets managed by pathName.

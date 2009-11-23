@@ -51,18 +51,18 @@ module Tk
       Lower.lower(self, below)
     end
 
-    private
-
-    def assign_pathname
-      @tk_pathname = Tk.register_object(tk_parent, self)
+    def execute(command, *args)
+      Tk.execute(tk_pathname, command, *args)
     end
 
     def execute_only(command, *args)
       Tk.execute_only(tk_pathname, command, *args)
     end
 
-    def execute(command, *args)
-      Tk.execute(tk_pathname, command, *args)
+    private
+
+    def assign_pathname
+      @tk_pathname = Tk.register_object(tk_parent, self)
     end
   end
 end

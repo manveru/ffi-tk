@@ -185,7 +185,7 @@ module Tk
     # options for entry index (see Tk_ConfigureInfo for information on the
     # format of this list).
     def entryconfigure(index, options = None)
-      common_configure(:entryconfigure, index, options)
+      common_configure([:entryconfigure, index], options)
     end
 
     # Returns the numerical index corresponding to index, or none if index was
