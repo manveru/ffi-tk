@@ -4,7 +4,7 @@ describe Tk::Message do
   it 'initializes' do
     instance = Tk::Message.new
     instance.class.should == Tk::Message
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'needs more specs' do

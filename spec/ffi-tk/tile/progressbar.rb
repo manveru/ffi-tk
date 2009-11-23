@@ -4,7 +4,7 @@ describe Tk::Tile::Progressbar do
   it 'initializes' do
     instance = Tk::Tile::Progressbar.new
     instance.class.should == Tk::Tile::Progressbar
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'start progress step with interval' do

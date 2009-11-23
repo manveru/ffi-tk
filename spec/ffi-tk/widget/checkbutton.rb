@@ -4,7 +4,7 @@ describe Tk::CheckButton do
   it 'initializes' do
     cb = Tk::CheckButton.new
     cb.class.should == Tk::CheckButton
-    cb.parent.should == Tk.root
+    cb.tk_parent.should == Tk.root
     cb.destroy
   end
 

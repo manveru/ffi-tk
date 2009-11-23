@@ -6,7 +6,7 @@ describe Tk::Tile::Notebook do
   it 'initializes' do
     instance = Tk::Tile::Notebook.new
     instance.class.should == Tk::Tile::Notebook
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'adds a new tab' do

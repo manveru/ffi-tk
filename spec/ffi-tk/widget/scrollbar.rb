@@ -4,7 +4,7 @@ describe Tk::Scrollbar do
   it 'initializes' do
     instance = Tk::Scrollbar.new
     instance.class.should == Tk::Scrollbar
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'needs more specs' do

@@ -4,7 +4,7 @@ describe Tk::Spinbox do
   it 'initializes' do
     instance = Tk::Spinbox.new
     instance.class.should == Tk::Spinbox
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'needs more specs' do

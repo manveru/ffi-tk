@@ -4,7 +4,7 @@ describe Tk::Tile::ComboBox do
   it 'initializes' do
     instance = Tk::Tile::ComboBox.new
     instance.class.should == Tk::Tile::ComboBox
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'sets combobox values' do

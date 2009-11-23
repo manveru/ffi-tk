@@ -2,15 +2,15 @@ module Tk
   class Widget
     include Pack, Destroy, Bind, Bindtags, WM, Winfo, Grid, Clipboard, Place, TkCmd
 
-    attr_reader :parent, :tk_pathname
+    attr_reader :tk_parent, :tk_pathname
 
     def self.tk_command
-      raise "Implement in subclass"
+      raise NotImplementedError, "Implement in subclass"
     end
 
-    def initialize(parent = Tk.root, options = None)
-      if parent.respond_to?(:to_tcl_options?)
-        parent, options = Tk.root, parent
+    def initialize(tk_parent = Tk.root, options = None)
+      if tk_parent.respond_to?(:to_tcl_options?)
+        tk_parent, options = Tk.root, tk_parent
       end
 
       if !options || None == options
@@ -19,7 +19,7 @@ module Tk
         options = options.dup
       end
 
-      @parent = parent
+      @tk_parent = tk_parent
 
       yield(options) if block_given? && !options[:command]
 
@@ -54,7 +54,7 @@ module Tk
     private
 
     def assign_pathname
-      @tk_pathname = Tk.register_object(parent, self)
+      @tk_pathname = Tk.register_object(tk_parent, self)
     end
 
     def execute_only(command, *args)

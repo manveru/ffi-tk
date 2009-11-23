@@ -4,7 +4,7 @@ describe Tk::Tile::Separator do
   it 'initializes' do
     instance = Tk::Tile::Separator.new
     instance.class.should == Tk::Tile::Separator
-    instance.parent.should == Tk.root
+    instance.tk_parent.should == Tk.root
   end
 
   it 'sets orientation' do
