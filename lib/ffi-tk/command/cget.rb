@@ -25,10 +25,10 @@ module Tk
     ]]
     insert[:string, %w[ tabs cursor text show default class ]]
     insert[:font, %w[ font ]]
-    insert[:symbol, %w[ wrap tabstyle relief justify validate orient mode]]
+    insert[:symbol, %w[ wrap tabstyle relief justify validate orient mode selectmode ]]
     insert[:variable, %w[ textvariable ]]
     insert[:bitmap, %w[ stipple ]]
-    insert[:list, %w[ padding state style ]]
+    insert[:list, %w[ padding state style columns displaycolumns ]]
 
     def cget(option)
       option = option.to_tcl_option
@@ -54,7 +54,7 @@ module Tk
       when :boolean
         Tk.boolean(value)
       when :color, :string, :font, :bitmap
-        value.to_s?
+        value.respond_to?(:to_s?) ? value.to_s? : value
       when :variable
         if name = value.to_s?
           Variable.new(name)
