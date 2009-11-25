@@ -11,7 +11,8 @@ describe Tk::Tile::Style do
     names.should.kind_of? Array
     names.should.not.be.empty?
     names.all?{|i| i.kind_of?(String) }
-    names.should == ["clam", "alt", "default", "classic"]
+    names.all?{|i| ["aqua", "clam", "alt", "default", "classic"].include? i }
+    # tk-aqua: "aqua", "clam", ...
   end
 
   it '#theme_use  sets the current theme' do

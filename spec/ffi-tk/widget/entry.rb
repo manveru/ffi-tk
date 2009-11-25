@@ -19,33 +19,33 @@ describe Tk::Entry do
   end
 
   it 'Returns the current value of the configuration option given' do
-    @entry.cget(:background         ).should == "#ffffff"
-    @entry.cget(:bd                 ).should == 1
-    @entry.cget(:bg                 ).should == "#ffffff"
-    @entry.cget(:borderwidth        ).should == 1
+    @entry.cget(:background         ).should == "systemWindowBody" #"#ffffff"
+    @entry.cget(:bd                 ).should == 2 #1
+    @entry.cget(:bg                 ).should == "systemWindowBody" #"#ffffff"
+    @entry.cget(:borderwidth        ).should == 2 #1
     @entry.cget(:cursor             ).should == "xterm"
-    @entry.cget(:disabledbackground ).should == "#d9d9d9"
+    @entry.cget(:disabledbackground ).should == "systemWindowBody" #"#d9d9d9"
     @entry.cget(:disabledforeground ).should == "#a3a3a3"
     @entry.cget(:exportselection    ).should == true
-    @entry.cget(:fg                 ).should == "#000000"
+    @entry.cget(:fg                 ).should == "Black" #"#000000"
     @entry.cget(:font               ).should == "TkTextFont"
-    @entry.cget(:foreground         ).should == "#000000"
-    @entry.cget(:highlightbackground).should == "#d9d9d9"
-    @entry.cget(:highlightcolor     ).should == "#000000"
-    @entry.cget(:highlightthickness ).should == 1
-    @entry.cget(:insertbackground   ).should == "#000000"
+    @entry.cget(:foreground         ).should == "Black" #"#000000"
+    @entry.cget(:highlightbackground).should == "systemWindowBody" #"#d9d9d9"
+    @entry.cget(:highlightcolor     ).should == "Black" #000000"
+    @entry.cget(:highlightthickness ).should == 3 #1
+    @entry.cget(:insertbackground   ).should == "Black" #"#000000"
     @entry.cget(:insertborderwidth  ).should == 0
     @entry.cget(:insertofftime      ).should == 300
     @entry.cget(:insertontime       ).should == 600
-    @entry.cget(:insertwidth        ).should == 2
+    @entry.cget(:insertwidth        ).should == 1 #2
     @entry.cget(:invalidcommand     ).should == nil
     @entry.cget(:invcmd             ).should == nil
     @entry.cget(:justify            ).should == :left
-    @entry.cget(:readonlybackground ).should == "#d9d9d9"
+    @entry.cget(:readonlybackground ).should == "systemWindowBody" #"#d9d9d9"
     @entry.cget(:relief             ).should == :sunken
-    @entry.cget(:selectbackground   ).should == "#c3c3c3"
-    @entry.cget(:selectborderwidth  ).should == 0
-    @entry.cget(:selectforeground   ).should == "#000000"
+    @entry.cget(:selectbackground   ).should == "systemHighlight" #"#c3c3c3"
+    @entry.cget(:selectborderwidth  ).should == 1 #0
+    @entry.cget(:selectforeground   ).should == nil #"#000000"
     @entry.cget(:show               ).should == nil
     @entry.cget(:state              ).should == ['normal']
     @entry.cget(:takefocus          ).should == false

@@ -15,34 +15,34 @@ describe Tk::Text do
 
   it 'gets all possible options with cget' do
     text.cget(:autoseparators          ).should == true
-    text.cget(:background              ).should == "#ffffff"
-    text.cget(:bd                      ).should == 1
-    text.cget(:bg                      ).should == "#ffffff"
+    text.cget(:background              ).should == "systemWindowBody" #"#ffffff"
+    text.cget(:bd                      ).should == 0 #1
+    text.cget(:bg                      ).should == "systemWindowBody" #"#ffffff"
     text.cget(:blockcursor             ).should == false
-    text.cget(:borderwidth             ).should == 1
+    text.cget(:borderwidth             ).should == 0 #1
     text.cget(:cursor                  ).should == "xterm"
     text.cget(:endline                 ).should == 0
     text.cget(:exportselection         ).should == true
-    text.cget(:fg                      ).should == "#000000"
+    text.cget(:fg                      ).should == "Black" #"#000000"
     text.cget(:font                    ).should == "TkFixedFont"
-    text.cget(:foreground              ).should == "#000000"
+    text.cget(:foreground              ).should == "Black" #"#000000"
     text.cget(:height                  ).should == 24
-    text.cget(:highlightbackground     ).should == "#d9d9d9"
-    text.cget(:highlightcolor          ).should == "#000000"
-    text.cget(:highlightthickness      ).should == 1
-    text.cget(:inactiveselectbackground).should == "#c3c3c3"
-    text.cget(:insertbackground        ).should == "#000000"
+    text.cget(:highlightbackground     ).should == "systemWindowBody" #"#d9d9d9"
+    text.cget(:highlightcolor          ).should == "Black" #"#000000"
+    text.cget(:highlightthickness      ).should == 3 #1
+    text.cget(:inactiveselectbackground).should == "systemHighlightSecondary" #"#c3c3c3"
+    text.cget(:insertbackground        ).should == "Black" #"#000000"
     text.cget(:insertborderwidth       ).should == 0
     text.cget(:insertofftime           ).should == 300
     text.cget(:insertontime            ).should == 600
-    text.cget(:insertwidth             ).should == 2
+    text.cget(:insertwidth             ).should == 1 #2
     text.cget(:maxundo                 ).should == 0
     text.cget(:padx                    ).should == 1
     text.cget(:pady                    ).should == 1
-    text.cget(:relief                  ).should == :sunken
-    text.cget(:selectbackground        ).should == "#c3c3c3"
-    text.cget(:selectborderwidth       ).should == 0
-    text.cget(:selectforeground        ).should == "#000000"
+    text.cget(:relief                  ).should == :flat #:sunken
+    text.cget(:selectbackground        ).should == "systemHighlight" #"#c3c3c3"
+    text.cget(:selectborderwidth       ).should == 1 #0
+    text.cget(:selectforeground        ).should == nil #"#000000"
     text.cget(:setgrid                 ).should == false
     text.cget(:spacing1                ).should == 0
     text.cget(:spacing2                ).should == 0
