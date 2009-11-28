@@ -1,0 +1,748 @@
+[294fdaf | 2009-11-23 08:13:47 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix Listbox#value
+
+[cb2b4cc | 2009-11-23 16:15:37 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Treeview#children
+
+[27bd01b | 2009-11-23 12:40:05 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * adding Tile::Treeview with example and spec
+
+[54145da | 2009-11-23 11:23:45 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make Configure usable for Font
+
+[5000a6f | 2009-11-23 06:12:33 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix warnings of function wrapping
+
+[acbb8be | 2009-11-23 05:38:58 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make tile widgets adhere to code style
+
+[73bb848 | 2009-11-23 05:29:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add shortcut to set Label text
+
+[2ae4372 | 2009-11-23 05:25:58 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Rename Widget#parent to Widget#tk_parent to avoid confusing name collisions
+
+[72552b6 | 2009-11-23 04:37:59 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Tile::Treeview stub
+
+[54dbfa0 | 2009-11-21 13:13:16 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Autoload aqua on osx. use NO_AQUA=1 for x11
+
+[a17fe6d | 2009-11-21 08:55:46 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * cleanup
+
+[c89b261 | 2009-11-21 08:55:39 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Clipboard::get
+
+[2fd71f1 | 2009-11-20 08:50:58 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Support running event loop on main thread
+
+[996040e | 2009-11-17 08:54:21 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Add tile combobox, progressbar widgets
+
+[9c0265b | 2009-11-17 02:08:14 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Add tile separator, sizegrip widget
+
+[d34f365 | 2009-11-17 09:10:22 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Update TODO
+
+[4fd810f | 2009-11-16 13:42:37 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Remove the gen_* scripts
+
+[343504b | 2009-11-16 12:56:11 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Regexp escaping
+
+[6f05905 | 2009-11-16 04:31:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Text#dlineinfo
+
+[5d85e1e | 2009-11-14 16:45:05 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * do_events_until should use until
+
+[ecff6c1 | 2009-11-14 12:10:04 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Listbox#get
+
+[5057c51 | 2009-11-14 11:54:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Entry#clear
+
+[8d7e941 | 2009-11-14 11:54:11 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve debugging
+
+[9c7929c | 2009-11-14 10:25:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make sure all execution happens in a single thread, this should make us pretty much thread-safe
+
+[c72caf6 | 2009-11-13 06:54:58 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix winfo spec
+
+[f0bb141 | 2009-11-13 06:51:54 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Clean up
+
+[4ae1678 | 2009-11-14 08:32:45 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Adding ThreadSender in preparation for EM compatibility
+
+[c07a8f2 | 2009-11-13 15:41:59 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Add tile notebook widget
+
+[77c0090 | 2009-11-13 15:40:20 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix text clear
+
+[d234c52 | 2009-11-12 19:02:59 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Move scrolling of widgets into own module
+
+[b73e61c | 2009-11-12 16:06:20 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Add more tile specs
+
+[eee25a3 | 2009-11-12 16:03:15 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Remove ttk::dialog
+
+[1d80711 | 2009-11-12 14:56:38 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Adjust tile frame spec
+
+[53c8ea8 | 2009-11-12 22:56:58 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Remove custom Tile initialize
+
+[2e16ed1 | 2009-11-12 02:10:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix typo
+
+[db58259 | 2009-11-12 02:06:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve tag bind and implement canvas bind
+
+[f65bd92 | 2009-11-11 05:22:44 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix listbox
+
+[8582198 | 2009-11-08 21:37:09 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Adjust event spec
+
+[4edff0d | 2009-11-09 04:56:57 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix tk command lookup issues on jruby
+
+[2854e63 | 2009-11-08 19:13:29 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix event. caller should invoke focus
+
+[ca76858 | 2009-11-09 03:17:47 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Text#search
+
+[42eadfc | 2009-11-08 14:05:37 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix event spec with focus issue
+
+[07d1648 | 2009-11-08 12:50:25 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix Menu widget
+
+[1bb22b3 | 2009-11-08 14:22:03 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Implement Text#tag_bind
+
+[56d8d51 | 2009-11-08 11:06:07 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve Regexp escaping
+
+[903fd09 | 2009-11-07 12:27:02 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Remove debugging output
+
+[4e63e5a | 2009-11-08 10:12:39 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix tcl_callback
+
+[1b9c79b | 2009-11-08 10:12:24 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Tk::After.idle
+
+[681b0b7 | 2009-11-08 09:29:02 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix/Add command
+
+[e2af760 | 2009-11-08 09:28:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fixing lower/raise
+
+[8fd8b21 | 2009-11-08 09:28:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Adding Tk::After command
+
+[b136858 | 2009-11-08 09:02:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Proper output for Text#tag_ranges
+
+[ab663dd | 2009-11-08 09:02:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Text#edit_modified?
+
+[aa97537 | 2009-11-08 08:06:15 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Prettier debug output
+
+[dd9ae81 | 2009-11-08 07:51:39 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix tag_ranges and speed up tag_remove
+
+[a9cb0e8 | 2009-11-08 07:51:22 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add missing requires
+
+[24947d8 | 2009-11-08 07:48:50 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve tk_pathname generation and allow easier subclassing
+
+[25a5569 | 2009-11-08 07:10:09 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Implement TkCmd module
+
+[715e464 | 2009-11-07 17:29:34 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix font spec
+
+[9ed4f94 | 2009-11-07 16:52:39 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Adjust tile widgets
+
+[0348d84 | 2009-11-07 16:29:20 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix button spec, and other widgets that register a command
+
+[503d6d9 | 2009-11-07 14:38:29 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Make wminfo, entry specs less enviorment dependent
+
+[6536be1 | 2009-11-07 11:28:13 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix regular expression escaping
+
+[610e900 | 2009-11-07 11:27:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * -style is a list
+
+[6db1bec | 2009-11-07 11:07:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Some fixes again, make EvalResult roundtrip-able
+
+[e8cdae2 | 2009-11-07 10:56:46 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix string escaping
+
+[b86fa6b | 2009-11-07 10:38:27 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Tons of cleanup/fixes/additions
+
+[ee933d9 | 2009-11-07 10:38:06 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Implement callback results
+
+[d6d09db | 2009-11-06 19:47:22 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix specs for Entry and Text for new type of :state
+
+[130db87 | 2009-11-06 19:34:09 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Remove trailing whitespace
+
+[5fc332e | 2009-11-06 19:40:16 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Merge lians tile branch
+
+[af36452 | 2009-11-06 19:26:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Specs and fixes for checkbutton
+
+[916fb38 | 2009-11-06 19:25:48 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Rename EvalResult#to_bool to to_boolean for consistency
+
+[ac252ec | 2009-11-06 18:51:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix require of Frame spec
+
+[46a3905 | 2009-11-06 18:51:27 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix implementation of Button
+
+[93fe329 | 2009-11-06 18:45:32 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Event spec
+
+[d3e34bc | 2009-11-06 18:38:49 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Entry spec
+
+[394ce7e | 2009-11-06 18:36:16 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix spec of Tk::Root
+
+[6743f48 | 2009-11-06 18:35:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix wm spec
+
+[674c144 | 2009-11-06 18:31:12 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Root is a Toplevel
+
+[6fb5853 | 2009-11-06 18:30:00 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * fix command name for Widget
+
+[a30a5b5 | 2009-11-06 18:28:21 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix a couple of specs
+
+[4e65493 | 2009-11-06 18:25:04 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add autoloads for all widgets
+
+[f5e17b5 | 2009-11-06 18:18:04 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix clipboard spec
+
+[fcbd134 | 2009-11-06 18:14:54 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add stub specs for widgets
+
+[25a3f3e | 2009-11-06 18:14:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Little spec generator
+
+[ecc16e5 | 2009-11-06 18:14:27 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Adding Rakefile and tasks
+
+[70b07cc | 2009-11-06 18:01:31 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Move specs for widgets into own directory
+
+[bb0a887 | 2009-11-06 18:00:18 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add last missing widget: Toplevel
+
+[3871865 | 2009-11-06 18:00:04 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Adjust gen_widget
+
+[43f3fc9 | 2009-11-06 17:59:50 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Remove done commands from todo list
+
+[ef8b66f | 2009-11-06 17:55:11 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Simplify and fix all Widget subclasses by doing smarter initialization in Widget
+
+[075f615 | 2009-11-06 17:31:17 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Clean up tk.rb, fix lazy init
+
+[3c33177 | 2009-11-06 16:55:24 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Support for Variable initial value
+
+[296f181 | 2009-11-06 16:55:06 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Lazy Tk.init
+
+[7b886bc | 2009-11-06 16:54:02 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Adding Tk::Wait
+
+[f9b45d4 | 2009-11-06 11:29:13 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add various methods for variables
+
+[45b77db | 2009-11-06 11:00:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add the tk_text(Copy|Cut|Paste) commands to Text widget
+
+[30d7f9b | 2009-11-06 10:58:04 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Tk.set_palette
+
+[ee9c5ab | 2009-11-06 10:41:06 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Tk.popup and Proc#to_tcl
+
+[ae09fd2 | 2009-11-06 10:24:17 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Variable to work with newly added Tk.option_menu
+
+[b1cec70 | 2009-11-06 09:38:30 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Tk::Variable
+
+[2c83cba | 2009-11-05 17:37:51 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Tk.message_box
+
+[2013e0d | 2009-11-05 12:43:32 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Implement a couple of tk_ commands
+
+[3c63589 | 2009-11-05 10:15:19 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add a few doc snippets
+
+[02eb18a | 2009-11-05 10:14:59 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add bin/rwish not very functional yet
+
+[02abfa7 | 2009-11-05 09:50:29 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix syntax and implementation of all the skeleton widgets
+
+[4f73ed2 | 2009-11-05 09:49:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve Configure
+
+[cc45b1a | 2009-11-05 08:15:33 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * translate methods for listbox
+
+[0f52465 | 2009-11-05 04:28:56 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make things run on JRuby
+
+[92fe70e | 2009-11-04 11:27:11 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * update todo list
+
+[9cd3c02 | 2009-11-04 11:27:00 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Text#see
+
+[db49a21 | 2009-11-04 11:24:50 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix specs for Text
+
+[515b2bd | 2009-11-04 11:22:00 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Implement Text#search
+
+[ae0d81d | 2009-11-04 09:31:57 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve canvas items and extract them
+
+[a7999ed | 2009-11-04 09:06:45 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Lots of improvments for Canvas and widgets
+
+[5e0ec52 | 2009-11-03 10:56:47 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Implemented Canvas
+
+[914224c | 2009-11-02 15:48:25 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add skeleton for most of the missing old commands together with the script used to generate them
+
+[1f26b50 | 2009-11-02 15:20:09 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add frame widget
+
+[007f54b | 2009-11-02 15:18:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Frame widget
+
+[015cb53 | 2009-11-02 15:12:14 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Grab command
+
+[1ef88d5 | 2009-11-02 14:57:59 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix text widget
+
+[854bf75 | 2009-11-02 14:57:48 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add image command definition
+
+[602b7a6 | 2009-11-02 14:41:07 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Winfo command
+
+[78e96e9 | 2009-11-02 07:58:22 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add to_sym?
+
+[d8d2f29 | 2009-11-02 07:57:04 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add a lot more specs and bugfixes for WM command
+
+[4970b5a | 2009-11-02 06:42:34 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add WM command, still needs a ton of specs
+
+[ddcf075 | 2009-11-02 06:41:52 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Pack.pack
+
+[114ae24 | 2009-11-01 07:59:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add lower/raise commands
+
+[7539f57 | 2009-11-01 07:52:03 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Font command
+
+[0c02ed3 | 2009-11-01 07:51:28 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve rb2tcl conversion a bit
+
+[694a7db | 2009-11-01 07:19:41 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make sure strings returned from Tcl don't have binary encoding
+
+[2d3d1c1 | 2009-11-01 06:46:24 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Selection
+
+[657d76e | 2009-11-01 06:20:19 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Simplify life by use of evil core extensions
+
+[c05fe8e | 2009-11-01 05:23:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Finish Clipboard
+
+[b2c3ba1 | 2009-10-29 04:09:13 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix spec for dlineinfo
+
+[5305af7 | 2009-10-31 10:49:03 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix the various example
+
+[9ea10a4 | 2009-10-31 10:48:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Update todo list
+
+[4f33883 | 2009-10-31 10:48:10 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Clipboard command
+
+[aee3524 | 2009-10-31 10:27:34 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add README and licenses
+
+[11e3067 | 2009-10-31 10:27:16 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add a bit more to the Grid command, still no specs
+
+[4b814d5 | 2009-10-31 10:26:37 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make event handling a bit more consistent
+
+[38f579f | 2009-10-30 17:11:24 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add TODO.md
+
+[dee8b7f | 2009-10-30 17:10:05 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add grid skeleton
+
+[14a9f31 | 2009-10-30 17:09:50 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Place command
+
+[68b6193 | 2009-10-30 16:41:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * minor
+
+[51035c3 | 2009-10-30 16:24:28 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add specs and better implementation for Pack
+
+[904676c | 2009-10-30 15:59:19 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * cleanup
+
+[c231071 | 2009-10-30 15:59:13 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add methods for Pack
+
+[0e1b0c9 | 2009-10-30 15:54:13 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make a dummy @interp that reminds you of calling Tk.init
+
+[8153f75 | 2009-10-30 14:45:35 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix conversion of array to tcl
+
+[fa36ee1 | 2009-10-30 14:44:35 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Put command requires into a single place
+
+[35f5af2 | 2009-10-30 14:44:16 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add bindtags command
+
+[6b9b494 | 2009-10-30 14:32:26 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix syntax error
+
+[04ab383 | 2009-10-30 14:14:09 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add bell command
+
+[2ffc7cd | 2009-10-30 14:08:25 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * add the last missing methods to Entry
+
+[c80e660 | 2009-10-30 09:08:34 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Clean the mess around command options a bit
+
+[aedf57e | 2009-10-30 09:07:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Now we can finally give return values to tcl from our callbacks
+
+[bc19a7e | 2009-10-30 08:18:07 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Automate the event spec, still shows an annoying window because else events aren't generated it seems
+
+[ad21abb | 2009-10-30 08:14:14 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * So pure ruby event callbacks finally work.
+
+[53fb864 | 2009-10-30 08:08:11 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add a ton of methods and specs for Entry widget
+
+[bdb58e7 | 2009-10-30 08:07:55 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Seems like the segfaults from event/callback calls are caused by Ruby GC of the Method objects
+
+[720d71c | 2009-10-30 08:07:09 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Nicer inspect for Obj
+
+[e0e38a6 | 2009-10-30 08:07:00 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve configuration, prepare for intelligent handling of validation callbacks
+
+[d99d84f | 2009-10-30 06:42:51 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * minor
+
+[5aecdcf | 2009-10-30 06:42:41 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Give useful exception messages on eval failure
+
+[3345745 | 2009-10-30 06:42:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * put configure into own module
+
+[c586e1b | 2009-10-29 18:35:39 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add focus command
+
+[42cb290 | 2009-10-29 18:34:02 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Seems like we cannot handle events using C commands, so we go (a slightly improved) tcl based way again
+
+[38a36ac | 2009-10-29 16:46:57 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Get rid of some warnings
+
+[bb100fd | 2009-10-29 16:36:29 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Move bulk of Tk module into own file
+
+[ac1c2cd | 2009-10-29 16:34:26 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Restructure
+
+[a62fb50 | 2009-10-29 16:13:44 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Handle :command for Button.new
+
+[8b75e87 | 2009-10-29 16:13:25 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix segfault through autoload of Cget
+
+[d071ebd | 2009-10-29 16:02:18 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Lots of new stuff, pure ruby<->tcl callbacks brought to you by FFI
+
+[30a3f3e | 2009-10-29 07:32:37 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Use namespace for our tcl stuff
+
+[88bc36b | 2009-10-29 07:06:22 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve upon FFI Struct
+
+[331cf96 | 2009-10-28 21:38:56 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Use Tcl_Obj type information to convert when possible
+
+[710219b | 2009-10-28 16:38:21 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix EvalResult
+
+[00f05c5 | 2009-10-28 16:37:44 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * And more methods of Tk::Text implemented with proper specs
+
+[a350658 | 2009-10-28 15:21:21 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * A couple of methods for Text with some specs
+
+[b0c6a3e | 2009-10-28 15:21:00 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Only show eval input when $DEBUG is on
+
+[f02795c | 2009-10-28 15:20:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * A lot of improvements around result handling
+
+[54b5265 | 2009-10-28 05:34:51 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Lots of improvements again
+
+[24485d5 | 2009-10-27 14:56:20 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * First cut of the new Tk
+
+[48de499 | 2009-10-27 04:13:15 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Restructure for new approach
+
+[709324d | 2009-09-14 10:22:27 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * First commit
+
