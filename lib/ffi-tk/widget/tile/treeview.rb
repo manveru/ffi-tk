@@ -23,6 +23,11 @@ module Tk
 
       def self.tk_command; 'ttk::treeview'; end
 
+      # Delete all items
+      def clear
+        delete(*children(nil))
+      end
+
       # Returns the bounding box (relative to the treeview widget's window) of
       # the specified item in the form x y width height.
       # If column is specified, returns the bounding box of that cell.
@@ -90,7 +95,7 @@ module Tk
       # @see detach
       def delete(*items)
         items = items.flatten
-        execute_only(:delete, *items) if items.any?
+        execute_only(:delete, items) if items.any?
       end
 
       # Unlinks all of the specified items in +items+ from the tree.
