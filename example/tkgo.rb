@@ -34,7 +34,7 @@ class TkGo
 
   def initialize(options)
     index = options.index('--boardsize')
-    @boardsize = index ? options[index + 1] : 9
+    @boardsize = index ? options[index + 1] : 19
     @linedist = 28
     @black_history = []
     @white_history = []
