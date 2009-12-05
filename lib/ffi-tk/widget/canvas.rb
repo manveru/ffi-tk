@@ -169,9 +169,9 @@ module Tk
         end
       end
 
-      name = "#{tag_or_id}_#{tag_name}".scan(/\w+/).join('_')
+      name = "#{tag_or_id}".scan(/\w+/).join('_')
       @events ||= {}
-      unregister_event(name)
+      # unregister_event(name)
 
       Event::Handler.register_custom(script) do |id|
         code = "%s bind %s %s { ::RubyFFI::event %d '' %s }"
@@ -329,28 +329,28 @@ module Tk
       execute(:find, tag, :above, tag_or_id)
     end
 
-    def find_all(tag)
-      execute(:find, tag, :all)
+    def find_all
+      execute(:find, :all)
     end
 
-    def find_below(tag, tag_or_id)
-      execute(:find, tag, :below, tag_or_id)
+    def find_below(tag_or_id)
+      execute(:find, :below, tag_or_id)
     end
 
-    def find_closest(tag, x, y, halo = None, start = None)
-      execute(:find, tag, :closest, x, y, halo, start)
+    def find_closest(x, y, halo = None, start = None)
+      execute(:find, :closest, x, y, halo, start)
     end
 
-    def find_enclosed(tag, x1, y1, x2, y2)
-      execute(:find, tag, :enclosed, x1, y1, x2, y2)
+    def find_enclosed(x1, y1, x2, y2)
+      execute(:find, :enclosed, x1, y1, x2, y2)
     end
 
-    def find_overlapping(tag, x1, y1, x2, y2)
-      execute(:find, tag, :overlapping, x1, y1, x2, y2)
+    def find_overlapping(x1, y1, x2, y2)
+      execute(:find, :overlapping, x1, y1, x2, y2)
     end
 
-    def find_withtag(tag, tag_or_id)
-      execute(:find, tag, :withtag, tag_or_id)
+    def find_withtag(tag_or_id)
+      execute(:find, :withtag, tag_or_id)
     end
 
     # Set the keyboard focus for the canvas widget to the item given by
