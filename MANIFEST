@@ -20,6 +20,7 @@ example/tile/kroc_rb_demo.rb
 example/tile/notebook.rb
 example/tile/theme_hello.rb
 example/tile/treeview.rb
+example/tkgo.rb
 example/various.rb
 example/wait.rb
 ffi-tk.gemspec

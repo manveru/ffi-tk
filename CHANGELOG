@@ -1,3 +1,23 @@
+[0ec1768 | 2009-12-05 16:50:39 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Gnugo defaults to 19 size
+
+[95e450e | 2009-12-05 12:30:24 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add license and some options
+
+[01bc732 | 2009-12-05 07:10:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix some stuff of Canvas
+
+[709119c | 2009-11-28 15:17:42 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make gemspec and related files
+
+[a03ce1d | 2009-11-28 10:05:07 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Treeview#delete and add Treeview#clear
+
 [294fdaf | 2009-11-23 08:13:47 UTC] Julian Langschaedel <meta.rb@gmail.com>
 
   * Fix Listbox#value
