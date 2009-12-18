@@ -5,15 +5,14 @@ This library provides you with a wrapper for the Tk windowing toolkit.
 
 ## Installation
 
-Right now this project only exists on github, and tarballs of the repository may
-be obtained there.
-Once feature-complete, a gem will be provided.
+    gem install ffi-tk
 
 No compilation is required, but I'm not yet confident that this will run on
 every architecture without changes, FFI::Tk is being developed on Archlinux and
 Debian on Intel i686 and AMD x86_64, testers for other platforms are invited to
 give it a try and report any problems that occur.
 
+You will need to have tk installed in order to actually use the library.
 
 ## Ruby-FFI
 
