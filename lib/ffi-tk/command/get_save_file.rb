@@ -78,6 +78,6 @@ module Tk
   # Extensions without a full stop character (e.g. "~") are allowed but may not
   # work on all platforms.
   def get_save_file(options = None)
-    Tk.execute(:tk_getSaveFile, options.to_tcl_options?)
+    Tk.execute(:tk_getSaveFile, options.to_tcl_options?).to_s?
   end
 end
