@@ -37,6 +37,7 @@ module FFI
     attach_function :Tcl_ParseVar, [Interp, :pointer, :pointer], :pointer
     attach_function :Tcl_SetObjResult, [Interp, Obj], :void
     attach_function :Tcl_WaitForEvent, [TclTime], :int
+    attach_function :Tcl_SetMaxBlockTime, [TclTime], :void
 
     callback :obj_cmd_proc, [:int, Interp, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
