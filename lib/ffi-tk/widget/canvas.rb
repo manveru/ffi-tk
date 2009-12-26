@@ -163,9 +163,9 @@ module Tk
     def bind(tag_or_id, sequence = None, &script)
       unless script
         if None == sequence
-          return Tk.execute(:bind, tag_or_id)
+          return Tk.execute(tk_pathname, :bind, tag_or_id)
         else
-          return Tk.execute(:bind, tag_or_id, sequence)
+          return Tk.execute(tk_pathname, :bind, tag_or_id, sequence)
         end
       end
 
@@ -174,9 +174,9 @@ module Tk
       # unregister_event(name)
 
       Event::Handler.register_custom(script) do |id|
-        code = "%s bind %s %s { ::RubyFFI::event %d '' %s }"
+        code = "%s bind %s %s { puts hi\n::RubyFFI::event %d %s %s }"
         props = Event::Data::PROPERTIES.transpose[0].join(' ')
-        tcl = code % [tk_pathname, tag_or_id, sequence, id, props]
+        tcl = code % [tk_pathname, tag_or_id, sequence, id, sequence, props]
         Tk.interp.eval(tcl)
         @events[name] = id
       end
@@ -372,8 +372,12 @@ module Tk
     # In most cases it is advisable to follow the focus widget command with the
     # focus command to set the focus window to the canvas (if it was not there
     # already).
-    def focus(tag_or_id)
-      execute_only(:focus, tag_or_id)
+    def focus(tag_or_id = None)
+      if None == tag_or_id
+        execute(:focus)
+      else
+        execute_only(:focus, tag_or_id)
+      end
     end
 
     # Return a list whose elements are the tags associated with the item given
@@ -778,7 +782,7 @@ module Tk
     # These are the same values passed to scrollbars via the -yscrollcommand
     # option.
     def yview
-      execute(:yview).to_a?(&:to_f)
+      execute(:yview)
     end
 
     # Adjusts the view in the window so that fraction of the canvas's area is
