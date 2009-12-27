@@ -330,7 +330,7 @@ module Tk
     # line is the line number and char is the character number. Index may have
     # any of the forms described under INDICES above.
     def index(index)
-      execute('index', index)
+      execute('index', index).to_s
     end
 
     # Inserts all of the chars arguments just before the character at index.
