@@ -92,6 +92,10 @@ module FFI
       end
 
       def self.to_string(interp, obj)
+        if obj.bytes.nil?
+          raise(ArgumentError, "%p is empty" % [obj])
+        end
+
         length_pointer = MemoryPointer.new(:int)
         string = Tcl.get_string_from_obj(obj, length_pointer)
         string.force_encoding(Encoding.default_external)
