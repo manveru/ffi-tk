@@ -15,20 +15,44 @@ module Tk
       end
 
       def tcl_options_to_hash(hints = {})
-        ::Hash[each_slice(2).map{|key, value|
-          key = key.sub(/^-/, '').to_sym
+        if first.respond_to?(:to_ary)
+          hash = {}
 
-          case hint = hints[key]
-          when :boolean
-            [key, Tk.boolean(value)]
-          when :symbol
-            [key, value.to_sym]
-          when :float
-            [key, Float(value)]
-          else
-            [key, value]
+          each do |key, _, _, _, value|
+            next if !value || (value.respond_to?(:empty?) && value.empty?)
+            key = key.sub(/^-/, '').to_sym
+
+            hash[key] =
+              case hint = hints[key]
+              when :boolean
+                Tk.boolean(value)
+              when :symbol
+                value.to_sym
+              when :float
+                Float(value)
+              else
+                value
+              end
           end
-        }]
+
+          hash
+        else
+          ::Hash[each_slice(2).map{|key, value|
+
+            key = key.sub(/^-/, '').to_sym
+
+            case hint = hints[key]
+            when :boolean
+              [key, Tk.boolean(value)]
+            when :symbol
+              [key, value.to_sym]
+            when :float
+              [key, Float(value)]
+            else
+              [key, value]
+            end
+          }]
+        end
       end
     end
 
