@@ -80,6 +80,8 @@ module Tk
   # Extensions without a full stop character (e.g. "~") are allowed but may not
   # work on all platforms.
   def get_open_file(options = None)
-    Tk.execute(:tk_getOpenFile, options.to_tcl_options?).to_s?
+    result = Tk.execute(:tk_getOpenFile, options.to_tcl_options?)
+    path = result.respond_to?(:to_str) ? result.to_str : result.to_s?
+    path unless path.empty?
   end
 end
