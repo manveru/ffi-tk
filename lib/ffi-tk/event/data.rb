@@ -17,21 +17,21 @@ module Tk
         ['%f', :String,  :focus             ],
         ['%h', :Integer, :height            ],
         ['%i', :String,  :window            ],
-        ['%k', :String,  :keycode           ],
+        ['%k', :Integer, :keycode           ],
         ['%m', :String,  :mode              ],
         ['%o', :String,  :override_redirect ],
         ['%p', :String,  :place             ],
         ['%s', :String,  :state             ],
-        ['%t', :String,  :time              ],
+        ['%t', :Integer, :time              ],
         ['%w', :Integer, :width             ],
         ['%x', :Integer, :x                 ],
         ['%y', :Integer, :y                 ],
         ['%A', :String,  :unicode           ],
         ['%B', :Integer, :border_width      ],
-        ['%D', :String,  :mousewheel_delta  ],
-        ['%E', :String,  :send_event        ],
+        ['%D', :Integer, :mousewheel_delta  ],
+        ['%E', :Integer, :send_event        ],
         ['%K', :String,  :keysym            ],
-        ['%N', :String,  :keysym_number     ],
+        ['%N', :Integer, :keysym_number     ],
         ['%P', :String,  :property          ],
         ['%R', :Integer, :root              ],
         ['%S', :Integer, :subwindow         ],
@@ -45,9 +45,8 @@ module Tk
         super id, sequence
 
         PROPERTIES.each do |code, conv, name|
-          property = properties.shift
-          next if property == '??'
-          converted = __send__(conv, property)
+          converted = __send__(conv, properties.shift)
+          next if converted == '??'
           self[name] = converted
         end
       end
