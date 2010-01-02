@@ -71,8 +71,8 @@ module Tk
     # option is returned.
     # If only the master window and index is specified, all the current settings
     # are returned in a list of â-option valueâ pairs.
-    def self.columnconfigure(master, index, options = {})
-      Tk.execute('grid', 'columnconfigure', master, index, options)
+    def self.columnconfigure(master, index, options = None)
+      Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_options?)
     end
 
     # The arguments consist of the names of one or more slave windows followed
@@ -194,8 +194,8 @@ module Tk
     end
 
     # @see Grid::columnconfigure
-    def grid_columnconfigure(index, options = {})
-      Grid.columnconfigure(self, index, options.to_tcl_options)
+    def grid_columnconfigure(index, options = None)
+      Grid.columnconfigure(self, index, options)
     end
 
     # @see Grid::configure
