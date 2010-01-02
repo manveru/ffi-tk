@@ -217,6 +217,10 @@ module Tk
           tk_parent.children(id, *new_children)
         end
 
+        def selection_set
+          tk_parent.selection_set(id)
+        end
+
         def selection_add
           tk_parent.selection_add(id)
         end
@@ -327,7 +331,7 @@ module Tk
 
       # +items+ becomes the new selection.
       def selection_set(*items)
-        execute(:selection, set, *items.flatten)
+        execute(:selection, :set, *items.flatten)
       end
 
       # Add +items+ to the selection
