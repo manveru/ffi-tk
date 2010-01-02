@@ -10,7 +10,7 @@ PROJECT_README = 'README.md'
 PROJECT_VERSION = ENV['VERSION'] || Date.today.strftime('%Y.%m.%d')
 
 DEPENDENCIES = {
-  'ffi' => {:version => '~> 0.5.1'},
+  'ffi' => {:version => '~> 0.5.4'},
 }
 
 DEVELOPMENT_DEPENDENCIES = {

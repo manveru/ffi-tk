@@ -1,3 +1,4 @@
+AUTHORS
 CHANGELOG
 MANIFEST
 README.md
@@ -74,6 +75,7 @@ lib/ffi-tk/geometry.rb
 lib/ffi-tk/thread_sender.rb
 lib/ffi-tk/tk.rb
 lib/ffi-tk/variable.rb
+lib/ffi-tk/version.rb
 lib/ffi-tk/widget.rb
 lib/ffi-tk/widget/button.rb
 lib/ffi-tk/widget/canvas.rb

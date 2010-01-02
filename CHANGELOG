@@ -1,3 +1,49 @@
+[b4c87c4 | 2010-01-01 18:37:44 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Refine handling of event data
+
+[fdac9fc | 2009-12-29 13:44:48 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix return values of get_(save|open)_file
+
+[f7b1a21 | 2009-12-29 13:39:01 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Revert "Avoid segfault in EvalResult::to_string"
+
+    This reverts commit 133b7b963c49c79ea1ee7a7b71663a0c895b22c0.
+
+[3e8953a | 2009-12-29 08:09:15 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix Array#tcl_options_to_hash for result of configure
+
+[4d14c53 | 2009-12-27 11:15:08 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make sure we convert Text#index
+
+[133b7b9 | 2009-12-27 11:11:59 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Avoid segfault in EvalResult::to_string
+
+[b1b92d1 | 2009-12-26 14:16:15 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Various fixes for Canvas
+
+[01629a8 | 2009-12-26 14:16:02 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add Tcl.set_max_block_time
+
+[d2d9144 | 2009-12-24 14:19:28 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix return value of get_(save|open)_file
+
+[b25337b | 2009-12-18 13:44:35 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Update readme
+
+[5c7b800 | 2009-12-14 03:55:15 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Version 2009.12.14
+
 [0ec1768 | 2009-12-05 16:50:39 UTC] Michael Fellinger <m.fellinger@gmail.com>
 
   * Gnugo defaults to 19 size
