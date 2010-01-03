@@ -14,6 +14,8 @@ module Tk
         TclString.new('{' << map(&:to_tcl).compact.join(' ') << '}')
       end
 
+      # try to convert to a Hash.
+      # it may return an Array if this contains none.
       def tcl_options_to_hash(hints = {})
         if first.respond_to?(:to_ary)
           hash = {}
@@ -36,9 +38,8 @@ module Tk
           end
 
           hash
-        else
+        elsif first =~ /^-/
           ::Hash[each_slice(2).map{|key, value|
-
             key = key.sub(/^-/, '').to_sym
 
             case hint = hints[key]
@@ -52,6 +53,8 @@ module Tk
               [key, value]
             end
           }]
+        else
+          self
         end
       end
     end
