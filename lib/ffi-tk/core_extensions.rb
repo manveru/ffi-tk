@@ -98,7 +98,7 @@ module Tk
 
     module String
       def to_tcl
-        TclString.new('"' << gsub(/[\[\]$"\\]/, '\\\\\&') << '"')
+        TclString.new('"' << gsub(/[\[\]{}$"\\]/, '\\\\\&') << '"')
       end
 
       def to_tcl_option
