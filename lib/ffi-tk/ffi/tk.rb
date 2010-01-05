@@ -3,10 +3,43 @@ module FFI
     extend FFI::Library
     ffi_lib 'libtk8.5.so', 'libtk.so', *::Tk::LIBPATH[:tk]
 
+    class XColor < FFI::Struct
+      layout(
+        :pixel, :ulong,
+        :red,   :ushort,
+        :green, :ushort,
+        :blue,  :ushort,
+        :flags, :char,
+        :pad,   :char
+      )
+
+      def red
+        self[:red]
+      end
+
+      def green
+        self[:green]
+      end
+
+      def blue
+        self[:blue]
+      end
+    end
+
+    # This is opaque
+    class Window < FFI::Struct
+    end
+
     attach_function :Tk_Init, [:pointer], :int
+    attach_function :Tk_MainWindow, [Tcl::Interp], Window
+    attach_function :Tk_GetColor, [Tcl::Interp, Window, name = :string], XColor
     attach_function :Tk_MainLoop, [], :void
 
     module_function
+
+    def get_color(interp, string)
+      XColor.new(Tk_GetColor(interp, Tk_MainWindow(interp), string))
+    end
 
     def mainloop
       if ::Tk::RUN_EVENTLOOP_ON_MAIN_THREAD
