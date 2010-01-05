@@ -201,18 +201,22 @@ module Tk
       indices = [given_index]
 
       while arg = arguments.shift
-        case arg.to_tcl
-        when '-command'
-          command = arguments.shift
-          invocation << ['-command', command]
-        when /^-(all|image|mark|tag|text|window)$/
-          invocation << tcl_option(arg)
+        if arg.respond_to?(:to_tcl_option)
+          case tcl_option = arg.to_tcl_option
+          when '-command'
+            command = arguments.shift
+            invocation << ['-command', command]
+          when /^-(?:all|image|mark|tag|text|window)$/
+            invocation << tcl_option
+          else
+            indices.unshift(arg)
+          end
         else
           indices.unshift(arg)
         end
       end
 
-      execute('dump', *invocation, *indices)
+      execute('dump', *invocation, *indices).to_a.each_slice(3).to_a
     end
 
     # If boolean is not specified, returns the modified flag of the widget.
