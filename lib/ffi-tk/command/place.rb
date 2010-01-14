@@ -32,11 +32,7 @@ module Tk
     # option(s) to have the given value(s); in this case the command returns
     # nil.
     def self.configure(window, options = None)
-      if options == None
-        Tk.execute('place', 'configure', window)
-      else
-        Tk.execute_only('place', 'configure', window, options)
-      end
+      Configure.common(Tk, [:place, :configure, window], options)
     end
 
     def self.forget(window)
