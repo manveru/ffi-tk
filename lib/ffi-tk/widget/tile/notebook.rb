@@ -38,17 +38,20 @@ module Tk
       # the string end, an integer index, or the name of a managed subwindow.
       # If subwindow is already managed by the notebook, moves it to
       # the specified position.
-      def insert(pos, window, options)
-          execute_only(:insert, pos, window, options.to_tcl_options)
+      def insert(pos, window, options = {})
+        execute_only(:insert, pos, window, options.to_tcl_options)
       end
 
       # Selects the specified tab. The associated slave window
       # will be displayed, and the previously-selected window
       # (if different) is unmapped. If tabid is omitted, returns
       # the widget name of the currently selected pane.
-      def select(window)
-        execute_only(:select, window)
-        window.tk_pathname
+      def select(window = None)
+        if None == window
+          execute(:select)
+        else
+          execute_only(:select, window)
+        end
       end
 
       # Remove the pane containing window from the panedwindow.
@@ -57,14 +60,18 @@ module Tk
         execute_only(:forget, window, *windows)
       end
 
-      def hide(window)
-        execute_only(:hide, window)
+      # Hides the tab specified by +tabid+.
+      # The tab will not be displayed, but the associated window remains managed
+      # by the notebook and its configuration remembered.
+      # Hidden tabs may be restored with the add command.
+      def hide(tabid)
+        execute_only(:hide, tabid)
       end
 
-      # Returns the numeric index of the tab specified by tabid,
+      # Returns the numeric index of the tab specified by +tabid+,
       # or the total number of tabs if tabid is the string 'end'.
-      def index(window)
-        execute(:index, window).to_i
+      def index(tabid)
+        execute(:index, tabid).to_i
       end
 
       def identify(x, y)
