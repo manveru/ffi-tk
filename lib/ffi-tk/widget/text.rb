@@ -893,5 +893,33 @@ module Tk
     def paste
       Tk.execute(:tk_textPaste, self)
     end
+
+    def tk_prev_word_pos(start)
+      Tk.execute('tk::TextPrevPos', self, start, 'tcl_startOfPreviousWord').to_s
+    end
+
+    def tk_next_word_pos(start)
+      Tk.execute('tk::TextNextPos', self, start, 'tcl_startOfNextWord').to_s
+    end
+
+    def tk_next_word_pos_end(start)
+      Tk.execute('tk::TextNextWord', self, start).to_s
+    end
+
+    def tk_prev_line_pos(count)
+      Tk.execute('tk::TextUpDownLine', self, -count.abs).to_s
+    end
+
+    def tk_next_line_pos(count)
+      Tk.execute('tk::TextUpDownLine', self, count).to_s
+    end
+
+    def tk_prev_page_pos(count)
+      Tk.execute('tk::TextScrollPages', self, -count.abs).to_s
+    end
+
+    def tk_next_page_pos(count)
+      Tk.execute('tk::TextScrollPages', self, count).to_s
+    end
   end
 end
