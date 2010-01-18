@@ -124,7 +124,7 @@ module Tk
 
     return BREAK
   rescue => ex
-    FFI::Tcl::Interp.new(interp).obj_result = ex.message
+    FFI::Tcl::Interp.new(interp).obj_result = ex
     return ERROR
   end
   TCL_CALLBACK = method(:tcl_callback)
@@ -145,7 +145,7 @@ module Tk
 
     return BREAK
   rescue => ex
-    FFI::Tcl::Interp.new(interp).obj_result = ex.message
+    FFI::Tcl::Interp.new(interp).obj_result = ex
     return ERROR
   end
   TCL_EVENT = method(:tcl_event)

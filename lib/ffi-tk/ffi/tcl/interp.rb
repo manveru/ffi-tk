@@ -30,6 +30,9 @@ module FFI
             Tcl.new_string_obj(ruby_obj, ruby_obj.bytesize)
           when Fixnum
             Tcl.new_int_obj(ruby_obj)
+          when Exception
+            string = [ruby_obj.message, *ruby_obj.backtrace].join("\n")
+            Tcl.new_string_obj(string, string.bytesize)
           else
             if ruby_obj.respond_to?(:to_tcl)
               ruby_obj.to_tcl
