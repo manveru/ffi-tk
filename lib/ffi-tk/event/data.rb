@@ -54,6 +54,10 @@ module Tk
       def call
         Handler.invoke(id, self) if id
       end
+
+      def widget
+        Tk.widgets[window_path]
+      end
     end
   end
 end
