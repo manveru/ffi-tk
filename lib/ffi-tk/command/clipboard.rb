@@ -21,8 +21,7 @@ module Tk
     end
 
     def clipboard_set(string, options = {})
-      clipboard_clear
-      clipboard_append(options.merge(data: string))
+      Clipboard.set(string, options)
     end
 
     module_function
@@ -83,6 +82,12 @@ module Tk
       args << "--" << data.to_s
 
       Tk.execute_only(:clipboard, :append, *args)
+    end
+
+    # Shortcut to clear clipboard and append given +string+.
+    def set(string, options = {})
+      clear
+      append(options.merge(data: string))
     end
 
     # Retrieve data from the clipboard on +window+'s display.
