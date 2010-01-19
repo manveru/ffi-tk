@@ -60,7 +60,7 @@ module Tk
     # processed. Certain events, such as key events, require that the window has
     # focus to receive the event properly.
     def self.generate(window = None, event = None, options = {})
-      Tk.execute_only(:event, :generate, window, event, options)
+      Tk.execute_only(:event, :generate, window, event, options.to_tcl_options)
     end
 
     # Returns information about virtual events.
