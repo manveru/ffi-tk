@@ -58,7 +58,7 @@ module Tk
   end
 
   class BindTag < Struct.new(:name)
-    def bind(sequence, &block)
+    def bind(sequence = None, &block)
       Bind.bind(name, sequence, &block)
     end
 
