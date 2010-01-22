@@ -62,6 +62,10 @@ module Tk
       Bind.bind(name, sequence, &block)
     end
 
+    def unbind(sequence)
+      Bind.unbind(name, sequence)
+    end
+
     def to_tcl
       TclString.new(name)
     end
