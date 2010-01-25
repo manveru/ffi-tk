@@ -103,7 +103,7 @@ module Tk
       # Returns the value specified for -option in style style in state
       # state, using the standard lookup rules for element options.
       # state is a list of state names; if omitted, it defaults to all
-      # bits off (the “normal” state). If the default argument is present,
+      # bits off (the "normal" state). If the default argument is present,
       # it is used as a fallback value in case no specification
       # for -option is found.
       def self.lookup(style, option, state=Tk::None, default=Tk::None)

@@ -31,14 +31,14 @@ module Tk
     # This command shifts the view in the window left or right according to
     # number and what.
     # What must be units, pages or pixels.
-    # If what is units or pages then number │ must be an integer, otherwise
-    # number may be specified in any of the forms accept│ able to
-    # Tk_GetPixels, such as “2.0c” or “1i” (the result is rounded to the
-    # nearest │ integer value.
+    # If what is units or pages then number must be an integer, otherwise
+    # number may be specified in any of the forms acceptable to
+    # Tk_GetPixels, such as "2.0c" or "1i" (the result is rounded to the
+    # nearest integer value.
     # If no units are given, pixels are assumed).
-    # If what is units, the │ view adjusts left or right by number
-    # average-width characters on the display; if │ it is pages then the view
-    # adjusts by number screenfuls; if it is pixels then the │ view adjusts by
+    # If what is units, the view adjusts left or right by number
+    # average-width characters on the display; if it is pages then the view
+    # adjusts by number screenfuls; if it is pixels then the view adjusts by
     # number pixels.
     # If number is negative then characters farther to the left become visible;
     # if it is positive then characters farther to the right become visible.
@@ -75,11 +75,11 @@ module Tk
     # Fraction is a fraction between 0 and 1; 0 indicates the first pixel of
     # the first character in the text, 0.33 indicates the pixel that is
     # one-third the way through the text; and so on.
-    # Values close to 1 │ will indicate values close to the last pixel in the
-    # text (1 actually refers to one │ pixel beyond the last pixel), but in
-    # such cases the widget will never scroll │ beyond the last pixel, and so a
-    # value of 1 will effectively be rounded back to │ whatever fraction
-    # ensures the last pixel is at the bottom of the window, and some │ other
+    # Values close to 1 will indicate values close to the last pixel in the
+    # text (1 actually refers to one pixel beyond the last pixel), but in
+    # such cases the widget will never scroll beyond the last pixel, and so a
+    # value of 1 will effectively be rounded back to whatever fraction
+    # ensures the last pixel is at the bottom of the window, and some other
     # pixel is at the top.
     def yview_moveto(fraction)
       execute_only(:yview, :moveto, fraction)
@@ -88,14 +88,14 @@ module Tk
     # This command adjust the view in the window up or down according to number
     # and what.
     # What must be units, pages or pixels.
-    # If what is units or pages then number │ must be an integer, otherwise
-    # number may be specified in any of the forms accept│ able to
-    # Tk_GetPixels, such as “2.0c” or “1i” (the result is rounded to the
-    # nearest │ integer value.
+    # If what is units or pages then number must be an integer, otherwise
+    # number may be specified in any of the forms acceptable to
+    # Tk_GetPixels, such as "2.0c" or "1i" (the result is rounded to the
+    # nearest integer value.
     # If no units are given, pixels are assumed).
-    # If what is units, the │ view adjusts up or down by number lines on the
-    # display; if it is pages then the │ view adjusts by number screenfuls; if
-    # it is pixels then the view adjusts by number │ pixels.
+    # If what is units, the view adjusts up or down by number lines on the
+    # display; if it is pages then the view adjusts by number screenfuls; if
+    # it is pixels then the view adjusts by number pixels.
     # If number is negative then earlier positions in the text become visible;
     # if it is positive then later positions in the text become visible.
     def yview_scroll(number, what)

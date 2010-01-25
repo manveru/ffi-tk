@@ -659,7 +659,7 @@ module Tk
     # and the substitutions performed on script before invoking it.
     # If all arguments are specified then a new binding is created, replacing
     # any existing binding for the same sequence and tagName (if the first
-    # character of script is “+” then script augments an existing binding
+    # character of script is "+" then script augments an existing binding
     # rather than replacing it).
     # In this case the return value is an empty string.
     # If script is omitted then the command returns the script associated
@@ -769,8 +769,8 @@ module Tk
     # active at the character position given by index.
     # If index is omitted, then the return value will describe all of the tags
     # that exist for the text (this includes all tags that have been named in a
-    # “pathName tag” widget command but have not been deleted by a “pathName
-    # tag delete” widget command, even if no characters are currently marked
+    # "pathName tag" widget command but have not been deleted by a "pathName
+    # tag delete" widget command, even if no characters are currently marked
     # with the tag).
     # The list will be sorted in order from lowest priority to highest
     # priority.

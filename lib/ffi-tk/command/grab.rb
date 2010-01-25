@@ -25,7 +25,7 @@ module Tk
   # mouse motion events are reported to window, and window entry and window exit
   # events are ignored.
   #
-  # The grab subtree âownsâ the pointer: windows outside the grab subtree
+  # The grab subtree owns the pointer: windows outside the grab subtree
   # will be visible on the screen but they will be insensitive until the grab is
   # released. The tree of windows underneath the grab window can include
   # top-level windows, in which case all of those top-level windows and their

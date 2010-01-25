@@ -17,8 +17,8 @@ module Tk
       # BUG: http://tcl.activestate.com/man/tcl8.5/TkCmd/ttk_sizegrip.htm
       # If the containing toplevel's position was specified relative to the
       # right or bottom of the screen (e.g., 'wm geometry ... wxh-x-y' instead
-      # of “wm geometry ... wxh+x+y”), the sizegrip widget will not resize the
-      # window. ttk::sizegrip widgets only support “southeast” resizing.
+      # of "wm geometry ... wxh+x+y"), the sizegrip widget will not resize the
+      # window. ttk::sizegrip widgets only support "southeast" resizing.
     end
   end
 end

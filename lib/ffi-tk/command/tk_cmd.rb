@@ -51,8 +51,9 @@ module Tk
     # application (the name that may be used in send commands to communicate
     # with the application).
     # If newName is specified, then the name of the application is changed to
-    # newName. If the given name is already in use, then a suffix of the form “
-    # #2” or “ #3” is appended in order to make the name unique.
+    # newName.
+    # If the given name is already in use, then a suffix of the form "#2" or
+    # "#3" is appended in order to make the name unique.
     # The command's result is the name actually chosen.
     # newName should not start with a capital letter.
     # This will interfere with option processing, since names starting with
@@ -90,7 +91,7 @@ module Tk
     # If the window argument is omitted, it defaults to the main window.
     # If the number argument is omitted, the current value of the scaling
     # factor is returned.
-    # A “point” is a unit of measurement equal to 1/72 inch.
+    # A "point" is a unit of measurement equal to 1/72 inch.
     # A scaling factor of 1.0 corresponds to 1 pixel per point, which is
     # equivalent to a standard 72 dpi monitor.
     # A scaling factor of 1.25 would mean 1.25 pixels per point, which is the

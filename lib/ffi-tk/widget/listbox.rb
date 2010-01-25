@@ -20,7 +20,7 @@ module Tk
     # Sets the active element to the one indicated by index.
     # If index is outside the range of elements in the listbox then the closest
     # element is activated.
-    # The active element is drawn as speci‐ fied by -activestyle when the
+    # The active element is drawn as specified by -activestyle when the
     # widget has the input focus, and its index may be retrieved with the index
     # active.
     def activate(index)
@@ -100,7 +100,7 @@ module Tk
     # of this list).
     # If option is specified with no value, then the command returns a list
     # describing the one named option (this list will be identical to the
-    # correspond‐ ing sublist of the value returned if no option is specified).
+    # corresponding sublist of the value returned if no option is specified).
     # If one or more option-value pairs are specified, then the command
     # modifies the given widget option(s) to have the given value(s); in this
     # case the command returns an empty string.
@@ -136,7 +136,7 @@ module Tk
 
     # This command computes the difference between its x and y arguments and
     # the x and y arguments to the last scan mark command for the widget.
-    # It then adjusts the view by 10 times the dif‐ ference in coordinates.
+    # It then adjusts the view by 10 times the difference in coordinates.
     # This command is typically associated with mouse motion events in the
     # widget, to produce the effect of dragging the list at high speed through
     # the window.

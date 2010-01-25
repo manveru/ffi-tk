@@ -15,7 +15,7 @@ module Tk
       end
     end
 
-    # Deselects the checkbutton and sets the associated variable to its “off”
+    # Deselects the checkbutton and sets the associated variable to its "off"
     # value.
     def deselect
       execute_only(:deselect)
@@ -36,12 +36,12 @@ module Tk
     # Tcl command associated with the checkbutton, if there is one.
     # The return value is the return value from the Tcl command, or an empty
     # string if there is no command associated with the checkbutton.
-    # This command is ignored if the checkbut‐ ton's state is disabled.
+    # This command is ignored if the checkbutton's state is disabled.
     def invoke
       execute_only(:invoke)
     end
 
-    # Selects the checkbutton and sets the associated variable to its “on”
+    # Selects the checkbutton and sets the associated variable to its "on"
     # value.
     def select
       execute_only(:select)

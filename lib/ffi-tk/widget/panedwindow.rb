@@ -62,7 +62,7 @@ module Tk
 
     # This command computes the difference between the given coordinates and
     # the coordinates given to the last sash mark command for the given sash.
-    # It then moves that sash the computed dif‐ ference.
+    # It then moves that sash the computed difference.
     def sash_dragto(index, x, y)
       execute_only(:sash, :dragto, index, x, y)
     end
@@ -84,81 +84,107 @@ module Tk
       execute(:panecget, window, option.to_tcl_option)
     end
 
-    # Query or modify the management options for window.
-    # If no option is specified, returns a list describing all of the available
-    # options for pathName (see Tk_ConfigureInfo for information on the format
+    # Query or modify the management options for +window+.
+    #
+    # If no +options+ is specified, returns a list describing all of the available
+    # options for +window+ (see Tk_ConfigureInfo for information on the format
     # of this list).
-    # If option is specified with no value, then the command returns a list
+    #
+    # If +options+ is specified with no value, then the command returns a list
     # describing the one named option (this list will be identical to the
     # corresponding sublist of the value returned if no option is specified).
-    # If one or more option-value pairs are specified, then the command
-    # modifies the given widget option(s) to have the given value(s); in this
-    # case the command returns an empty string.
-    # The following options are supported: -after window Insert the window
-    # after the window specified.
-    # window should be the name of a window already managed by pathName.
-    # -before window Insert the window before the window specified.
-    # window should be the name of a window already managed by pathName.
-    # -height size Specify a height for the window.
-    # The height will be the outer dimension of the window including its
-    # border, if any.
-    # If size is an empty string, or if -height is not specified, then the
-    # height requested internally by the window will be used initially; the
-    # height may later be adjusted by the movement of sashes in the
-    # panedwindow. Size may be any value accepted by Tk_GetPixels.
-    # -hide boolean Controls the visibility of a pane.
-    # When the boolean is true (according to Tcl_GetBoolean) the pane will not
-    # be visible, but it will still be maintained in the list of panes.
-    # │ -minsize n Specifies that the size of the window cannot be made less
-    # than n.
-    # This constraint only affects the size of the widget in the paned
-    # dimension — the x dimension for horizontal panedwin‐ dows, the y
-    # dimension for vertical panedwindows.
-    # May be any value accepted by Tk_GetPixels.
-    # -padx n Specifies a non-negative value indicating how much extra space to
-    # leave on each side of the window in the X-direction.
-    # The value may have any of the forms accepted by Tk_GetPixels.
-    # -pady n Specifies a non-negative value indicating how much extra space to
-    # leave on each side of the window in the Y-direction.
-    # The value may have any of the forms accepted by Tk_GetPixels.
-    # -sticky style If a window's pane is larger than the requested dimensions
-    # of the window, this option may be used to position (or stretch) the
-    # window within its pane.
-    # Style is a string that contains zero or more of the characters n, s, e or
-    # w. The string can optionally contains spaces or commas, but they are
-    # ignored. Each letter refers to a side (north, south, east, or west) that
-    # the window will “stick” to.
-    # If both n and s (or e and w) are specified, the window will be stretched
-    # to fill the entire height (or width) of its cavity.
-    # -stretch when Controls how extra space is allocated to each of the panes.
-    # When is one of always, first, last, middle, and never.
-    # The panedwindow will calculate the required size of all its panes.
-    # │ Any remaining (or deficit) space will be distributed to those panes
-    # marked for stretching.
-    # The space will be distributed based on each panes current ratio of the
-    # whole. The when values │ have the following definition: │ always │ This
-    # pane will always stretch.
-    # │ first │ Only if this pane is the first pane (left-most or top-most)
-    # will it stretch.
-    # │ last │ Only if this pane is the last pane (right-most or bottom-most)
-    # will it stretch.
-    # This is the default value.
-    # │ middle │ Only if this pane is not the first or last pane will it
-    # stretch. │ never │ This pane will never stretch.
-    # │ -width size Specify a width for the window.
-    # The width will be the outer dimension of the window including its border,
-    # if any.
-    # If size is an empty string, or if -width is not specified, then the width
-    # requested internally by the window will be used initially; the width may
-    # later be adjusted by the movement of sashes in the panedwindow.
-    # Size may be any value accepted by Tk_Get‐ Pixels.
+    #
+    # If one or more option-value pairs are specified, then the command modifies
+    # the given widget option(s) to have the given value(s); in this case the
+    # command returns an empty string.
+    #
+    # The following options are supported:
+    #   :after window
+    #     Insert the window after the window specified.
+    #     window should be the name of a window already managed by +window+.
+    #
+    #   :before window
+    #     Insert the window before the window specified.
+    #     window should be the name of a window already managed by +window+.
+    #
+    #   :height size
+    #     Specify a height for the window.
+    #     The height will be the outer dimension of the window including its
+    #     border, if any.
+    #     If size is an empty string, or if -height is not specified, then the
+    #     height requested internally by the window will be used initially; the
+    #     height may later be adjusted by the movement of sashes in the
+    #     panedwindow. Size may be any value accepted by Tk_GetPixels.
+    #
+    #   :hide boolean
+    #     Controls the visibility of a pane.
+    #     When the boolean is true (according to Tcl_GetBoolean) the pane will
+    #     not be visible, but it will still be maintained in the list of panes.
+    #
+    #   :minsize n
+    #     Specifies that the size of the window cannot be made less than n.
+    #     This constraint only affects the size of the widget in the paned
+    #     dimension -- the x dimension for horizontal panedwindows, the y
+    #     dimension for vertical panedwindows.
+    #     May be any value accepted by Tk_GetPixels.
+    #
+    #   :padx n
+    #     Specifies a non-negative value indicating how much extra space to
+    #     leave on each side of the window in the X-direction.
+    #     The value may have any of the forms accepted by Tk_GetPixels.
+    #
+    #   :pady n
+    #     Specifies a non-negative value indicating how much extra space to
+    #     leave on each side of the window in the Y-direction.
+    #     The value may have any of the forms accepted by Tk_GetPixels.
+    #   :sticky style
+    #     If a window's pane is larger than the requested dimensions of the
+    #     window, this option may be used to position (or stretch) the window
+    #     within its pane.
+    #     Style is a string that contains zero or more of the characters n, s, e
+    #     or w.
+    #     The string can optionally contains spaces or commas, but they are
+    #     ignored. Each letter refers to a side (north, south, east, or west)
+    #     that the window will "stick" to.
+    #     If both n and s (or e and w) are specified, the window will be
+    #     stretched to fill the entire height (or width) of its cavity.
+    #   :stretch when
+    #     Controls how extra space is allocated to each of the panes.
+    #     When is one of always, first, last, middle, and never.
+    #     The panedwindow will calculate the required size of all its panes.
+    #     Any remaining (or deficit) space will be distributed to those panes
+    #     marked for stretching.
+    #     The space will be distributed based on each panes current ratio of the
+    #     whole.
+    #     The when values have the following definition:
+    #       :always
+    #         This pane will always stretch.
+    #       :first
+    #         Only if this pane is the first pane (left-most or top-most) will
+    #         it stretch.
+    #       :last
+    #         Only if this pane is the last pane (right-most or bottom-most)
+    #         will it stretch. This is the default value.
+    #       :middle
+    #         Only if this pane is not the first or last pane will it stretch.
+    #       :never
+    #         This pane will never stretch.
+    #
+    #   :width size
+    #     Specify a width for the window.
+    #     The width will be the outer dimension of the window including its
+    #     border, if any.
+    #     If size is an empty string, or if -width is not specified, then the
+    #     width requested internally by the window will be used initially; the
+    #     width may later be adjusted by the movement of sashes in the
+    #     panedwindow. Size may be any value accepted by Tk_GetPixels.
     def paneconfigure(window, options = None)
       common_configure([:paneconfigure, window], options)
     end
 
-    # Returns an ordered list of the widgets managed by pathName.
-    def panes
-      execute(:panes).to_a
+    # Returns an ordered list of the widgets managed by +window+.
+    def panes(window = None)
+      execute(:panes, window).to_a
     end
   end
 end

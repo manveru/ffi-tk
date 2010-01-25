@@ -44,7 +44,7 @@ module Tk
     # This option is not available for separator or tear-off entries.
     # -bitmap value Specifies a bitmap to display in the menu instead of a
     # textual label, in any of the forms accepted by Tk_GetBitmap.
-    # This option overrides the -label option (as controlled by the -com‐ pound
+    # This option overrides the -label option (as controlled by the -compound
     # option) but may be reset to an empty string to enable a textual label to
     # be displayed.
     # If a -image option has been specified, it overrides -bitmap.
@@ -58,7 +58,7 @@ module Tk
     # -compound value Specifies whether the menu entry should display both an
     # image and text, and if so, where the image should be placed relative to
     # the text.
-    # Valid values for this option are bottom, cen‐ ter, left, none, right and
+    # Valid values for this option are bottom, center, left, none, right and
     # top. The default value is none, meaning that the button will display
     # either an image or text, depending on the values of the -image and
     # -bitmap options.
@@ -122,7 +122,7 @@ module Tk
     # bindings will refuse to activate or invoke the entry.
     # In this state the entry is displayed according to the disabledForeground
     # option for the menu and the background option from the entry.
-    # This option is not available for separa‐ tor entries.
+    # This option is not available for separator entries.
     # -underline value Specifies the integer index of a character to underline
     # in the entry.
     # This option is also queried by the default bindings and used to implement
@@ -255,7 +255,7 @@ module Tk
     # Unmap the window so that it is no longer displayed.
     # If a lower-level cascaded menu is posted, unpost that menu.
     # Returns an empty string.
-    # This subcommand does not work on Windows and the Mac‐ intosh, as those
+    # This subcommand does not work on Windows and the Macintosh, as those
     # platforms have their own way of unposting menus.
     def unpost
       execute(:unpost)
@@ -263,7 +263,6 @@ module Tk
 
     # Returns a decimal string giving the x-coordinate within the menu window
     # of the leftmost pixel in the entry specified by index.
-    # │
     def xposition(index)
       execute(:xposition, index)
     end
@@ -299,7 +298,7 @@ module Tk
     # menus. You create a torn-off menu by invoking the tear-off entry at the
     # top of an existing menu.
     # The default bindings will create a new menu that is a copy of the
-    # original menu and leave it perma‐ nently posted as a top-level window.
+    # original menu and leave it permanently posted as a top-level window.
     # The torn-off menu behaves just the same as the original menu.
     # and unposts the menu.
     # If the current menu is a top-level menu posted from a menubutton, then

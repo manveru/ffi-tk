@@ -434,7 +434,7 @@ module Tk
     # Returns the number of pixels in window corresponding to the distance
     # given by number.
     # Number may be specified in any of the forms acceptable to Tk_GetPixels,
-    # such as “2.0c” or “1i”.
+    # such as "2.0c" or "1i".
     # The result is rounded to the nearest integer value; for a fractional
     # result, use winfo fpixels.
     def pixels(window, number)

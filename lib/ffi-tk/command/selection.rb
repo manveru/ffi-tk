@@ -35,9 +35,9 @@ module Tk
     end
 
     # Retrieves the value of selection from window's display and returns it as a
-    # result. Selection defaults to PRIMARY and window defaults to â.â.
+    # result. Selection defaults to PRIMARY and window defaults to ".".
     # Type specifies the form in which the selection is to be returned (the
-    # desired âtargetâ for conversion, in ICCCM terminology), and should be
+    # desired "target" for conversion, in ICCCM terminology), and should be
     # an atom name such as STRING or FILE_NAME; see the Inter-Client
     # Communication Conventions Manual for complete details.
     # Type defaults to STRING.

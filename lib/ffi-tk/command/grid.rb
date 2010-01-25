@@ -70,7 +70,7 @@ module Tk
     # If only an option is specified, with no value, the current value of that
     # option is returned.
     # If only the master window and index is specified, all the current settings
-    # are returned in a list of â-option valueâ pairs.
+    # are returned in a list of "-option value" pairs.
     def self.columnconfigure(master, index, options = None)
       Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_options?)
     end
@@ -97,7 +97,7 @@ module Tk
     # Returns a list whose elements are the current configuration state of the
     # slave given by slave in the same option-value form that might be specified
     # to grid configure.
-    # The first two elements of the list are â-in masterâ where master is
+    # The first two elements of the list are "-in master" where master is
     # the slave's master.
     def self.info(slave)
       Tk.execute('grid', 'info', slave)
@@ -148,7 +148,7 @@ module Tk
     # If only an option is specified, with no value, the current value of that
     # option is returned.
     # If only the master window and index is specified, all the current settings
-    # are returned in a list of â-option valueâ pairs.
+    # are returned in a list of "-option value" pairs.
     def self.rowconfigure(master, index, options = None)
       Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_options?)
     end
