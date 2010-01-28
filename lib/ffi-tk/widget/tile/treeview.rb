@@ -326,7 +326,7 @@ module Tk
 
       # Returns the list of selected items.
       def selection
-        execute(:selection).to_a
+        execute(:selection).to_a.map{|id| Item.new(self, id) }
       end
 
       # +items+ becomes the new selection.
