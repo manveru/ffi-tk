@@ -1,3 +1,3 @@
 module FFI::Tk
-  VERSION = "2009.01"
+  VERSION = "2010.01"
 end
