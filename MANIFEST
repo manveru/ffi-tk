@@ -1,3 +1,4 @@
+.gitignore
 AUTHORS
 CHANGELOG
 MANIFEST
@@ -20,6 +21,7 @@ example/tile/kroc_demo_small.rb
 example/tile/kroc_rb_demo.rb
 example/tile/notebook.rb
 example/tile/theme_hello.rb
+example/tile/themes.rb
 example/tile/treeview.rb
 example/tkgo.rb
 example/various.rb
@@ -126,6 +128,7 @@ lib/ffi-tk/widget/tile/sizegrip.rb
 lib/ffi-tk/widget/tile/style.rb
 lib/ffi-tk/widget/tile/treeview.rb
 lib/ffi-tk/widget/toplevel.rb
+spec/ffi-tk/command/bind.rb
 spec/ffi-tk/command/bindtags.rb
 spec/ffi-tk/command/clipboard.rb
 spec/ffi-tk/command/font.rb
