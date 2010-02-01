@@ -38,7 +38,13 @@ module FFI
     module_function
 
     def get_color(interp, string)
-      XColor.new(Tk_GetColor(interp, Tk_MainWindow(interp), string))
+      if ::Tk::RUN_EVENTLOOP_ON_MAIN_THREAD
+        XColor.new(Tk_GetColor(interp, Tk_MainWindow(interp), string))
+      else
+        Tcl.thread_sender.thread_send{
+          XColor.new(Tk_GetColor(interp, Tk_MainWindow(interp), string))
+        }
+      end
     end
 
     def mainloop
