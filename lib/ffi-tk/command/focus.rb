@@ -5,17 +5,17 @@ module Tk
 
     def focus(window = None, option = None)
       if window == None
-        Tk.execute('focus')
+        Tk.execute('focus').to_s
       else
         case option
         when None
-          Tk.execute('focus', window)
+          Tk.execute('focus', window).to_s
         when :displayof
-          Tk.execute('focus', '-displayof', window)
+          Tk.execute('focus', '-displayof', window).to_s
         when :force
-          Tk.execute_only('focus', '-force', window)
+          Tk.execute_only('focus', '-force', window).to_s
         when :lastfor
-          Tk.execute('focus', '-lastfor', window)
+          Tk.execute('focus', '-lastfor', window).to_s
         else
           raise ArgumentError, "option must be one of: None, :displayof, :force, :lastfor"
         end
