@@ -22,8 +22,6 @@ module Tk
       def command(&block)
         configure(:command => block) if block
       end
-
-      def scrollbar_default; end
     end
 
     class YScrollbar < Tk::Tile::Scrollbar
