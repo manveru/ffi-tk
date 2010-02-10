@@ -174,7 +174,7 @@ module Tk
       # unregister_event(name)
 
       Event::Handler.register_custom(script) do |id|
-        code = "%s bind %s %s { puts hi\n::RubyFFI::event %d %s %s }"
+        code = "%s bind %s %s { ::RubyFFI::event %d %s %s }"
         props = Event::Data::PROPERTIES.transpose[0].join(' ')
         tcl = code % [tk_pathname, tag_or_id, sequence, id, sequence, props]
         Tk.interp.eval(tcl)
