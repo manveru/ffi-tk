@@ -100,7 +100,20 @@ module Tk
     # The first two elements of the list are "-in master" where master is
     # the slave's master.
     def self.info(slave)
-      Tk.execute('grid', 'info', slave)
+      info = Tk.execute('grid', 'info', slave).to_s
+      hash = {}
+
+      info.scan(/(?:-(\w+))\s+([^-][\S]*)/) do
+        key = $1.to_sym
+        case key
+        when :column, :row, :columnspan, :rowspan, :ipadx, :ipady, :padx, :pady
+          hash[key] = Integer($2)
+        else
+          hash[key] = $2.to_str
+        end
+      end
+
+      hash
     end
 
     # Given x and y values in screen units relative to the master window, the
