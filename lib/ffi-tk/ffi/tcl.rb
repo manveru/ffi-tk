@@ -7,7 +7,7 @@ require 'ffi-tk/ffi/tcl/eval_result'
 module FFI
   module Tcl
     extend FFI::Library
-    ffi_lib 'libtcl8.5.so', 'tcl85.dll', *::Tk::LIBPATH[:tcl]
+    ffi_lib ['libtcl8.5.so', 'tcl85.dll', *::Tk::LIBPATH[:tcl]]
 
     attach_function :Tcl_AppendAllObjTypes, [Interp, Obj], :int
     attach_function :Tcl_CreateInterp, [], Interp
