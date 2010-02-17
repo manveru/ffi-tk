@@ -728,7 +728,8 @@ module Tk
     # Option may have any of the values accepted by the pathName tag
     # configure widget command.
     def tag_cget(tag_name, option)
-      execute(:tag, :cget, tag_name, option.to_tcl_option)
+      value = execute(:tag, :cget, tag_name, option.to_tcl_option)
+      Cget.option_to_ruby(option, value)
     end
 
     # This command is similar to the pathName configure widget command except
