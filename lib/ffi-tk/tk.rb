@@ -91,6 +91,10 @@ module Tk
     execute('exit')
   end
 
+  def update(idletasks = None)
+    execute('update', idletasks)
+  end
+
   def callback_break
     throw :callback_break
   end
