@@ -291,7 +291,7 @@ module Tk
     # This may have the effect that some of the returned ranges are empty
     # strings.
     def get_displaychars(index, *indices)
-      execute('get', '-displaychars', index, *indices)
+      execute('get', '-displaychars', index, *indices).to_s
     end
 
     def image_cget(index, option)
