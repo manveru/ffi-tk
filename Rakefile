@@ -7,10 +7,10 @@ require 'date'
 PROJECT_SPECS = FileList['spec/ffi-tk/**/*.rb']
 PROJECT_MODULE = 'FFI::Tk'
 PROJECT_README = 'README.md'
-PROJECT_VERSION = ENV['VERSION'] || Date.today.strftime('%Y.%m.%d')
+PROJECT_VERSION = (ENV['VERSION'] || Date.today.strftime('%Y.%m.%d')).dup
 
 DEPENDENCIES = {
-  'ffi' => {:version => '~> 0.6.0'},
+  'ffi' => {:version => '= 0.6.2'},
 }
 
 DEVELOPMENT_DEPENDENCIES = {
@@ -29,7 +29,7 @@ GEMSPEC = Gem::Specification.new{|s|
   s.files        = `git ls-files`.split("\n").sort
   s.has_rdoc     = true
   s.require_path = 'lib'
-  s.required_rubygems_version = '>= 1.3.5'
+  s.required_rubygems_version = '>= 1.3.3'
 }
 
 DEPENDENCIES.each do |name, options|
