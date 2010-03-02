@@ -1,3 +1,43 @@
+[d0db268 | 2010-03-02 05:07:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Update Rakefile
+
+[6704d90 | 2010-03-01 05:38:20 UTC] Julian Langschaedel <meta.rb@gmail.com>
+
+  * Fix ffi_lib loadpaths osx
+
+[9a44790 | 2010-03-01 10:24:38 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add some constants for flags
+
+[7c520c9 | 2010-02-28 21:56:12 UTC] unknown <manveru@.(none)>
+
+  * Fix ffi_lib for windows
+
+[8ad1897 | 2010-02-28 06:47:48 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Force output of clipboard to UTF-8
+
+[fb959b5 | 2010-02-26 17:45:24 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Text#get_displaychars should return String
+
+[12d960a | 2010-02-25 15:19:05 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add shortcut for the tcl update command
+
+[2de99ed | 2010-02-17 17:57:57 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Make sure Text#tag_cget doesn't return EvalResult
+
+[a173b8a | 2010-02-15 06:37:09 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Adapt to FFI 0.6
+
+[e1ae1ee | 2010-02-14 18:34:03 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Version 2010.02
+
 [a84139f | 2010-02-11 15:16:14 UTC] Michael Fellinger <m.fellinger@gmail.com>
 
   * Parse the grid_info
