@@ -887,16 +887,29 @@ module Tk
     # received.
     def protocol(window, name = None, command = None, &block)
       command = block if block && !command.nil?
+      @commands ||= {}
+      key = [window, name]
 
       if name == None
         Tk.execute(:wm, :protocol, window).to_a
       elsif name != None && command == None
-        Tk.execute(:wm, :protocol, name)
+        Tk.execute(:wm, :protocol, window, name)
       elsif name != None && command.nil?
-        Tk.execute_only(:wm, :protocol, name, '')
+        if id = @commands[key]
+          Tk.unregister_proc(id)
+          @commands.delete(key)
+        end
+
+        Tk.execute_only(:wm, :protocol, window, name, '')
       elsif name != None && command
-        command = register_command(:wm_protocol, &command)
-        Tk.execute_only(:wm, :protocol, name, command)
+        if id = @commands[key]
+          Tk.unregister_proc(id)
+        end
+
+        id, tcl_command = Tk.register_proc(command, '')
+        @commands[key] = id
+
+        Tk.execute_only(:wm, :protocol, window, name, tcl_command)
       else
         raise ArgumentError
       end
