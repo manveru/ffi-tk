@@ -4,23 +4,21 @@ require 'ffi'
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
 module Tk
-  LIBPATH = {
-    tcl: ENV['TCL_LIBPATH'].to_s.split(':'),
-    tk:  ENV[ 'TK_LIBPATH'].to_s.split(':'),
-  }
-
-  LIBPATH[:tcl] << 'tcl' << 'tcl85' << 'tcl8.5'
-  LIBPATH[:tk ] <<  'tk' <<  'tk85' <<  'tk8.5'
+  TCL_LIBPATH = ENV['TCL_LIBPATH'].to_s.split(':')
+  TK_LIBPATH  = ENV[ 'TK_LIBPATH'].to_s.split(':')
 
   if FFI::Platform.mac?
     if ENV['NO_AQUA'] || ENV['USE_X11'] # macports-x11 libtk
-      LIBPATH[:tcl] << '/opt/local/lib/libtcl8.5.dylib'
-      LIBPATH[:tk] << '/opt/local/lib/libtk8.5.dylib'
+      TCL_LIBPATH << '/opt/local/lib/libtcl8.5.dylib'
+      TK_LIBPATH  << '/opt/local/lib/libtk8.5.dylib'
     else # Tcl/Tk Aqua >= 8.5
-      LIBPATH[:tcl] << '/Library/Frameworks/Tcl.framework/Tcl'
-      LIBPATH[:tk] << '/Library/Frameworks/Tk.framework/Tk'
+      TCL_LIBPATH << '/Library/Frameworks/Tcl.framework/Tcl'
+      TK_LIBPATH  << '/Library/Frameworks/Tk.framework/Tk'
     end
   end
+
+  TCL_LIBPATH << 'tcl' << 'tcl85' << 'tcl8.5'
+  TK_LIBPATH  <<  'tk' <<  'tk85' <<  'tk8.5'
 
   unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
     if FFI::Platform.mac?
