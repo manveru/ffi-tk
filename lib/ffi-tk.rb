@@ -4,11 +4,15 @@ require 'ffi'
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
 module Tk
-  LIBPATH = { tcl: [], tk: [] }
+  LIBPATH = {
+    tcl: ENV['TCL_LIBPATH'].to_s.split(':'),
+    tk:  ENV[ 'TK_LIBPATH'].to_s.split(':'),
+  }
 
-  if ENV['Apple_PubSub_Socket_Render']
-    RUN_EVENTLOOP_ON_MAIN_THREAD = true
+  LIBPATH[:tcl] << 'tcl' << 'tcl85' << 'tcl8.5'
+  LIBPATH[:tk ] <<  'tk' <<  'tk85' <<  'tk8.5'
 
+  if FFI::Platform.mac?
     if ENV['NO_AQUA'] || ENV['USE_X11'] # macports-x11 libtk
       LIBPATH[:tcl] << '/opt/local/lib/libtcl8.5.dylib'
       LIBPATH[:tk] << '/opt/local/lib/libtk8.5.dylib'
@@ -17,14 +21,26 @@ module Tk
       LIBPATH[:tk] << '/Library/Frameworks/Tk.framework/Tk'
     end
   end
-end
 
-require 'ffi-tk/thread_sender'
-require 'ffi-tk/ffi/tcl'
-require 'ffi-tk/ffi/tk'
+  unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
+    if FFI::Platform.mac?
+      # In some cases Tk has trouble running, this seems to happen on windows and
+      # OSX/TkAqua mostly.
+      # In these cases please use:
+      #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
+      # before you require 'tk'
+      RUN_EVENTLOOP_ON_MAIN_THREAD = true
+    else
+      RUN_EVENTLOOP_ON_MAIN_THREAD = false
+    end
+  end
 
-module Tk
-  Error = Class.new(RuntimeError)
+  DONT_WAIT     = 1 << 1
+  WINDOW_EVENTS = 1 << 2
+  FILE_EVENTS   = 1 << 3
+  TIMER_EVENTS  = 1 << 4
+  IDLE_EVENTS   = 1 << 5
+  ALL_EVENTS    = ~DONT_WAIT
 
   OK       = 0
   ERROR    = 1
@@ -32,6 +48,7 @@ module Tk
   BREAK    = 3
   CONTINUE = 4
 
+  Error = Class.new(RuntimeError)
   None = Object.new
 
   class << None
@@ -40,7 +57,13 @@ module Tk
     def to_tcl_option?; self; end
     def inspect; '#<None>'; end
   end
+end
 
+require 'ffi-tk/thread_sender'
+require 'ffi-tk/ffi/tcl'
+require 'ffi-tk/ffi/tk'
+
+module Tk
   autoload :Button,      'ffi-tk/widget/button'
   autoload :Canvas,      'ffi-tk/widget/canvas'
   autoload :CheckButton, 'ffi-tk/widget/checkbutton'

@@ -1,7 +1,7 @@
 module FFI
   module Tk
     extend FFI::Library
-    ffi_lib [*::Tk::LIBPATH[:tk], 'libtk', 'tk85', 'libtk8.5']
+    ffi_lib ::Tk::LIBPATH[:tk]
 
     class XColor < FFI::Struct
       layout(

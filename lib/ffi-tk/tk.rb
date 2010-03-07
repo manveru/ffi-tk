@@ -14,21 +14,6 @@ module Tk
 
   module_function
 
-  unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
-    # In some cases Tk has trouble running, this seems to happen on windows and
-    # OSX/TkAqua mostly.
-    # In these cases please use:
-    #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
-    # before you require 'tk'
-    RUN_EVENTLOOP_ON_MAIN_THREAD = false
-  end
-
-  DONT_WAIT     = 1 << 1
-  WINDOW_EVENTS = 1 << 2
-  FILE_EVENTS   = 1 << 3
-  TIMER_EVENTS  = 1 << 4
-  IDLE_EVENTS   = 1 << 5
-  ALL_EVENTS    = ~DONT_WAIT
 
   def init
     if RUN_EVENTLOOP_ON_MAIN_THREAD
