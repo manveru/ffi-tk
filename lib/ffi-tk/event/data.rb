@@ -1,11 +1,11 @@
 module Tk
   module Event
     Data = Struct.new(
-      :id, :sequence, :border_width, :button, :count, :detail, :focus, :height,
+      :id, :pattern, :border_width, :button, :count, :detail, :focus, :height,
       :keycode, :keysym, :keysym_number, :mode, :mousewheel_delta,
-      :override_redirect, :place, :property, :root, :send_event, :serial, :state,
-      :subwindow, :time, :type, :unicode, :width, :window, :window_path, :x,
-      :x_root, :y, :y_root
+      :override_redirect, :place, :property, :root, :send_event, :serial,
+      :state, :subwindow, :time, :type, :unicode, :width, :window,
+      :window_path, :x, :x_root, :y, :y_root
     )
 
     class Data
@@ -41,8 +41,8 @@ module Tk
         ['%Y', :Integer, :y_root            ],
       ]
 
-      def initialize(id, sequence, *properties)
-        super id, sequence
+      def initialize(id, pattern, *properties)
+        super id, pattern
 
         PROPERTIES.each do |code, conv, name|
           value = properties.shift
@@ -64,7 +64,7 @@ module Tk
           value = self[name]
 
           case name
-          when :id, :sequence, :border_width, :button, :count, :focus, :height,
+          when :id, :pattern, :border_width, :button, :count, :focus, :height,
             :keycode, :keysym, :keysym_number, :mode, :mousewheel_delta,
             :override_redirect, :place, :property, :root, :send_event,
             :subwindow, :type, :unicode, :width, :window, :window_path
@@ -84,6 +84,11 @@ module Tk
 
       def widget
         Tk.widgets[window_path]
+      end
+
+      def sequence
+        Kernel.warn("#{self.class}.sequence deprecated, use #{self.class}.pattern")
+        pattern
       end
     end
   end
