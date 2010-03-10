@@ -65,17 +65,16 @@ module FFI
         end
       end
 
-      def self.map_list_core(interp, obj)
-        result_pointer = MemoryPointer.new(:pointer)
-        count_pointer  = MemoryPointer.new(:int)
-        length_pointer = MemoryPointer.new(:int)
+      def self.map_list_core(interp, obj, &block)
+        objc_ptr = MemoryPointer.new(:int)
+        objv_ptr = MemoryPointer.new(:pointer)
 
-        Tcl.list_obj_length(interp, obj, count_pointer)
-        count = count_pointer.get_int(0)
-
-        (0...count).map do |idx|
-          Tcl.list_obj_index(interp, obj, idx, result_pointer)
-          yield result_pointer.get_pointer(0)
+        if Tcl.list_obj_get_elements(interp, obj, objc_ptr, objv_ptr) == 0
+          objv_ptr.get_pointer(0).
+            read_array_of_pointer(objc_ptr.get_int(0)).
+            map(&block)
+        else
+          panic(interp, 'Tcl_ListObjGetElements')
         end
       end
 
@@ -95,6 +94,16 @@ module FFI
         length_pointer = MemoryPointer.new(:int)
         string = Tcl.get_string_from_obj(obj, length_pointer)
         string.force_encoding(Encoding.default_external)
+      end
+
+      def self.panic(interp, function)
+        message = guess(interp, Obj.new(Tcl.get_obj_result(interp))).to_s
+
+        if message.empty?
+          raise 'Failure during call of: %p' % [function]
+        else
+          raise '%s during call of: %p' % [message, function]
+        end
       end
 
       def to_a(&block)
