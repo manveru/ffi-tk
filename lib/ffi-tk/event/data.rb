@@ -46,8 +46,9 @@ module Tk
 
         PROPERTIES.each do |code, conv, name|
           value = properties.shift
-          converted = __send__(conv, value)
+          converted = String(value)
           next if converted == '??'
+          converted = __send__(conv, value)
           self[name] = converted
         end
       end
