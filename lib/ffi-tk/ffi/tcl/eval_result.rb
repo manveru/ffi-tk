@@ -80,18 +80,27 @@ module FFI
 
       def self.to_boolean(interp, obj)
         boolean_pointer = MemoryPointer.new(:int)
-        Tcl.get_boolean_from_obj(interp, obj, boolean_pointer)
-        boolean_pointer.get_int(0) == 1
+
+        if Tcl.get_boolean_from_obj(interp, obj, boolean_pointer) == 0
+          boolean_pointer.get_int(0) == 1
+        else
+          panic(interp, 'Tcl_GetBooleanFromObj')
+        end
       end
 
       def self.to_int(interp, obj)
         int_pointer = MemoryPointer.new(:int)
-        Tcl.get_int_from_obj(interp, obj, int_pointer)
-        int_pointer.get_int(0)
+
+        if Tcl.get_int_from_obj(interp, obj, int_pointer) == 0
+          int_pointer.get_int(0)
+        else
+          panic(interp, 'Tcl_GetIntFromObj')
+        end
       end
 
       def self.to_string(interp, obj)
         length_pointer = MemoryPointer.new(:int)
+
         string = Tcl.get_string_from_obj(obj, length_pointer)
         string.force_encoding(Encoding.default_external)
       end
