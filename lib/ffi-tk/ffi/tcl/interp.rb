@@ -7,6 +7,9 @@ module FFI
         :errorLine, :int
       )
 
+      EVAL_GLOBAL = 0x20000
+      EVAL_DIRECT = 0x40000
+
       def inspect
         "Interp"
       end
@@ -82,7 +85,7 @@ module FFI
           end
         end
 
-        code = Tcl.eval_ex(self, string, string.bytesize, 0x40000)
+        code = Tcl.eval_ex(self, string, string.bytesize, EVAL_DIRECT)
         return true if code == 0
 
         message = guess_result.to_s
