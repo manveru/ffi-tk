@@ -27,7 +27,15 @@ module Tk
 
       def register(tag, sequence, &block)
         id = register_block(block)
-        Tk.interp.eval(@callback % [tag, sequence, id, sequence])
+        if sequence.to_s == '%'
+          Tk.interp.eval(
+            @callback % [tag, '%%'.to_tcl, id, '%%'.to_tcl]
+          )
+        else
+          Tk.interp.eval(
+            @callback % [tag, sequence.to_tcl, id, sequence.to_tcl]
+          )
+        end
         @bound[[tag, sequence]] = block
         id
       end
