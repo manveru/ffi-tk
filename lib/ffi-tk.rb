@@ -17,8 +17,8 @@ module Tk
     end
   end
 
-  TCL_LIBPATH << 'tcl' << 'tcl85' << 'tcl8.5'
-  TK_LIBPATH  <<  'tk' <<  'tk85' <<  'tk8.5'
+  TCL_LIBPATH << 'tcl' << 'tcl86' << 'tcl85' << 'tcl8.6' << 'tcl8.5'
+  TK_LIBPATH  <<  'tk' <<  'tk86' <<  'tk85' <<  'tk8.6' <<  'tk8.5'
 
   unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
     if FFI::Platform.mac?
