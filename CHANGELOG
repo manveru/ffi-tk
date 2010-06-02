@@ -1,3 +1,59 @@
+[c2d350b | 2010-06-02 16:13:10 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * ComboBox is not an Entry
+
+[ff17848 | 2010-06-02 16:12:59 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Fix pathname generation
+
+[0747bc3 | 2010-03-12 05:14:57 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Add tcl/tk 8.6 as working versions
+
+[80c4cb4 | 2010-03-10 16:07:57 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Name the mysterious eval flag
+
+[28aff12 | 2010-03-10 16:07:41 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Use better array retrieval
+
+[4916cfb | 2010-03-10 15:53:06 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Let other function calls panic too
+
+[2caf7a1 | 2010-03-10 15:52:51 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Don't try to convert event data if it's ??
+
+[77dce01 | 2010-03-10 15:52:30 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Improve EvalResult::map_list_core
+
+[6f328f6 | 2010-03-10 08:03:10 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Handle the % sequence in events
+
+[795e77d | 2010-03-09 07:36:38 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Rename Event::Data.sequence to Event::Data.pattern
+
+[bc3f560 | 2010-03-07 16:04:59 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Split up the LIBPATH Hash into two constant Arrays, fix bug on osx
+
+[c98168e | 2010-03-07 15:59:15 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * A little bit of restructure, don't require the 'Apple_PubSub_Socket_Render' env to be set, but allow TK_LIBPATH and TCL_LIBPATH to be
+
+[865fd4b | 2010-03-05 17:41:38 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Working implementation of WM::protocol
+
+[920e7c5 | 2010-03-02 05:07:40 UTC] Michael Fellinger <m.fellinger@gmail.com>
+
+  * Version 2010.03
+
 [d0db268 | 2010-03-02 05:07:23 UTC] Michael Fellinger <m.fellinger@gmail.com>
 
   * Update Rakefile
