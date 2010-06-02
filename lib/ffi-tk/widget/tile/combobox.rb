@@ -2,10 +2,15 @@ module Tk
   module Tile
     # combobox combines a text field with a pop-down list of values.
     # the user may select the value of the text field from among the values in the list.
-    class ComboBox < Tile::Entry
+    class ComboBox < Widget
       def self.tk_command; 'ttk::combobox'; end
+
       include TileWidget
-      # include Cget, Configure
+      include Cget, Configure
+
+      def initialize(parent = Tk.root, options = {})
+        super
+      end
 
       def postcommand(&block)
         configure(:postcommand => block) if block
