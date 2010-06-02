@@ -169,7 +169,7 @@ module Tk
     parent_name = parent.respond_to?(:tk_pathname) ? parent.tk_pathname : parent
     cmd = object.class.tk_command
 
-    id = "#{cmd}#{uuid(cmd)}"
+    id = "#{cmd}#{uuid(cmd)}".gsub('::', '__') # :: is namespace convention.
     pathname = [parent_name, id].join('.').squeeze('.')
     @widgets[pathname] = object
 
