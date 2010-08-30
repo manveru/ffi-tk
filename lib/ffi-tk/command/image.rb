@@ -73,7 +73,7 @@ module Tk
     # of the values that may be supplied for the type argument to image
     # create).
     def types
-      Tk.execute(:image, :types).to_sym
+      Tk.execute(:image, :types).to_a{|e| e.to_sym }
     end
   end
 end
