@@ -29,9 +29,9 @@ module Tk
       if None == name
         Tk.execute(:image, :create, type)
       elsif None == options && name.respond_to?(:to_hash)
-        Tk.execute(:image, :create, name.to_tcl_options)
+        Tk.execute(:image, :create, type, name.to_tcl_options)
       elsif None != name && None != options
-        Tk.exeucte(:image, :create, name, options.to_tcl_options)
+        Tk.exeucte(:image, :create, type, name, options.to_tcl_options)
       end
     end
 
