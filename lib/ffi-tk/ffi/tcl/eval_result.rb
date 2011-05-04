@@ -74,6 +74,7 @@ module FFI
         objv_ptr = MemoryPointer.new(:pointer)
 
         if Tcl.list_obj_get_elements(interp, obj, objc_ptr, objv_ptr) == 0
+          return [] if objv_ptr.get_pointer(0).null?
           objv_ptr.get_pointer(0).
             read_array_of_pointer(objc_ptr.get_int(0)).
             map(&block)
