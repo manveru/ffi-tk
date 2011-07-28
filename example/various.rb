@@ -8,7 +8,7 @@ Tk.root.bind('Control-c'){|event| p event }
 Tk.root.bind('Control-q'){|event| exit }
 
 hello = Tk::Button.new('.', text: 'Push me'){
-  Tk::MessageBox.new(message: 'Hello, World!')
+  Tk.message_box(message: 'Hello, World!')
 }.pack
 
 button = Tk::Button.new('.', text: 'Destroy me!').pack

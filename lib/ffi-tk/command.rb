@@ -1,6 +1,7 @@
 module Tk
   require 'ffi-tk/command/choose_color'
   require 'ffi-tk/command/choose_directory'
+  require 'ffi-tk/command/dialog'
   require 'ffi-tk/command/event'
   require 'ffi-tk/command/get_open_file'
   require 'ffi-tk/command/get_save_file'
@@ -19,7 +20,6 @@ module Tk
   autoload :Clipboard, 'ffi-tk/command/clipboard'
   autoload :Configure, 'ffi-tk/command/configure'
   autoload :Destroy,   'ffi-tk/command/destroy'
-  autoload :Dialog,    'ffi-tk/command/dialog'
   autoload :Focus,     'ffi-tk/command/focus'
   autoload :Font,      'ffi-tk/command/font'
   autoload :Grab,      'ffi-tk/command/grab'

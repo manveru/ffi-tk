@@ -31,7 +31,7 @@ Ruby-FFI ships with JRuby and Rubinius, and is available as a gem for MRI.
     Tk.init
 
     Tk::Button.new('.', text: 'Press me'){
-      Tk::MessageBox.new(message: 'Hello, World!')
+      Tk.message_box(message: 'Hello, World!')
     }.pack
 
     Tk.mainloop
