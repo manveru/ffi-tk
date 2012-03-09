@@ -7,7 +7,9 @@ module Tk
   TCL_LIBPATH = ENV['TCL_LIBPATH'].to_s.split(':')
   TK_LIBPATH  = ENV[ 'TK_LIBPATH'].to_s.split(':')
 
-  if FFI::Platform.mac?
+  HOST_OS = RbConfig::CONFIG['host_os']
+
+  if HOST_OS =~ /darwin/
     if ENV['NO_AQUA'] || ENV['USE_X11'] # macports-x11 libtk
       TCL_LIBPATH << '/opt/local/lib/libtcl8.5.dylib'
       TK_LIBPATH  << '/opt/local/lib/libtk8.5.dylib'
@@ -21,7 +23,7 @@ module Tk
   TK_LIBPATH  <<  'tk' <<  'tk86' <<  'tk85' <<  'tk8.6' <<  'tk8.5'
 
   unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
-    if FFI::Platform.mac?
+    if HOST_OS =~ /darwin/
       # In some cases Tk has trouble running, this seems to happen on windows and
       # OSX/TkAqua mostly.
       # In these cases please use:

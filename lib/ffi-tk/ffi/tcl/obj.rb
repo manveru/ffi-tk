@@ -44,37 +44,11 @@ module FFI
     end
 
     class Obj < PrettyStruct
-      class InternalRep < Union
-        class TwoPtrValue < PrettyStruct
-          layout(
-            :ptr1, :pointer,
-            :ptr2, :pointer
-          )
-        end
-
-        class PtrAndLongRep < PrettyStruct
-          layout(
-            :ptr,   :pointer,
-            :value, :ulong
-          )
-        end
-
-        layout(
-          :longValue,     :long,
-          :doubleValue,   :double,
-          :otherValuePtr, :pointer,
-          :wideValue,     :int64,
-          :twoPtrValue,   TwoPtrValue,
-          :ptrAndLongRep, PtrAndLongRep
-        )
-      end
-
       layout(
         :refCount,    :int,
         :bytes,       :string,
         :length,      :int,
-        :type,        ObjType,
-        :internalRep, InternalRep
+        :type,        :pointer,
       )
 
       def pretty_type

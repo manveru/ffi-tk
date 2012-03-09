@@ -9,40 +9,40 @@ module FFI
     extend FFI::Library
     ffi_lib ::Tk::TCL_LIBPATH
 
-    attach_function :Tcl_AppendAllObjTypes, [Interp, Obj], :int
-    attach_function :Tcl_CreateInterp, [], Interp
-    attach_function :Tcl_DeleteInterp, [Interp], :void
+    attach_function :Tcl_AppendAllObjTypes, [:pointer, :pointer], :int
+    attach_function :Tcl_CreateInterp, [], :pointer
+    attach_function :Tcl_DeleteInterp, [:pointer], :void
     attach_function :Tcl_DoOneEvent, [flags = :int], :int
-    attach_function :Tcl_EvalEx, [Interp, script = :string, length = :int, flags = :int], :int
-    attach_function :Tcl_GetBoolean, [Interp, :string, :pointer], :int
-    attach_function :Tcl_GetBooleanFromObj, [Interp, Obj, boolean = :pointer], :int
-    attach_function :Tcl_GetDoubleFromObj, [Interp, Obj, :pointer], :int
-    attach_function :Tcl_GetIntFromObj, [Interp, Obj, int = :pointer], :int
-    attach_function :Tcl_GetObjResult, [Interp], Obj
-    attach_function :Tcl_GetObjType, [:string], ObjType
-    attach_function :Tcl_GetString, [Obj], :string
-    attach_function :Tcl_GetStringFromObj, [Obj, length = :pointer], :string
-    attach_function :Tcl_GetStringResult, [Interp], :string
-    attach_function :Tcl_GetUnicode, [Obj], :string
-    attach_function :Tcl_Init, [Interp], :int
-    attach_function :Tcl_ListObjGetElements, [Interp, Obj, count = :pointer, list = :pointer], :int
-    attach_function :Tcl_ListObjIndex, [Interp, list = :pointer, index = :int, result = :pointer], :int
-    attach_function :Tcl_ListObjLength, [Interp, list = :pointer, int = :pointer], :int
-    attach_function :Tcl_NewBooleanObj, [:int], Obj
-    attach_function :Tcl_NewIntObj, [:int], Obj
-    attach_function :Tcl_NewListObj, [count = :int, values = :pointer], Obj
-    attach_function :Tcl_NewStringObj, [:string, :int], Obj
-    attach_function :Tcl_ObjGetVar2, [Interp, :pointer, :pointer, :int], Obj
-    attach_function :Tcl_ObjSetVar2, [Interp, Obj, Obj, Obj, :int], Obj
-    attach_function :Tcl_ParseVar, [Interp, :pointer, :pointer], :pointer
-    attach_function :Tcl_SetObjResult, [Interp, Obj], :void
-    attach_function :Tcl_WaitForEvent, [TclTime], :int
-    attach_function :Tcl_SetMaxBlockTime, [TclTime], :void
+    attach_function :Tcl_EvalEx, [:pointer, script = :string, length = :int, flags = :int], :int
+    attach_function :Tcl_GetBoolean, [:pointer, :string, :pointer], :int
+    attach_function :Tcl_GetBooleanFromObj, [:pointer, :pointer, boolean = :pointer], :int
+    attach_function :Tcl_GetDoubleFromObj, [:pointer, :pointer, :pointer], :int
+    attach_function :Tcl_GetIntFromObj, [:pointer, :pointer, int = :pointer], :int
+    attach_function :Tcl_GetObjResult, [:pointer], :pointer
+    attach_function :Tcl_GetObjType, [:string], :pointer
+    attach_function :Tcl_GetString, [:pointer], :string
+    attach_function :Tcl_GetStringFromObj, [:pointer, length = :pointer], :string
+    attach_function :Tcl_GetStringResult, [:pointer], :string
+    attach_function :Tcl_GetUnicode, [:pointer], :string
+    attach_function :Tcl_Init, [:pointer], :int
+    attach_function :Tcl_ListObjGetElements, [:pointer, :pointer, count = :pointer, list = :pointer], :int
+    attach_function :Tcl_ListObjIndex, [:pointer, list = :pointer, index = :int, result = :pointer], :int
+    attach_function :Tcl_ListObjLength, [:pointer, list = :pointer, int = :pointer], :int
+    attach_function :Tcl_NewBooleanObj, [:int], :pointer
+    attach_function :Tcl_NewIntObj, [:int], :pointer
+    attach_function :Tcl_NewListObj, [count = :int, values = :pointer], :pointer
+    attach_function :Tcl_NewStringObj, [:string, :int], :pointer
+    attach_function :Tcl_ObjGetVar2, [:pointer, :pointer, :pointer, :int], :pointer
+    attach_function :Tcl_ObjSetVar2, [:pointer, :pointer, :pointer, :pointer, :int], :pointer
+    attach_function :Tcl_ParseVar, [:pointer, :pointer, :pointer], :pointer
+    attach_function :Tcl_SetObjResult, [:pointer, :pointer], :void
+    attach_function :Tcl_WaitForEvent, [:pointer], :int
+    attach_function :Tcl_SetMaxBlockTime, [:pointer], :void
 
-    callback :obj_cmd_proc, [:int, Interp, :int, :pointer], :int
+    callback :obj_cmd_proc, [:int, :pointer, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
     attach_function :Tcl_CreateObjCommand, [
-      Interp, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
+      :pointer, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
     module_function
 

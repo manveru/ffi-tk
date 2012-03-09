@@ -19,7 +19,7 @@ task :bacon => :setup do
   specs.each_with_index do |spec, idx|
     print(left_format % [idx + 1, specs_size, spec])
 
-    Open3.popen3(RUBY, spec) do |sin, sout, serr|
+    Open3.popen3(FileUtils::RUBY, spec) do |sin, sout, serr|
       out = sout.read.strip
       err = serr.read.strip
 
