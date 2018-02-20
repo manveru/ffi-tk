@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::RadioButton do
@@ -10,4 +11,3 @@ describe Tk::Tile::RadioButton do
   it 'needs more specs' do
   end
 end
-

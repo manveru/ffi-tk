@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     # The ttk::treeview widget displays a hierarchical collection of items.
@@ -21,7 +22,9 @@ module Tk
     class Treeview < Tk::Widget
       include Tk::Tile::TileWidget, Scrollable, Cget, Configure
 
-      def self.tk_command; 'ttk::treeview'; end
+      def self.tk_command
+        'ttk::treeview'
+      end
 
       # Delete all items
       def clear
@@ -45,7 +48,7 @@ module Tk
       # None of the items in newchildren may be an ancestor of item.
       def children(item, *new_children)
         if new_children.empty?
-          execute(:children, item).to_a.map{|child| Item.new(self, child) }
+          execute(:children, item).to_a.map { |child| Item.new(self, child) }
         else
           execute(:children, item, *new_children.flatten)
         end
@@ -177,7 +180,8 @@ module Tk
       Item = Struct.new(:tk_parent, :id)
       class Item
         def initialize(tk_parent, id)
-          self.tk_parent, self.id = tk_parent, id.to_s
+          self.tk_parent = tk_parent
+          self.id = id.to_s
         end
 
         def insert(index, options = {})
@@ -265,7 +269,7 @@ module Tk
         end
 
         def inspect
-          "#<Treeview::Item @tk_parent=%p @id=%p>" % [tk_parent.tk_pathname, id]
+          '#<Tk::Treeview::Item @tk_parent=%p @id=%p>' % [tk_parent.tk_pathname, id]
         end
 
         private :id=
@@ -307,6 +311,8 @@ module Tk
       # hierarchy.
       def parent(item)
         id = execute(:parent, item)
+        p item
+        p id
         Item.new(self, id) if id
       end
 
@@ -326,7 +332,7 @@ module Tk
 
       # Returns the list of selected items.
       def selection
-        execute(:selection).to_a.map{|id| Item.new(self, id) }
+        execute(:selection).to_a.map { |id| Item.new(self, id) }
       end
 
       # +items+ becomes the new selection.

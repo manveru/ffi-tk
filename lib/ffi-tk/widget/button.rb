@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # A button is a widget that displays a textual string, bitmap or image.
   # If text is displayed, it must all be in a single font, but it can occupy
@@ -13,7 +14,9 @@ module Tk
   class Button < Widget
     include Cget, Configure
 
-    def self.tk_command; 'button'; end
+    def self.tk_command
+      'button'
+    end
 
     # TODO: implement custom procs
     def initialize(parent = Tk.root, options = None, &block)

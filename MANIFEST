@@ -1,6 +1,10 @@
 .gitignore
+.rubocop.yml
+.rubocop_todo.yml
 AUTHORS
 CHANGELOG
+Gemfile
+Gemfile.lock
 MANIFEST
 README.md
 Rakefile
@@ -27,6 +31,7 @@ example/tkgo.rb
 example/various.rb
 example/wait.rb
 ffi-tk.gemspec
+gemset.nix
 lib/ffi-tk.rb
 lib/ffi-tk/command.rb
 lib/ffi-tk/command/after.rb
@@ -128,11 +133,11 @@ lib/ffi-tk/widget/tile/sizegrip.rb
 lib/ffi-tk/widget/tile/style.rb
 lib/ffi-tk/widget/tile/treeview.rb
 lib/ffi-tk/widget/toplevel.rb
+shell.nix
 spec/ffi-tk/command/bind.rb
 spec/ffi-tk/command/bindtags.rb
 spec/ffi-tk/command/clipboard.rb
 spec/ffi-tk/command/font.rb
-spec/ffi-tk/command/grid.rb
 spec/ffi-tk/command/image.rb
 spec/ffi-tk/command/pack.rb
 spec/ffi-tk/command/place.rb
@@ -184,11 +189,10 @@ tasks/authors.rake
 tasks/bacon.rake
 tasks/changelog.rake
 tasks/gem.rake
-tasks/gem_setup.rake
 tasks/grancher.rake
 tasks/manifest.rake
 tasks/rcov.rake
 tasks/release.rake
 tasks/reversion.rake
-tasks/setup.rake
+tasks/simplecov.rake
 tasks/ycov.rake

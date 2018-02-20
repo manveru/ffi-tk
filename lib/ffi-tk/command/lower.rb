@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Change a window's position in the stacking order
   module Lower

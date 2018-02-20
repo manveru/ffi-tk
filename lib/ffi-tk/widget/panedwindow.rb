@@ -1,15 +1,18 @@
+# frozen_string_literal: true
 module Tk
   class PanedWindow < Widget
     include Cget, Configure
 
-    def self.tk_command; 'panedwindow'; end
+    def self.tk_command
+      'panedwindow'
+    end
 
     # Add one or more windows to the panedwindow, each in a separate pane.
     # The arguments consist of the names of one or more windows followed by
     # pairs of arguments that specify how to manage the windows.
     # Option may have any of the values accepted by the configure subcommand.
     def add(window, *arguments)
-      options, windows = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
+      options, windows = arguments.partition { |arg| arg.respond_to?(:to_tcl_options) }
 
       if option = options.first
         execute(:add, window, *windows, option.to_tcl_options)

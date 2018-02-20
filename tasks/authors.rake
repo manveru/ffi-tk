@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Once git has a fix for the glibc in handling .mailmap and another fix for
 # allowing empty mail address to be mapped in .mailmap we won't have to handle
 # them manually.
@@ -14,8 +15,8 @@ task :authors do
     io.puts "Following persons have contributed to #{GEMSPEC.name}."
     io.puts '(Sorted by number of submitted patches, then alphabetically)'
     io.puts ''
-    authors.sort_by{|(n,e),c| [-c, n.downcase] }.each do |(name, email), count|
-      io.puts("%6d %s <%s>" % [count, name, email])
+    authors.sort_by { |(n, _e), c| [-c, n.downcase] }.each do |(name, email), count|
+      io.puts('%6d %s <%s>' % [count, name, email])
     end
   end
 end

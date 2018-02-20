@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Canvas
     # A text item displays a string of characters on the screen in one or more

@@ -1,0 +1,7 @@
+inherit_from: .rubocop_todo.yml
+AllCops:
+  StyleGuideBaseURL: https://github.com/bbatsov/ruby-style-guide
+  TargetRubyVersion: 2.3
+Bundler/OrderedGems:
+  Exclude:
+    - 'Gemfile'

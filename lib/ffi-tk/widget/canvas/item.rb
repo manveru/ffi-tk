@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Canvas
     class Item < Struct.new(:canvas, :id)
@@ -52,9 +53,8 @@ module Tk
         text:                   :string,
         underline:              :integer,
         width:                  :integer,
-        width:                  :integer,
         window:                 :pathname
-      }
+      }.freeze
 
       def self.create(canvas, type, id)
         klass = Canvas.const_get(type.to_s.capitalize)
@@ -79,7 +79,7 @@ end
       end
 
       def inspect
-        "#<%s %d>" % [self.class.name, id]
+        '#<%s %d>' % [self.class.name, id]
       end
 
       def cget(option)

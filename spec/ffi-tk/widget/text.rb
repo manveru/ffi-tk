@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Text do
@@ -13,50 +14,58 @@ describe Tk::Text do
     text.get('1.0', 'end').should == "Hello, World!\n"
   end
 
-  it 'gets all possible options with cget' do
-    text.cget(:autoseparators          ).should == true
-    text.cget(:background              ).should == "systemWindowBody" #"#ffffff"
-    text.cget(:bd                      ).should == 0 #1
-    text.cget(:bg                      ).should == "systemWindowBody" #"#ffffff"
-    text.cget(:blockcursor             ).should == false
-    text.cget(:borderwidth             ).should == 0 #1
-    text.cget(:cursor                  ).should == "xterm"
-    text.cget(:endline                 ).should == 0
-    text.cget(:exportselection         ).should == true
-    text.cget(:fg                      ).should == "Black" #"#000000"
-    text.cget(:font                    ).should == "TkFixedFont"
-    text.cget(:foreground              ).should == "Black" #"#000000"
-    text.cget(:height                  ).should == 24
-    text.cget(:highlightbackground     ).should == "systemWindowBody" #"#d9d9d9"
-    text.cget(:highlightcolor          ).should == "Black" #"#000000"
-    text.cget(:highlightthickness      ).should == 3 #1
-    text.cget(:inactiveselectbackground).should == "systemHighlightSecondary" #"#c3c3c3"
-    text.cget(:insertbackground        ).should == "Black" #"#000000"
-    text.cget(:insertborderwidth       ).should == 0
-    text.cget(:insertofftime           ).should == 300
-    text.cget(:insertontime            ).should == 600
-    text.cget(:insertwidth             ).should == 1 #2
-    text.cget(:maxundo                 ).should == 0
-    text.cget(:padx                    ).should == 1
-    text.cget(:pady                    ).should == 1
-    text.cget(:relief                  ).should == :flat #:sunken
-    text.cget(:selectbackground        ).should == "systemHighlight" #"#c3c3c3"
-    text.cget(:selectborderwidth       ).should == 1 #0
-    text.cget(:selectforeground        ).should == nil #"#000000"
-    text.cget(:setgrid                 ).should == false
-    text.cget(:spacing1                ).should == 0
-    text.cget(:spacing2                ).should == 0
-    text.cget(:spacing3                ).should == 0
-    text.cget(:startline               ).should == 0
-    text.cget(:state                   ).should == ['normal']
-    text.cget(:tabs                    ).should == nil
-    text.cget(:tabstyle                ).should == :tabular
-    text.cget(:takefocus               ).should == false
-    text.cget(:undo                    ).should == false
-    text.cget(:width                   ).should == 80
-    text.cget(:wrap                    ).should == :char
-    text.cget(:xscrollcommand          ).should == nil
-    text.cget(:yscrollcommand          ).should == nil
+  cget_options = {
+    autoseparators: [true],
+    background: %w(systemWindowBody #282828),
+    bd: [0, 1],
+    bg: %w(systemWindowBody #ffffff #282828),
+    blockcursor: [false],
+    borderwidth: [0, 1],
+    cursor: ['xterm'],
+    endline: ['', 0],
+    exportselection: [true],
+    fg: %w(Black #000000 #ebdbb2),
+    font: %w(TkFixedFont),
+    foreground: %w(Black #000000 #ebdbb2),
+    height: [24],
+    highlightbackground: %w(systemWindowBody #d9d9d9),
+    highlightcolor: %w(Black #000000),
+    highlightthickness: [3, 1],
+    inactiveselectbackground: %w(systemHighlightSecondary #c3c3c3),
+    insertbackground: %w(Black #000000),
+    insertborderwidth: [0],
+    insertofftime: [300],
+    insertontime: [600],
+    insertwidth: [1, 2],
+    maxundo: [0],
+    padx: [1],
+    pady: [1],
+    relief: [:flat, :sunken],
+    selectbackground: %w(systemHighlight #c3c3c3),
+    selectborderwidth: [1, 0],
+    selectforeground: [nil, '#000000'],
+    setgrid: [false],
+    spacing1: [0],
+    spacing2: [0],
+    spacing3: [0],
+    startline: [0, ''],
+    state: [['normal']],
+    tabs: [nil],
+    tabstyle: [:tabular],
+    takefocus: [false],
+    undo: [false, true],
+    width: [80],
+    wrap: [:char],
+    xscrollcommand: [nil],
+    yscrollcommand: [nil]
+  }
+
+  describe 'getting options via cget' do
+    cget_options.each do |key, values|
+      it "returns a member of #{values.inspect} for -#{key}" do
+        values.should.include text.cget(key)
+      end
+    end
   end
 
   it 'configures a single option' do
@@ -111,7 +120,7 @@ describe Tk::Text do
   end
 
   it 'counts ypixels' do
-    text.count(1.0, :end, :ypixels).should == 195
+    text.count(1.0, :end, :ypixels).should == 182
   end
 
   should 'not be in debug mode' do
@@ -131,7 +140,7 @@ describe Tk::Text do
   it 'gives line info' do
     info = text.dlineinfo(1.0)
     info.size.should == 5
-    info.all?{|i| i.kind_of?(Fixnum) }
+    info.all? { |i| i.is_a?(Integer) }
   end
 
   it 'inserts string with taglist' do
@@ -189,12 +198,12 @@ describe Tk::Text do
     text.peer_names.should == []
   end
 
-   it 'searches for {}' do
-     text.insert :end, '{ now some text in here}'
-     text.search(/\{/, '1.0', 'end', :all).should == ['1.10']
-     text.search(/\}/, '1.0', 'end', :all).should == ['1.33']
-     text.search(/[{}]/, '1.0', 'end', :all).should == ['1.10', '1.33']
-   end
+  it 'searches for {}' do
+    text.insert :end, '{ now some text in here}'
+    text.search(/\{/, '1.0', 'end', :all).should == ['1.10']
+    text.search(/\}/, '1.0', 'end', :all).should == ['1.33']
+    text.search(/[{}]/, '1.0', 'end', :all).should == ['1.10', '1.33']
+  end
 
   text.delete '1.0', 'end'
   text.insert(:end, <<-TEXT)
@@ -222,8 +231,8 @@ Voluptates dicta labore impedit deserunt quod. Vero sint rerum at asperiores eos
 
   describe 'Text#search' do
     it 'searches by exact match' do
-      text.search("et", '1.0', :end).should == ['1.13']
-      text.search("labore", '1.0', :end).should == ['20.17']
+      text.search('et', '1.0', :end).should == ['1.13']
+      text.search('labore', '1.0', :end).should == ['20.17']
     end
 
     it 'searches by regular expression' do

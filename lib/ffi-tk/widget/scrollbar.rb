@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   class Scrollbar < Widget
     include Cget, Configure
 
-    def self.tk_command; 'scrollbar'; end
+    def self.tk_command
+      'scrollbar'
+    end
 
     # Marks the element indicated by element as active, which causes it to be
     # displayed as specified by the activeBackground and activeRelief options.

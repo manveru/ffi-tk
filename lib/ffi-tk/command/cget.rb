@@ -1,34 +1,36 @@
+# frozen_string_literal: true
 module Tk
   module Cget
     CGET_MAP = {}
 
-    insert = lambda{|type, array|
-      array.each{|option| CGET_MAP["-#{option}"] = type } }
+    insert = lambda do |type, array|
+      array.each { |option| CGET_MAP["-#{option}"] = type }
+    end
 
-    insert[:integer, %w[
+    insert[:integer, %w(
       height width maxundo spacing1 spacing2 spacing3 borderwidth bd
       highlightthickness insertborderwidth insertofftime insertontime
       insertwidth padx pady selectborderwidth endline startline length
       maximum
-    ]]
-    insert[:boolean, %w[
+    )]
+    insert[:boolean, %w(
       autoseparators blockcursor undo exportselection setgrid takefocus
-    ]]
-    insert[:color, %w[
+    )]
+    insert[:color, %w(
       inactiveselectbackground disabledbackground disabledforeground background
       bg foreground fg highlightbackground highlightcolor insertbackground
       selectbackground selectforeground readonlybackground
-    ]]
-    insert[:command, %w[
+    )]
+    insert[:command, %w(
       invalidcommand invcmd yscrollcommand xscrollcommand validatecommand
       command vcmd
-    ]]
-    insert[:string, %w[ tabs cursor text show default class ]]
-    insert[:font, %w[ font ]]
-    insert[:symbol, %w[ wrap tabstyle relief justify validate orient mode selectmode ]]
-    insert[:variable, %w[ textvariable ]]
-    insert[:bitmap, %w[ stipple ]]
-    insert[:list, %w[ padding state style columns displaycolumns ]]
+    )]
+    insert[:string, %w(tabs cursor text show default class)]
+    insert[:font, %w(font)]
+    insert[:symbol, %w(wrap tabstyle relief justify validate orient mode selectmode)]
+    insert[:variable, %w(textvariable)]
+    insert[:bitmap, %w(stipple)]
+    insert[:list, %w(padding state style columns displaycolumns)]
 
     def cget(option)
       option = option.to_tcl_option
@@ -41,26 +43,31 @@ module Tk
       if type = CGET_MAP[name.to_tcl_option]
         type_to_ruby(type, value)
       else
-        raise "Unknown type for %p: %p" % [name, value]
+        raise 'Unknown type for %p: %p' % [name, value]
       end
     end
 
     def type_to_ruby(type, value)
       case type
       when :integer
-        value.to_i
+        value.respond_to?(:to_i?) ? value.to_i? : value.to_i
       when :symbol
-        value.to_sym?
+        value&.to_sym
       when :boolean
         Tk.boolean(value)
       when :color, :string, :font, :bitmap
         value.respond_to?(:to_s?) ? value.to_s? : value
       when :variable
-        if name = value.to_s?
-          Variable.new(name)
-        end
+        Variable.new(value.to_s?) if value.respond_to?(:to_s?)
       when :list
-        value.to_a
+        case value
+        when Array
+          value
+        when String
+          value.split
+        else
+          value.to_a
+        end
       when :float
         value.to_f
       when :pathname
@@ -69,7 +76,7 @@ module Tk
         string = value.to_s
         string unless string.empty?
       else
-        raise "Unknown type: %p: %p" % [type, value]
+        raise 'Unknown type: %p: %p' % [type, value]
       end
     end
 

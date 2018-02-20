@@ -1,7 +1,10 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     class PanedWindow < Tk::PanedWindow
-      def self.tk_command; 'ttk::panedwindow'; end
+      def self.tk_command
+        'ttk::panedwindow'
+      end
       include TileWidget
 
       # pathname add subwindow options...

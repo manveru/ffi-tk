@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module FFI
   module Tcl
     # This whole class feels very awkward, maybe it should be merged with Obj.
@@ -31,6 +32,7 @@ module FFI
 
       def self.guess(interp, obj, fallback = nil)
         obj = Obj.new(obj) unless obj.respond_to?(:type)
+        # p obj: obj, obj_type: obj.type
         type = TYPES[obj.type.to_i]
 
         case type
@@ -42,14 +44,47 @@ module FFI
           to_int(interp, obj)
         when :double
           to_double(interp, obj)
+        when :dict
+          to_dict(interp, obj)
+        when :window
+          to_window(interp, obj)
         else
           if fallback
             __send__(fallback, interp, obj)
+          elsif type.nil? && obj.bytes == ''
+            nil
+          elsif type.nil?
+            to_string(interp, obj)
           else
-            raise "Unknown type: %p" % [type] if type
-            new(interp, obj)
+            raise 'Unknown type: %p' % [type]
           end
         end
+      end
+
+      def self.to_window(interp, obj)
+        p interp: interp, obj: obj
+      end
+
+      def self.to_dict(interp, obj)
+        out = {}
+
+        search = MemoryPointer.new(:pointer)
+        done = MemoryPointer.new(:int)
+        key_ptr = MemoryPointer.new(:pointer)
+        value_ptr = MemoryPointer.new(:pointer)
+        strlen = MemoryPointer.new(:int)
+
+        Tcl.dict_obj_first(interp, obj, search, key_ptr, value_ptr, done)
+
+        while done.get_int(0) != 1
+          key = Tcl.get_string_from_obj(key_ptr.get_pointer(0), strlen)
+          value = Tcl.get_string_from_obj(value_ptr.get_pointer(0), strlen)
+          out[key] = value
+
+          Tcl.dict_obj_next(search, key_ptr, value_ptr, done)
+        end
+
+        out
       end
 
       def self.to_double(interp, obj)
@@ -75,9 +110,9 @@ module FFI
 
         if Tcl.list_obj_get_elements(interp, obj, objc_ptr, objv_ptr) == 0
           return [] if objv_ptr.get_pointer(0).null?
-          objv_ptr.get_pointer(0).
-            read_array_of_pointer(objc_ptr.get_int(0)).
-            map(&block)
+          objv_ptr.get_pointer(0)
+                  .read_array_of_pointer(objc_ptr.get_int(0))
+                  .map(&block)
         else
           panic(interp, 'Tcl_ListObjGetElements')
         end
@@ -96,14 +131,16 @@ module FFI
       def self.to_int(interp, obj)
         int_pointer = MemoryPointer.new(:int)
 
-        if Tcl.get_int_from_obj(interp, obj, int_pointer) == 0
+        if obj.bytes == ''
+          '' # used by text widget -endline
+        elsif Tcl.get_int_from_obj(interp, obj, int_pointer) == 0
           int_pointer.get_int(0)
         else
           panic(interp, 'Tcl_GetIntFromObj')
         end
       end
 
-      def self.to_string(interp, obj)
+      def self.to_string(_interp, obj)
         length_pointer = MemoryPointer.new(:int)
 
         string = Tcl.get_string_from_obj(obj, length_pointer)
@@ -164,7 +201,7 @@ module FFI
       end
 
       def inspect
-        "#<EvalResult #{to_s}>"
+        "#<EvalResult #{self}>"
       end
     end
   end

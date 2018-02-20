@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::Separator do
@@ -16,7 +17,6 @@ describe Tk::Tile::Separator do
 
   it 'sets identify' do
     s = Tk::Tile::Separator.new
-    s.identify(0,0).should == true 
+    s.identify(0, 0).should == true
   end
 end
-

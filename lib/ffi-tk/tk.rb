@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Object
   undef :type if respond_to?(:type)
 end
@@ -14,13 +15,12 @@ module Tk
 
   module_function
 
-
   def init
-    if RUN_EVENTLOOP_ON_MAIN_THREAD
-      @interp = FFI::Tcl.setup_eventloop_on_main_thread
-    else
-      @interp = FFI::Tcl.setup_eventloop_on_new_thread
-    end
+    @interp = if RUN_EVENTLOOP_ON_MAIN_THREAD
+                FFI::Tcl.setup_eventloop_on_main_thread
+              else
+                FFI::Tcl.setup_eventloop_on_new_thread
+              end
 
     FFI::Tcl.init(@interp)
     FFI::Tcl::EvalResult.reset_types(@interp)
@@ -35,7 +35,7 @@ module Tk
 
     module_eval('class << Tk; attr_reader :interp, :root; end')
 
-    return @interp
+    @interp
   end
 
   # A little something so people don't have to call Tk.init
@@ -53,9 +53,7 @@ module Tk
   def mainloop
     @running = true
 
-    while @running && interp.wait_for_event(0.1)
-      interp.do_one_event(0)
-    end
+    interp.do_one_event(0) while @running && interp.wait_for_event(0.05)
   end
 
   def stop
@@ -72,7 +70,7 @@ module Tk
 
   def execute(*args)
     interp.eval(convert_arguments(*args))
-    result
+    result.tap{|r| puts "eval= %p" % [r] if $DEBUG }
   end
 
   def result
@@ -96,14 +94,14 @@ module Tk
   end
 
   # without our callbacks, nothing goes anymore, abort mission
-  def tcl_delete(client_data)
-    raise RuntimeError, "tcl function is going to be removed"
+  def tcl_delete(_client_data)
+    raise 'tcl function is going to be removed'
   end
   TCL_DELETE = method(:tcl_delete)
 
   # TODO: support for break and continue return status (by catch/throw)
   # 1 means true, 0 means false.
-  def tcl_callback(client_data, interp, objc, objv)
+  def tcl_callback(_client_data, interp, objc, objv)
     cmd, id, *args = tcl_cmd_args(interp, objc, objv)
     id = id.first if id.is_a?(Array)
 
@@ -126,7 +124,7 @@ module Tk
   TCL_CALLBACK = method(:tcl_callback)
 
   # TODO: support for break and continue return status (by catch/throw)
-  def tcl_event(client_data, interp, objc, objv)
+  def tcl_event(_client_data, interp, objc, objv)
     cmd, id, sequence, *args = tcl_cmd_args(interp, objc, objv)
 
     catch :callback_break do
@@ -149,15 +147,17 @@ module Tk
   def tcl_cmd_args(interp, objc, objv)
     length = FFI::MemoryPointer.new(0)
     array = objv.read_array_of_pointer(objc)
-    array.map{|e|
+    array.map do |e|
       obj = FFI::Tcl::EvalResult.guess(interp, e)
       case obj
-      when Fixnum, Float
+      when Integer, Float
         obj
+      when nil
+        nil
       else
         obj.respond_to?(:dup) ? obj.dup : obj
       end
-    }
+    end
   end
 
   def handle_callback(id, *args)
@@ -173,20 +173,20 @@ module Tk
     pathname = [parent_name, id].join('.').squeeze('.')
     @widgets[pathname] = object
 
-    return pathname
+    pathname
   end
 
   def unregister_object(object)
-    @widgets.delete_if{|path, obj| obj == object }
+    @widgets.delete_if { |_path, obj| obj == object }
   end
 
   def unregister_objects(*objects)
-    @widgets.delete_if{|path, obj| objects.include?(obj) }
+    @widgets.delete_if { |_path, obj| objects.include?(obj) }
   end
 
   def register_proc(proc, argument_string = '')
-    id = uuid(:proc){|uuid| @callbacks[uuid] = proc }
-    return id, %(RubyFFI::callback #{id} #{argument_string})
+    id = uuid(:proc) { |uuid| @callbacks[uuid] = proc }
+    [id, %(RubyFFI::callback #{id} #{argument_string})]
   end
 
   def unregister_proc(id)

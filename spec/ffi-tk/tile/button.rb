@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -10,14 +11,14 @@ describe Tk::Tile::Button do
     button = Button.new('.')
     button.cget(:default).should == 'normal'
 
-    %w{normal active disabled}.each do |state|
-      button = Button.new('.', default: state )
+    %w(normal active disabled).each do |state|
+      button = Button.new('.', default: state)
       button.cget(:default).should == state
     end
 
-    lambda {
+    lambda do
       Button.new('.', default: 'unkown-')
-    }.should.raise RuntimeError
+    end.should.raise RuntimeError
   end
 
   it 'sets width and height' do
@@ -29,7 +30,7 @@ describe Tk::Tile::Button do
       button.cget(:width).should == i.to_i
 
       button = Button.new('.', width: i.to_f)
-      button.cget(:width).should == 0
+      button.cget(:width).should == i.to_i
     end
   end
 
@@ -38,14 +39,13 @@ describe Tk::Tile::Button do
     ran = false
     Tk.callbacks.size.should == 0
 
-    button = Button.new('.'){
+    button = Button.new('.') do
       ran = true
       button.destroy
-    }
+    end
     button.invoke
 
     Tk.callbacks.size.should == 0
     ran.should == true
   end
 end
-

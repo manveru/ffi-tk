@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   class Text < Widget
     include Cget, Configure, Scrollable
 
-    def self.tk_command; 'text'; end
+    def self.tk_command
+      'text'
+    end
 
     autoload :Peer, 'ffi-tk/widget/text/peer'
 
@@ -111,7 +114,7 @@ module Tk
     # :xpixels, :ypixels` is perfectly valid and will return a list of two
     # elements.
     def count(index1, index2, *options)
-      args = options.map{|option| option.to_tcl_option }
+      args = options.map(&:to_tcl_option)
       execute('count', *args, index1, index2)
     end
 
@@ -200,7 +203,10 @@ module Tk
       invocation = []
       indices = [given_index]
 
-      while arg = arguments.shift
+      loop do
+        arg = arguments.shift
+        break unless arg
+
         if arg.respond_to?(:to_tcl_option)
           case tcl_option = arg.to_tcl_option
           when '-command'
@@ -363,7 +369,7 @@ module Tk
     # markName is set to the given value.
     def mark_gravity(name, direction = None)
       if direction == None
-        execute('mark', 'gravity', name).to_sym?
+        execute('mark', 'gravity', name)&.to_sym
       else
         execute_only('mark', 'gravity', name, direction)
       end
@@ -389,7 +395,7 @@ module Tk
     # after end with respect to the pathName mark next operation.
     # nil is returned if there are no marks after index.
     def mark_next(index)
-      execute('mark', 'next', index).to_sym?
+      execute('mark', 'next', index)&.to_sym
     end
 
     # Returns the name of the mark at or before index.
@@ -404,7 +410,7 @@ module Tk
     # mark information returned by the pathName dump operation.
     # nil is returned if there are no marks before index.
     def mark_previous(index)
-      execute('mark', 'previous', index).to_sym?
+      execute('mark', 'previous', index)&.to_sym
     end
 
     # Sets the mark named markName to a position just before the character at
@@ -592,7 +598,7 @@ module Tk
       switches << :regexp if pattern.class < CoreExtensions::Regexp
       to = :end if None == to
 
-      switches.map!{|switch| switch.to_s.to_tcl_option }
+      switches.map! { |switch| switch.to_s.to_tcl_option }
       switches.uniq!
 
       if switches.include?('-all') && switches.delete('-count')
@@ -607,20 +613,20 @@ module Tk
 
       if count
         SEARCH_MUTEX.synchronize do
-          list = execute(:search, *switches, sep, pattern, from, to).to_a
+          list = [*execute(:search, *switches, sep, pattern, from, to)]
           return list if list.empty?
           count_value = Tk.execute('set', count)
           [*list, count_value]
         end
       elsif count_all
         SEARCH_MUTEX.synchronize do
-          list = execute(:search, *switches, sep, pattern, from, to).to_a
+          list = [*execute(:search, *switches, sep, pattern, from, to)]
           return list if list.empty?
           count_list = Tk.execute('set', count_all)
           list.zip(count_list)
         end
       else
-        execute(:search, *switches, sep, pattern, from, to).to_a
+        [*execute(:search, *switches, sep, pattern, from, to)]
       end
     end
 
@@ -695,12 +701,10 @@ module Tk
     # The tag bindings will be invoked first, followed by bindings for the
     # window as a whole.
     def tag_bind(tag_name, sequence = None, &script)
-      unless script
-        if None == sequence
-          return Tk.execute(:tag, :bind, tag_name)
-        else
-          return Tk.execute(:tag, :bind, tag_name, sequence)
-        end
+      if !script && None == sequence
+        return Tk.execute(:tag, :bind, tag_name)
+      elsif !script
+        return Tk.execute(:tag, :bind, tag_name, sequence)
       end
 
       # create name for command

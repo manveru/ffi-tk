@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   class Spinbox < Widget
     include Cget, Configure
 
-    def self.tk_command; 'spinbox'; end
+    def self.tk_command
+      'spinbox'
+    end
 
     # Returns a list of four numbers describing the bounding box of the
     # character given by index.

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Create and manipulate message widgets
   #
@@ -31,6 +32,8 @@ module Tk
   class Message < Widget
     include Cget, Configure
 
-    def self.tk_command; 'message'; end
+    def self.tk_command
+      'message'
+    end
   end
 end

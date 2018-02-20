@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     # progressbar widget shows the status of a long-running operation.
@@ -6,7 +7,9 @@ module Tk
     # indeterminate mode provides an animated display to let the user
     # know that something is happening.
     class Progressbar < Widget
-      def self.tk_command; 'ttk::progressbar'; end
+      def self.tk_command
+        'ttk::progressbar'
+      end
       include TileWidget, Cget, Configure
 
       # Begin autoincrement mode
@@ -39,7 +42,6 @@ module Tk
       def phase
         execute(:cget, '-phase').to_i
       end
-
 
       def identify(x, y)
         execute(:identify, x, y)

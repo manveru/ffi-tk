@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Ttk package merged Tcl/Tk core (Tcl/Tk 8.5+)
 module Tk
   module Tile
@@ -34,7 +35,7 @@ module Tk
     module TileWidget
       def ttk_state(new_state = None)
         if new_state == None
-          execute(:state).to_a
+          execute(:state)&.split
         else
           execute_only(:state, new_state)
         end

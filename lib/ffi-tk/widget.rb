@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Widget
     include Pack, Destroy, Bind, Bindtags, WM, Winfo, Grid, Clipboard, Place, TkCmd
@@ -62,7 +63,7 @@ module Tk
     private
 
     def assign_pathname
-      @tk_pathname = Tk.register_object(tk_parent, self)
+      @tk_pathname ||= Tk.register_object(tk_parent, self)
     end
   end
 end

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   class RadioButton < Button
     include Cget, Configure
 
-    def self.tk_command; 'radiobutton'; end
+    def self.tk_command
+      'radiobutton'
+    end
 
     # Deselects the radiobutton and sets the associated variable to an empty
     # string. If this radiobutton was not currently selected, the command has

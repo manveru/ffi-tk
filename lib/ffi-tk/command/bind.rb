@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Bind
     def self.bind(tag, sequence = None)

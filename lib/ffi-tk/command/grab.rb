@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Confine pointer and keyboard events to a window sub-tree
   #
@@ -61,7 +62,7 @@ module Tk
   # a given display at once.
   module Grab
     # @see Grab.global
-    def grab_global(window)
+    def grab_global(_window)
       Grab.globa(self)
     end
 

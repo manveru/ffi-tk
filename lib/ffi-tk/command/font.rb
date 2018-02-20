@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Create and inspect fonts.
   # The font command provides several facilities for dealing with fonts, such as
@@ -8,8 +9,8 @@ module Tk
         string_or_hash =~ /^(.*)\s+(\d+)?$/
 
         params = {}
-        params[:family] = $1.to_s
-        params[:size] = $2.to_i if $2
+        params[:family] = Regexp.last_match(1).to_s
+        params[:size] = Regexp.last_match(2).to_i if Regexp.last_match(2)
 
         @font = Font.create(params)
       elsif string_or_hash.respond_to?(:to_hash)
@@ -47,8 +48,8 @@ module Tk
       underline:  :boolean,
       overstrike: :boolean,
       weight:     :symbol,
-      slant:      :symbol,
-    }
+      slant:      :symbol
+    }.freeze
 
     def self.execute(command, *args)
       Tk.execute(:font, command, *args)
@@ -74,9 +75,9 @@ module Tk
       char = options.fetch(:char, None)
 
       args = []
-      args << "-displayof" << window unless window == None
+      args << '-displayof' << window unless window == None
       args << option.to_tcl_option unless option == None
-      args << "--" << char.to_tcl unless char == None
+      args << '--' << char.to_tcl unless char == None
 
       array = execute(:actual, font, *args)
       array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
@@ -84,16 +85,18 @@ module Tk
 
     def self.configure(fontname, argument = None)
       Configure.common(
-        self, [:configure, fontname], argument, FONT_CONFIGURE_HINTS)
+        self, [:configure, fontname], argument, FONT_CONFIGURE_HINTS
+      )
     end
 
     def self.create(fontname, options = None)
       if fontname.respond_to?(:to_tcl_options)
-        fontname, options = None, fontname
+        options = fontname
+        fontname = None
         options = options.to_tcl_options
       end
 
-      execute(:create, fontname, options)
+      execute(:create, fontname, options)&.to_str
     end
 
     def self.delete(*fontnames)

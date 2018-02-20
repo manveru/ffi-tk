@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Text
     class Peer < Text

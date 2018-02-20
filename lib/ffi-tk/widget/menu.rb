@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   class Menu < Widget
     include Cget, Configure
 
-    def self.tk_command; 'menu'; end
+    def self.tk_command
+      'menu'
+    end
 
     # Change the state of the entry indicated by index to active and redisplay
     # it using its active colors.

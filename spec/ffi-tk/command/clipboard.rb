@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -7,8 +8,8 @@ describe Tk::Clipboard do
 
   it 'should clear the clipboard' do
     C.clear
-    lambda{ C.get }.should.raise.message.
-      should =~ /^CLIPBOARD selection doesn't exist or form "STRING" not defined/
+    -> { C.get }.should.raise.message
+                .should =~ /^CLIPBOARD selection doesn't exist or form "STRING" not defined/
   end
 
   it 'should append to the clipboard' do

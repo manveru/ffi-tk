@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module_function
 
@@ -18,7 +19,7 @@ module Tk
   #   dialog, to the left of the text.
   #   If this is nil then no bitmap is displayed in the dialog.
   #
-  # @param default [nil Fixnum]
+  # @param default [nil Integer]
   #   If this is an integer greater than or equal to zero, then it gives the
   #   index of the button that is to be the default button for the dialog (0 for
   #   the leftmost button, and so on).
@@ -48,7 +49,7 @@ module Tk
   #     'questhead', 0, 'Yes', 'No', "I'm not sure")
   def dialog(window, title, text, bitmap, default, *answers)
     answer = Tk.execute(:tk_dialog,
-      window, title, text, bitmap, default, *answers).to_i
+                        window, title, text, bitmap, default, *answers).to_i
     return answer unless answer == -1
   end
 end

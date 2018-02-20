@@ -1,18 +1,19 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require_relative '../lib/ffi-tk'
 
 Tk.init
 
-Tk.root.bind('Control-c'){|event| p event }
-Tk.root.bind('Control-q'){|event| exit }
+Tk.root.bind('Control-c') { |event| p event }
+Tk.root.bind('Control-q') { |_event| exit }
 
-hello = Tk::Button.new('.', text: 'Push me'){
+hello = Tk::Button.new('.', text: 'Push me') do
   Tk.message_box(message: 'Hello, World!')
-}.pack
+end.pack
 
 button = Tk::Button.new('.', text: 'Destroy me!').pack
-button.bind('Enter'){|event| button.destroy }
+button.bind('Enter') { |_event| button.destroy }
 
 text = Tk::Text.new('.')
 text.insert 'insert', 'Hello, World!'

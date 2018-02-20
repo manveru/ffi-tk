@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Canvas
     # Items of type oval appear as circular or oval regions on the display.

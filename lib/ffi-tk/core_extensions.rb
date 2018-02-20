@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Already converted statement, don't process again
   class TclString < String
@@ -11,7 +12,7 @@ module Tk
   module CoreExtensions
     module Array
       def to_tcl
-        TclString.new('{' << map(&:to_tcl).compact.join(' ') << '}')
+        TclString.new("{#{map(&:to_tcl).compact.join(' ')}}")
       end
 
       # try to convert to a Hash.
@@ -92,13 +93,13 @@ module Tk
           pattern = "(?#{embed.join})#{source}"
         end
 
-        TclString.new('{' << pattern.gsub(/([^\\])(?=[{}])/, '\1\\\\\2') << '}')
+        TclString.new(%({#{pattern.gsub(/([^\\])(?=[{}])/, '\1\\\\\2')}}))
       end
     end
 
     module String
       def to_tcl
-        TclString.new('"' << gsub(/[\[\]{}$"\\]/, '\\\\\&') << '"')
+        TclString.new(%("#{gsub(/[\[\]{}$"\\]/, '\\\\\&')}"))
       end
 
       def to_tcl_option
@@ -128,7 +129,7 @@ module Tk
       end
     end
 
-    module Fixnum
+    module Integer
       def tcl_to_ruby(option, hints)
         name = option.sub(/^-/, '').to_sym
 

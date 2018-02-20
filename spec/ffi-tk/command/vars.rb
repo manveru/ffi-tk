@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -27,6 +28,6 @@ describe 'tkvars' do
   end
 
   it 'does not have text_relayout set' do
-    lambda{ Tk.text_relayout }.should.raise(NameError)
+    -> { Tk.text_relayout }.should.raise(NameError)
   end
 end

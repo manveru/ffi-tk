@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Button do
@@ -5,10 +6,10 @@ describe Tk::Button do
     ran = false
     Tk.callbacks.size.should == 0
 
-    button = Tk::Button.new{
+    button = Tk::Button.new do
       ran = true
       button.destroy
-    }
+    end
     button.invoke
 
     Tk.callbacks.size.should == 0

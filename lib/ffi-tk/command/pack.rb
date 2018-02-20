@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Geometry manager that packs around edges of cavity
   #
@@ -33,7 +34,7 @@ module Tk
     def self.info(slave)
       info = Tk.execute('pack', 'info', slave)
 
-      array = info.split.each_slice(2).map{|key, value|
+      array = info.map do |key, value|
         case key = key[1..-1].to_sym
         when :expand
           [key, Tk.boolean(value)]
@@ -44,9 +45,9 @@ module Tk
         when :after, :anchor, :before, :in
           [key, value]
         else
-          raise "Unknown info pair: %p => %p" % [key, value]
+          raise 'Unknown info pair: %p => %p' % [key, value]
         end
-      }
+      end
 
       Hash[array]
     end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'ffi-tk'
 
 Tk.init
@@ -22,11 +23,11 @@ Tk::Label.new(Tk.root, text: desc).pack
 
 @exception = Tk::Label.new(Tk.root).pack
 @entry = Tk::Entry.new(Tk.root).pack
-@entry.bind('<Return>'){
+@entry.bind('<Return>') do
   change_palette(@entry.get)
   @entry.delete(0, :end)
-}
+end
 
-Tk::Button.new(Tk.root, text: 'Exit'){ exit }.pack
+Tk::Button.new(Tk.root, text: 'Exit') { exit }.pack
 
 Tk.mainloop

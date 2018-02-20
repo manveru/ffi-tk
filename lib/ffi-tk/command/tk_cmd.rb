@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Manipulate Tk internal state
 module Tk
   module TkCmd

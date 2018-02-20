@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Event
     Data = Struct.new(
@@ -10,41 +11,41 @@ module Tk
 
     class Data
       PROPERTIES = [
-        ['%#', :Integer, :serial            ],
-        ['%b', :Integer, :button            ],
-        ['%c', :Integer, :count             ],
-        ['%d', :String,  :detail            ],
-        ['%f', :String,  :focus             ],
-        ['%h', :Integer, :height            ],
-        ['%i', :String,  :window            ],
-        ['%k', :Integer, :keycode           ],
-        ['%m', :String,  :mode              ],
-        ['%o', :String,  :override_redirect ],
-        ['%p', :String,  :place             ],
-        ['%s', :String,  :state             ],
-        ['%t', :Integer, :time              ],
-        ['%w', :Integer, :width             ],
-        ['%x', :Integer, :x                 ],
-        ['%y', :Integer, :y                 ],
-        ['%A', :String,  :unicode           ],
-        ['%B', :Integer, :border_width      ],
-        ['%D', :Integer, :mousewheel_delta  ],
-        ['%E', :Integer, :send_event        ],
-        ['%K', :String,  :keysym            ],
-        ['%N', :Integer, :keysym_number     ],
-        ['%P', :String,  :property          ],
-        ['%R', :String,  :root              ],
-        ['%S', :String,  :subwindow         ],
-        ['%T', :Integer, :type              ],
-        ['%W', :String,  :window_path       ],
-        ['%X', :Integer, :x_root            ],
-        ['%Y', :Integer, :y_root            ],
-      ]
+        ['%#', :Integer, :serial],
+        ['%b', :Integer, :button],
+        ['%c', :Integer, :count],
+        ['%d', :String,  :detail],
+        ['%f', :String,  :focus],
+        ['%h', :Integer, :height],
+        ['%i', :String,  :window],
+        ['%k', :Integer, :keycode],
+        ['%m', :String,  :mode],
+        ['%o', :String,  :override_redirect],
+        ['%p', :String,  :place],
+        ['%s', :String,  :state],
+        ['%t', :Integer, :time],
+        ['%w', :Integer, :width],
+        ['%x', :Integer, :x],
+        ['%y', :Integer, :y],
+        ['%A', :String,  :unicode],
+        ['%B', :Integer, :border_width],
+        ['%D', :Integer, :mousewheel_delta],
+        ['%E', :Integer, :send_event],
+        ['%K', :String,  :keysym],
+        ['%N', :Integer, :keysym_number],
+        ['%P', :String,  :property],
+        ['%R', :String,  :root],
+        ['%S', :String,  :subwindow],
+        ['%T', :Integer, :type],
+        ['%W', :String,  :window_path],
+        ['%X', :Integer, :x_root],
+        ['%Y', :Integer, :y_root]
+      ].freeze
 
       def initialize(id, pattern, *properties)
         super id, pattern
 
-        PROPERTIES.each do |code, conv, name|
+        PROPERTIES.each do |_code, conv, name|
           value = properties.shift
           converted = String(value)
           next if converted == '??'

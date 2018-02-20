@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'ffi-tk'
 
 Tk.init
@@ -5,7 +6,7 @@ Tk.init
 label = Tk::Label.new(Tk.root, text: 'Press any key to open the dialog')
 label.pack
 
-Tk.root.bind('<Key>'){
+Tk.root.bind('<Key>') do
   dir = Tk.choose_directory(initialdir: '~', title: 'Choose a directory')
 
   label.configure text: 'Press any key to close the window'
@@ -16,7 +17,7 @@ Tk.root.bind('<Key>'){
     Tk::Label.new(Tk.root, text: 'No directory selected').pack
   end
 
-  Tk.root.bind('<Key>'){ exit }
-}
+  Tk.root.bind('<Key>') { exit }
+end
 
 Tk.mainloop

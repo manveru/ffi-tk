@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     def self.style(style, parent_name)
@@ -6,7 +7,7 @@ module Tk
 
     module Style
       extend Tk::Cget, Tk::Configure
-      TkkStyleCmd = 'ttk::style'.freeze
+      TkkStyleCmd = 'ttk::style'
 
       # Returns a list of all known themes.
       def self.theme_names
@@ -26,10 +27,10 @@ module Tk
         return unless block
         raise ArgumentError unless theme_names.include? name
 
-        id = Tk.uuid(:proc){|uuid| Tk.callbacks[uuid] = block }
+        id = Tk.uuid(:proc) { |uuid| Tk.callbacks[uuid] = block }
         cmd = "{ RubyFFI::callback #{id} }"
         Tk.eval "ttk::style theme settings #{name} #{cmd}"
-        #Tk.execute_only('ttk::style', 'theme', 'settings', name, cmd)
+        # Tk.execute_only('ttk::style', 'theme', 'settings', name, cmd)
         Tk.callbacks.delete(id) if id
         name
       end
@@ -38,19 +39,18 @@ module Tk
       # If -parent is specified, the new theme will inherit styles, elements, and
       # layouts from the parent theme basedon. If -settings is present, script is
       # evaluated in the context of the new theme as per ttk::style theme settings.
-      def self.theme_create(name, options={}, &block)
+      def self.theme_create(name, options = {}, &block)
         raise ArgumentError if theme_names.include? name
         options = options.to_tcl_options
 
         if block
-          id = Tk.uuid(:proc){|uuid| Tk.callbacks[uuid] = block }
+          id = Tk.uuid(:proc) { |uuid| Tk.callbacks[uuid] = block }
           options << " -settings { RubyFFI::callback #{id} }"
         end
         res = Tk.execute_only('ttk::style', 'theme', 'create', name, options)
         Tk.callbacks.delete(id) if id
         res
       end
-
 
       # Returns the list of elements defined in the current theme.
       def self.element_names
@@ -66,14 +66,11 @@ module Tk
       # Creates a new element in the current theme of type type. The only
       # built-in element type is image (see ttk_image(n)), although themes
       # may define other element types (see Ttk_RegisterElementFactory).
-      def self.element_create(name, type, args=nil, options={})
+      def self.element_create(name, type, args = nil, options = {})
         if type == 'image' || type == :image
           Tk.execute_only('ttk::style', 'element', 'create', name, 'image', args, options.to_tcl_options)
-        else
-          #Tk.execute_only('ttk::style', 'element', 'create', name, type)
         end
       end
-
 
       # Define the widget layout for style style. See LAYOUTS below for the format
       # of layoutSpec. If layoutSpec is omitted, return the layout specification
@@ -85,19 +82,21 @@ module Tk
       # Sets dynamic values of the specified option(s) in style.
       # Each statespec / value pair is examined in order; the value
       # corresponding to the first matching statespec is used.
-      def self.map(style, options={})
-        style.kind_of?(Hash) && (options, style = style, nil)
+      def self.map(style, options = {})
+        style.is_a?(Hash) && (options = style
+                              style = nil)
         style = '.' unless style
 
-        Tk.execute_only('ttk::style', 'map', style, options.to_tcl_options )
+        Tk.execute_only('ttk::style', 'map', style, options.to_tcl_options)
       end
 
       # Sets the default value of the specified option(s) in style.
-      def self.configure(style=nil, options={})
-        style.kind_of?(Hash) && (keys, style = style, nil)
+      def self.configure(style = nil, options = {})
+        style.is_a?(Hash) && (keys = style
+                              style = nil)
         style = '.' unless style
 
-        Tk.execute_only('ttk::style','configure', style, options.to_tcl_options)
+        Tk.execute_only('ttk::style', 'configure', style, options.to_tcl_options)
       end
 
       # Returns the value specified for -option in style style in state
@@ -106,7 +105,7 @@ module Tk
       # bits off (the "normal" state). If the default argument is present,
       # it is used as a fallback value in case no specification
       # for -option is found.
-      def self.lookup(style, option, state=Tk::None, default=Tk::None)
+      def self.lookup(style, option, state = Tk::None, default = Tk::None)
         Tk.execute('ttk::style', 'lookup', style, option.to_tcl_option, state, default).to_s
       end
     end

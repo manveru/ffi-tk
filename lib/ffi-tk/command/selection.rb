@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # This command provides a Tcl interface to the X selection mechanism and
   # implements the full selection functionality described in the X Inter-Client
@@ -7,11 +8,11 @@ module Tk
   # clipboard command may also be used.
   module Selection
     def selection_clear(options = {})
-      Selection.clear({displayof: self}.merge(options))
+      Selection.clear({ displayof: self }.merge(options))
     end
 
     def selection_get(options = {})
-      Selection.get({displayof: self}.merge(options))
+      Selection.get({ displayof: self }.merge(options))
     end
 
     def selection_handle(options = {}, &command)
@@ -120,7 +121,7 @@ module Tk
 
         if cmd = (options[:command] || command)
           command = register_command(:selection_own, &cmd)
-          Tk.execute(:selection, :own, {command: command}.merge(options).to_tcl_options)
+          Tk.execute(:selection, :own, { command: command }.merge(options).to_tcl_options)
         else
           Tk.execute(:selection, :own, options.to_tcl_options)
         end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Utility methods for managing the input focus.
   module Focus
@@ -17,7 +18,7 @@ module Tk
         when :lastfor
           Tk.execute('focus', '-lastfor', window).to_s
         else
-          raise ArgumentError, "option must be one of: None, :displayof, :force, :lastfor"
+          raise ArgumentError, 'option must be one of: None, :displayof, :force, :lastfor'
         end
       end
     end

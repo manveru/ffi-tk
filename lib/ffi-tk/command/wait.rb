@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Wait for variable to change or window to be destroyed
   #

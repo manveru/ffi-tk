@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module FFI
   module Tcl
     class Interp < PrettyStruct
@@ -11,7 +12,7 @@ module FFI
       EVAL_DIRECT = 0x40000
 
       def inspect
-        "Interp"
+        'Interp'
       end
 
       def guess_result
@@ -31,7 +32,7 @@ module FFI
             Tcl.new_boolean_obj(0)
           when String
             Tcl.new_string_obj(ruby_obj, ruby_obj.bytesize)
-          when Fixnum
+          when Integer
             Tcl.new_int_obj(ruby_obj)
           when Exception
             string = [ruby_obj.message, *ruby_obj.backtrace].join("\n")
@@ -79,16 +80,18 @@ module FFI
       def eval(string)
         if $DEBUG
           if string =~ /\n/
-            puts "eval: %p" % [string]
+            puts "\neval: %p" % [string]
           else
-            puts "eval: %s" % [string]
+            puts "\neval: %s" % [string]
           end
         end
 
         code = Tcl.eval_ex(self, string, string.bytesize, EVAL_DIRECT)
+        puts 'eval= %p' % [code] if $DEBUG
         return true if code == 0
 
         message = guess_result.to_s
+        puts 'eval= %p' % [message] if $DEBUG
 
         if message.empty?
           raise 'Failure during eval of: %p' % [string]

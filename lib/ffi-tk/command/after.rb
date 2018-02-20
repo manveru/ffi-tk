@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module After
     module_function
@@ -7,11 +8,11 @@ module Tk
         id = nil
         block = Proc.new
 
-        wrap = lambda{|*args|
+        wrap = lambda do |*_args|
           block.call
           Tk.unregister_proc(id)
           true
-        }
+        end
 
         id, command = Tk.register_proc(wrap, 'after_ms')
         Tk.execute_only(:after, ms, command)
@@ -20,14 +21,14 @@ module Tk
       end
     end
 
-    def idle(&block)
+    def idle
       id = nil
-    
-      wrap = lambda{|*args|
-        block.call
+
+      wrap = lambda do |*_args|
+        yield
         Tk.unregister_proc(id)
         true
-      }
+      end
 
       id, command = Tk.register_proc(wrap, 'after_idle')
       Tk.execute_only(:after, :idle, command)

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     # Separator widget displays a horizontal or vertical separator bar.
     class Separator < Widget
-      def self.tk_command; 'ttk::separator'; end
+      def self.tk_command
+        'ttk::separator'
+      end
       include TileWidget, Cget, Configure
 
       # Specifies the orientation of the separator.

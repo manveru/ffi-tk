@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::Progressbar do
@@ -75,4 +76,3 @@ describe Tk::Tile::Progressbar do
     pbar.orient.should == :vertical
   end
 end
-

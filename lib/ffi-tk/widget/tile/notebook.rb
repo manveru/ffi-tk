@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     # Tk::Tile::Notebook widget manages a collection of windows
@@ -5,7 +6,9 @@ module Tk
     # is associated with a tab, which the user may select to
     # change the currently-displayed window.
     class Notebook < Widget
-      def self.tk_command; 'ttk::notebook'; end
+      def self.tk_command
+        'ttk::notebook'
+      end
       include TileWidget
 
       def initialize(parent = Tk.root, options = {})

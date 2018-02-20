@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -13,7 +14,7 @@ describe Tk::Tile::Notebook do
     f0 = Tk::Tile::Frame.new
     nb = Tk::Tile::Notebook.new
 
-    nb.add( f0, text: 'first tab' ).should == true
+    nb.add(f0, text: 'first tab').should == true
   end
 
   it 'selects the specified tab' do
@@ -21,11 +22,13 @@ describe Tk::Tile::Notebook do
     f1 = Tk::Tile::Frame.new
 
     nb = Tk::Tile::Notebook.new
-    nb.add( f0, text: 'first tab' ).should == true
-    nb.add( f1, text: 'second tab' ).should == true
+    nb.add(f0, text: 'first tab').should == true
+    nb.add(f1, text: 'second tab').should == true
 
-    nb.select(f1).should == f1.tk_pathname
-    nb.select(f0).should == f0.tk_pathname
+    nb.select(f1).should.true?
+    nb.select.should == f1.tk_pathname
+    nb.select(f0).should.true?
+    nb.select.should == f0.tk_pathname
   end
 
   it 'return index of tabs' do
@@ -33,8 +36,8 @@ describe Tk::Tile::Notebook do
     f1 = Tk::Tile::Frame.new
 
     nb = Tk::Tile::Notebook.new
-    nb.add( f0, text: 'first tab' ).should == true
-    nb.add( f1, text: 'second tab' ).should == true
+    nb.add(f0, text: 'first tab').should == true
+    nb.add(f1, text: 'second tab').should == true
 
     nb.index(f1).should == 1
     nb.index(f0).should == 0
@@ -47,8 +50,8 @@ describe Tk::Tile::Notebook do
     nb = Tk::Tile::Notebook.new
 
     nb.tabs.should == []
-    nb.add( f2, text: 'first tab' ).should == true
-    nb.tabs.should == [ f2.tk_pathname ]
+    nb.add(f2, text: 'first tab').should == true
+    nb.tabs.should == [f2.tk_pathname]
   end
 
   it 'inserts a new tab at position' do
@@ -56,19 +59,19 @@ describe Tk::Tile::Notebook do
     f1 = Tk::Tile::Frame.new
     nb = Tk::Tile::Notebook.new
 
-    nb.add( f0, text: 'first tab' ).should == true
-    nb.insert( 0, f1, text: 'first tab' ).should == true
+    nb.add(f0, text: 'first tab').should == true
+    nb.insert(0, f1, text: 'first tab').should == true
 
-    nb.tabs.should == [ f1.tk_pathname, f0.tk_pathname ]
+    nb.tabs.should == [f1.tk_pathname, f0.tk_pathname]
   end
 
   it 'set tab options' do
     f2 = Tk::Tile::Frame.new
     nb = Tk::Tile::Notebook.new
 
-    nb.add(f2, text: 'first tab' ).should == true
+    nb.add(f2, text: 'first tab').should == true
 
-    nb.tab(f2, state: :disabled ).should == true
+    nb.tab(f2, state: :disabled).should == true
     nb.tab(f2).should.include 'disabled'
   end
 
@@ -76,21 +79,21 @@ describe Tk::Tile::Notebook do
     f2 = Tk::Tile::Frame.new
     nb = Tk::Tile::Notebook.new
 
-    nb.add( f2, text: 'first tab' ).should == true
-    nb.tabs.should == [ f2.tk_pathname ]
+    nb.add(f2, text: 'first tab').should == true
+    nb.tabs.should == [f2.tk_pathname]
 
     nb.forget(f2).should == true
-    nb.tabs.should == [ ]
+    nb.tabs.should == []
   end
 
   it 'hides a specified tab' do
     f2 = Tk::Tile::Frame.new
     nb = Tk::Tile::Notebook.new
 
-    nb.add( f2, text: 'first tab' ).should == true
+    nb.add(f2, text: 'first tab').should == true
 
     nb.hide(f2).should == true
-    nb.tabs.should == [ f2.tk_pathname ]
+    nb.tabs.should == [f2.tk_pathname]
   end
 
   it 'enables traversal' do
@@ -100,4 +103,3 @@ describe Tk::Tile::Notebook do
     Tk::Tile::Notebook.enable_traversal(nb).should == true
   end
 end
-

@@ -1,7 +1,10 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     class Sizegrip < Tk::Widget
-      def self.tk_command; 'ttk::sizegrip'; end
+      def self.tk_command
+        'ttk::sizegrip'
+      end
       include TileWidget, Cget, Configure
 
       # # USAGE

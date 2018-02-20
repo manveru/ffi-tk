@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Canvas widgets implement structured graphics.
   #
@@ -11,20 +12,22 @@ module Tk
   # mouse cursor over an item.
   # This means that items in a canvas can have behaviors defined.
   class Canvas < Widget
-    require "ffi-tk/widget/canvas/item.rb"
-    require "ffi-tk/widget/canvas/arc.rb"
-    require "ffi-tk/widget/canvas/bitmap.rb"
-    require "ffi-tk/widget/canvas/image.rb"
-    require "ffi-tk/widget/canvas/line.rb"
-    require "ffi-tk/widget/canvas/oval.rb"
-    require "ffi-tk/widget/canvas/polygon.rb"
-    require "ffi-tk/widget/canvas/rectangle.rb"
-    require "ffi-tk/widget/canvas/text.rb"
-    require "ffi-tk/widget/canvas/window.rb"
+    require 'ffi-tk/widget/canvas/item.rb'
+    require 'ffi-tk/widget/canvas/arc.rb'
+    require 'ffi-tk/widget/canvas/bitmap.rb'
+    require 'ffi-tk/widget/canvas/image.rb'
+    require 'ffi-tk/widget/canvas/line.rb'
+    require 'ffi-tk/widget/canvas/oval.rb'
+    require 'ffi-tk/widget/canvas/polygon.rb'
+    require 'ffi-tk/widget/canvas/rectangle.rb'
+    require 'ffi-tk/widget/canvas/text.rb'
+    require 'ffi-tk/widget/canvas/window.rb'
 
     include Cget, Configure
 
-    def self.tk_command; 'canvas'; end
+    def self.tk_command
+      'canvas'
+    end
 
     # For each item that meets the constraints specified by +search_spec+ and
     # the +args+, add +tag+ to the list of tags associated with the item if it
@@ -169,12 +172,12 @@ module Tk
         end
       end
 
-      name = "#{tag_or_id}".scan(/\w+/).join('_')
+      name = tag_or_id.to_s.scan(/\w+/).join('_')
       @events ||= {}
       # unregister_event(name)
 
       Event::Handler.register_custom(script) do |id|
-        code = "%s bind %s %s { ::RubyFFI::event %d %s %s }"
+        code = '%s bind %s %s { ::RubyFFI::event %d %s %s }'
         props = Event::Data::PROPERTIES.transpose[0].join(' ')
         tcl = code % [tk_pathname, tag_or_id, sequence, id, sequence, props]
         Tk.interp.eval(tcl)
@@ -250,7 +253,7 @@ module Tk
     # Line items support coordinate indexing operations using the methods
     # [dchars], [index], and [insert].
     def create_line(*arguments)
-      options, coords = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
+      options, coords = arguments.partition { |arg| arg.respond_to?(:to_tcl_options) }
       create(:line, coords, options.first)
     end
 
@@ -264,7 +267,7 @@ module Tk
     # display. Polygon items support coordinate indexing operations using the
     # methods [dchars], [index], or [insert].
     def create_polygon(*arguments)
-      options, coords = arguments.partition{|arg| arg.respond_to?(:to_tcl_options) }
+      options, coords = arguments.partition { |arg| arg.respond_to?(:to_tcl_options) }
       create(:polygon, coords, options.first)
     end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'ffi-tk/ffi/tcl/obj'
 require 'ffi-tk/ffi/tcl/interp'
 require 'ffi-tk/ffi/tcl/cmd_proc'
@@ -12,37 +13,47 @@ module FFI
     attach_function :Tcl_AppendAllObjTypes, [:pointer, :pointer], :int
     attach_function :Tcl_CreateInterp, [], :pointer
     attach_function :Tcl_DeleteInterp, [:pointer], :void
-    attach_function :Tcl_DoOneEvent, [flags = :int], :int
-    attach_function :Tcl_EvalEx, [:pointer, script = :string, length = :int, flags = :int], :int
+    attach_function :Tcl_DoOneEvent, [:int], :int
+    attach_function :Tcl_EvalEx, [:pointer, :string, :int, :int], :int
     attach_function :Tcl_GetBoolean, [:pointer, :string, :pointer], :int
-    attach_function :Tcl_GetBooleanFromObj, [:pointer, :pointer, boolean = :pointer], :int
+    attach_function :Tcl_GetBooleanFromObj, [:pointer, :pointer, :pointer], :int
     attach_function :Tcl_GetDoubleFromObj, [:pointer, :pointer, :pointer], :int
-    attach_function :Tcl_GetIntFromObj, [:pointer, :pointer, int = :pointer], :int
+    attach_function :Tcl_GetIntFromObj, [:pointer, :pointer, :pointer], :int
     attach_function :Tcl_GetObjResult, [:pointer], :pointer
     attach_function :Tcl_GetObjType, [:string], :pointer
     attach_function :Tcl_GetString, [:pointer], :string
-    attach_function :Tcl_GetStringFromObj, [:pointer, length = :pointer], :string
+    attach_function :Tcl_GetStringFromObj, [:pointer, :pointer], :string
     attach_function :Tcl_GetStringResult, [:pointer], :string
     attach_function :Tcl_GetUnicode, [:pointer], :string
     attach_function :Tcl_Init, [:pointer], :int
-    attach_function :Tcl_ListObjGetElements, [:pointer, :pointer, count = :pointer, list = :pointer], :int
-    attach_function :Tcl_ListObjIndex, [:pointer, list = :pointer, index = :int, result = :pointer], :int
-    attach_function :Tcl_ListObjLength, [:pointer, list = :pointer, int = :pointer], :int
+    attach_function :Tcl_ListObjGetElements, [:pointer, :pointer, :pointer, :pointer], :int
+    attach_function :Tcl_ListObjIndex, [:pointer, :pointer, :int, :pointer], :int
+    attach_function :Tcl_ListObjLength, [:pointer, :pointer, :pointer], :int
     attach_function :Tcl_NewBooleanObj, [:int], :pointer
     attach_function :Tcl_NewIntObj, [:int], :pointer
-    attach_function :Tcl_NewListObj, [count = :int, values = :pointer], :pointer
+    attach_function :Tcl_NewListObj, [:int, :pointer], :pointer
     attach_function :Tcl_NewStringObj, [:string, :int], :pointer
+    attach_function :Tcl_NewDictObj, [], :pointer
     attach_function :Tcl_ObjGetVar2, [:pointer, :pointer, :pointer, :int], :pointer
     attach_function :Tcl_ObjSetVar2, [:pointer, :pointer, :pointer, :pointer, :int], :pointer
     attach_function :Tcl_ParseVar, [:pointer, :pointer, :pointer], :pointer
     attach_function :Tcl_SetObjResult, [:pointer, :pointer], :void
     attach_function :Tcl_WaitForEvent, [:pointer], :int
     attach_function :Tcl_SetMaxBlockTime, [:pointer], :void
+    attach_function :Tcl_DictObjGet, [:pointer, :pointer, :pointer, :pointer], :int
+    attach_function :Tcl_DictObjPut, [:pointer, :pointer, :pointer, :pointer], :int
+    attach_function :Tcl_DictObjRemove, [:pointer, :pointer, :pointer], :int
+    attach_function :Tcl_DictObjSize, [:pointer, :pointer, :pointer], :int
+    attach_function :Tcl_DictObjFirst, [:pointer, :pointer, :pointer, :pointer, :pointer, :pointer], :int
+    attach_function :Tcl_DictObjNext, [:pointer, :pointer, :pointer, :pointer], :void
+    attach_function :Tcl_DictObjDone, [:pointer], :void
+    attach_function :Tcl_DictObjPutKeyList, [:pointer, :pointer, :int, :pointer, :pointer], :int
+    attach_function :Tcl_DictObjRemoveKeyList, [:pointer, :pointer, :int, :pointer], :int
 
     callback :obj_cmd_proc, [:int, :pointer, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
     attach_function :Tcl_CreateObjCommand, [
-      :pointer, name = :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
+      :pointer, :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
 
     module_function
 

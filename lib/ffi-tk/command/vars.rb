@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   @library       = Variable.new('tk_library')
 

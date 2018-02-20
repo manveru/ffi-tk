@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Geometry manager that arranges widgets in a grid
   #
@@ -37,7 +38,7 @@ module Tk
     #   Bbox.bbox('.', 0, 0) # top left cell
     #   Bbox.bbox('.', 1, 1) # cell in second column and row
     #   Bbox.bbox('.', 0, 0, 1, 1) # cells from top left to second col/row
-    def self.bbox(master, col1 = None, row1 = None, col2 = None, row2 = None)
+    def self.bbox(master, _col1 = None, row1 = None, _col2 = None, row2 = None)
       bbox = Tk.execute('grid', 'bbox', master, column1, row1, column2, row2)
       bbox.map(&:to_i)
     end
@@ -80,7 +81,7 @@ module Tk
     # The characters -, x and ^, can be specified instead of a window name to
     # alter the default location of a slave.
     def self.configure(*arguments)
-      options, slaves = arguments.partition{|arg| arg.respond_to?(:to_tcl_options?) }
+      options, slaves = arguments.partition { |arg| arg.respond_to?(:to_tcl_options?) }
       options = options.first
       Tk.execute('grid', 'configure', *slaves, options.to_tcl_options?)
     end
@@ -104,12 +105,12 @@ module Tk
       hash = {}
 
       info.scan(/(?:-(\w+))\s+([^-][\S]*)/) do
-        key = $1.to_sym
+        key = Regexp.last_match(1).to_sym
         case key
         when :column, :row, :columnspan, :rowspan, :ipadx, :ipady, :padx, :pady
-          hash[key] = Integer($2)
+          hash[key] = Integer(Regexp.last_match(2))
         else
-          hash[key] = $2.to_str
+          hash[key] = Regexp.last_match(2).to_str
         end
       end
 
@@ -187,7 +188,7 @@ module Tk
     # returned, most recently manages first.
     # Option can be either -row or -column which causes only the slaves in the
     # row (or column) specified by value to be returned.
-    def self.slaves(master, options = {})
+    def self.slaves(_master, _options = {})
       Tk.execute('grid', 'slaves')
     end
 

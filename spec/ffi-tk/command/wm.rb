@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -14,9 +15,9 @@ describe Tk::WM do
   #  * WM.iconposition
   #  * WM.iconwindow
 
-  describe "WM.aspect" do
+  describe 'WM.aspect' do
     should 'list current attributes' do
-      root.wm_aspect.should == nil
+      root.wm_aspect.should.nil?
     end
 
     should 'set aspect ratio' do
@@ -26,7 +27,7 @@ describe Tk::WM do
 
     should 'remove aspect ratio' do
       root.wm_aspect = nil
-      root.wm_aspect.should == nil
+      root.wm_aspect.should.nil?
     end
   end
 
@@ -56,25 +57,25 @@ describe Tk::WM do
       root.wm_attributes(:fullscreen).should == true
       root.wm_attributes(fullscreen: false)
 
-      # TODO somehow fullscreen doesn't change back, on tk side.
-      #Tk.interp.do_events_until do
+      # TODO: somehow fullscreen doesn't change back, on tk side.
+      # Tk.interp.do_events_until do
       #  root.wm_attributes(:fullscreen) == false
-      #end
+      # end
 
-      #root.wm_attributes(:fullscreen).should == false
+      # root.wm_attributes(:fullscreen).should == false
     end
   end
 
   describe 'WM.client' do
     it 'has empty WM_CLIENT_MACHINE property' do
-      root.wm_client.should == nil
+      root.wm_client.should.nil?
     end
 
     it 'sets WM_CLIENT_MACHINE property' do
       root.wm_client = 'foo'
       root.wm_client.should == 'foo'
       root.wm_client = nil
-      root.wm_client.should == nil
+      root.wm_client.should.nil?
     end
   end
 
@@ -91,14 +92,14 @@ describe Tk::WM do
 
   describe 'WM.command' do
     it 'queries the WM_COMMAND property' do
-      root.wm_command.should == []
+      root.wm_command.should.nil?
     end
 
     it 'sets queries the WM_COMMAND property' do
-      root.wm_command = ['foo', 'bar']
-      root.wm_command.should == ['foo', 'bar']
-      root.wm_command = []
-      root.wm_command.should == []
+      root.wm_command = %w(foo bar)
+      root.wm_command.should == %w(foo bar)
+      root.wm_command = nil
+      root.wm_command.should.nil?
     end
   end
 
@@ -145,18 +146,18 @@ describe Tk::WM do
 
   describe 'WM.grid' do
     it 'queries grid info when no grid is set' do
-      root.wm_grid.should == nil
+      root.wm_grid.should.nil?
     end
 
     it 'sets a grid' do
-      root.wm_grid = [1,1,1,1]
-      root.wm_grid.should == [1,1,1,1]
+      root.wm_grid = [1, 1, 1, 1]
+      root.wm_grid.should == [1, 1, 1, 1]
     end
   end
 
   describe 'WM.group' do
     it 'queries group pathname' do
-      root.wm_group.should == nil
+      root.wm_group.should.nil?
     end
 
     it 'sets group pathname' do
@@ -167,12 +168,12 @@ describe Tk::WM do
 
   describe 'WM.iconbitmap' do
     it 'queries iconbitmap' do
-      root.wm_iconbitmap.should == nil
+      root.wm_iconbitmap.should.nil?
     end
 
     it 'sets iconbitmap' do
-      lambda{ root.wm_iconbitmap = 'some.gif' }.
-        should.raise.message.should =~ /^bitmap "some.gif" not defined/
+      -> { root.wm_iconbitmap = 'some.gif' }
+        .should.raise.message.should =~ /^bitmap "some.gif" not defined/
     end
   end
 

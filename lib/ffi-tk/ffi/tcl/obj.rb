@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module FFI
   module Tcl
     # Nicer introspection and some accessors.
@@ -8,7 +9,7 @@ module FFI
       CODE
 
       def self.layout(*kvs)
-        kvs.each_slice(2) do |key, value|
+        kvs.each_slice(2) do |key, _value|
           eval ACCESSOR_CODE.gsub(/\{(.*?)\}/, '{name}' => key, '{sym}' => ":#{key}")
         end
 
@@ -17,8 +18,8 @@ module FFI
 
       def inspect
         kvs = members.zip(values)
-        kvs.map!{|key, value| "%s=%s" % [key, value.inspect] }
-        "<%s %s>" % [self.class, kvs.join(' ')]
+        kvs.map! { |key, value| '%s=%s' % [key, value.inspect] }
+        '<%s %s>' % [self.class, kvs.join(' ')]
       end
     end
 
@@ -39,7 +40,7 @@ module FFI
       end
 
       def inspect
-        "#<ObjType name=%p>" % [self[:name]]
+        '#<ObjType name=%p>' % [self[:name]]
       end
     end
 
@@ -48,7 +49,7 @@ module FFI
         :refCount,    :int,
         :bytes,       :string,
         :length,      :int,
-        :type,        :pointer,
+        :type,        :pointer
       )
 
       def pretty_type
@@ -56,7 +57,7 @@ module FFI
       end
 
       def inspect
-        "#<Obj bytes=%p type=%p>" % [self[:bytes], pretty_type]
+        '#<Obj bytes=%p type=%p>' % [self[:bytes], pretty_type]
       end
     end
   end

@@ -1,9 +1,12 @@
+# frozen_string_literal: true
 module Tk
   # Create and manipulate checkbutton widgets
   class CheckButton < Button
     include Cget, Configure
 
-    def self.tk_command; 'checkbutton'; end
+    def self.tk_command
+      'checkbutton'
+    end
 
     def initialize(parent = Tk.root, options = None)
       if block_given?

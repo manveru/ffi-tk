@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Manipulate Tk clipboard
   #
@@ -13,7 +14,7 @@ module Tk
     end
 
     def clipboard_append(options = {})
-      Clipboard.append({displayof: self}.merge(options))
+      Clipboard.append({ displayof: self }.merge(options))
     end
 
     def clipboard_get(type = None)
@@ -76,10 +77,10 @@ module Tk
 
       format = format.to_s.upcase if format
 
-      args << "-displayof" << displayof if displayof
-      args << "-format" << format.to_s.upcase if format
-      args << "-type" << type.to_s.upcase if type
-      args << "--" << data.to_s
+      args << '-displayof' << displayof if displayof
+      args << '-format' << format.to_s.upcase if format
+      args << '-type' << type.to_s.upcase if type
+      args << '--' << data.to_s
 
       Tk.execute_only(:clipboard, :append, *args)
     end

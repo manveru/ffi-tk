@@ -1,31 +1,34 @@
+# frozen_string_literal: true
 module Tk
   class TkGeometry < Struct.new(:original, :width, :height, :x, :y)
     def initialize(tcl_string)
-      case tcl_string.to_s
-      when /^\=?(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)$/
-        md = $~
-        self.width, self.height, self.x, self.y =
-          md[:width].to_i, md[:height].to_i, md[:x].to_i, md[:y].to_i
-      when /^\=?(?<width>\d+)x(?<height>\d+)$/
-        md = $~
-        self.width, self.height = md[:width].to_i, md[:height].to_i
-      when /^\=?(?<x>[+-]\d+)(?<y>[+-]\d+)$/
-        md = $~
-        self.x, self.y = md[:x].to_i, md[:y].to_i
+      str = tcl_string.to_s
+
+      if /^\=?(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
+        self.width = Integer(width)
+        self.height = Integer(height)
+        self.x = Integer(x)
+        self.y = Integer(y)
+      elsif /^\=?(?<width>\d+)x(?<height>\d+)$/ =~ str
+        self.width = Integer(width)
+        self.height = Integer(height)
+      elsif /^\=?(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
+        self.x = Integer(x)
+        self.y = Integer(y)
       else
-        raise "Invalid geometry: %p" % [tcl_string]
+        raise 'Invalid geometry: %p' % [tcl_string]
       end
     end
 
     def to_tcl
       if width && height && x && y
-        "=%dx%d%+d%+d" % [width, height, x, y]
+        '=%dx%d%+d%+d' % [width, height, x, y]
       elsif width && height
-        "=%dx%d%" % [width, height]
+        '=%dx%d%' % [width, height]
       elsif x && y
-        "=+d%+d" % [x, y]
+        '=+d%+d' % [x, y]
       else
-        raise "Incomplete geometry: %p" % [self]
+        raise 'Incomplete geometry: %p' % [self]
       end
     end
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::CheckButton do
@@ -21,7 +22,7 @@ describe Tk::CheckButton do
   it 'assigns a command block on initialize' do
     toggled = false
     value = Tk::Variable.new('checkbutton_value')
-    cb = Tk::CheckButton.new(variable: value){ toggled = !toggled }
+    cb = Tk::CheckButton.new(variable: value) { toggled = !toggled }
     cb.pack
     cb.focus
 
@@ -30,15 +31,15 @@ describe Tk::CheckButton do
     Tk::Wait.visibility(cb)
 
     Tk::Event.generate(cb, '<1>')
-    Tk.interp.do_events_until{ toggled }
+    Tk.interp.do_events_until { toggled }
     toggled.should == true
 
     Tk::Event.generate(cb, '<1>')
-    Tk.interp.do_events_until{ !toggled }
+    Tk.interp.do_events_until { !toggled }
     toggled.should == false
 
     Tk::Event.generate(cb, '<1>')
-    Tk.interp.do_events_until{ toggled }
+    Tk.interp.do_events_until { toggled }
     toggled.should == true
   end
 end

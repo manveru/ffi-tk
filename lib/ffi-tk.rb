@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'thread'
 require 'ffi'
 
@@ -22,17 +23,13 @@ module Tk
   TCL_LIBPATH << 'tcl' << 'tcl86' << 'tcl85' << 'tcl8.6' << 'tcl8.5'
   TK_LIBPATH  <<  'tk' <<  'tk86' <<  'tk85' <<  'tk8.6' <<  'tk8.5'
 
+  # In some cases Tk has trouble running, this seems to happen on windows and
+  # OSX/TkAqua mostly.
+  # In these cases please use:
+  #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
+  # before you require 'tk'
   unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
-    if HOST_OS =~ /darwin/
-      # In some cases Tk has trouble running, this seems to happen on windows and
-      # OSX/TkAqua mostly.
-      # In these cases please use:
-      #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
-      # before you require 'tk'
-      RUN_EVENTLOOP_ON_MAIN_THREAD = true
-    else
-      RUN_EVENTLOOP_ON_MAIN_THREAD = false
-    end
+    RUN_EVENTLOOP_ON_MAIN_THREAD = HOST_OS =~ /darwin/
   end
 
   DONT_WAIT     = 1 << 1

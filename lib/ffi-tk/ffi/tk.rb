@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module FFI
   module Tk
     extend FFI::Library
@@ -41,9 +42,9 @@ module FFI
       if ::Tk::RUN_EVENTLOOP_ON_MAIN_THREAD
         XColor.new(Tk_GetColor(interp, Tk_MainWindow(interp), string))
       else
-        Tcl.thread_sender.thread_send{
+        Tcl.thread_sender.thread_send do
           XColor.new(Tk_GetColor(interp, Tk_MainWindow(interp), string))
-        }
+        end
       end
     end
 
@@ -51,7 +52,7 @@ module FFI
       if ::Tk::RUN_EVENTLOOP_ON_MAIN_THREAD
         Tk_MainLoop()
       else
-        Tcl.thread_sender.thread_send{ Tk_MainLoop() }
+        Tcl.thread_sender.thread_send { Tk_MainLoop() }
       end
     end
 
@@ -59,13 +60,13 @@ module FFI
       if ::Tk::RUN_EVENTLOOP_ON_MAIN_THREAD
         if Tk_Init(interp) == 1
           message = Tcl.Tcl_GetStringResult(interp)
-          raise RuntimeError, message
+          raise message
         end
       else
         Tcl.thread_sender.thread_send do
           if Tk_Init(interp) == 1
             message = Tcl.Tcl_GetStringResult(interp)
-            raise RuntimeError, message
+            raise message
           end
         end
       end

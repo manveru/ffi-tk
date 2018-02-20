@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -15,6 +16,6 @@ describe Tk::Pack do
 
   it 'forgets the packing' do
     Tk::Pack.forget(@button)
-    lambda{ Tk::Pack.info(@button) }.should.raise
+    -> { Tk::Pack.info(@button) }.should.raise
   end
 end

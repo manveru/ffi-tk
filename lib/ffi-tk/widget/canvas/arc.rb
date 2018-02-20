@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Canvas
     # Items of type arc appear on the display as arc-shaped regions.

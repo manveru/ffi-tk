@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::Label do
@@ -9,9 +10,8 @@ describe Tk::Tile::Label do
 
   it 'assigns a value' do
     label = Tk::Tile::Label.new
-    label.value.should == nil
+    label.value.should.nil?
     label.value = 'Hello, World!'
     label.value.should == 'Hello, World!'
   end
 end
-

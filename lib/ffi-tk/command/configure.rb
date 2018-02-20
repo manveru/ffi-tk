@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Configure
     # Query or modify the configuration options of the widget.
@@ -31,7 +32,7 @@ module Tk
         elsif argument.respond_to?(:to_tcl_option)
           receiver.execute(*invocation, argument.to_tcl_option)
         else
-          raise ArgumentError, "Invalid argument: %p" % [argument]
+          raise ArgumentError, 'Invalid argument: %p' % [argument]
         end
 
       if result.respond_to?(:tcl_options_to_hash)
@@ -46,24 +47,25 @@ module Tk
     end
 
     def register_command(name, &block)
-      case name
-      when :validatecommand
-        # %d Type of action: 1 for insert, 0 for delete, or -1 for focus, forced
-        #    or textvariable validation.
-        # %i Index of char string to be inserted/deleted, if any, otherwise -1.
-        # %P The value of the entry if the edit is allowed.
-        #    If you are configuring the entry widget to have a new textvariable,
-        #    this will be the value of that textvariable.
-        # %s The current value of entry prior to editing.
-        # %S The text string being inserted/deleted, if any, {} otherwise.
-        # %v The type of validation currently set.
-        # %V The type of validation that triggered the callback (key, focusin,
-        #    focusout, forced).
-        # %W The name of the entry widget.
-        arg = '%d %i %P %s %S %v %V %W'
-      else
-        arg = ''
-      end
+      arg =
+        case name
+        when :validatecommand
+          # %d Type of action: 1 for insert, 0 for delete, or -1 for focus, forced
+          #    or textvariable validation.
+          # %i Index of char string to be inserted/deleted, if any, otherwise -1.
+          # %P The value of the entry if the edit is allowed.
+          #    If you are configuring the entry widget to have a new textvariable,
+          #    this will be the value of that textvariable.
+          # %s The current value of entry prior to editing.
+          # %S The text string being inserted/deleted, if any, {} otherwise.
+          # %v The type of validation currently set.
+          # %V The type of validation that triggered the callback (key, focusin,
+          #    focusout, forced).
+          # %W The name of the entry widget.
+          '%d %i %P %s %S %v %V %W'
+        else
+          ''
+        end
 
       @commands ||= {}
 
@@ -71,7 +73,7 @@ module Tk
       id, command = Tk.register_proc(block, arg)
       @commands[name] = id
 
-      return command
+      command
     end
 
     def unregister_command(name, id = @commands[name])
@@ -82,7 +84,7 @@ module Tk
 
     def unregister_commands
       return unless @commands
-      @commands.each{|name, id| unregister_command(name, id) }
+      @commands.each { |name, id| unregister_command(name, id) }
     end
   end
 end

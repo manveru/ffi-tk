@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::Sizegrip do
@@ -10,4 +11,3 @@ describe Tk::Tile::Sizegrip do
   it 'needs more specs' do
   end
 end
-

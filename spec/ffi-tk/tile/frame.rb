@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -8,13 +9,13 @@ describe Tk::Tile::Frame do
 
   it 'creates a new frame with layout_style' do
     layout_style = [
-      'Button.button', {:children=>[
-        'Button.focus', {:children=>[
-          'Button.padding', {:children=>[
-            'Button.label', {:expand=>true, :sticky=>''}
-          ]}
-        ]}
-      ]}
+      'Button.button', { children: [
+        'Button.focus', { children: [
+          'Button.padding', { children: [
+            'Button.label', { expand: true, sticky: '' }
+          ] }
+        ] }
+      ] }
     ]
 
     frame = Frame.new(Tk.root)
@@ -44,11 +45,11 @@ describe Tk::Tile::Frame do
 
   it 'sets cursor' do
     frame = Frame.new(Tk.root)
-    frame.cget(:cursor).should == nil
+    frame.cget(:cursor).should.nil?
 
-    lambda {
+    lambda do
       Frame.new(Tk.root, cursor: '.s.s.s.s')
-    }.should.raise RuntimeError
+    end.should.raise RuntimeError
   end
 
   it 'sets additional padding to include inside the border' do
@@ -56,10 +57,9 @@ describe Tk::Tile::Frame do
     frame.cget(:padding).should == []
 
     frame = Frame.new(Tk.root, padding: 10)
-    frame.cget(:padding).should == [ '10' ]
+    frame.cget(:padding).should == ['10']
 
     frame.configure padding: [10, 20]
-    frame.cget(:padding).should == ['10', '20']
+    frame.cget(:padding).should == %w(10 20)
   end
 end
-

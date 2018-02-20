@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Communicate with window manager
   # The wm command is used to interact with window managers in order to control
@@ -303,7 +304,7 @@ module Tk
         Tk.execute_only(:wm, :aspect, window, '', '', '', '')
       else
         result = Tk.execute_only(:wm, :aspect, window,
-          min_numer, min_denom, max_numer, max_denom)
+                                 min_numer, min_denom, max_numer, max_denom)
         if result.to_s == ''
           nil
         else
@@ -409,8 +410,8 @@ module Tk
       alpha:      :float,
       topmost:    :boolean,
       zoomed:     :boolean,
-      fullscreen: :boolean,
-    }
+      fullscreen: :boolean
+    }.freeze
 
     # If name is specified, this command stores name (which should be the name
     # of the host on which the application is executing) in window's
@@ -422,7 +423,7 @@ module Tk
     # WM_CLIENT_MACHINE property from window.
     def client(window, name = None)
       if name == None
-        Tk.execute(:wm, :client, window).to_s?
+        Tk.execute(:wm, :client, window)
       else
         Tk.execute_only(:wm, :client, window, name)
       end
@@ -471,7 +472,7 @@ module Tk
     # WM_COMMAND property from window.
     def command(window, value = None)
       if value == None
-        Tk.execute(:wm, :command, window).to_a
+        Tk.execute(:wm, :command, window)&.split
       else
         Tk.execute_only(:wm, :command, window, value)
       end
@@ -594,7 +595,7 @@ module Tk
     # functionality.
     def grid(window, base_width = None, base_height = None, width_inc = None, height_inc = None)
       if base_width == None
-        Tk.execute(:wm, :grid, window).to_a?(&:to_i)
+        Tk.execute(:wm, :grid, window)
       else
         Tk.execute_only(:wm, :grid, window, base_width, base_height, width_inc, height_inc)
       end
@@ -611,13 +612,13 @@ module Tk
     # if window is not part of any group.
     def group(window, pathname = None)
       if None == pathname
-        Tk.execute(:wm, :group, window).to_s?
+        Tk.execute(:wm, :group, window)
       else
         Tk.execute_only(:wm, :group, window, pathname)
       end
     end
 
-    #wm iconbitmap window ?bitmap?
+    # wm iconbitmap window ?bitmap?
     # If bitmap is specified, then it names a bitmap in the standard forms
     # accepted by Tk (see the Tk_GetBitmap manual entry for details).
     # This bitmap is passed to the window manager to be dis? played in window's
@@ -630,7 +631,7 @@ module Tk
     # On the Windows operating system, an additional flag is supported:
     def iconbitmap(window, bitmap = None)
       if None == bitmap
-        Tk.execute(:wm, :iconbitmap, window).to_s?
+        Tk.execute(:wm, :iconbitmap, window)
       else
         Tk.execute_only(:wm, :iconbitmap, window, bitmap)
       end
@@ -780,7 +781,7 @@ module Tk
     # maximum width and height currently in effect.
     # The maximum size defaults to the size of the screen.
     # See the sections on geometry management below for more information.
-    def maxsize(window, width = None, height = None)
+    def maxsize(_window, width = None, height = None)
       if width == None || height == None
         Tk.execute(:wm, :maxsize)
       else

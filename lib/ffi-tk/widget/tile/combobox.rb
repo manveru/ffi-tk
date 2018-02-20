@@ -1,9 +1,12 @@
+# frozen_string_literal: true
 module Tk
   module Tile
     # combobox combines a text field with a pop-down list of values.
     # the user may select the value of the text field from among the values in the list.
     class ComboBox < Widget
-      def self.tk_command; 'ttk::combobox'; end
+      def self.tk_command
+        'ttk::combobox'
+      end
 
       include TileWidget
       include Cget, Configure
@@ -13,7 +16,7 @@ module Tk
       end
 
       def postcommand(&block)
-        configure(:postcommand => block) if block
+        configure(postcommand: block) if block
       end
 
       # Sets the value of the combobox to value.

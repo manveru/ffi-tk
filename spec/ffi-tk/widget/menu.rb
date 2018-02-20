@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Menu do
@@ -7,6 +8,6 @@ describe Tk::Menu do
     instance.tk_parent.should == Tk.root
   end
 
-  #it 'needs more specs' do
-  #end
+  # it 'needs more specs' do
+  # end
 end

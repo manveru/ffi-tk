@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Tk
   module Scrollable
-
     # Returns a list containing two elements.
     # Each element is a real fraction between 0 and 1; together they describe
     # the portion of the document's horizontal span that is visible in the
@@ -69,7 +69,6 @@ module Tk
       end
     end
 
-
     # Adjusts the view in the window so that the pixel given by fraction
     # appears at the top of the top line of the window.
     # Fraction is a fraction between 0 and 1; 0 indicates the first pixel of
@@ -124,8 +123,8 @@ module Tk
       @yscrollbar = sbar
       @yscrollbar.orient :vertical
 
-      self.yscrollcommand {|*arg| @yscrollbar.set(*arg); true }
-      @yscrollbar.command {|action,fraction| self.yview_moveto(fraction) }
+      yscrollcommand { |*arg| @yscrollbar.set(*arg); true }
+      @yscrollbar.command { |_action, fraction| yview_moveto(fraction) }
       @yscrollbar
     end
 
@@ -133,19 +132,17 @@ module Tk
       @xscrollbar = sbar
       @xscrollbar.orient :horizontal
 
-      self.xscrollcommand {|*arg| @xscrollbar.set(*arg); true }
-      @xscrollbar.command {|action,fraction| self.xview_moveto(fraction) }
+      xscrollcommand { |*arg| @xscrollbar.set(*arg); true }
+      @xscrollbar.command { |_action, fraction| xview_moveto(fraction) }
       @xscrollbar
     end
 
     def xscrollcommand(&block)
-      configure(:xscrollcommand => block) if block
+      configure(xscrollcommand: block) if block
     end
 
     def yscrollcommand(&block)
-      configure(:yscrollcommand => block) if block
+      configure(yscrollcommand: block) if block
     end
-
   end
 end
-

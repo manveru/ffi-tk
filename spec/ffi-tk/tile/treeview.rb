@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::Treeview do
@@ -13,16 +14,16 @@ describe Tk::Tile::Treeview do
     list.cget(:takefocus).should == false
     list.cget(:columns).should == []
     list.cget(:displaycolumns).should == ['#all']
-    list.cget(:show).should == ['tree', 'headings']
+    list.cget(:show).should == %w(tree headings)
     list.cget(:selectmode).should == :extended
     list.cget(:height).should == 10
     list.cget(:padding).should == []
-    list.cget(:xscrollcommand).should == nil
-    list.cget(:yscrollcommand).should == nil
+    list.cget(:xscrollcommand).should.nil?
+    list.cget(:yscrollcommand).should.nil?
     list.cget(:takefocus).should == false
-    list.cget(:cursor).should == nil
+    list.cget(:cursor).should.nil?
     list.cget(:style).should == []
-    list.cget(:class).should == nil
+    list.cget(:class).should.nil?
   end
 
   it 'returns the widget state' do
@@ -31,9 +32,9 @@ describe Tk::Tile::Treeview do
 
   it 'executes a block if the state matches the spec' do
     value = nil
-    list.instate('active'){ value = :active }
+    list.instate('active') { value = :active }
     value.should == :active
-    list.instate('!active'){ value = :inactive }
+    list.instate('!active') { value = :inactive }
     value.should == :active
   end
 
@@ -53,7 +54,7 @@ describe Tk::Tile::Treeview do
       image: '',
       values: '',
       open: 0,
-      tags: '',
+      tags: ''
     }
   end
 
@@ -63,7 +64,7 @@ describe Tk::Tile::Treeview do
       minwidth: 20,
       stretch: true,
       anchor: 'w',
-      id: '',
+      id: ''
     }
   end
 
@@ -76,7 +77,7 @@ describe Tk::Tile::Treeview do
   end
 
   it 'gets parent of item' do
-    @item0.parent.id.should == ''
+    @item0.parent.should.nil?
   end
 
   it 'detaches the item' do

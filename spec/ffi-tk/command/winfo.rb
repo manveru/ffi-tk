@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 Tk.init
@@ -34,7 +35,7 @@ describe Tk::Winfo do
   end
 
   should 'not contain any coordinates yet' do
-    root.winfo_containing(0, 0).should == nil
+    root.winfo_containing(0, 0).should.nil?
   end
 
   it 'tells us the depth of the window' do
@@ -84,12 +85,12 @@ describe Tk::Winfo do
     root.winfo_manager.should == 'wm'
   end
 
-  it "knows its name" do
+  it 'knows its name' do
     root.winfo_name.should =~ /^tk/
   end
 
   it 'knows its parent' do
-    root.winfo_parent.should == nil
+    root.winfo_parent.should.nil?
     entry.winfo_parent.should == root.tk_pathname
   end
 
@@ -98,11 +99,11 @@ describe Tk::Winfo do
   end
 
   it 'knows location of pointer x coordinate' do
-    root.winfo_pointerx.class.should == Fixnum
+    root.winfo_pointerx.class.should == Integer
   end
 
   it 'knows location of pointer y coordinate' do
-    root.winfo_pointery.class.should == Fixnum
+    root.winfo_pointery.class.should == Integer
   end
 
   # NOTE: hold still while the specs are running ;)
@@ -119,9 +120,9 @@ describe Tk::Winfo do
   end
 
   it 'gives r,g,b values of a color' do
-    root.winfo_rgb('red').should   == [65535, 0, 0]
-    root.winfo_rgb('green').should == [0, 65535, 0]
-    root.winfo_rgb('blue').should  == [0, 0, 65535]
+    root.winfo_rgb('red').should   == [65_535, 0, 0]
+    root.winfo_rgb('green').should == [0, 32_911, 0]
+    root.winfo_rgb('blue').should  == [0, 0, 65_535]
   end
 
   it 'knows x coordinate of root window' do
@@ -194,7 +195,6 @@ describe Tk::Winfo do
     root.winfo_visualsavailable(:directcolor).should.not.be.empty
   end
 
-
   it 'knows the height of the virtual root window' do
     root.winfo_vrootheight.should >= 200
   end
@@ -223,7 +223,7 @@ describe Tk::Winfo do
     root.winfo_y.should == 0
   end
 
-  # TODO check real screen values? (xrandr only)
+  # TODO: check real screen values? (xrandr only)
   # For now it checks for a minimum of 320 x 200
   #
   # matcher = /Screen (.+?)\: (.+), current (.+) x (.+), /

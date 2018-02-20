@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Geometry manager for fixed or rubber-sheet placement
   #
@@ -17,7 +18,7 @@ module Tk
     # +window+'s geometry is managed.
     # Option may have any of the values accepted by [Place.configure].
     def self.place(window, options = {})
-      args = options.map{|k,v| ["-#{k}", v] }.flatten
+      args = options.map { |k, v| ["-#{k}", v] }.flatten
       Tk.execute_only('place', window, *args)
     end
 
@@ -42,7 +43,7 @@ module Tk
     def self.info(window)
       info = Tk.execute('place', 'info', window).to_s
 
-      array = info.split.each_slice(2).map{|key, value|
+      array = info.split.each_slice(2).map do |key, value|
         case key = key[1..-1].to_sym
         when :anchor, :in
           [key, value]
@@ -53,9 +54,9 @@ module Tk
         when :relheight, :relwidth, :relx, :rely
           [key, value.to_f]
         else
-          raise "Unknown info pair: %p => %p" % [key, value]
+          raise 'Unknown info pair: %p => %p' % [key, value]
         end
-      }
+      end
 
       Hash[array]
     end

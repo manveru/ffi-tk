@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # A label is a widget that displays a textual string, bitmap or image.
   #
@@ -13,7 +14,9 @@ module Tk
   class Label < Widget
     include Cget, Configure
 
-    def self.tk_command; 'label'; end
+    def self.tk_command
+      'label'
+    end
 
     def value=(string)
       configure(text: string)

@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-if File.symlink?(__FILE__)
-  lib = File.expand_path('../../lib/ffi-tk', File.readlink(__FILE__))
-else
-  lib = File.expand_path('../../lib/ffi-tk', __FILE__)
-end
+lib = if File.symlink?(__FILE__)
+        File.expand_path('../../lib/ffi-tk', File.readlink(__FILE__))
+      else
+        File.expand_path('../../lib/ffi-tk', __FILE__)
+      end
 
 require lib
 

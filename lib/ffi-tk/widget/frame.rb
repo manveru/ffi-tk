@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # Create and manipulate frame widgets
   # A frame is a simple widget.
@@ -7,6 +8,8 @@ module Tk
   class Frame < Widget
     include Cget, Configure
 
-    def self.tk_command; 'frame'; end
+    def self.tk_command
+      'frame'
+    end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Winfo
     # @see Winfo.atom
@@ -324,7 +325,7 @@ module Tk
       if None == window
         Tk.execute(:winfo, :containing, root_x, root_y).to_s?
       else
-        Tk.execute(:winfo, :containing, '-displayof', window, root_x, root_y).to_s?
+        Tk.execute(:winfo, :containing, '-displayof', window, root_x, root_y)
       end
     end
 
@@ -401,7 +402,7 @@ module Tk
     # If the geometry manager is a widget, such as canvases or text, the name
     # is the widget's class command, such as canvas.
     def manager(window)
-      Tk.execute(:winfo, :manager, window).to_s?
+      Tk.execute(:winfo, :manager, window)
     end
 
     # Returns window's name (i.e. its name within its parent, as opposed to its
@@ -414,7 +415,7 @@ module Tk
     # Returns the path name of +window+'s parent, or nil if +window+ is the main
     # window of the application.
     def parent(window)
-      Tk.execute(:winfo, :parent, window).to_s?
+      Tk.execute(:winfo, :parent, window)
     end
 
     # Returns the path name of the window whose X identifier is +id+.
@@ -491,7 +492,7 @@ module Tk
     # in the window given by window.
     # Color may be specified in any of the forms acceptable for a color option.
     def rgb(window, color)
-      Tk.execute(:winfo, :rgb, window, color).to_a(&:to_i)
+      Tk.execute(:winfo, :rgb, window, color).split.map(&:to_i)
     end
 
     # Returns a decimal string giving the x-coordinate, in the root window of
@@ -602,16 +603,16 @@ module Tk
     def visualsavailable(window, includeids = None)
       if None == includeids
         list = Tk.execute(:winfo, :visualsavailable, window).to_a
-        list.uniq.map{|string|
+        list.uniq.map do |string|
           klass, depth = string.split
           [klass, depth.to_i]
-        }
+        end
       else
         list = Tk.execute(:winfo, :visualsavailable, window, :includeids).to_a
-        list.uniq.map{|string|
+        list.uniq.map do |string|
           klass, depth, id = string.split
           [klass, depth.to_i, id]
-        }
+        end
       end
     end
 

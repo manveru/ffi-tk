@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   def self.set_palette(background, *rest)
     if rest.empty?

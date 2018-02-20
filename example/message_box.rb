@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'ffi-tk'
 
 Tk.init
@@ -5,12 +6,13 @@ Tk.init
 label = Tk::Label.new(Tk.root, text: 'Press any key to open the dialog')
 label.pack
 
-Tk.root.bind('<Key>'){
+Tk.root.bind('<Key>') do
   answer = Tk.message_box(
     message: 'Really quit?',
     icon: :question,
     type: :yesno,
-    detail: 'Select "Yes" to make the application exit')
+    detail: 'Select "Yes" to make the application exit'
+  )
 
   case answer
   when :yes
@@ -18,9 +20,10 @@ Tk.root.bind('<Key>'){
   when :no
     Tk.message_box(
       message: 'I know you like this application!',
-      type: :ok)
+      type: :ok
+    )
     exit
   end
-}
+end
 
 Tk.mainloop

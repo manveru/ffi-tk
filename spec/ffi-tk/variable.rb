@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../helper'
 
 Tk.init
@@ -5,11 +6,11 @@ Tk.init
 describe Tk::Variable do
   it 'creates a Variable' do
     @var = Tk::Variable.new('somevar')
-    @var.name.should == "somevar"
+    @var.name.should == 'somevar'
   end
 
   it 'cannot get a value from it yet' do
-    lambda{ @var.get }.should.raise(NameError)
+    -> { @var.get }.should.raise(NameError)
   end
 
   it 'sets the value and retrieves it' do
@@ -19,6 +20,6 @@ describe Tk::Variable do
 
   it 'unsets the variable' do
     @var.unset
-    lambda{ @var.get }.should.raise(NameError)
+    -> { @var.get }.should.raise(NameError)
   end
 end

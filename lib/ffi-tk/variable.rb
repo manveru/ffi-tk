@@ -1,11 +1,14 @@
+# frozen_string_literal: true
 module Tk
   # This class is used for communication of variables with Tcl.
   class Variable
+    include Comparable
+
     attr_reader :name, :tcl_name, :bytesize
 
     def initialize(name, value = None)
       @name = name.freeze
-      @tcl_name = "$#{name}".freeze
+      @tcl_name = "$#{name}"
       set(value) unless None == value
     end
 
@@ -36,11 +39,30 @@ module Tk
     end
 
     def to_boolean
-      get.to_boolean
+      got = get
+
+      if got.respond_to?(:to_boolean)
+        got.to_boolean
+      elsif got == '0'
+        false
+      elsif got == '1'
+        true
+      else
+        got
+      end
     end
 
     def to_f
       get.to_f
+    end
+
+    def <=>(other)
+      case other
+      when self.class
+        get <=> other.get
+      else
+        get <=> other
+      end
     end
   end
 end

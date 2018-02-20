@@ -1,8 +1,11 @@
+# frozen_string_literal: true
 module Tk
   class Listbox < Widget
     include Cget, Configure, Scrollable
 
-    def self.tk_command; 'listbox'; end
+    def self.tk_command
+      'listbox'
+    end
 
     def clear
       delete 0, :end
@@ -14,7 +17,7 @@ module Tk
 
     def value=(enumerable)
       clear
-      enumerable.each{|element| insert(:end, element) }
+      enumerable.each { |element| insert(:end, element) }
     end
 
     # Sets the active element to the one indicated by index.

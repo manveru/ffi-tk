@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Tile::ComboBox do
@@ -8,15 +9,15 @@ describe Tk::Tile::ComboBox do
   end
 
   it 'sets combobox values' do
-    b = Tk::Tile::ComboBox.new Tk.root, values: ['a','b']
-    b.configure(values: ['c','d']).should == true
+    b = Tk::Tile::ComboBox.new Tk.root, values: %w(a b)
+    b.configure(values: %w(c d)).should == true
   end
 
   it 'sets the current value' do
     var = Tk::Variable.new('somevar')
     var.set 'before_combobox'
 
-    b = Tk::Tile::ComboBox.new Tk.root, textvariable: var, values: ['a','b']
+    b = Tk::Tile::ComboBox.new Tk.root, textvariable: var, values: %w(a b)
 
     b.current.should == -1
 
@@ -28,9 +29,9 @@ describe Tk::Tile::ComboBox do
     b.set('baz').should == true
     var.to_s.should == 'baz'
 
-    lambda { 
+    lambda do
       b.current(10).should == false
-    }.should.raise RuntimeError
+    end.should.raise RuntimeError
   end
 
   it 'sets the value of the combobox to value' do
@@ -51,15 +52,13 @@ describe Tk::Tile::ComboBox do
   end
 
   it 'sets postcommand' do
-    lambda { 
+    lambda do
       Tk::Tile::ComboBox.new Tk.root, postcommand: proc {}
-    }.should.not.raise RuntimeError
+    end.should.not.raise RuntimeError
 
-    lambda { 
+    lambda do
       b = Tk::Tile::ComboBox.new
-      b.postcommand { } 
-    }.should.not.raise RuntimeError
+      b.postcommand {}
+    end.should.not.raise RuntimeError
   end
-
 end
-

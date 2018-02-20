@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Canvas
     # Items of type polygon appear as polygonal or curved filled regions on the

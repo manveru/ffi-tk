@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'ffi-tk'
 require 'find'
 
@@ -8,11 +9,11 @@ class FileTree < Tk::Tile::Treeview
 
   def populate_roots
     ## Create the tree and set it up
-    configure columns: %w[fullpath type size], displaycolumns: %w[size]
+    configure columns: %w(fullpath type size), displaycolumns: %w(size)
     heading('#0', text: 'Directory Structure')
     heading('size', text: 'File Size')
     column('size', stretch: 0, width: 70)
-    bind('<<TreeviewOpen>>'){|event|
+    bind('<<TreeviewOpen>>') do |_event|
       begin
         populate_tree(focus_item)
       rescue Exception => ex
@@ -20,7 +21,7 @@ class FileTree < Tk::Tile::Treeview
       end
 
       true
-    }
+    end
 
     Tk.execute('file', 'volumes').sort.each do |volume|
       node = insert(nil, :end, text: volume, values: [volume, 'directory'])
@@ -35,7 +36,8 @@ class FileTree < Tk::Tile::Treeview
     delete(*node.children.to_a)
 
     Dir.glob File.join(path, '*') do |path|
-      name, type = File.basename(path), File.ftype(path)
+      name = File.basename(path)
+      type = File.ftype(path)
 
       item = insert(node, :end, text: name, values: [path, type])
 
@@ -46,15 +48,15 @@ class FileTree < Tk::Tile::Treeview
       elsif type == 'file'
         size = File.size(path)
 
-        if size >= GB
-          size = '%.1f GB' % [size / GB]
-        elsif size >= MB
-          size = '%.1f MB' % [size / MB]
-        elsif size >= KB
-          size = '%.1f KB' % [size / KB]
-        else
-          size = '%.1f bytes' % [size]
-        end
+        size = if size >= GB
+                 '%.1f GB' % [size / GB]
+               elsif size >= MB
+                 '%.1f MB' % [size / MB]
+               elsif size >= KB
+                 '%.1f KB' % [size / KB]
+               else
+                 '%.1f bytes' % [size]
+               end
 
         item.set(:size, size)
       end
@@ -63,7 +65,7 @@ class FileTree < Tk::Tile::Treeview
 end
 
 tree = FileTree.new
-tree.bind('<Escape>'){ Tk.exit }
+tree.bind('<Escape>') { Tk.exit }
 tree.pack expand: true, fill: :both
 tree.focus
 tree.populate_roots

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Bell
     # This command rings the bell on the display for window and returns an empty

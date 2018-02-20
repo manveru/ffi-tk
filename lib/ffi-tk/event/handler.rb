@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   module Event
     module Handler
@@ -17,12 +18,12 @@ module Tk
       def register_block(block)
         id = nil
 
-        @mutex.synchronize{
+        @mutex.synchronize do
           @store << block
           id = @store.size - 1
-        }
+        end
 
-        return id
+        id
       end
 
       def register(tag, sequence, &block)

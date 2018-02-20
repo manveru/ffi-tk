@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   class Canvas
     # Items of type window cause a particular window to be displayed at a given

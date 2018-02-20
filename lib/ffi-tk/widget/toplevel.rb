@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Tk
   # A toplevel is similar to a frame except that it is created as a top-level
   # window: its X parent is the root window of a screen rather than the logical
@@ -9,6 +10,8 @@ module Tk
   class Toplevel < Widget
     include Cget, Configure
 
-    def self.tk_command; 'toplevel'; end
+    def self.tk_command
+      'toplevel'
+    end
   end
 end

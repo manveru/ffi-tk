@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../../helper'
 
 describe Tk::Canvas do
@@ -12,18 +13,18 @@ describe Tk::Canvas do
     @text.id.should == 1
     @text.canvas.should == @canvas
 
-    @text.activefill.should == nil
-    @text.activestipple.should == nil
-    @text.anchor.should == "center"
-    @text.disabledfill.should == nil
-    @text.disabledstipple.should == nil
-    @text.fill.should == "black"
-    @text.font.should == "TkDefaultFont"
+    @text.activefill.should.nil?
+    @text.activestipple.should.nil?
+    @text.anchor.should == 'center'
+    @text.disabledfill.should.nil?
+    @text.disabledstipple.should.nil?
+    @text.fill.should == 'black'
+    @text.font.should == 'TkDefaultFont'
     @text.justify.should == :left
-    @text.state.should == nil
-    @text.stipple.should == nil
+    @text.state.should.nil?
+    @text.stipple.should.nil?
     @text.tags.should == []
-    @text.text.should == "Hello, World!"
+    @text.text.should == 'Hello, World!'
     @text.underline.should == -1
     @text.width.should == 0
   end
@@ -37,23 +38,23 @@ describe Tk::Canvas do
     @rect.activedash.should == 0
     @rect.disableddash.should == 0
     @rect.dashoffset.should == 0
-    @rect.fill.should == nil
-    @rect.activefill.should == nil
-    @rect.disabledfill.should == nil
+    @rect.fill.should.nil?
+    @rect.activefill.should.nil?
+    @rect.disabledfill.should.nil?
     @rect.offset.should == '0,0'
     @rect.outline.should == 'black'
-    @rect.activeoutline.should == nil
-    @rect.disabledoutline.should == nil
+    @rect.activeoutline.should.nil?
+    @rect.disabledoutline.should.nil?
     @rect.outlineoffset.should == 0
-    @rect.outlinestipple.should == nil
-    @rect.activeoutlinestipple.should == nil
-    @rect.disabledoutlinestipple.should == nil
-    @rect.stipple.should == nil
-    @rect.activestipple.should == nil
-    @rect.disabledstipple.should == nil
-    @rect.state.should == nil
+    @rect.outlinestipple.should.nil?
+    @rect.activeoutlinestipple.should.nil?
+    @rect.disabledoutlinestipple.should.nil?
+    @rect.stipple.should.nil?
+    @rect.activestipple.should.nil?
+    @rect.disabledstipple.should.nil?
+    @rect.state.should.nil?
     @rect.tags.should == []
-    @rect.width.should == 0
+    @rect.width.should == 1
     @rect.activewidth.should == 0
     @rect.disabledwidth.should == 0
   end
@@ -67,23 +68,23 @@ describe Tk::Canvas do
     @arc.activedash.should == 0
     @arc.disableddash.should == 0
     @arc.dashoffset.should == 0
-    @arc.fill.should == nil
-    @arc.activefill.should == nil
-    @arc.disabledfill.should == nil
+    @arc.fill.should.nil?
+    @arc.activefill.should.nil?
+    @arc.disabledfill.should.nil?
     @arc.offset.should == '0,0'
     @arc.outline.should == 'black'
-    @arc.activeoutline.should == nil
-    @arc.disabledoutline.should == nil
+    @arc.activeoutline.should.nil?
+    @arc.disabledoutline.should.nil?
     @arc.outlineoffset.should == 0.0
-    @arc.outlinestipple.should == nil
-    @arc.activeoutlinestipple.should == nil
-    @arc.disabledoutlinestipple.should == nil
-    @arc.stipple.should == nil
-    @arc.activestipple.should == nil
-    @arc.disabledstipple.should == nil
-    @arc.state.should == nil
+    @arc.outlinestipple.should.nil?
+    @arc.activeoutlinestipple.should.nil?
+    @arc.disabledoutlinestipple.should.nil?
+    @arc.stipple.should.nil?
+    @arc.activestipple.should.nil?
+    @arc.disabledstipple.should.nil?
+    @arc.state.should.nil?
     @arc.tags.should == []
-    @arc.width.should == 0
+    @arc.width.should == 1
     @arc.activewidth.should == 0
     @arc.disabledwidth.should == 0
     @arc.extent.should == 90.0
@@ -101,21 +102,21 @@ describe Tk::Canvas do
     @poly.disableddash.should == 0
     @poly.dashoffset.should == 0
     @poly.fill.should == 'black'
-    @poly.activefill.should == nil
-    @poly.disabledfill.should == nil
+    @poly.activefill.should.nil?
+    @poly.disabledfill.should.nil?
     @poly.offset.should == '0,0'
-    @poly.outline.should == nil
-    @poly.activeoutline.should == nil
-    @poly.disabledoutline.should == nil
-    @poly.outlinestipple.should == nil
-    @poly.activeoutlinestipple.should == nil
-    @poly.disabledoutlinestipple.should == nil
-    @poly.stipple.should == nil
-    @poly.activestipple.should == nil
-    @poly.disabledstipple.should == nil
-    @poly.state.should == nil
+    @poly.outline.should.nil?
+    @poly.activeoutline.should.nil?
+    @poly.disabledoutline.should.nil?
+    @poly.outlinestipple.should.nil?
+    @poly.activeoutlinestipple.should.nil?
+    @poly.disabledoutlinestipple.should.nil?
+    @poly.stipple.should.nil?
+    @poly.activestipple.should.nil?
+    @poly.disabledstipple.should.nil?
+    @poly.state.should.nil?
     @poly.tags.should == []
-    @poly.width.should == 0
+    @poly.width.should == 1
     @poly.activewidth.should == 0
     @poly.disabledwidth.should == 0
     @poly.joinstyle.should == :round
@@ -133,18 +134,18 @@ describe Tk::Canvas do
     @line.disableddash.should == 0
     @line.dashoffset.should == 0
     @line.fill.should == 'black'
-    @line.activefill.should == nil
-    @line.disabledfill.should == nil
-    @line.stipple.should == nil
-    @line.activestipple.should == nil
-    @line.disabledstipple.should == nil
-    @line.state.should == nil
+    @line.activefill.should.nil?
+    @line.disabledfill.should.nil?
+    @line.stipple.should.nil?
+    @line.activestipple.should.nil?
+    @line.disabledstipple.should.nil?
+    @line.state.should.nil?
     @line.tags.should == []
-    @line.width.should == 0
+    @line.width.should == 1
     @line.activewidth.should == 0
     @line.disabledwidth.should == 0
     @line.arrow.should == :none
-    @line.arrowshape.should == ["8", "10", "3"]
+    @line.arrowshape.should == %w(8 10 3)
     @line.capstyle.should == :butt
     @line.joinstyle.should == :round
     @line.smooth.should == false
@@ -157,7 +158,7 @@ describe Tk::Canvas do
     @win.id.should == 6
     @win.canvas.should == @canvas
 
-    @win.state.should == nil
+    @win.state.should.nil?
     @win.tags.should == []
     @win.anchor.should == 'center'
     @win.height.should == 0
