@@ -1,21 +1,34 @@
 # -*- encoding: utf-8 -*-
-# frozen_string_literal: true
+# stub: ffi-tk 2018.02.20 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = 'ffi-tk'
-  s.version = '2017.02.20'
+  s.name = "ffi-tk".freeze
+  s.version = "2018.02.20"
 
-  s.required_rubygems_version = Gem::Requirement.new('>= 1.3.3') if s.respond_to? :required_rubygems_version=
-  s.authors = ["Michael 'manveru' Fellinger"]
-  s.date = '2017-02-20'
-  s.description = 'Pure Ruby FFI wrapper for the Tk GUI toolkit.'
-  s.email = 'm.fellinger@gmail.com'
-  s.files = Dir['**/*']
-  s.homepage = 'http://github.com/manveru/ffi-tk'
-  s.require_paths = ['lib']
-  s.rubygems_version = '1.3.7'
-  s.summary = 'Pure Ruby FFI wrapper for the Tk GUI toolkit.'
+  s.required_rubygems_version = Gem::Requirement.new(">= 1.3.3".freeze) if s.respond_to? :required_rubygems_version=
+  s.require_paths = ["lib".freeze]
+  s.authors = ["Michael 'manveru' Fellinger".freeze]
+  s.date = "2018-02-20"
+  s.description = "Comfortably talk with Tcl/Tk using FFI.".freeze
+  s.email = "m.fellinger@gmail.com".freeze
+  s.files = [".gitignore".freeze, ".rubocop.yml".freeze, ".rubocop_todo.yml".freeze, "AUTHORS".freeze, "CHANGELOG".freeze, "Gemfile".freeze, "Gemfile.lock".freeze, "MANIFEST".freeze, "README.md".freeze, "Rakefile".freeze, "TODO.md".freeze, "bin/rwish".freeze, "doc/MIT_LICENSE".freeze, "doc/TCL_LICENSE".freeze, "example/choose_color.rb".freeze, "example/choose_directory.rb".freeze, "example/dialog.rb".freeze, "example/hello.rb".freeze, "example/message_box.rb".freeze, "example/option_menu.rb".freeze, "example/popup.rb".freeze, "example/set_palette.rb".freeze, "example/text.rb".freeze, "example/tile/kroc_demo_small.rb".freeze, "example/tile/kroc_rb_demo.rb".freeze, "example/tile/notebook.rb".freeze, "example/tile/theme_hello.rb".freeze, "example/tile/themes.rb".freeze, "example/tile/treeview.rb".freeze, "example/tkgo.rb".freeze, "example/various.rb".freeze, "example/wait.rb".freeze, "ffi-tk.gemspec".freeze, "gemset.nix".freeze, "lib/ffi-tk.rb".freeze, "lib/ffi-tk/command.rb".freeze, "lib/ffi-tk/command/after.rb".freeze, "lib/ffi-tk/command/bell.rb".freeze, "lib/ffi-tk/command/bind.rb".freeze, "lib/ffi-tk/command/bindtags.rb".freeze, "lib/ffi-tk/command/cget.rb".freeze, "lib/ffi-tk/command/choose_color.rb".freeze, "lib/ffi-tk/command/choose_directory.rb".freeze, "lib/ffi-tk/command/clipboard.rb".freeze, "lib/ffi-tk/command/configure.rb".freeze, "lib/ffi-tk/command/destroy.rb".freeze, "lib/ffi-tk/command/dialog.rb".freeze, "lib/ffi-tk/command/event.rb".freeze, "lib/ffi-tk/command/focus.rb".freeze, "lib/ffi-tk/command/font.rb".freeze, "lib/ffi-tk/command/get_open_file.rb".freeze, "lib/ffi-tk/command/get_save_file.rb".freeze, "lib/ffi-tk/command/grab.rb".freeze, "lib/ffi-tk/command/grid.rb".freeze, "lib/ffi-tk/command/image.rb".freeze, "lib/ffi-tk/command/lower.rb".freeze, "lib/ffi-tk/command/message_box.rb".freeze, "lib/ffi-tk/command/option_menu.rb".freeze, "lib/ffi-tk/command/pack.rb".freeze, "lib/ffi-tk/command/place.rb".freeze, "lib/ffi-tk/command/popup.rb".freeze, "lib/ffi-tk/command/raise.rb".freeze, "lib/ffi-tk/command/scrollable.rb".freeze, "lib/ffi-tk/command/selection.rb".freeze, "lib/ffi-tk/command/set_palette.rb".freeze, "lib/ffi-tk/command/tk_cmd.rb".freeze, "lib/ffi-tk/command/vars.rb".freeze, "lib/ffi-tk/command/wait.rb".freeze, "lib/ffi-tk/command/winfo.rb".freeze, "lib/ffi-tk/command/wm.rb".freeze, "lib/ffi-tk/core_extensions.rb".freeze, "lib/ffi-tk/event/data.rb".freeze, "lib/ffi-tk/event/handler.rb".freeze, "lib/ffi-tk/ffi/tcl.rb".freeze, "lib/ffi-tk/ffi/tcl/cmd_proc.rb".freeze, "lib/ffi-tk/ffi/tcl/eval_result.rb".freeze, "lib/ffi-tk/ffi/tcl/interp.rb".freeze, "lib/ffi-tk/ffi/tcl/obj.rb".freeze, "lib/ffi-tk/ffi/tcl/time.rb".freeze, "lib/ffi-tk/ffi/tk.rb".freeze, "lib/ffi-tk/geometry.rb".freeze, "lib/ffi-tk/thread_sender.rb".freeze, "lib/ffi-tk/tk.rb".freeze, "lib/ffi-tk/variable.rb".freeze, "lib/ffi-tk/version.rb".freeze, "lib/ffi-tk/widget.rb".freeze, "lib/ffi-tk/widget/button.rb".freeze, "lib/ffi-tk/widget/canvas.rb".freeze, "lib/ffi-tk/widget/canvas/arc.rb".freeze, "lib/ffi-tk/widget/canvas/bitmap.rb".freeze, "lib/ffi-tk/widget/canvas/image.rb".freeze, "lib/ffi-tk/widget/canvas/item.rb".freeze, "lib/ffi-tk/widget/canvas/line.rb".freeze, "lib/ffi-tk/widget/canvas/oval.rb".freeze, "lib/ffi-tk/widget/canvas/polygon.rb".freeze, "lib/ffi-tk/widget/canvas/rectangle.rb".freeze, "lib/ffi-tk/widget/canvas/text.rb".freeze, "lib/ffi-tk/widget/canvas/window.rb".freeze, "lib/ffi-tk/widget/checkbutton.rb".freeze, "lib/ffi-tk/widget/entry.rb".freeze, "lib/ffi-tk/widget/frame.rb".freeze, "lib/ffi-tk/widget/label.rb".freeze, "lib/ffi-tk/widget/labelframe.rb".freeze, "lib/ffi-tk/widget/listbox.rb".freeze, "lib/ffi-tk/widget/menu.rb".freeze, "lib/ffi-tk/widget/menubutton.rb".freeze, "lib/ffi-tk/widget/message.rb".freeze, "lib/ffi-tk/widget/panedwindow.rb".freeze, "lib/ffi-tk/widget/radiobutton.rb".freeze, "lib/ffi-tk/widget/root.rb".freeze, "lib/ffi-tk/widget/scale.rb".freeze, "lib/ffi-tk/widget/scrollbar.rb".freeze, "lib/ffi-tk/widget/spinbox.rb".freeze, "lib/ffi-tk/widget/text.rb".freeze, "lib/ffi-tk/widget/text/peer.rb".freeze, "lib/ffi-tk/widget/tile.rb".freeze, "lib/ffi-tk/widget/tile/button.rb".freeze, "lib/ffi-tk/widget/tile/checkbutton.rb".freeze, "lib/ffi-tk/widget/tile/combobox.rb".freeze, "lib/ffi-tk/widget/tile/entry.rb".freeze, "lib/ffi-tk/widget/tile/frame.rb".freeze, "lib/ffi-tk/widget/tile/label.rb".freeze, "lib/ffi-tk/widget/tile/labelframe.rb".freeze, "lib/ffi-tk/widget/tile/menubutton.rb".freeze, "lib/ffi-tk/widget/tile/notebook.rb".freeze, "lib/ffi-tk/widget/tile/panedwindow.rb".freeze, "lib/ffi-tk/widget/tile/progressbar.rb".freeze, "lib/ffi-tk/widget/tile/radiobutton.rb".freeze, "lib/ffi-tk/widget/tile/scale.rb".freeze, "lib/ffi-tk/widget/tile/scrollbar.rb".freeze, "lib/ffi-tk/widget/tile/separator.rb".freeze, "lib/ffi-tk/widget/tile/sizegrip.rb".freeze, "lib/ffi-tk/widget/tile/style.rb".freeze, "lib/ffi-tk/widget/tile/treeview.rb".freeze, "lib/ffi-tk/widget/toplevel.rb".freeze, "shell.nix".freeze, "spec/ffi-tk/command/bind.rb".freeze, "spec/ffi-tk/command/bindtags.rb".freeze, "spec/ffi-tk/command/clipboard.rb".freeze, "spec/ffi-tk/command/font.rb".freeze, "spec/ffi-tk/command/image.rb".freeze, "spec/ffi-tk/command/pack.rb".freeze, "spec/ffi-tk/command/place.rb".freeze, "spec/ffi-tk/command/selection.rb".freeze, "spec/ffi-tk/command/vars.rb".freeze, "spec/ffi-tk/command/winfo.rb".freeze, "spec/ffi-tk/command/wm.rb".freeze, "spec/ffi-tk/event.rb".freeze, "spec/ffi-tk/tile/button.rb".freeze, "spec/ffi-tk/tile/checkbutton.rb".freeze, "spec/ffi-tk/tile/combobox.rb".freeze, "spec/ffi-tk/tile/entry.rb".freeze, "spec/ffi-tk/tile/frame.rb".freeze, "spec/ffi-tk/tile/label.rb".freeze, "spec/ffi-tk/tile/labelframe.rb".freeze, "spec/ffi-tk/tile/menubutton.rb".freeze, "spec/ffi-tk/tile/notebook.rb".freeze, "spec/ffi-tk/tile/panedwindow.rb".freeze, "spec/ffi-tk/tile/progressbar.rb".freeze, "spec/ffi-tk/tile/radiobutton.rb".freeze, "spec/ffi-tk/tile/scale.rb".freeze, "spec/ffi-tk/tile/scrollbar.rb".freeze, "spec/ffi-tk/tile/separator.rb".freeze, "spec/ffi-tk/tile/sizegrip.rb".freeze, "spec/ffi-tk/tile/style.rb".freeze, "spec/ffi-tk/tile/treeview.rb".freeze, "spec/ffi-tk/variable.rb".freeze, "spec/ffi-tk/widget/button.rb".freeze, "spec/ffi-tk/widget/canvas.rb".freeze, "spec/ffi-tk/widget/checkbutton.rb".freeze, "spec/ffi-tk/widget/entry.rb".freeze, "spec/ffi-tk/widget/frame.rb".freeze, "spec/ffi-tk/widget/label.rb".freeze, "spec/ffi-tk/widget/labelframe.rb".freeze, "spec/ffi-tk/widget/listbox.rb".freeze, "spec/ffi-tk/widget/menu.rb".freeze, "spec/ffi-tk/widget/menubutton.rb".freeze, "spec/ffi-tk/widget/message.rb".freeze, "spec/ffi-tk/widget/panedwindow.rb".freeze, "spec/ffi-tk/widget/radiobutton.rb".freeze, "spec/ffi-tk/widget/root.rb".freeze, "spec/ffi-tk/widget/scale.rb".freeze, "spec/ffi-tk/widget/scrollbar.rb".freeze, "spec/ffi-tk/widget/spinbox.rb".freeze, "spec/ffi-tk/widget/text.rb".freeze, "spec/ffi-tk/widget/toplevel.rb".freeze, "spec/helper.rb".freeze, "tasks/authors.rake".freeze, "tasks/bacon.rake".freeze, "tasks/changelog.rake".freeze, "tasks/gem.rake".freeze, "tasks/manifest.rake".freeze, "tasks/release.rake".freeze, "tasks/reversion.rake".freeze]
+  s.homepage = "http://github.com/manveru/ffi-tk".freeze
+  s.licenses = ["MIT".freeze]
+  s.rubygems_version = "2.6.13".freeze
+  s.summary = "Pure Ruby FFI wrapper for the Tk GUI toolkit.".freeze
 
-  s.add_runtime_dependency('ffi', ['~> 1.9'])
-  s.add_development_dependency('bacon', ['~> 1.2'])
+  if s.respond_to? :specification_version then
+    s.specification_version = 4
+
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<ffi>.freeze, ["~> 1.9"])
+      s.add_development_dependency(%q<bacon>.freeze, ["~> 1.2"])
+    else
+      s.add_dependency(%q<ffi>.freeze, ["~> 1.9"])
+      s.add_dependency(%q<bacon>.freeze, ["~> 1.2"])
+    end
+  else
+    s.add_dependency(%q<ffi>.freeze, ["~> 1.9"])
+    s.add_dependency(%q<bacon>.freeze, ["~> 1.2"])
+  end
 end

@@ -189,10 +189,6 @@ tasks/authors.rake
 tasks/bacon.rake
 tasks/changelog.rake
 tasks/gem.rake
-tasks/grancher.rake
 tasks/manifest.rake
-tasks/rcov.rake
 tasks/release.rake
 tasks/reversion.rake
-tasks/simplecov.rake
-tasks/ycov.rake
