@@ -25,6 +25,6 @@ module Tk
   #   Tk::Button.new(Tk.root,
   #     bg: Tk.choose_color(initial_color: 'gray', title: 'Choose color'))
   def choose_color(options = None)
-    Tk.execute(:tk_chooseColor, options.to_tcl_options?).to_s?
+    Tk.execute(:tk_chooseColor, options.to_tcl_options?).to_s
   end
 end

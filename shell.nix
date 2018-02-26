@@ -14,5 +14,6 @@ in stdenv.mkDerivation rec {
     pkgconfig
     ruby bundler bundix gems
     tcl-8_6 tk
+    zip
   ];
 }
