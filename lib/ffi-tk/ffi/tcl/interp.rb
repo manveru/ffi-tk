@@ -69,7 +69,7 @@ module FFI
         loop do
           wait_for_event(0.1)
           Tcl.do_one_event(flag)
-        break if yield
+          break if yield
         end
       end
 
@@ -77,7 +77,7 @@ module FFI
         loop do
           wait_for_event(0.1)
           Tcl.do_one_event(flag)
-        break unless yield
+          break unless yield
         end
       end
 

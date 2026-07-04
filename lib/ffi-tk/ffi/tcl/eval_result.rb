@@ -3,7 +3,7 @@
 module FFI
   module Tcl
     # This whole class feels very awkward, maybe it should be merged with Obj.
-EvalResult = ::Struct.new(:interp, :obj) do
+    EvalResult = ::Struct.new(:interp, :obj) do
       # Per-interpreter type cache: cleared and repopulated at runtime by
       # reset_types, so it is intentionally mutable.
       TYPES = {} # rubocop:disable Style/MutableConstant

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Tk
-TkGeometry = Struct.new(:original, :width, :height, :x, :y) do
+  TkGeometry = Struct.new(:original, :width, :height, :x, :y) do
     def initialize(tcl_string)
       str = tcl_string.to_s
       self.original = str
