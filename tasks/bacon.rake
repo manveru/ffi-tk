@@ -36,7 +36,7 @@ task :bacon do
           totals = totals.zip(total).map { |a, b| a + b }
           tests, _, failures, errors = total
 
-          if tests > 0 && failures + errors == 0
+          if tests.positive? && (failures + errors).zero?
             puts((green % '%6d passed') % tests)
           else
             some_failed = true

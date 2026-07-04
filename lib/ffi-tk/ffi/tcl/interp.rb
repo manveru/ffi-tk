@@ -90,7 +90,7 @@ module FFI
 
         code = Tcl.eval_ex(self, string, string.bytesize, EVAL_DIRECT)
         puts format('eval= %p', code) if $DEBUG
-        return true if code == 0
+        return true if code.zero?
 
         message = guess_result.to_s
         puts format('eval= %p', message) if $DEBUG

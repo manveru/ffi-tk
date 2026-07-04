@@ -18,7 +18,7 @@ EvalResult = ::Struct.new(:interp, :obj) do
 
         string_length_ptr = MemoryPointer.new(:int)
 
-        if Tcl.list_obj_get_elements(interp, list, objc_ptr, objv_ptr) == 0
+        if Tcl.list_obj_get_elements(interp, list, objc_ptr, objv_ptr).zero?
           return [] if objv_ptr.get_pointer(0).null?
 
           array_ptr = objv_ptr.get_pointer(0)
@@ -94,7 +94,7 @@ EvalResult = ::Struct.new(:interp, :obj) do
       def self.to_double(interp, obj)
         double_pointer = MemoryPointer.new(:double)
 
-        unless Tcl.get_double_from_obj(interp, obj, double_pointer) == 0
+        unless Tcl.get_double_from_obj(interp, obj, double_pointer).zero?
           raise format("Couldn't get double from %p", obj)
         end
 
@@ -112,7 +112,7 @@ EvalResult = ::Struct.new(:interp, :obj) do
         objc_ptr = MemoryPointer.new(:int)
         objv_ptr = MemoryPointer.new(:pointer)
 
-        if Tcl.list_obj_get_elements(interp, obj, objc_ptr, objv_ptr) == 0
+        if Tcl.list_obj_get_elements(interp, obj, objc_ptr, objv_ptr).zero?
           return [] if objv_ptr.get_pointer(0).null?
 
           objv_ptr.get_pointer(0)
@@ -126,7 +126,7 @@ EvalResult = ::Struct.new(:interp, :obj) do
       def self.to_boolean(interp, obj)
         boolean_pointer = MemoryPointer.new(:int)
 
-        if Tcl.get_boolean_from_obj(interp, obj, boolean_pointer) == 0
+        if Tcl.get_boolean_from_obj(interp, obj, boolean_pointer).zero?
           boolean_pointer.get_int(0) == 1
         else
           panic(interp, 'Tcl_GetBooleanFromObj')
@@ -138,7 +138,7 @@ EvalResult = ::Struct.new(:interp, :obj) do
 
         if obj.bytes == ''
           '' # used by text widget -endline
-        elsif Tcl.get_int_from_obj(interp, obj, int_pointer) == 0
+        elsif Tcl.get_int_from_obj(interp, obj, int_pointer).zero?
           int_pointer.get_int(0)
         else
           panic(interp, 'Tcl_GetIntFromObj')
