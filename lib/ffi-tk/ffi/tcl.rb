@@ -68,7 +68,7 @@ module FFI
     BINDING = binding
 
     def setup_eventloop_on_new_thread
-      puts "Run eventloop on new thread" if $DEBUG
+      puts 'Run eventloop on new thread' if $DEBUG
 
       code = <<~RUBY.strip
         def self.%s(*args, &block)
@@ -89,7 +89,7 @@ module FFI
     end
 
     def setup_eventloop_on_main_thread
-      puts "Run eventloop on main thread" if $DEBUG
+      puts 'Run eventloop on main thread' if $DEBUG
 
       code = <<~'RUBY'.strip
         def self.%s(*args, &block)

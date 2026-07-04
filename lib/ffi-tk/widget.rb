@@ -16,7 +16,7 @@ module Tk
     attr_reader :tk_parent, :tk_pathname
 
     def self.tk_command
-      raise NotImplementedError, "Implement in subclass"
+      raise NotImplementedError, 'Implement in subclass'
     end
 
     def initialize(tk_parent = Tk.root, options = None)
