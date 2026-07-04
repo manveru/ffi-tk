@@ -90,3 +90,58 @@ Style/GlobalVars:
 Naming/MethodName:
   Exclude:
     - 'example/**/*'
+
+# --- Metrics: pinned to the library's current shape ---
+# ffi-tk is a thin, wide FFI binding whose command wrappers mirror Tk's own
+# (deliberately large) API surface. These thresholds hold the library at its
+# present complexity -- guarding regressions -- without forcing artificial
+# decomposition of methods that map 1:1 onto Tk commands. Test/demo code exempt.
+Metrics/MethodLength:
+  Max: 29
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
+Metrics/AbcSize:
+  Max: 29
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
+Metrics/CyclomaticComplexity:
+  Max: 15
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
+Metrics/PerceivedComplexity:
+  Max: 14
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
+Metrics/ParameterLists:
+  Max: 6
+  MaxOptionalParameters: 4
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
+
+# Length cops keep RuboCop's default Max; only the specific classes/modules that
+# mirror large Tk widgets/commands (and rake's task DSL) are exempt.
+Metrics/ClassLength:
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
+    - 'lib/ffi-tk/ffi/tcl/eval_result.rb'
+    - 'lib/ffi-tk/widget/canvas.rb'
+    - 'lib/ffi-tk/widget/canvas/item.rb'
+    - 'lib/ffi-tk/widget/text.rb'
+    - 'lib/ffi-tk/widget/tile/treeview.rb'
+Metrics/ModuleLength:
+  Exclude:
+    - 'lib/ffi-tk/command/winfo.rb'
+    - 'lib/ffi-tk/command/wm.rb'
+    - 'lib/ffi-tk/ffi/tcl/eval_result.rb'
+    - 'lib/ffi-tk/tk.rb'
+Metrics/BlockLength:
+  Exclude:
+    - 'tasks/**/*'
+    - 'example/**/*'
+    - 'spec/**/*'
