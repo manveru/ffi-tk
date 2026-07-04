@@ -87,7 +87,11 @@ describe Tk::Tile::Style do
                    ] }
                  ]).should == true
 
-    module Tk::Tile::TScrollbar; end
+    module Tk
+          module Tile
+          module TScrollbar;           end
+          end
+    end
     style_name = Tk::Tile.style('Vertical', Tk::Tile::TScrollbar)
     style_name.should == 'Vertical.TScrollbar'
 
