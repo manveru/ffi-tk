@@ -33,10 +33,10 @@ module Tk
 
           hash
         elsif first =~ /^-/
-          each_slice(2).map do |key, value|
+          each_slice(2).to_h do |key, value|
             key = key.sub(/^-/, '').to_sym
             [key, coerce_tcl_value(value, hints[key])]
-          end.to_h
+          end
         else
           self
         end
