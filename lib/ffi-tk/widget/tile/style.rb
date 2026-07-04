@@ -90,7 +90,7 @@ module Tk
       def self.map(style, options = {})
         style.is_a?(Hash) && (options = style
                               style = nil)
-        style = '.' unless style
+        style ||= '.'
 
         Tk.execute_only('ttk::style', 'map', style, options.to_tcl_options)
       end
@@ -99,7 +99,7 @@ module Tk
       def self.configure(style = nil, options = {})
         style.is_a?(Hash) && (keys = style
                               style = nil)
-        style = '.' unless style
+        style ||= '.'
 
         Tk.execute_only('ttk::style', 'configure', style, options.to_tcl_options)
       end
