@@ -22,7 +22,7 @@ module Tk
   end
 
   TCL_LIBPATH << 'tcl' << 'tcl86' << 'tcl85' << 'tcl8.6' << 'tcl8.5'
-  TK_LIBPATH  <<  'tk' <<  'tk86' <<  'tk85' <<  'tk8.6' <<  'tk8.5'
+  TK_LIBPATH  << 'tk' << 'tk86' << 'tk85' << 'tk8.6' << 'tk8.5'
 
   # In some cases Tk has trouble running, this seems to happen on windows and
   # OSX/TkAqua mostly.
@@ -82,7 +82,7 @@ module Tk
   autoload :Text,        'ffi-tk/widget/text'
   autoload :Toplevel,    'ffi-tk/widget/toplevel'
 
-  autoload :Tile,         'ffi-tk/widget/tile'
+  autoload :Tile, 'ffi-tk/widget/tile'
 
   require 'ffi-tk/core_extensions'
   require 'ffi-tk/geometry'
