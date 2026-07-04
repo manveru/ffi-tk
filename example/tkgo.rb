@@ -156,7 +156,7 @@ class TkGo
     status.value = "White: #{pos}"
 
     draw_pieces
-  rescue => ex
+  rescue StandardError => ex
     puts "#{ex.class}: #{ex}", *ex.backtrace
     nil
   end

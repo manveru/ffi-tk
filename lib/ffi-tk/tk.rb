@@ -118,7 +118,7 @@ module Tk
     end
 
     BREAK
-  rescue => ex
+  rescue StandardError => ex
     FFI::Tcl::Interp.new(interp).obj_result = ex
     ERROR
   end
@@ -139,7 +139,7 @@ module Tk
     end
 
     BREAK
-  rescue => ex
+  rescue StandardError => ex
     FFI::Tcl::Interp.new(interp).obj_result = ex
     ERROR
   end
