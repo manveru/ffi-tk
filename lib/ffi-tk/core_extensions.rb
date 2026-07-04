@@ -23,6 +23,7 @@ module Tk
 
           each do |key, _, _, _, value|
             next if !value || (value.respond_to?(:empty?) && value.empty?)
+
             key = key.sub(/^-/, '').to_sym
 
             hash[key] =

@@ -17,6 +17,7 @@ module Tk
       # Sets the current theme to themeName, and refreshes all widgets.
       def self.theme_use(name)
         return unless theme_names.include? name
+
         Tk.execute_only('ttk::style', 'theme', 'use', name) && name
       end
 
@@ -41,6 +42,7 @@ module Tk
       # evaluated in the context of the new theme as per ttk::style theme settings.
       def self.theme_create(name, options = {}, &block)
         raise ArgumentError if theme_names.include? name
+
         options = options.to_tcl_options
 
         if block
@@ -60,6 +62,7 @@ module Tk
       # Returns the list of element's options.
       def self.element_options(name)
         return unless element_names.include? name
+
         Tk.execute('ttk::style', 'element', 'options', name).to_a
       end
 

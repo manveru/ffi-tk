@@ -17,6 +17,7 @@ module FFI
 
         if Tcl.list_obj_get_elements(interp, list, objc_ptr, objv_ptr) == 0
           return [] if objv_ptr.get_pointer(0).null?
+
           array_ptr = objv_ptr.get_pointer(0)
           array_length = objc_ptr.get_int(0)
           array = array_ptr.read_array_of_pointer(array_length)
@@ -110,6 +111,7 @@ module FFI
 
         if Tcl.list_obj_get_elements(interp, obj, objc_ptr, objv_ptr) == 0
           return [] if objv_ptr.get_pointer(0).null?
+
           objv_ptr.get_pointer(0)
                   .read_array_of_pointer(objc_ptr.get_int(0))
                   .map(&block)

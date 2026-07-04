@@ -12,6 +12,7 @@ module Tk
 
       def invoke(id, event)
         return unless found = @store.at(id)
+
         found.call(event)
       end
 

@@ -615,6 +615,7 @@ module Tk
         SEARCH_MUTEX.synchronize do
           list = [*execute(:search, *switches, sep, pattern, from, to)]
           return list if list.empty?
+
           count_value = Tk.execute('set', count)
           [*list, count_value]
         end
@@ -622,6 +623,7 @@ module Tk
         SEARCH_MUTEX.synchronize do
           list = [*execute(:search, *switches, sep, pattern, from, to)]
           return list if list.empty?
+
           count_list = Tk.execute('set', count_all)
           list.zip(count_list)
         end
@@ -723,6 +725,7 @@ module Tk
 
     def unregister_event(name, id = @events[name])
       return unless id
+
       @events.delete(id)
       Event::Handler.unregister(id)
     end

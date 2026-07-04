@@ -78,12 +78,14 @@ module Tk
 
     def unregister_command(name, id = @commands[name])
       return unless id
+
       @commands.delete(id)
       Tk.unregister_proc(id)
     end
 
     def unregister_commands
       return unless @commands
+
       @commands.each { |name, id| unregister_command(name, id) }
     end
   end

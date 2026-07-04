@@ -49,6 +49,7 @@ module Tk
           value = properties.shift
           converted = String(value)
           next if converted == '??'
+
           converted = __send__(conv, value)
           self[name] = converted
         end
