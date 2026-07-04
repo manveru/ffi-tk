@@ -3,9 +3,7 @@ AllCops:
   # Gem requires Ruby >= 4.0 (see Rakefile GEMSPEC); RuboCop 1.80.2 only knows
   # up to 3.5, so we target the newest version it understands.
   TargetRubyVersion: 3.5
-  # Lock the cop set to what this config governs; adopting newer cops is a
-  # separate, deliberate step (run with --enable-pending-cops to preview).
-  NewCops: disable
+  NewCops: enable
   SuggestExtensions: false
   Exclude:
     - 'pkg/**/*'
