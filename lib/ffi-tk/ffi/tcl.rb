@@ -54,7 +54,8 @@ module FFI
     callback :obj_cmd_proc, [:int, :pointer, :int, :pointer], :int
     callback :obj_delete_proc, [:int], :void
     attach_function :Tcl_CreateObjCommand, [
-      :pointer, :string, :obj_cmd_proc, :int, :obj_delete_proc], :pointer
+      :pointer, :string, :obj_cmd_proc, :int, :obj_delete_proc
+], :pointer
 
     module_function
 
