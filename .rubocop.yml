@@ -53,6 +53,23 @@ Style/OptionalBooleanParameter:
     - 'lib/ffi-tk/command/pack.rb'
     - 'lib/ffi-tk/widget/canvas.rb'
 
+# In this binding a trailing `?` marks a *nilable/safe variant*, not a boolean
+# predicate: to_a?/to_s?/to_sym? return the converted value or nil (the Tk
+# command produced nothing), and to_tcl_options? is the None-safe form of
+# to_tcl_options. Conversely, several methods that do return a boolean keep
+# their bare Tk-subcommand names (Entry#validate, Entry#selection_present) or
+# are value converters parallel to to_i/to_f/to_s (Tk::Tk#boolean). This cop
+# assumes `?` <=> boolean, so every offense it raises here is a false positive.
+Naming/PredicateMethod:
+  Enabled: false
+
+# The to_a?/to_s?/to_sym? nilable variants (see Naming/PredicateMethod above)
+# return nil to signal "absent"; that is the intended API, not a predicate that
+# should return false.
+Style/ReturnNilInPredicateMethodDefinition:
+  Exclude:
+    - 'lib/ffi-tk/ffi/tcl/eval_result.rb'
+
 # --- Test/example idioms (RuboCop defaults do not fit these contexts) ---
 
 # bacon assertions read as void expressions (obj.should == x); autocorrecting
