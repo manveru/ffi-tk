@@ -161,8 +161,8 @@ module Tk
     # cloneType can be normal, menubar, or tearoff.
     # Should not normally be called outside of the Tk library.
     # See the CLONES section for more information.
-    def clone(newPathname, cloneType = None)
-      execute(:clone, newPathname, cloneType)
+    def clone(new_pathname, clone_type = None)
+      execute(:clone, new_pathname, clone_type)
     end
 
     # Delete all of the menu entries between index1 and index2 inclusive.

@@ -382,7 +382,8 @@ module Tk
     #     needs to be set to a color with some alpha, e.g.
     #     ?systemTransparent?.
     #
-    # On X11, the following attributes may be set.  These are not supported by all window managers, and will have no effect under older WMs.
+    # On X11, the following attributes may be set.  These are not supported by
+    # all window managers, and will have no effect under older WMs.
     #
     #   :zoomed
     #     Requests that the window should be maximized.

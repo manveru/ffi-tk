@@ -9,7 +9,7 @@ module Tk
     module Style
       extend Tk::Configure
       extend Tk::Cget
-      TkkStyleCmd = 'ttk::style'
+      TTK_STYLE_CMD = 'ttk::style'
 
       # Returns a list of all known themes.
       def self.theme_names
