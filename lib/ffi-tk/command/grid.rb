@@ -107,12 +107,12 @@ module Tk
 
       info.scan(/(?:-(\w+))\s+([^-][\S]*)/) do
         key = Regexp.last_match(1).to_sym
-        case key
+        hash[key] = case key
         when :column, :row, :columnspan, :rowspan, :ipadx, :ipady, :padx, :pady
-          hash[key] = Integer(Regexp.last_match(2))
+          Integer(Regexp.last_match(2))
         else
-          hash[key] = Regexp.last_match(2).to_str
-        end
+          Regexp.last_match(2).to_str
+                    end
       end
 
       hash

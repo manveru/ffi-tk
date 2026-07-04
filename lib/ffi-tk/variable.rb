@@ -58,12 +58,12 @@ module Tk
     end
 
     def <=>(other)
-      case other
+      get <=> case other
       when self.class
-        get <=> other.get
+        other.get
       else
-        get <=> other
-      end
+        other
+              end
     end
   end
 end

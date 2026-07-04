@@ -89,11 +89,11 @@ module Tk
         embed << 'x' if options & ::Regexp::EXTENDED != 0
         embed << 'n' if options & ::Regexp::MULTILINE != 0
 
-        if embed.empty?
-          pattern = source
+        pattern = if embed.empty?
+          source
         else
-          pattern = "(?#{embed.join})#{source}"
-        end
+          "(?#{embed.join})#{source}"
+                  end
 
         TclString.new(%({#{pattern.gsub(/([^\\])(?=[{}])/, '\1\\\\\2')}}))
       end

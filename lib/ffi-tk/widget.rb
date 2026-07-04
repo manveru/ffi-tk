@@ -15,11 +15,11 @@ module Tk
         tk_parent, options = Tk.root, tk_parent
       end
 
-      if !options || None == options
-        options = {}
+      options = if !options || None == options
+        {}
       else
-        options = options.dup
-      end
+        options.dup
+                end
 
       @tk_parent = tk_parent
 
