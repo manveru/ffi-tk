@@ -46,10 +46,10 @@ module Tk
     end
 
     FONT_CONFIGURE_HINTS = {
-      underline:  :boolean,
+      underline: :boolean,
       overstrike: :boolean,
-      weight:     :symbol,
-      slant:      :symbol
+      weight: :symbol,
+      slant: :symbol
     }.freeze
 
     def self.execute(command, *args)

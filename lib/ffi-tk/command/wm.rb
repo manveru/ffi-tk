@@ -408,9 +408,9 @@ module Tk
     end
 
     WM_ATTRIBUTES_HINTS = {
-      alpha:      :float,
-      topmost:    :boolean,
-      zoomed:     :boolean,
+      alpha: :float,
+      topmost: :boolean,
+      zoomed: :boolean,
       fullscreen: :boolean
     }.freeze
 
