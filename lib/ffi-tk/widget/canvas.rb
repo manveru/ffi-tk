@@ -13,16 +13,16 @@ module Tk
   # mouse cursor over an item.
   # This means that items in a canvas can have behaviors defined.
   class Canvas < Widget
-    require 'ffi-tk/widget/canvas/item.rb'
-    require 'ffi-tk/widget/canvas/arc.rb'
-    require 'ffi-tk/widget/canvas/bitmap.rb'
-    require 'ffi-tk/widget/canvas/image.rb'
-    require 'ffi-tk/widget/canvas/line.rb'
-    require 'ffi-tk/widget/canvas/oval.rb'
-    require 'ffi-tk/widget/canvas/polygon.rb'
-    require 'ffi-tk/widget/canvas/rectangle.rb'
-    require 'ffi-tk/widget/canvas/text.rb'
-    require 'ffi-tk/widget/canvas/window.rb'
+    require 'ffi-tk/widget/canvas/item'
+    require 'ffi-tk/widget/canvas/arc'
+    require 'ffi-tk/widget/canvas/bitmap'
+    require 'ffi-tk/widget/canvas/image'
+    require 'ffi-tk/widget/canvas/line'
+    require 'ffi-tk/widget/canvas/oval'
+    require 'ffi-tk/widget/canvas/polygon'
+    require 'ffi-tk/widget/canvas/rectangle'
+    require 'ffi-tk/widget/canvas/text'
+    require 'ffi-tk/widget/canvas/window'
 
     include Configure
     include Cget
