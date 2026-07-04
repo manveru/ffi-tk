@@ -2,7 +2,7 @@
 
 module Tk
   class Canvas
-    class Item < Struct.new(:canvas, :id)
+Item = Struct.new(:canvas, :id) do
       OPTION_MAP = {
         activebackground: :bitmap,
         activebitmap: :bitmap,

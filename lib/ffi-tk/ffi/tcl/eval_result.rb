@@ -3,7 +3,7 @@
 module FFI
   module Tcl
     # This whole class feels very awkward, maybe it should be merged with Obj.
-    class EvalResult < ::Struct.new(:interp, :obj)
+EvalResult = ::Struct.new(:interp, :obj) do
       TYPES = {}
 
       def self.reset_types(interp)
