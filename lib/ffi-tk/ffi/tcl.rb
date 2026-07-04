@@ -83,7 +83,7 @@ module FFI
 
       @thread_sender = ThreadSender.new
       class << self; attr_reader :thread_sender; end
-      @thread_sender.thread_send{ Interp.new(create_interp) }
+      @thread_sender.thread_send { Interp.new(create_interp) }
     end
 
     def setup_eventloop_on_main_thread

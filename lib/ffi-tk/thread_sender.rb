@@ -3,7 +3,7 @@
 class ThreadSender
   def initialize
     @queue = Queue.new
-    @thread = Thread.new{ reaper }
+    @thread = Thread.new { reaper }
   end
 
   def reaper
