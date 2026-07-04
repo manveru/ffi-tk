@@ -20,7 +20,10 @@ module Tk
     end
 
     def initialize(tk_parent = Tk.root, options = None)
-      tk_parent, options = Tk.root, tk_parent if tk_parent.respond_to?(:to_tcl_options?)
+      if tk_parent.respond_to?(:to_tcl_options?)
+        options = tk_parent
+        tk_parent = Tk.root
+      end
 
       options = if !options || None == options
         {}

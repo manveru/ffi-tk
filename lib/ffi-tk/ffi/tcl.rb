@@ -76,7 +76,9 @@ module FFI
         end
       RUBY
 
-      binding, file, line = BINDING, __FILE__, __LINE__ - 5
+      binding = BINDING
+      file = __FILE__
+      line = __LINE__ - 5
       ATTACHED_FUNCTIONS.each do |function, ruby_name|
         eval(format(code, ruby_name, function), binding, file, line)
       end
@@ -95,7 +97,9 @@ module FFI
         end
       RUBY
 
-      binding, file, line = BINDING, __FILE__, __LINE__ - 5
+      binding = BINDING
+      file = __FILE__
+      line = __LINE__ - 5
       ATTACHED_FUNCTIONS.each do |function, ruby_name|
         eval(format(code, ruby_name, function), binding, file, line)
       end
