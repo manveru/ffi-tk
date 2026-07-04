@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Create and inspect fonts.
   # The font command provides several facilities for dealing with fonts, such as

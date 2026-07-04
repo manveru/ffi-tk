@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Create and manipulate checkbutton widgets
   class CheckButton < Button

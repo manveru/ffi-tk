@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Object
   undef :type if respond_to?(:type)
 end

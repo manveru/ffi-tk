@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module FFI
   module Tcl
     # This whole class feels very awkward, maybe it should be merged with Obj.

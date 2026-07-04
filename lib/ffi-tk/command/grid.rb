@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Geometry manager that arranges widgets in a grid
   #

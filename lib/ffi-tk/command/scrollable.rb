@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Scrollable
     # Returns a list containing two elements.

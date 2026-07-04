@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #
 # based on:
 #   >> kroc.rb - by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)

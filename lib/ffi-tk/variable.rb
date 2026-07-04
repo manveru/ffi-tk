@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # This class is used for communication of variables with Tcl.
   class Variable

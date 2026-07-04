@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 desc 'update version.rb'
 task :reversion do
   File.open("lib/#{GEMSPEC.name}/version.rb", 'w+') do |file|

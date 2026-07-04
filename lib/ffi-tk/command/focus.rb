@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Utility methods for managing the input focus.
   module Focus

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   require 'ffi-tk/command/choose_color'
   require 'ffi-tk/command/choose_directory'

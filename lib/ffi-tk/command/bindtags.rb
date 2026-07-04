@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Determine which bindings apply to a window, and order of evaluation
   #

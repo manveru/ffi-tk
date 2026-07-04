@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   class Scrollbar < Widget
     include Cget, Configure

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Create and manipulate frame widgets
   # A frame is a simple widget.

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Ttk package merged Tcl/Tk core (Tcl/Tk 8.5+)
 module Tk
   module Tile

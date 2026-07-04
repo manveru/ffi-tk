@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # A label is a widget that displays a textual string, bitmap or image.
   #

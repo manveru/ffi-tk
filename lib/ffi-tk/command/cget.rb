@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Cget
     CGET_MAP = {}

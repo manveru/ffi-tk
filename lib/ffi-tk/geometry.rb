@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   class TkGeometry < Struct.new(:original, :width, :height, :x, :y)
     def initialize(tcl_string)

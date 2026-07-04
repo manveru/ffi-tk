@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Tile
     # progressbar widget shows the status of a long-running operation.

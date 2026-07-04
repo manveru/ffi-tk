@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   class Widget
     include Pack, Destroy, Bind, Bindtags, WM, Winfo, Grid, Clipboard, Place, TkCmd

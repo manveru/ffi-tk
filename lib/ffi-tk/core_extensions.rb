@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Already converted statement, don't process again
   class TclString < String

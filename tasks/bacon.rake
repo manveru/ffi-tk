@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 desc 'Run all bacon specs with pretty output'
 task :bacon do
   require 'open3'

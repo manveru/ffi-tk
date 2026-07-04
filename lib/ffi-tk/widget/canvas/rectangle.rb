@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   class Canvas
     # Items of type rectangle appear as rectangular regions on the display.

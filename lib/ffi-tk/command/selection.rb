@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # This command provides a Tcl interface to the X selection mechanism and
   # implements the full selection functionality described in the X Inter-Client

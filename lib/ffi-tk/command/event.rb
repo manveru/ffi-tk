@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Miscellaneous event facilities: define virtual events and generate events
   #

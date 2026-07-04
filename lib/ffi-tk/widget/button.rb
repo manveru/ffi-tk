@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # A button is a widget that displays a textual string, bitmap or image.
   # If text is displayed, it must all be in a single font, but it can occupy

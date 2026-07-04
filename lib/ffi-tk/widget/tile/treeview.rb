@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Tile
     # The ttk::treeview widget displays a hierarchical collection of items.

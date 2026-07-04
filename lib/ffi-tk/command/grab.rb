@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Confine pointer and keyboard events to a window sub-tree
   #

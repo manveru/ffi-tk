@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'ffi-tk/ffi/tcl/obj'
 require 'ffi-tk/ffi/tcl/interp'
 require 'ffi-tk/ffi/tcl/cmd_proc'

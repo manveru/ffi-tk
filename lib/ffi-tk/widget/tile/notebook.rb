@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Tile
     # Tk::Tile::Notebook widget manages a collection of windows

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module FFI
   module Tcl
     # Nicer introspection and some accessors.

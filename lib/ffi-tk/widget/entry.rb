@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # An entry is a widget that displays a one-line text string and allows that
   # string to be edited using widget methods described below, which are

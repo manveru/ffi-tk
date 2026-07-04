@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Geometry manager for fixed or rubber-sheet placement
   #

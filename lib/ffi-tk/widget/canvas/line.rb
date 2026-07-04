@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   class Canvas
     # Items of type line appear on the display as one or more connected line

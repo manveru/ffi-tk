@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Tile
     def self.style(style, parent_name)

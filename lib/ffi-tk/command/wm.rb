@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # Communicate with window manager
   # The wm command is used to interact with window managers in order to control

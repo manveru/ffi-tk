@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Once git has a fix for the glibc in handling .mailmap and another fix for
 # allowing empty mail address to be mapped in .mailmap we won't have to handle
 # them manually.

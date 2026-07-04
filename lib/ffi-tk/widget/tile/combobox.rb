@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Tile
     # combobox combines a text field with a pop-down list of values.

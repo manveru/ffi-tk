@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   # This procedure posts a menu at a given position on the screen and configures
   # Tk so that the menu and its cascaded children can be traversed with the

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   class Canvas
     class Item < Struct.new(:canvas, :id)

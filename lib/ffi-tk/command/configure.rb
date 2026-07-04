@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Tk
   module Configure
     # Query or modify the configuration options of the widget.
