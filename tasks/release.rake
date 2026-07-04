@@ -14,16 +14,16 @@ namespace :release do
        "#{name}.gemspec",
        "lib/#{name}/version.rb")
 
-    puts <<-INSTRUCTIONS
-================================================================================
-
-I added the relevant files, you can commit them, tag the commit, and push:
-
-git commit -m 'Version #{version}'
-git tag -a -m '#{version}' '#{version}'
-git push
-
-================================================================================
+    puts <<~INSTRUCTIONS
+      ================================================================================
+      
+      I added the relevant files, you can commit them, tag the commit, and push:
+      
+      git commit -m 'Version #{version}'
+      git tag -a -m '#{version}' '#{version}'
+      git push
+      
+      ================================================================================
     INSTRUCTIONS
   end
 
@@ -32,14 +32,14 @@ git push
     name = GEMSPEC.name
     version = GEMSPEC.version
 
-    puts <<-INSTRUCTIONS
-================================================================================
-
-To publish to rubygems do following:
-
-gem push pkg/#{name}-#{version}.gem
-
-================================================================================
+    puts <<~INSTRUCTIONS
+      ================================================================================
+      
+      To publish to rubygems do following:
+      
+      gem push pkg/#{name}-#{version}.gem
+      
+      ================================================================================
     INSTRUCTIONS
   end
 end

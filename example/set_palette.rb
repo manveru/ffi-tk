@@ -11,13 +11,13 @@ rescue Exception => ex
   @exception.configure(text: ex.message)
 end
 
-desc = <<DESC
-This example shows how Tk can calculate whole palettes from a given background color.
-Simply fill the entry field with a color you would like.
-
-For example: "black", "yellow", "#fafafa", or "#f00"
-
-Hit Return to change the color.
+desc = <<~DESC
+  This example shows how Tk can calculate whole palettes from a given background color.
+  Simply fill the entry field with a color you would like.
+  
+  For example: "black", "yellow", "#fafafa", or "#f00"
+  
+  Hit Return to change the color.
 DESC
 
 Tk::Label.new(Tk.root, text: desc).pack

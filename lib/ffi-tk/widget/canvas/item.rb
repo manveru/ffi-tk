@@ -62,10 +62,10 @@ module Tk
         klass.new(canvas, id)
       end
 
-      OPTIONS_CODE = <<-RUBY
-def %s
-  Cget.type_to_ruby(%p, canvas.itemcget(id, %p))
-end
+      OPTIONS_CODE = <<~RUBY
+        def %s
+          Cget.type_to_ruby(%p, canvas.itemcget(id, %p))
+        end
       RUBY
 
       def self.options(*names)

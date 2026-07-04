@@ -69,10 +69,10 @@ module FFI
     def setup_eventloop_on_new_thread
       puts "Run eventloop on new thread" if $DEBUG
 
-      code = <<-RUBY.strip
-def self.%s(*args, &block)
-  @thread_sender.thread_send{ %s(*args, &block) }
-end
+      code = <<~RUBY.strip
+        def self.%s(*args, &block)
+          @thread_sender.thread_send{ %s(*args, &block) }
+        end
       RUBY
 
       binding, file, line = BINDING, __FILE__, __LINE__ - 5
@@ -88,10 +88,10 @@ end
     def setup_eventloop_on_main_thread
       puts "Run eventloop on main thread" if $DEBUG
 
-      code = <<-'RUBY'.strip
-def self.%s(*args, &block)
-  %s(*args, &block)
-end
+      code = <<~'RUBY'.strip
+        def self.%s(*args, &block)
+          %s(*args, &block)
+        end
       RUBY
 
       binding, file, line = BINDING, __FILE__, __LINE__ - 5
