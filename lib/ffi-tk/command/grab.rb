@@ -63,8 +63,8 @@ module Tk
   # a given display at once.
   module Grab
     # @see Grab.global
-    def grab_global(_window)
-      Grab.globa(self)
+    def grab_global
+      Grab.global(self)
     end
 
     # @see Grab.local
@@ -114,7 +114,7 @@ module Tk
       if window == None
         Tk.execute(:grab, :current).to_a
       else
-        Tk.execute(:grab, :current, window).to_s?
+        Tk.execute(:grab, :current, window).to_s
       end
     end
 
