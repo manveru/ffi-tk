@@ -103,7 +103,7 @@ module Tk
   # TODO: support for break and continue return status (by catch/throw)
   # 1 means true, 0 means false.
   def tcl_callback(_client_data, interp, objc, objv)
-    cmd, id, *args = tcl_cmd_args(interp, objc, objv)
+    _, id, *args = tcl_cmd_args(interp, objc, objv)
     id = id.first if id.is_a?(Array)
 
     catch :callback_break do
@@ -126,7 +126,7 @@ module Tk
 
   # TODO: support for break and continue return status (by catch/throw)
   def tcl_event(_client_data, interp, objc, objv)
-    cmd, id, sequence, *args = tcl_cmd_args(interp, objc, objv)
+    _, id, sequence, *args = tcl_cmd_args(interp, objc, objv)
 
     catch :callback_break do
       catch :callback_continue do
@@ -146,7 +146,7 @@ module Tk
   TCL_EVENT = method(:tcl_event)
 
   def tcl_cmd_args(interp, objc, objv)
-    length = FFI::MemoryPointer.new(0)
+    FFI::MemoryPointer.new(0)
     array = objv.read_array_of_pointer(objc)
     array.map do |e|
       obj = FFI::Tcl::EvalResult.guess(interp, e)

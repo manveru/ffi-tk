@@ -88,7 +88,7 @@ module Tk
       result = {}
 
       hash.each do |key, value|
-        case type = CGET_MAP[option = key.to_tcl_option]
+        case CGET_MAP[option = key.to_tcl_option]
         when :command
           command = register_command(key, &value)
           result[option] = command

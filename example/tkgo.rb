@@ -98,7 +98,7 @@ class TkGo
 
   def read_pipe
     reply = sout.gets.strip.split
-    ignore = sout.gets
+    sout.gets
     reply
   end
 
@@ -124,7 +124,7 @@ class TkGo
     return if cs.empty?
 
     goban.create_oval(*cs, tags: [:piece], fill: color)
-    outline = color == :white ? :black : :white
+    color == :white ? :black : :white
   end
 
   def draw_markers(blacks, whites)

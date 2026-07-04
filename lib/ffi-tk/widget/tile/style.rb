@@ -97,7 +97,7 @@ module Tk
 
       # Sets the default value of the specified option(s) in style.
       def self.configure(style = nil, options = {})
-        style.is_a?(Hash) && (keys = style
+        style.is_a?(Hash) && (style
                               style = nil)
         style ||= '.'
 

@@ -34,7 +34,7 @@ module FFI
 
     attach_function :Tk_Init, [:pointer], :int
     attach_function :Tk_MainWindow, [:pointer], :pointer
-    attach_function :Tk_GetColor, [:pointer, :pointer, name = :string], :pointer
+    attach_function :Tk_GetColor, [:pointer, :pointer, :string], :pointer
     attach_function :Tk_MainLoop, [], :void
 
     module_function

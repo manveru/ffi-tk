@@ -28,7 +28,7 @@ module Tk
             key = key.sub(/^-/, '').to_sym
 
             hash[key] =
-              case hint = hints[key]
+              case hints[key]
               when :boolean
                 Tk.boolean(value)
               when :symbol
@@ -45,7 +45,7 @@ module Tk
           ::Hash[each_slice(2).map do |key, value|
             key = key.sub(/^-/, '').to_sym
 
-            case hint = hints[key]
+            case hints[key]
             when :boolean
               [key, Tk.boolean(value)]
             when :symbol
