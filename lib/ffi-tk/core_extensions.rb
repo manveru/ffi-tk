@@ -126,7 +126,7 @@ module Tk
     end
 
     module Float
-      def tcl_to_ruby(option, hints)
+      def tcl_to_ruby(_option, _hints)
         self
       end
     end
