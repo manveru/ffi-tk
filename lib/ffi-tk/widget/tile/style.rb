@@ -88,9 +88,10 @@ module Tk
       # Each statespec / value pair is examined in order; the value
       # corresponding to the first matching statespec is used.
       def self.map(style, options = {})
-        style.is_a?(Hash) && (options = style
-                              style = nil)
-        style ||= '.'
+        if style.is_a?(Hash)
+          options = style
+          style = '.'
+        end
 
         Tk.execute_only('ttk::style', 'map', style, options.to_tcl_options)
       end

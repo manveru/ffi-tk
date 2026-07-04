@@ -22,8 +22,6 @@ module Tk
       common_configure([:configure], argument, hints)
     end
 
-    private
-
     def self.common(receiver, invocation, argument, hints = {})
       result =
         if argument == None
@@ -42,6 +40,8 @@ module Tk
         result
       end
     end
+
+    private
 
     def common_configure(invocation, argument, hints = {})
       Configure.common(self, invocation, argument, hints)
