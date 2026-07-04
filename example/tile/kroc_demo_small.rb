@@ -75,16 +75,16 @@ def makeToolbars(parent)
   CHECKBOXES.each do |icon|
     i += 1
     Tk::Tile::CheckButton.new(tb, text: icon,
-                                  #:image=>$ICON[icon],
-                                  #:variable=>$V.ref(icon),
-                                  #:compound=>$V[:COMPOUND],
+                                  # :image=>$ICON[icon],
+                                  # :variable=>$V.ref(icon),
+                                  # :compound=>$V[:COMPOUND],
                                   style: :Toolbutton).grid(row: 0, column: i,
                                                            sticky: :news)
   end
 
   mb = Tk::Tile::MenuButton.new(tb, text: 'toolbar')
-  #:image=>$ICON['file'],
-  #:compound=>$V[:COMPOUND]
+  # :image=>$ICON['file'],
+  # :compound=>$V[:COMPOUND]
   mb.configure menu: makeCompoundMenu(mb)
 
   i += 1
@@ -105,7 +105,7 @@ def makeCompoundMenu(mb)
     # menu.add(:radiobutton, :label=> Tk.tk_call('string', 'totitle', str),
     menu.add(:radiobutton, label: str,
                            value: str,
-                           #:variable=>$V.ref(:COMPOUND),
+                           # :variable=>$V.ref(:COMPOUND),
                            command: proc { puts 'foo'; true })
   end
   menu
