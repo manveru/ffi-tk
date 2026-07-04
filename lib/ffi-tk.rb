@@ -7,7 +7,7 @@ $LOAD_PATH.unshift File.dirname(__FILE__)
 
 module Tk
   TCL_LIBPATH = ENV['TCL_LIBPATH'].to_s.split(':')
-  TK_LIBPATH  = ENV[ 'TK_LIBPATH'].to_s.split(':')
+  TK_LIBPATH  = ENV['TK_LIBPATH'].to_s.split(':')
 
   HOST_OS = RbConfig::CONFIG['host_os']
 
