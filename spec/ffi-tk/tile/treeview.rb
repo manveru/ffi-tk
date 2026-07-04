@@ -15,7 +15,7 @@ describe Tk::Tile::Treeview do
     list.cget(:takefocus).should == false
     list.cget(:columns).should == []
     list.cget(:displaycolumns).should == ['#all']
-    list.cget(:show).should == %w(tree headings)
+    list.cget(:show).should == %w[tree headings]
     list.cget(:selectmode).should == :extended
     list.cget(:height).should == 10
     list.cget(:padding).should == []

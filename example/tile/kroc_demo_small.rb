@@ -8,13 +8,13 @@ Tk.init
 Tk::Tile::Style.theme_use 'alt'
 
 THEMELIST = [
-  %w(default Default),
-  %w(classic Classic),
-  %w(alt Revitalized),
-  %w(clam Clam),
+  %w[default Default],
+  %w[classic Classic],
+  %w[alt Revitalized],
+  %w[clam Clam],
   ['winnative', 'Windows native'],
   ['xpnative', 'XP Native'],
-  %w(aqua Aqua)
+  %w[aqua Aqua]
 ].freeze
 RUBY_THEMELIST = [].freeze
 RUBY_THEMELIST << ['kroc-rb', 'Kroc (by Ruby)', false]
@@ -41,9 +41,9 @@ end
 
 makeThemeControl(Tk.root).pack side: 'left'
 
-BUTTONS = %w(open new save).freeze
+BUTTONS = %w[open new save].freeze
 TOOLBARS = [].freeze
-CHECKBOXES = %w(bold italic).freeze
+CHECKBOXES = %w[bold italic].freeze
 ICON = {}.freeze
 
 # def loadIcons(file)
@@ -101,7 +101,7 @@ end
 #
 def makeCompoundMenu(mb)
   menu = Tk::Menu.new(mb)
-  %w(text image none top bottom left right center).each do |str|
+  %w[text image none top bottom left right center].each do |str|
     # menu.add(:radiobutton, :label=> Tk.tk_call('string', 'totitle', str),
     menu.add(:radiobutton, label: str,
                            value: str,

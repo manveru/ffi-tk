@@ -10,15 +10,15 @@ describe Tk::Tile::ComboBox do
   end
 
   it 'sets combobox values' do
-    b = Tk::Tile::ComboBox.new Tk.root, values: %w(a b)
-    b.configure(values: %w(c d)).should == true
+    b = Tk::Tile::ComboBox.new Tk.root, values: %w[a b]
+    b.configure(values: %w[c d]).should == true
   end
 
   it 'sets the current value' do
     var = Tk::Variable.new('somevar')
     var.set 'before_combobox'
 
-    b = Tk::Tile::ComboBox.new Tk.root, textvariable: var, values: %w(a b)
+    b = Tk::Tile::ComboBox.new Tk.root, textvariable: var, values: %w[a b]
 
     b.current.should == -1
 

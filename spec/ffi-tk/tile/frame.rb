@@ -61,6 +61,6 @@ describe Tk::Tile::Frame do
     frame.cget(:padding).should == ['10']
 
     frame.configure padding: [10, 20]
-    frame.cget(:padding).should == %w(10 20)
+    frame.cget(:padding).should == %w[10 20]
   end
 end

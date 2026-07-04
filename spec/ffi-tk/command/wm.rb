@@ -97,8 +97,8 @@ describe Tk::WM do
     end
 
     it 'sets queries the WM_COMMAND property' do
-      root.wm_command = %w(foo bar)
-      root.wm_command.should == %w(foo bar)
+      root.wm_command = %w[foo bar]
+      root.wm_command.should == %w[foo bar]
       root.wm_command = nil
       root.wm_command.should.nil?
     end

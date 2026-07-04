@@ -93,7 +93,7 @@ class TkGo
 
   # NOTE: there is no I
   def x_to_letter(x)
-    %w(A B C D E F G H J K L M N O P Q R S T)[x]
+    %w[A B C D E F G H J K L M N O P Q R S T][x]
   end
 
   def read_pipe

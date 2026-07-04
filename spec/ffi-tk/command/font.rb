@@ -6,11 +6,11 @@ Tk.init
 
 describe Tk::Font do
   it 'lists names of all named fonts' do
-    Tk::Font.names.sort.select { |name| name.match(/^Tk./) }.should == %w(
+    Tk::Font.names.sort.select { |name| name.match(/^Tk./) }.should == %w[
       TkCaptionFont TkDefaultFont TkFixedFont TkHeadingFont
       TkIconFont TkMenuFont TkSmallCaptionFont TkTextFont
       TkTooltipFont
-    )
+    ]
   end
 
   it 'measures a character' do

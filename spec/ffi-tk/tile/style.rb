@@ -13,7 +13,7 @@ describe Tk::Tile::Style do
     names.should.is_a? Array
     names.should.not.be.empty?
     names.all? { |i| i.is_a?(String) }
-    names.all? { |i| %w(aqua clam alt default classic).include? i }
+    names.all? { |i| %w[aqua clam alt default classic].include? i }
     # tk-aqua: "aqua", "clam", ...
   end
 
@@ -28,12 +28,12 @@ describe Tk::Tile::Style do
     names.should.is_a? Array
     names.should.not.be.empty?
     names.all? { |i| i.is_a?(String) }
-    %w(label focus image text textarea).each { |i| names.should.include? i }
+    %w[label focus image text textarea].each { |i| names.should.include? i }
   end
 
   it '#element_options returns the list of elements options' do
     name = 'text'
-    options = %w(-text -font -foreground -underline -width -anchor -justify -wraplength -embossed)
+    options = %w[-text -font -foreground -underline -width -anchor -justify -wraplength -embossed]
 
     Style.element_options(name).should.is_a? Array
     Style.element_options(name).should.not.be.empty?
@@ -44,8 +44,8 @@ describe Tk::Tile::Style do
 
   it '#lookup returns the value specified for -option in style style' do
     Style.lookup('label', 'font').should == 'TkDefaultFont'
-    %w(black #000000).should.include? Style.lookup('label', 'foreground')
-    %w(black #000000).should.include? Style.lookup('label', :foreground)
+    %w[black #000000].should.include? Style.lookup('label', 'foreground')
+    %w[black #000000].should.include? Style.lookup('label', :foreground)
   end
 
   it '#configure sets the default value of the specified option(s) in style' do

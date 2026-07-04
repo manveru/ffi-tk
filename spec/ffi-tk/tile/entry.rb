@@ -33,7 +33,7 @@ describe Tk::Tile::Entry do
     @entry.state.should == ['active']
 
     @entry.state(:disabled).should == true
-    @entry.state.should == %w(active disabled)
+    @entry.state.should == %w[active disabled]
 
     @entry.cget(:state).should == ['normal']
   end
@@ -44,10 +44,10 @@ describe Tk::Tile::Entry do
     @entry.cget(:state).should == ['disabled']
 
     @entry.state(:active).should == true
-    @entry.state.should == %w(active disabled)
+    @entry.state.should == %w[active disabled]
 
     @entry.state(:disabled).should == true
-    @entry.state.should == %w(active disabled)
+    @entry.state.should == %w[active disabled]
 
     @entry.cget(:state).should == ['disabled']
   end

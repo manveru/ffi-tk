@@ -12,7 +12,7 @@ describe Tk::Tile::Button do
     button = Button.new('.')
     button.cget(:default).should == 'normal'
 
-    %w(normal active disabled).each do |state|
+    %w[normal active disabled].each do |state|
       button = Button.new('.', default: state)
       button.cget(:default).should == state
     end

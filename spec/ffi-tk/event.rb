@@ -13,7 +13,7 @@ describe Tk::Event do
   it 'shows what sequences invoke a specific virtual event' do
     info = Tk::Event.info('<<Paste>>')
     info.should.is_a? Array
-    %w(<Control-Key-v> <Mod1-Key-v>).should.include info.first
+    %w[<Control-Key-v> <Mod1-Key-v>].should.include info.first
     # "<Control-Key-v>", "<Key-F18>", "<Control-Key-y>"
     # "<Control-Key-v>", "<Key-F18>", "<Control-Lock-Key-V>", "<Control-Key-y>"
     # tk-aqua: "<Mod1-Key-v>", "<Key-F4>", "<Control-Lock-Key-V>"

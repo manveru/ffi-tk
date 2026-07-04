@@ -10,7 +10,7 @@ class FileTree < Tk::Tile::Treeview
 
   def populate_roots
     ## Create the tree and set it up
-    configure columns: %w(fullpath type size), displaycolumns: %w(size)
+    configure columns: %w[fullpath type size], displaycolumns: %w[size]
     heading('#0', text: 'Directory Structure')
     heading('size', text: 'File Size')
     column('size', stretch: 0, width: 70)

@@ -146,7 +146,7 @@ describe Tk::Canvas do
     @line.activewidth.should == 0
     @line.disabledwidth.should == 0
     @line.arrow.should == :none
-    @line.arrowshape.should == %w(8 10 3)
+    @line.arrowshape.should == %w[8 10 3]
     @line.capstyle.should == :butt
     @line.joinstyle.should == :round
     @line.smooth.should == false

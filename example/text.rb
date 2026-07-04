@@ -11,7 +11,7 @@ text.pack
 p text.bbox '0.1'
 p text.index 'end'
 
-%w( autoseparators autoseparators blockcursor endline inactiveselectbackground
+%w[ autoseparators autoseparators blockcursor endline inactiveselectbackground
     maxundo spacing1 spacing2 spacing3 startline state tabs tabstyle undo width wrap
 
     background bg
@@ -38,7 +38,7 @@ p text.index 'end'
     setgrid
     takefocus
     xscrollcommand
-    yscrollcommand).each do |option|
+    yscrollcommand].each do |option|
   p option: text.cget(option)
 end
 
