@@ -8,4 +8,5 @@ gem 'rake'
 group :development, :test do
   gem 'bacon'
   gem 'pry'
+  gem 'simplecov', require: false
 end
