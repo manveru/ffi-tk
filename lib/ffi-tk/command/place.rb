@@ -45,7 +45,7 @@ module Tk
       info = Tk.execute('place', 'info', window).to_s
 
       array = info.split.each_slice(2).map do |key, value|
-        case key = key[1..-1].to_sym
+        case key = key[1..].to_sym
         when :anchor, :in
           [key, value]
         when :bordermode

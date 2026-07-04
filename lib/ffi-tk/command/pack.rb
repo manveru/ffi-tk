@@ -36,7 +36,7 @@ module Tk
       info = Tk.execute('pack', 'info', slave)
 
       array = info.map do |key, value|
-        case key = key[1..-1].to_sym
+        case key = key[1..].to_sym
         when :expand
           [key, Tk.boolean(value)]
         when :ipadx, :ipady, :padx, :pady
