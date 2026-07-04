@@ -137,7 +137,6 @@ describe Tk::Tile::Style do
     # Creates a new theme. It is an error if themeName already exists.
     -> { Style.theme_create('default') }.should.raise ArgumentError
 
-    #
     Style.theme_create('spec-theme').should == true
     Style.theme_names.should.include? 'spec-theme'
 
