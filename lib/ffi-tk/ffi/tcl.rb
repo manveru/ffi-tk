@@ -59,12 +59,11 @@ module FFI
 
     module_function
 
-    ATTACHED_FUNCTIONS = {}
-    singleton_methods.grep(/^Tcl_/).each do |function|
+    ATTACHED_FUNCTIONS = singleton_methods.grep(/^Tcl_/).each_with_object({}) do |function, functions|
       ruby_name = function.to_s
                           .gsub(/([A-Z][a-z]+)/, '_\1').sub('_Tcl__', '').downcase
-      ATTACHED_FUNCTIONS[function] = ruby_name
-    end
+      functions[function] = ruby_name
+    end.freeze
     BINDING = binding
 
     def setup_eventloop_on_new_thread

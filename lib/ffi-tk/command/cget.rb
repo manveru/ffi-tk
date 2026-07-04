@@ -2,36 +2,36 @@
 
 module Tk
   module Cget
-    CGET_MAP = {}
+    OPTIONS_BY_TYPE = {
+      integer: %w[
+        height width maxundo spacing1 spacing2 spacing3 borderwidth bd
+        highlightthickness insertborderwidth insertofftime insertontime
+        insertwidth padx pady selectborderwidth endline startline length
+        maximum
+      ],
+      boolean: %w[
+        autoseparators blockcursor undo exportselection setgrid takefocus
+      ],
+      color: %w[
+        inactiveselectbackground disabledbackground disabledforeground background
+        bg foreground fg highlightbackground highlightcolor insertbackground
+        selectbackground selectforeground readonlybackground
+      ],
+      command: %w[
+        invalidcommand invcmd yscrollcommand xscrollcommand validatecommand
+        command vcmd
+      ],
+      string: %w[tabs cursor text show default class],
+      font: %w[font],
+      symbol: %w[wrap tabstyle relief justify validate orient mode selectmode],
+      variable: %w[textvariable],
+      bitmap: %w[stipple],
+      list: %w[padding state style columns displaycolumns]
+    }.freeze
 
-    insert = lambda do |type, array|
-      array.each { |option| CGET_MAP["-#{option}"] = type }
-    end
-
-    insert[:integer, %w[
-      height width maxundo spacing1 spacing2 spacing3 borderwidth bd
-      highlightthickness insertborderwidth insertofftime insertontime
-      insertwidth padx pady selectborderwidth endline startline length
-      maximum
-    ]]
-    insert[:boolean, %w[
-      autoseparators blockcursor undo exportselection setgrid takefocus
-    ]]
-    insert[:color, %w[
-      inactiveselectbackground disabledbackground disabledforeground background
-      bg foreground fg highlightbackground highlightcolor insertbackground
-      selectbackground selectforeground readonlybackground
-    ]]
-    insert[:command, %w[
-      invalidcommand invcmd yscrollcommand xscrollcommand validatecommand
-      command vcmd
-    ]]
-    insert[:string, %w[tabs cursor text show default class]]
-    insert[:font, %w[font]]
-    insert[:symbol, %w[wrap tabstyle relief justify validate orient mode selectmode]]
-    insert[:variable, %w[textvariable]]
-    insert[:bitmap, %w[stipple]]
-    insert[:list, %w[padding state style columns displaycolumns]]
+    CGET_MAP = OPTIONS_BY_TYPE.each_with_object({}) do |(type, options), map|
+      options.each { |option| map["-#{option}"] = type }
+    end.freeze
 
     def cget(option)
       option = option.to_tcl_option
