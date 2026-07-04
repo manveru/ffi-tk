@@ -12,6 +12,7 @@ module Tk
     module Style
       extend Tk::Configure
       extend Tk::Cget
+
       TTK_STYLE_CMD = 'ttk::style'
 
       # Returns a list of all known themes.

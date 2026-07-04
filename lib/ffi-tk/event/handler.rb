@@ -4,7 +4,7 @@ module Tk
   module Event
     # Register and dispatch Ruby callbacks for Tk events.
     module Handler
-      data = Data::PROPERTIES.transpose[0].join(' ').gsub(/%/, '%%')
+      data = Data::PROPERTIES.transpose[0].join(' ').gsub('%', '%%')
       @callback = %(bind %s %s { ::RubyFFI::event %d %s #{data} })
       @store = []
       @bound = {}

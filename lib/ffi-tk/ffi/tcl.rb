@@ -10,6 +10,7 @@ module FFI
   # Low-level FFI bindings to the Tcl C library (libtcl).
   module Tcl
     extend FFI::Library
+
     ffi_lib ::Tk::TCL_LIBPATH
 
     attach_function :Tcl_AppendAllObjTypes, %i[pointer pointer], :int
@@ -91,7 +92,7 @@ module FFI
     def setup_eventloop_on_main_thread
       puts 'Run eventloop on main thread' if $DEBUG
 
-      code = <<~'RUBY'.strip
+      code = <<~RUBY.strip
         def self.%s(*args, &block)
           %s(*args, &block)
         end

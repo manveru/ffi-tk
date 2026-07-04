@@ -4,6 +4,7 @@ module FFI
   # Low-level FFI bindings to the Tk C library (libtk).
   module Tk
     extend FFI::Library
+
     ffi_lib ::Tk::TK_LIBPATH
 
     # FFI binding for Xlib's XColor struct (RGB components plus pixel value).

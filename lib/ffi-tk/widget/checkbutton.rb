@@ -12,7 +12,7 @@ module Tk
 
     def initialize(parent = Tk.root, options = None, &block)
       if block
-        super(parent, options) do |options|
+        super do |options|
           options[:command] = register_command(:command, &block)
         end
       else

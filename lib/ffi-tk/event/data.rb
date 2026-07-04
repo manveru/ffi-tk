@@ -48,7 +48,7 @@ module Tk
       ].freeze
 
       def initialize(id, pattern, *properties)
-        super id, pattern
+        super(id, pattern)
 
         PROPERTIES.each do |_code, conv, name|
           value = properties.shift
