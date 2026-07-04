@@ -11,7 +11,9 @@ module Tk
       def self.tk_command
         'ttk::progressbar'
       end
-      include TileWidget, Cget, Configure
+      include Configure
+      include Cget
+      include TileWidget
 
       # Begin autoincrement mode
       # schedules a recurring timer event that calls step every

@@ -13,7 +13,8 @@ module Tk
   # over the button), then the command specified in the -command option is
   # invoked.
   class Button < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'button'

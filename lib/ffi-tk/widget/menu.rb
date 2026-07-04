@@ -2,7 +2,8 @@
 
 module Tk
   class Menu < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'menu'

@@ -3,7 +3,8 @@
 module Tk
   # Create and manipulate checkbutton widgets
   class CheckButton < Button
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'checkbutton'

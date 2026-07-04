@@ -2,7 +2,8 @@
 
 module Tk
   class Scrollbar < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'scrollbar'

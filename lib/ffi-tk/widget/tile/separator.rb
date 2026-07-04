@@ -7,7 +7,9 @@ module Tk
       def self.tk_command
         'ttk::separator'
       end
-      include TileWidget, Cget, Configure
+      include Configure
+      include Cget
+      include TileWidget
 
       # Specifies the orientation of the separator.
       # horizontal or vertical

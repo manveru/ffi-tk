@@ -31,7 +31,8 @@ module Tk
   # "0123456789abcdef\x" then control characters and undefined characters
   # are not displayed at all.
   class Message < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'message'

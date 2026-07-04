@@ -2,7 +2,8 @@
 
 module Tk
   class PanedWindow < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'panedwindow'

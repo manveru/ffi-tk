@@ -9,7 +9,8 @@ module Tk
   # The only visible features of a toplevel are its background color and an
   # optional 3-D border to make the toplevel appear raised or sunken.
   class Toplevel < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'toplevel'

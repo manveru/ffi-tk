@@ -2,7 +2,8 @@
 
 module Tk
   class MenuButton < Button
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'menubutton'

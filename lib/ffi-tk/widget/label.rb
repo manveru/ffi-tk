@@ -13,7 +13,8 @@ module Tk
   # Additional options may be specified to configure aspects of the label such
   # as its colors, font, text, and initial relief.
   class Label < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'label'

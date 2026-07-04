@@ -21,7 +21,10 @@ module Tk
     # Treeview widgets support horizontal and vertical scrolling with the
     # standard -[xy]scrollcommand options and [xy]view widget commands.
     class Treeview < Tk::Widget
-      include Tk::Tile::TileWidget, Scrollable, Cget, Configure
+      include Configure
+      include Cget
+      include Scrollable
+      include Tk::Tile::TileWidget
 
       def self.tk_command
         'ttk::treeview'

@@ -2,7 +2,8 @@
 
 module Tk
   class Spinbox < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'spinbox'

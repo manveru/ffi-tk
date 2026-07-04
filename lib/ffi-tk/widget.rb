@@ -2,7 +2,16 @@
 
 module Tk
   class Widget
-    include Pack, Destroy, Bind, Bindtags, WM, Winfo, Grid, Clipboard, Place, TkCmd
+    include TkCmd
+    include Place
+    include Clipboard
+    include Grid
+    include Winfo
+    include WM
+    include Bindtags
+    include Bind
+    include Destroy
+    include Pack
 
     attr_reader :tk_parent, :tk_pathname
 

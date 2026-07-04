@@ -10,7 +10,8 @@ module Tk
       end
 
       include TileWidget
-      include Cget, Configure
+      include Configure
+      include Cget
 
       def initialize(parent = Tk.root, options = {})
         super

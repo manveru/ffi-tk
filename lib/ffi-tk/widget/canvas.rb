@@ -24,7 +24,8 @@ module Tk
     require 'ffi-tk/widget/canvas/text.rb'
     require 'ffi-tk/widget/canvas/window.rb'
 
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'canvas'

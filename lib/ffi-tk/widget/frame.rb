@@ -7,7 +7,8 @@ module Tk
   # layouts. The only features of a frame are its background color and an
   # optional 3-D border to make the frame appear raised or sunken.
   class Frame < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'frame'

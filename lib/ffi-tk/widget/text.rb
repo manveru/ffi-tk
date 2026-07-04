@@ -2,7 +2,9 @@
 
 module Tk
   class Text < Widget
-    include Cget, Configure, Scrollable
+    include Scrollable
+    include Configure
+    include Cget
 
     def self.tk_command
       'text'

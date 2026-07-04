@@ -6,7 +6,9 @@ module Tk
       def self.tk_command
         'ttk::sizegrip'
       end
-      include TileWidget, Cget, Configure
+      include Configure
+      include Cget
+      include TileWidget
 
       # # USAGE
       # Using pack:

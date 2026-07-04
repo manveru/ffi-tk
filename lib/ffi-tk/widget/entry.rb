@@ -21,7 +21,8 @@ module Tk
   # scrollbars (see the description of the xScrollCommand option for details).
   # They also support scanning, as described below.
   class Entry < Widget
-    include Cget, Configure
+    include Configure
+    include Cget
 
     def self.tk_command
       'entry'
