@@ -59,17 +59,7 @@ module Tk
       when :variable
         Variable.new(value.to_s?) if value.respond_to?(:to_s?)
       when :list
-        # List options (padding, columns, ...) are string-valued in Tk (they
-        # may hold screen distances like "2m"). EvalResult.to_list type-guesses
-        # each element from Tcl's cached obj type, so "10" comes back as 10 or
-        # "10" depending on shimmering. Pin the contract to strings.
-        list =
-          case value
-          when Array then value
-          when String then value.split
-          else value.to_a
-          end
-        list.map(&:to_s)
+        list_to_ruby(value)
       when :float
         value.to_f
       when :pathname
@@ -80,6 +70,20 @@ module Tk
       else
         raise format('Unknown type: %p: %p', type, value)
       end
+    end
+
+    # List options (padding, columns, ...) are string-valued in Tk (they may
+    # hold screen distances like "2m"). EvalResult.to_list type-guesses each
+    # element from Tcl's cached obj type, so "10" comes back as 10 or "10"
+    # depending on shimmering. Pin the contract to strings.
+    def list_to_ruby(value)
+      list =
+        case value
+        when Array then value
+        when String then value.split
+        else value.to_a
+        end
+      list.map(&:to_s)
     end
 
     def option_hash_to_tcl(hash)

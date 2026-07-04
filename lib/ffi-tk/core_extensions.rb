@@ -26,38 +26,29 @@ module Tk
             next if !value || (value.respond_to?(:empty?) && value.empty?)
 
             key = key.sub(/^-/, '').to_sym
-
-            hash[key] =
-              case hints[key]
-              when :boolean
-                Tk.boolean(value)
-              when :symbol
-                value.to_sym
-              when :float
-                Float(value)
-              else
-                value
-              end
+            hash[key] = coerce_tcl_value(value, hints[key])
           end
 
           hash
         elsif first =~ /^-/
           ::Hash[each_slice(2).map do |key, value|
             key = key.sub(/^-/, '').to_sym
-
-            case hints[key]
-            when :boolean
-              [key, Tk.boolean(value)]
-            when :symbol
-              [key, value.to_sym]
-            when :float
-              [key, Float(value)]
-            else
-              [key, value]
-            end
+            [key, coerce_tcl_value(value, hints[key])]
           end]
         else
           self
+        end
+      end
+
+      private
+
+      # Coerce a raw Tcl option value using the caller's type hint.
+      def coerce_tcl_value(value, hint)
+        case hint
+        when :boolean then Tk.boolean(value)
+        when :symbol then value.to_sym
+        when :float then Float(value)
+        else value
         end
       end
     end
