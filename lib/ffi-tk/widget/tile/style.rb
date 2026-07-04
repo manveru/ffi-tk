@@ -98,8 +98,10 @@ module Tk
 
       # Sets the default value of the specified option(s) in style.
       def self.configure(style = nil, options = {})
-        style.is_a?(Hash) && (style
-                              style = nil)
+        if style.is_a?(Hash)
+          options = style
+          style = nil
+        end
         style ||= '.'
 
         Tk.execute_only('ttk::style', 'configure', style, options.to_tcl_options)
