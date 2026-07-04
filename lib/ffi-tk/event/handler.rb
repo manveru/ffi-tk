@@ -12,7 +12,7 @@ module Tk
       module_function
 
       def invoke(id, event)
-        return unless found = @store.at(id)
+        return unless (found = @store.at(id))
 
         found.call(event)
       end
@@ -52,7 +52,7 @@ module Tk
       def unregister(tag, sequence)
         key = [tag, sequence]
 
-        return unless block = @bound[key]
+        return unless (block = @bound[key])
 
         Tk.execute(:bind, tag, sequence, nil)
         id = @store.index(block)

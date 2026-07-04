@@ -897,14 +897,14 @@ module Tk
       elsif name != None && command == None
         Tk.execute(:wm, :protocol, window, name)
       elsif name != None && command.nil?
-        if id = @commands[key]
+        if (id = @commands[key])
           Tk.unregister_proc(id)
           @commands.delete(key)
         end
 
         Tk.execute_only(:wm, :protocol, window, name, '')
       elsif name != None && command
-        if id = @commands[key]
+        if (id = @commands[key])
           Tk.unregister_proc(id)
         end
 

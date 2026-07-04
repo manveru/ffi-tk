@@ -16,7 +16,7 @@ module Tk
     def add(window, *arguments)
       options, windows = arguments.partition { |arg| arg.respond_to?(:to_tcl_options) }
 
-      if option = options.first
+      if (option = options.first)
         execute(:add, window, *windows, option.to_tcl_options)
       else
         execute(:add, window, *windows)

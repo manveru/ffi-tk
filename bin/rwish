@@ -14,7 +14,7 @@ Tk.init
 begin
   require 'readline'
 
-  while line = Readline.readline('> ', true)
+  while (line = Readline.readline('> ', true))
     begin
       p eval(line)
     rescue StandardError => e
@@ -22,7 +22,7 @@ begin
     end
   end
 rescue LoadError
-  while line = $stdin.gets
+  while (line = $stdin.gets)
     line.strip!
 
     begin

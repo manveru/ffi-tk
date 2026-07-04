@@ -135,7 +135,7 @@ module Tk
       def tcl_to_ruby(option, hints)
         name = option.sub(/^-/, '').to_sym
 
-        return unless type = hints[name]
+        return unless (type = hints[name])
 
         case type
         when :boolean
