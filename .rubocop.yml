@@ -12,3 +12,81 @@ AllCops:
 Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
+
+# --- Deliberate project style choices (promoted from the auto-generated todo) ---
+
+# Tk uses one- and two-letter coordinate/dimension parameters pervasively
+# (x, y, w, h, r, g, b, dx, dy, ...); allow them while keeping the cop for
+# genuinely forbidden names.
+Naming/MethodParameterName:
+  MinNameLength: 1
+
+# Tk/C-style format strings use positional (%s, %d) tokens; annotated tokens
+# would be noise here.
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
+
+# The gem's entry file must be named after the (hyphenated) gem so that
+# `require 'ffi-tk'` works; it cannot be snake_case.
+Naming/FileName:
+  Exclude:
+    - 'lib/ffi-tk.rb'
+
+# grab.set_local/set_global and Tile.set_theme are action commands (Tk's
+# `grab set`, `style theme use`), not attribute writers.
+Naming/AccessorMethodName:
+  Exclude:
+    - 'lib/ffi-tk/command/grab.rb'
+    - 'lib/ffi-tk/widget/tile.rb'
+
+# Tk::Tile::Font holds an enum-like namespace of font-name constants
+# (Font::Default, Font::Heading, ...) that are public API.
+Naming/ConstantName:
+  Exclude:
+    - 'lib/ffi-tk/widget/tile.rb'
+
+# pack/canvas expose long-standing positional boolean parameters; converting to
+# keyword args would break every existing caller.
+Style/OptionalBooleanParameter:
+  Exclude:
+    - 'lib/ffi-tk/command/pack.rb'
+    - 'lib/ffi-tk/widget/canvas.rb'
+
+# --- Test/example idioms (RuboCop defaults do not fit these contexts) ---
+
+# bacon assertions read as void expressions (obj.should == x); autocorrecting
+# would delete them.
+Lint/Void:
+  Exclude:
+    - 'spec/**/*'
+
+# Specs legitimately assert on exact geometry/progress float values.
+Lint/FloatComparison:
+  Exclude:
+    - 'spec/**/*'
+
+# Test helper classes are defined inside describe blocks; and the constants in
+# these two files belong to a Struct-subclass body written as `Struct.new(...) do`.
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/ffi-tk/ffi/tcl/eval_result.rb'
+    - 'lib/ffi-tk/widget/canvas/item.rb'
+
+# Test data (event sequences, widget dumps) contains long literal strings that
+# do not wrap meaningfully.
+Layout/LineLength:
+  Exclude:
+    - 'spec/**/*'
+
+# Demo scripts use broad rescues, top-level globals, and camelCase method names
+# ported from the Tcl/Tk demo sources.
+Lint/RescueException:
+  Exclude:
+    - 'example/**/*'
+Style/GlobalVars:
+  Exclude:
+    - 'example/**/*'
+Naming/MethodName:
+  Exclude:
+    - 'example/**/*'
