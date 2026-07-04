@@ -166,11 +166,11 @@ module Tk
     # the window as a whole.
     def bind(tag_or_id, sequence = None, &script)
       unless script
-        if None == sequence
-          return Tk.execute(tk_pathname, :bind, tag_or_id)
-        else
+        return Tk.execute(tk_pathname, :bind, tag_or_id) if None == sequence
+          
+        
           return Tk.execute(tk_pathname, :bind, tag_or_id, sequence)
-        end
+        
       end
 
       name = tag_or_id.to_s.scan(/\w+/).join('_')

@@ -41,11 +41,11 @@ module Tk
     module_function
 
     def option_to_ruby(name, value)
-      if type = CGET_MAP[name.to_tcl_option]
+      raise format('Unknown type for %p: %p', name, value) unless type = CGET_MAP[name.to_tcl_option]
         type_to_ruby(type, value)
-      else
-        raise format('Unknown type for %p: %p', name, value)
-      end
+      
+        
+      
     end
 
     def type_to_ruby(type, value)

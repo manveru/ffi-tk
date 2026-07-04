@@ -71,9 +71,9 @@ module Tk
       # built-in element type is image (see ttk_image(n)), although themes
       # may define other element types (see Ttk_RegisterElementFactory).
       def self.element_create(name, type, args = nil, options = {})
-        if type == 'image' || type == :image
+        return unless type == 'image' || type == :image
           Tk.execute_only('ttk::style', 'element', 'create', name, 'image', args, options.to_tcl_options)
-        end
+        
       end
 
       # Define the widget layout for style style. See LAYOUTS below for the format

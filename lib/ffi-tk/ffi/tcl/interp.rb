@@ -39,11 +39,13 @@ module FFI
             string = [ruby_obj.message, *ruby_obj.backtrace].join("\n")
             Tcl.new_string_obj(string, string.bytesize)
           else
-            if ruby_obj.respond_to?(:to_tcl)
+            unless ruby_obj.respond_to?(:to_tcl)
+  raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
+end
               ruby_obj.to_tcl
-            else
-              raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
-            end
+            
+              
+            
           end
 
         Tcl.set_obj_result(self, obj)
@@ -94,11 +96,11 @@ module FFI
         message = guess_result.to_s
         puts format('eval= %p', message) if $DEBUG
 
-        if message.empty?
-          raise format('Failure during eval of: %p', string)
-        else
+        raise format('Failure during eval of: %p', string) if message.empty?
+          
+        
           raise format('%s during eval of: %p', message, string)
-        end
+        
       end
     end
   end

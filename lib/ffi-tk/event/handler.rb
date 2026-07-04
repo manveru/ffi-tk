@@ -52,12 +52,12 @@ module Tk
       def unregister(tag, sequence)
         key = [tag, sequence]
 
-        if block = @bound[key]
+        return unless block = @bound[key]
           Tk.execute(:bind, tag, sequence, nil)
           id = @store.index(block)
           @store[id] = nil
           @bound.delete(key)
-        end
+        
       end
     end
   end

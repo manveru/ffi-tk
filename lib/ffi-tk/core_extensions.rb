@@ -135,14 +135,14 @@ module Tk
       def tcl_to_ruby(option, hints)
         name = option.sub(/^-/, '').to_sym
 
-        if type = hints[name]
+        return unless type = hints[name]
           case type
           when :boolean
             Tk.boolean(self)
           else
             self
           end
-        end
+        
       end
 
       def to_boolean

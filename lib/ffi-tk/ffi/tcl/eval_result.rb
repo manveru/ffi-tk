@@ -92,11 +92,13 @@ module FFI
       def self.to_double(interp, obj)
         double_pointer = MemoryPointer.new(:double)
 
-        if Tcl.get_double_from_obj(interp, obj, double_pointer) == 0
+        unless Tcl.get_double_from_obj(interp, obj, double_pointer) == 0
+  raise format("Couldn't get double from %p", obj)
+end
           double_pointer.get_double(0)
-        else
-          raise format("Couldn't get double from %p", obj)
-        end
+        
+          
+        
       end
 
       def self.to_list(interp, obj)
@@ -153,11 +155,11 @@ module FFI
       def self.panic(interp, function)
         message = guess(interp, Obj.new(Tcl.get_obj_result(interp))).to_s
 
-        if message.empty?
-          raise format('Failure during call of: %p', function)
-        else
+        raise format('Failure during call of: %p', function) if message.empty?
+          
+        
           raise format('%s during call of: %p', message, function)
-        end
+        
       end
 
       def to_a(&block)
