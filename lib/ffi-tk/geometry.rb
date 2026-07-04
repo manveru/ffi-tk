@@ -3,6 +3,7 @@ module Tk
   class TkGeometry < Struct.new(:original, :width, :height, :x, :y)
     def initialize(tcl_string)
       str = tcl_string.to_s
+      self.original = str
 
       if /^\=?(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
         self.width = Integer(width)
@@ -24,9 +25,9 @@ module Tk
       if width && height && x && y
         '=%dx%d%+d%+d' % [width, height, x, y]
       elsif width && height
-        '=%dx%d%' % [width, height]
+        '=%dx%d' % [width, height]
       elsif x && y
-        '=+d%+d' % [x, y]
+        '=%+d%+d' % [x, y]
       else
         raise 'Incomplete geometry: %p' % [self]
       end
