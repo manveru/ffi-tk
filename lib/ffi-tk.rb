@@ -29,9 +29,7 @@ module Tk
   # In these cases please use:
   #   module Tk; RUN_EVENTLOOP_ON_MAIN_THREAD = true; end
   # before you require 'tk'
-  unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
-    RUN_EVENTLOOP_ON_MAIN_THREAD = HOST_OS =~ /darwin/
-  end
+  RUN_EVENTLOOP_ON_MAIN_THREAD = HOST_OS =~ /darwin/ unless const_defined?(:RUN_EVENTLOOP_ON_MAIN_THREAD)
 
   DONT_WAIT     = 1 << 1
   WINDOW_EVENTS = 1 << 2
