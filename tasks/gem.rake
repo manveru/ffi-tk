@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
 
-task gemspec: [:manifest, :changelog] do
+task gemspec: %i[manifest changelog] do
   gemspec_file = "#{GEMSPEC.name}.gemspec"
   File.open(gemspec_file, 'w+') { |gs| gs.puts(GEMSPEC.to_ruby) }
 end

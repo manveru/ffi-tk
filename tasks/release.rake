@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :release do
-  task prepare: [:reversion, :authors, :gemspec]
+  task prepare: %i[reversion authors gemspec]
   task all: ['release:github', 'release:rubygems']
 
   desc 'Release on github'

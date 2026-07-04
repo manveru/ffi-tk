@@ -41,7 +41,7 @@ describe Tk::Text do
     maxundo: [0],
     padx: [1],
     pady: [1],
-    relief: [:flat, :sunken],
+    relief: %i[flat sunken],
     selectbackground: %w[systemHighlight #c3c3c3],
     selectborderwidth: [1, 0],
     selectforeground: [nil, '#000000'],
@@ -162,7 +162,7 @@ describe Tk::Text do
   end
 
   it 'lists mark names' do
-    text.mark_names.sort.should == [:current, :insert]
+    text.mark_names.sort.should == %i[current insert]
   end
 
   it 'answers with the next mark after index' do
@@ -179,12 +179,12 @@ describe Tk::Text do
 
   it 'sets a mark' do
     text.mark_set('foo', '1.3')
-    text.mark_names.sort.should == [:current, :foo, :insert]
+    text.mark_names.sort.should == %i[current foo insert]
   end
 
   it 'unsets a mark' do
     text.mark_unset('foo')
-    text.mark_names.sort.should == [:current, :insert]
+    text.mark_names.sort.should == %i[current insert]
   end
 
   it 'creates a peer' do

@@ -36,7 +36,7 @@ def kroc_rb_settings
   Tk::Tile::Style.map(Tk::Tile::TScrollbar,
                       background: [:pressed, '#694418'],
                       arrowcolor: [:pressed, '#FEF7CB'],
-                      relief: [:pressed, :sunken])
+                      relief: %i[pressed sunken])
 
   # Tk::Tile::Style.layout('Vertical.TScrollbar',
   Tk::Tile::Style.layout(Tk::Tile.style('Vertical', Tk::Tile::TScrollbar),
@@ -68,18 +68,18 @@ def kroc_rb_settings
   Tk::Tile::Style.element_create('Checkbutton.indicator',
                                  :image,
                                  [$images['check-nu'],
-                                  [:pressed, :selected], $images['check-nc'],
+                                  %i[pressed selected], $images['check-nc'],
                                   :pressed,             $images['check-nu'],
-                                  [:active, :selected], $images['check-hc'],
+                                  %i[active selected], $images['check-hc'],
                                   :active,              $images['check-hu'],
                                   :selected,            $images['check-nc']], sticky: :w)
 
   Tk::Tile::Style.element_create('Radiobutton.indicator',
                                  :image,
                                  [$images['radio-nu'],
-                                  [:pressed, :selected], $images['radio-nc'],
+                                  %i[pressed selected], $images['radio-nc'],
                                   :pressed, $images['radio-nu'],
-                                  [:active, :selected], $images['radio-hc'],
+                                  %i[active selected], $images['radio-hc'],
                                   :active,             $images['radio-hu'],
                                   :selected,           $images['radio-nc']], sticky: :w)
 
