@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'thread'
 require 'ffi'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
