@@ -74,7 +74,9 @@ module Tk
     private
 
     def assign_pathname
-      @tk_pathname ||= Tk.register_object(tk_parent, self)
+      # Memoizes the tk_pathname attribute (attr_reader above), not the method
+      # name, so the cop's method-name heuristic does not apply here.
+      @tk_pathname ||= Tk.register_object(tk_parent, self) # rubocop:disable Naming/MemoizedInstanceVariableName
     end
   end
 end
