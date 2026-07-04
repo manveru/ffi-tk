@@ -62,7 +62,7 @@ module FFI
     ATTACHED_FUNCTIONS = {}
     singleton_methods.grep(/^Tcl_/).each do |function|
       ruby_name = function.to_s
-        .gsub(/([A-Z][a-z]+)/, '_\1').sub('_Tcl__', '').downcase
+                          .gsub(/([A-Z][a-z]+)/, '_\1').sub('_Tcl__', '').downcase
       ATTACHED_FUNCTIONS[function] = ruby_name
     end
     BINDING = binding
