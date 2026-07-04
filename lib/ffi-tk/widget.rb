@@ -26,9 +26,9 @@ module Tk
       end
 
       options = if !options || None == options
-        {}
-      else
-        options.dup
+                  {}
+                else
+                  options.dup
                 end
 
       @tk_parent = tk_parent

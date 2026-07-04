@@ -7,8 +7,8 @@ module Tk
         Tk.execute(:bind, tag).to_a
       elsif block
         Event::Handler.register(tag, sequence, &block)
-        else
-          Tk.execute(:bind, tag, sequence).to_s
+      else
+        Tk.execute(:bind, tag, sequence).to_s
       end
     end
 

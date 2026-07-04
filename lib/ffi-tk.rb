@@ -47,10 +47,10 @@ module Tk
   None = Object.new
 
   class << None
-    def to_tcl() = nil
-    def to_tcl_options?() = self
-    def to_tcl_option?() = self
-    def inspect() = '#<None>'
+    def to_tcl = nil
+    def to_tcl_options? = self
+    def to_tcl_option? = self
+    def inspect = '#<None>'
   end
 end
 

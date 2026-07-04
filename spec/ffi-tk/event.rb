@@ -80,8 +80,10 @@ describe Tk::Event do
     entered = false
 
     entry = Tk::Entry.new('.')
-    entry.bind('<Key>') { entered = true
- Tk.stop }
+    entry.bind('<Key>') do
+      entered = true
+      Tk.stop
+    end
     entry.bind('<Map>') do
       entry.focus
       Tk::Event.generate(entry, '<KeyPress-a>')

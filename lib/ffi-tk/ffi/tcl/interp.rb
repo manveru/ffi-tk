@@ -40,12 +40,11 @@ module FFI
             Tcl.new_string_obj(string, string.bytesize)
           else
             unless ruby_obj.respond_to?(:to_tcl)
-  raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
-end
-              ruby_obj.to_tcl
-            
-              
-            
+              raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
+            end
+
+            ruby_obj.to_tcl
+
           end
 
         Tcl.set_obj_result(self, obj)
@@ -97,10 +96,8 @@ end
         puts format('eval= %p', message) if $DEBUG
 
         raise format('Failure during eval of: %p', string) if message.empty?
-          
-        
-          raise format('%s during eval of: %p', message, string)
-        
+
+        raise format('%s during eval of: %p', message, string)
       end
     end
   end

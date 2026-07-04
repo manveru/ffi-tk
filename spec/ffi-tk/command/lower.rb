@@ -9,9 +9,9 @@ Tk.init
 # Widget#lower raised on every call.
 describe Tk::Lower do
   @a = Tk::Frame.new('.')
- @a.pack
+  @a.pack
   @b = Tk::Frame.new('.')
- @b.pack
+  @b.pack
 
   it 'lowers a window below all siblings (below omitted)' do
     should.not.raise { Tk::Lower.lower(@a) }

@@ -93,12 +93,10 @@ module FFI
         double_pointer = MemoryPointer.new(:double)
 
         unless Tcl.get_double_from_obj(interp, obj, double_pointer) == 0
-  raise format("Couldn't get double from %p", obj)
-end
-          double_pointer.get_double(0)
-        
-          
-        
+          raise format("Couldn't get double from %p", obj)
+        end
+
+        double_pointer.get_double(0)
       end
 
       def self.to_list(interp, obj)
@@ -156,10 +154,8 @@ end
         message = guess(interp, Obj.new(Tcl.get_obj_result(interp))).to_s
 
         raise format('Failure during call of: %p', function) if message.empty?
-          
-        
-          raise format('%s during call of: %p', message, function)
-        
+
+        raise format('%s during call of: %p', message, function)
       end
 
       def to_a(&block)

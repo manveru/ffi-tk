@@ -53,11 +53,11 @@ module Tk
         key = [tag, sequence]
 
         return unless block = @bound[key]
-          Tk.execute(:bind, tag, sequence, nil)
-          id = @store.index(block)
-          @store[id] = nil
-          @bound.delete(key)
-        
+
+        Tk.execute(:bind, tag, sequence, nil)
+        id = @store.index(block)
+        @store[id] = nil
+        @bound.delete(key)
       end
     end
   end

@@ -73,8 +73,8 @@ module Tk
       # may define other element types (see Ttk_RegisterElementFactory).
       def self.element_create(name, type, args = nil, options = {})
         return unless ['image', :image].include?(type)
-          Tk.execute_only('ttk::style', 'element', 'create', name, 'image', args, options.to_tcl_options)
-        
+
+        Tk.execute_only('ttk::style', 'element', 'create', name, 'image', args, options.to_tcl_options)
       end
 
       # Define the widget layout for style style. See LAYOUTS below for the format

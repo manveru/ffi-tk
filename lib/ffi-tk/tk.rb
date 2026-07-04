@@ -34,7 +34,7 @@ module Tk
     FFI::Tcl.create_obj_command(@interp, 'RubyFFI::callback', TCL_CALLBACK, 0, TCL_DELETE)
     FFI::Tcl.create_obj_command(@interp, 'RubyFFI::event',    TCL_EVENT,    0, TCL_DELETE)
 
-    module_eval('class << Tk; attr_reader :interp, :root; end')
+    module_eval('class << Tk; attr_reader :interp, :root; end', __FILE__, __LINE__)
 
     @interp
   end

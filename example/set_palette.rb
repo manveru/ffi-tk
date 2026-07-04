@@ -14,9 +14,9 @@ end
 desc = <<~DESC
   This example shows how Tk can calculate whole palettes from a given background color.
   Simply fill the entry field with a color you would like.
-  
+
   For example: "black", "yellow", "#fafafa", or "#f00"
-  
+
   Hit Return to change the color.
 DESC
 

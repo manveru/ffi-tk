@@ -9,9 +9,9 @@ Tk.init
 # Raise.raise itself now lives as `def self.raise` and no longer collides.
 describe Tk::Raise do
   @a = Tk::Frame.new('.')
- @a.pack
+  @a.pack
   @b = Tk::Frame.new('.')
- @b.pack
+  @b.pack
 
   it 'raises a window above all siblings (above omitted)' do
     should.not.raise { Tk::Raise.raise(@a) }

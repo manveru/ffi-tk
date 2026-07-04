@@ -16,13 +16,13 @@ namespace :release do
 
     puts <<~INSTRUCTIONS
       ================================================================================
-      
+
       I added the relevant files, you can commit them, tag the commit, and push:
-      
+
       git commit -m 'Version #{version}'
       git tag -a -m '#{version}' '#{version}'
       git push
-      
+
       ================================================================================
     INSTRUCTIONS
   end
@@ -34,11 +34,11 @@ namespace :release do
 
     puts <<~INSTRUCTIONS
       ================================================================================
-      
+
       To publish to rubygems do following:
-      
+
       gem push pkg/#{name}-#{version}.gem
-      
+
       ================================================================================
     INSTRUCTIONS
   end

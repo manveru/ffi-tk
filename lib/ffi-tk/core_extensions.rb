@@ -90,9 +90,9 @@ module Tk
         embed << 'n' if options & ::Regexp::MULTILINE != 0
 
         pattern = if embed.empty?
-          source
-        else
-          "(?#{embed.join})#{source}"
+                    source
+                  else
+                    "(?#{embed.join})#{source}"
                   end
 
         TclString.new(%({#{pattern.gsub(/([^\\])(?=[{}])/, '\1\\\\\2')}}))
@@ -136,13 +136,13 @@ module Tk
         name = option.sub(/^-/, '').to_sym
 
         return unless type = hints[name]
-          case type
-          when :boolean
-            Tk.boolean(self)
-          else
-            self
-          end
-        
+
+        case type
+        when :boolean
+          Tk.boolean(self)
+        else
+          self
+        end
       end
 
       def to_boolean
