@@ -42,7 +42,7 @@ module Tk
 
           hash
         elsif first =~ /^-/
-          ::Hash[each_slice(2).map {|key, value|
+          ::Hash[each_slice(2).map { |key, value|
             key = key.sub(/^-/, '').to_sym
 
             case hint = hints[key]
@@ -64,12 +64,12 @@ module Tk
 
     module Hash
       def to_tcl
-        pairs = map {|key, val| "#{key.to_tcl} #{val.to_tcl}" }
+        pairs = map { |key, val| "#{key.to_tcl} #{val.to_tcl}" }
         TclString.new(pairs.join(' '))
       end
 
       def to_tcl_options
-        pairs = map {|key, val| "#{key.to_tcl_option} #{val.to_tcl}" }
+        pairs = map { |key, val| "#{key.to_tcl_option} #{val.to_tcl}" }
         TclString.new(pairs.join(' '))
       end
       alias to_tcl_options? to_tcl_options
