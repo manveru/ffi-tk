@@ -51,6 +51,6 @@ module Tk
   def dialog(window, title, text, bitmap, default, *answers)
     answer = Tk.execute(:tk_dialog,
                         window, title, text, bitmap, default, *answers).to_i
-    return answer unless answer == -1
+    answer unless answer == -1
   end
 end
