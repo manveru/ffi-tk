@@ -26,8 +26,16 @@
         { config, pkgs, ... }:
         let
           ruby = pkgs.ruby_4_0;
-          bundler = pkgs.bundler.override { inherit ruby; };
-          bundix = pkgs.bundix.override { inherit bundler; };
+          # Gems come from bundlerEnv so the ruby-4.0 gem environment stays
+          # clean. Keep bundler/bundix/rubocop OUT of the shell: bundler and
+          # bundix ship gems that shadow ruby 4.0's own, and rubocop is built
+          # against ruby 3.4 — mixing either into GEM_PATH breaks native
+          # extensions and bundler. rubocop is reached via treefmt instead.
+          gems = pkgs.bundlerEnv {
+            name = "ffi-tk-gems";
+            inherit ruby;
+            gemdir = ./.;
+          };
         in
         {
           # `nix fmt` and `nix flake check` both drive this.
@@ -49,16 +57,19 @@
             TK_LIBPATH = "${pkgs.tk}/lib/libtk8.6.so";
 
             packages = [
-              ruby
-              bundler
-              bundix
-              pkgs.rubocop
+              gems # rake, bacon, pry, ffi as bundle wrappers on PATH
+              gems.wrappedRuby # `ruby`/`irb` that can require the bundled gems
               pkgs.pkg-config
               pkgs.tcl
               pkgs.tk
               pkgs.zip
               config.treefmt.build.wrapper # `treefmt` on PATH, same config as `nix fmt`
             ];
+            # The specs need an X display and use `rake`. Locally they run
+            # against the ambient $DISPLAY. Headless CI would need not just Xvfb
+            # but a window manager — the bind/event specs synthesise key events
+            # that require real keyboard focus — so that is a deliberate CI
+            # concern, not a dev-shell dependency.
           };
         };
     };
