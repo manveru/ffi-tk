@@ -52,7 +52,7 @@ describe Tk::Tile::Entry do
     @entry.cget(:state).should == ['disabled']
   end
 
-  # NOTE fails on 'bacon spec/tile/*' but passes with 'ruby __FILE__'
+  # NOTE: fails on 'bacon spec/tile/*' but passes with 'ruby __FILE__'
   # it 'Configure the current value of cursor' do
   #  @entry.cget(:cursor             ).should == nil #"xterm"
   #  @entry.configure(cursor: 'xterm').should == true

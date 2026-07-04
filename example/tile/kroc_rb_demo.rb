@@ -6,7 +6,7 @@
 #   >> kroc.tcl - Copyright (C) 2004 David Zolli <kroc@kroc.tk>
 #
 
-# NOTE not ready, needs photoimage and load_images
+# NOTE: not ready, needs photoimage and load_images
 # * some parts are used in Tile::Style specs and work as excepted
 
 # imgdir = File.join(File.dirname(__FILE__), 'kroc', 'kroc')
