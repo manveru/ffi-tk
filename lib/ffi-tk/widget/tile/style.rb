@@ -36,7 +36,7 @@ module Tk
 
         id = Tk.uuid(:proc) { |uuid| Tk.callbacks[uuid] = block }
         cmd = "{ RubyFFI::callback #{id} }"
-        Tk.eval "ttk::style theme settings #{name} #{cmd}"
+        Tk.eval "ttk::style theme settings #{name} #{cmd}" # Tcl eval: ttk::style theme settings <name> <cmd>
         # Tk.execute_only('ttk::style', 'theme', 'settings', name, cmd)
         Tk.callbacks.delete(id) if id
         name
