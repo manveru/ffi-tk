@@ -8,10 +8,10 @@ module Tk
       'checkbutton'
     end
 
-    def initialize(parent = Tk.root, options = None)
-      if block_given?
-        super do |options|
-          options[:command] = register_command(:command, &Proc.new)
+    def initialize(parent = Tk.root, options = None, &block)
+      if block
+        super(parent, options) do |options|
+          options[:command] = register_command(:command, &block)
         end
       else
         super

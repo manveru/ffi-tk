@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 module Tk
   module Bind
-    def self.bind(tag, sequence = None)
+    def self.bind(tag, sequence = None, &block)
       if None == sequence
         Tk.execute(:bind, tag).to_a
       else
-        if block_given?
-          Event::Handler.register(tag, sequence, &Proc.new)
+        if block
+          Event::Handler.register(tag, sequence, &block)
         else
           Tk.execute(:bind, tag, sequence).to_s
         end

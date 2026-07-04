@@ -15,12 +15,12 @@ class ThreadSender
   # If callbacks are invoked within a thread_send, we process them inside the
   # same thread.
   # Calling pop on the queue would cause deadlocks.
-  def thread_send
+  def thread_send(&block)
     if @thread == Thread.current
       yield
     else
       response_queue = Queue.new
-      @queue.push([Proc.new, response_queue])
+      @queue.push([block, response_queue])
       response_queue.pop
     end
   end

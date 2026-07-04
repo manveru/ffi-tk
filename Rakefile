@@ -28,7 +28,6 @@ GEMSPEC = Gem::Specification.new do |s|
   s.platform     = Gem::Platform::RUBY
   s.version      = PROJECT_VERSION
   s.files        = `git ls-files`.split("\n").sort
-  s.has_rdoc     = true
   s.require_path = 'lib'
   s.required_rubygems_version = '>= 1.3.3'
 end

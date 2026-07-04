@@ -3,10 +3,9 @@ module Tk
   module After
     module_function
 
-    def ms(ms)
-      if block_given?
+    def ms(ms, &block)
+      if block
         id = nil
-        block = Proc.new
 
         wrap = lambda do |*_args|
           block.call
