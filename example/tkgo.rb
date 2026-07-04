@@ -128,10 +128,10 @@ class TkGo
   end
 
   def draw_markers(blacks, whites)
-    last_white = @white_history.reject { |name| name =~ /pass/i }.last
+    last_white = @white_history.grep_v(/pass/i).last
     draw_marker(last_white, :black) if whites && last_white
 
-    last_black = @black_history.reject { |name| name =~ /pass/i }.last
+    last_black = @black_history.grep_v(/pass/i).last
     draw_marker(last_black, :white) if blacks && last_black
   end
 
