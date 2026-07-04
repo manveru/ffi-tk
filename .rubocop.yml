@@ -66,6 +66,13 @@ Lint/FloatComparison:
   Exclude:
     - 'spec/**/*'
 
+# Specs use empty blocks two intentional ways: `it 'needs more specs' do end`
+# placeholder markers for widgets awaiting coverage, and empty no-op callbacks
+# (proc {}, widget.postcommand {}) that assert setting a callback does not raise.
+Lint/EmptyBlock:
+  Exclude:
+    - 'spec/**/*'
+
 # Test helper classes are defined inside describe blocks; and the constants in
 # these two files belong to a Struct-subclass body written as `Struct.new(...) do`.
 Lint/ConstantDefinitionInBlock:
