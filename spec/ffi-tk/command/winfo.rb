@@ -120,9 +120,15 @@ describe Tk::Winfo do
   end
 
   it 'gives r,g,b values of a color' do
-    root.winfo_rgb('red').should   == [65_535, 0, 0]
-    root.winfo_rgb('green').should == [0, 32_911, 0]
-    root.winfo_rgb('blue').should  == [0, 0, 65_535]
+    root.winfo_rgb('red').should  == [65_535, 0, 0]
+    root.winfo_rgb('blue').should == [0, 0, 65_535]
+
+    # "green" is not a primary; its exact 16-bit value depends on the X/Tk
+    # colour database (e.g. 32_896 vs 32_911), so assert the shape and range.
+    r, g, b = root.winfo_rgb('green')
+    r.should == 0
+    b.should == 0
+    (32_000..33_000).should.include g
   end
 
   it 'knows x coordinate of root window' do

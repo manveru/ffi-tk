@@ -60,14 +60,17 @@ module Tk
       when :variable
         Variable.new(value.to_s?) if value.respond_to?(:to_s?)
       when :list
-        case value
-        when Array
-          value
-        when String
-          value.split
-        else
-          value.to_a
-        end
+        # List options (padding, columns, ...) are string-valued in Tk (they
+        # may hold screen distances like "2m"). EvalResult.to_list type-guesses
+        # each element from Tcl's cached obj type, so "10" comes back as 10 or
+        # "10" depending on shimmering. Pin the contract to strings.
+        list =
+          case value
+          when Array then value
+          when String then value.split
+          else value.to_a
+          end
+        list.map(&:to_s)
       when :float
         value.to_f
       when :pathname

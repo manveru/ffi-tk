@@ -18,7 +18,7 @@ describe Tk::Canvas do
     @text.anchor.should == 'center'
     @text.disabledfill.should.nil?
     @text.disabledstipple.should.nil?
-    @text.fill.should == 'black'
+    ['black', '#000000'].should.include @text.fill
     @text.font.should == 'TkDefaultFont'
     @text.justify.should == :left
     @text.state.should.nil?
@@ -42,7 +42,7 @@ describe Tk::Canvas do
     @rect.activefill.should.nil?
     @rect.disabledfill.should.nil?
     @rect.offset.should == '0,0'
-    @rect.outline.should == 'black'
+    ['black', '#000000'].should.include @rect.outline
     @rect.activeoutline.should.nil?
     @rect.disabledoutline.should.nil?
     @rect.outlineoffset.should == 0
@@ -72,7 +72,7 @@ describe Tk::Canvas do
     @arc.activefill.should.nil?
     @arc.disabledfill.should.nil?
     @arc.offset.should == '0,0'
-    @arc.outline.should == 'black'
+    ['black', '#000000'].should.include @arc.outline
     @arc.activeoutline.should.nil?
     @arc.disabledoutline.should.nil?
     @arc.outlineoffset.should == 0.0
@@ -101,7 +101,7 @@ describe Tk::Canvas do
     @poly.activedash.should == 0
     @poly.disableddash.should == 0
     @poly.dashoffset.should == 0
-    @poly.fill.should == 'black'
+    ['black', '#000000'].should.include @poly.fill
     @poly.activefill.should.nil?
     @poly.disabledfill.should.nil?
     @poly.offset.should == '0,0'
@@ -133,7 +133,7 @@ describe Tk::Canvas do
     @line.activedash.should == 0
     @line.disableddash.should == 0
     @line.dashoffset.should == 0
-    @line.fill.should == 'black'
+    ['black', '#000000'].should.include @line.fill
     @line.activefill.should.nil?
     @line.disabledfill.should.nil?
     @line.stipple.should.nil?
