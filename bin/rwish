@@ -4,7 +4,7 @@
 lib = if File.symlink?(__FILE__)
         File.expand_path('../../lib/ffi-tk', File.readlink(__FILE__))
       else
-        File.expand_path('../../lib/ffi-tk', __FILE__)
+        File.expand_path('../lib/ffi-tk', __dir__)
       end
 
 require lib
