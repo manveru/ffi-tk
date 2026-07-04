@@ -17,7 +17,7 @@ text.value = 'text..'
 # create buttons inside labelframe
 Tk::Button.new(@labelframe, text: 'Jump Tab') do
   nb.select text
-  text.value = 'current tab options: ' + nb.tab(text).inspect
+  text.value = "current tab options: #{nb.tab(text).inspect}"
 end.pack
 
 add_button = Tk::Button.new(@labelframe, text: 'Add Tab') do
@@ -25,7 +25,7 @@ add_button = Tk::Button.new(@labelframe, text: 'Add Tab') do
   nb.add(t, text: 'new tab')
   nb.select t
 
-  t.value = 'current tab options: ' + nb.tab(t).inspect
+  t.value = "current tab options: #{nb.tab(t).inspect}"
 
   add_button.configure state: :disabled
 end.pack
