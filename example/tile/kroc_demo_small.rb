@@ -106,7 +106,8 @@ def makeCompoundMenu(mb)
     menu.add(:radiobutton, label: str,
                            value: str,
                            # :variable=>$V.ref(:COMPOUND),
-                           command: proc { puts 'foo'; true })
+                           command: proc { puts 'foo'
+ true })
   end
   menu
 end

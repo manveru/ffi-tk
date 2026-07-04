@@ -8,8 +8,10 @@ Tk.init
 # module_function `raise(window, above)`, binding `above` to `window`.
 # Raise.raise itself now lives as `def self.raise` and no longer collides.
 describe Tk::Raise do
-  @a = Tk::Frame.new('.'); @a.pack
-  @b = Tk::Frame.new('.'); @b.pack
+  @a = Tk::Frame.new('.')
+ @a.pack
+  @b = Tk::Frame.new('.')
+ @b.pack
 
   it 'raises a window above all siblings (above omitted)' do
     should.not.raise { Tk::Raise.raise(@a) }

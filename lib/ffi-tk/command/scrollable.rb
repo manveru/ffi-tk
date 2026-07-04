@@ -124,7 +124,8 @@ module Tk
       @yscrollbar = sbar
       @yscrollbar.orient :vertical
 
-      yscrollcommand { |*arg| @yscrollbar.set(*arg); true }
+      yscrollcommand { |*arg| @yscrollbar.set(*arg)
+ true }
       @yscrollbar.command { |_action, fraction| yview_moveto(fraction) }
       @yscrollbar
     end
@@ -133,7 +134,8 @@ module Tk
       @xscrollbar = sbar
       @xscrollbar.orient :horizontal
 
-      xscrollcommand { |*arg| @xscrollbar.set(*arg); true }
+      xscrollcommand { |*arg| @xscrollbar.set(*arg)
+ true }
       @xscrollbar.command { |_action, fraction| xview_moveto(fraction) }
       @xscrollbar
     end

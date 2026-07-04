@@ -8,8 +8,10 @@ Tk.init
 # referenced an undefined `window`), so both the module function and
 # Widget#lower raised on every call.
 describe Tk::Lower do
-  @a = Tk::Frame.new('.'); @a.pack
-  @b = Tk::Frame.new('.'); @b.pack
+  @a = Tk::Frame.new('.')
+ @a.pack
+  @b = Tk::Frame.new('.')
+ @b.pack
 
   it 'lowers a window below all siblings (below omitted)' do
     should.not.raise { Tk::Lower.lower(@a) }
