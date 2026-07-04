@@ -60,9 +60,8 @@ module Tk
       Tk.execute_only(:font, command, *args)
     end
 
-    # NOTE:
-    #   the signature has been simplified to a required +font+ argument and a
-    #   simple +options+ hash.
+    # NOTE: the signature has been simplified to a required +font+ argument and
+    #   a simple +options+ hash.
     #   The original signature is:
     #     `font actual font ?-displayof window? ?option? ?--? ?char?`
     #   But it just makes things very painful.

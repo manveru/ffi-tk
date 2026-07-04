@@ -16,7 +16,7 @@ begin
 
   while (line = Readline.readline('> ', true))
     begin
-      p eval(line)
+      p eval(line) # rubocop:disable Security/Eval
     rescue StandardError => e
       puts "#{e.class}: #{e}", *e.backtrace
     end
@@ -26,7 +26,7 @@ rescue LoadError
     line.strip!
 
     begin
-      p eval(line)
+      p eval(line) # rubocop:disable Security/Eval
     rescue StandardError => ex
       puts "#{ex.class}: #{ex}", *ex.backtrace
     end

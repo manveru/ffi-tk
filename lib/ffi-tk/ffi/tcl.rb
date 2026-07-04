@@ -79,7 +79,7 @@ module FFI
       file = __FILE__
       line = __LINE__ - 5
       ATTACHED_FUNCTIONS.each do |function, ruby_name|
-        eval(format(code, ruby_name, function), binding, file, line)
+        eval(format(code, ruby_name, function), binding, file, line) # rubocop:disable Security/Eval
       end
 
       @thread_sender = ThreadSender.new
@@ -100,7 +100,7 @@ module FFI
       file = __FILE__
       line = __LINE__ - 5
       ATTACHED_FUNCTIONS.each do |function, ruby_name|
-        eval(format(code, ruby_name, function), binding, file, line)
+        eval(format(code, ruby_name, function), binding, file, line) # rubocop:disable Security/Eval
       end
 
       Interp.new(create_interp)

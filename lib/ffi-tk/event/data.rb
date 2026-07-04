@@ -2,6 +2,8 @@
 
 module Tk
   module Event
+    # :count mirrors Tk's %c event field; overriding Struct#count is intended.
+    # rubocop:disable Lint/StructNewOverride
     Data = Struct.new(
       :id, :pattern, :border_width, :button, :count, :detail, :focus, :height,
       :keycode, :keysym, :keysym_number, :mode, :mousewheel_delta,
@@ -9,6 +11,7 @@ module Tk
       :state, :subwindow, :time, :type, :unicode, :width, :window,
       :window_path, :x, :x_root, :y, :y_root
     )
+    # rubocop:enable Lint/StructNewOverride
 
     class Data
       PROPERTIES = [
@@ -72,6 +75,7 @@ module Tk
             :keycode, :keysym, :keysym_number, :mode, :mousewheel_delta,
             :override_redirect, :place, :property, :root, :send_event,
             :subwindow, :type, :unicode, :width, :window, :window_path
+            # copied as-is; these fields need no key remapping or filtering
           when :x_root
             original[:rootx] = value
           when :y_root

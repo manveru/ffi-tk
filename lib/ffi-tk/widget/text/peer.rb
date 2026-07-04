@@ -3,7 +3,9 @@
 module Tk
   class Text
     class Peer < Text
-      def initialize(tk_parent, options = {})
+      # A peer is created via Tk's `peer create`, not the normal widget path,
+      # so the standard Widget initialisation is intentionally skipped.
+      def initialize(tk_parent, options = {}) # rubocop:disable Lint/MissingSuper
         @tk_parent = tk_parent
         Tk.execute(tk_parent.tk_pathname, 'peer', 'create', assign_pathname, options)
       end

@@ -11,7 +11,7 @@ module FFI
 
       def self.layout(*kvs)
         kvs.each_slice(2) do |key, _value|
-          eval ACCESSOR_CODE.gsub(/\{(.*?)\}/, '{name}' => key, '{sym}' => ":#{key}")
+          eval ACCESSOR_CODE.gsub(/\{(.*?)\}/, '{name}' => key, '{sym}' => ":#{key}") # rubocop:disable Security/Eval
         end
 
         super
