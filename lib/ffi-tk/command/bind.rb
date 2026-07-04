@@ -5,12 +5,10 @@ module Tk
     def self.bind(tag, sequence = None, &block)
       if None == sequence
         Tk.execute(:bind, tag).to_a
-      else
-        if block
-          Event::Handler.register(tag, sequence, &block)
+      elsif block
+        Event::Handler.register(tag, sequence, &block)
         else
           Tk.execute(:bind, tag, sequence).to_s
-        end
       end
     end
 
