@@ -50,7 +50,7 @@ module Tk
         end
       end
 
-      Hash[array]
+      array.to_h
     end
 
     # If +boolean+ is true then propagation is enabled for +master+, which must

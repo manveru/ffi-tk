@@ -59,7 +59,7 @@ module Tk
         end
       end
 
-      Hash[array]
+      array.to_h
     end
 
     def self.slaves(window)
