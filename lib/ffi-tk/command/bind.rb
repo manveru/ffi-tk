@@ -19,8 +19,8 @@ module Tk
       Event::Handler.unregister(tag, sequence)
     end
 
-    def bind(sequence = None, &block)
-      Bind.bind(tk_pathname, sequence, &block)
+    def bind(sequence = None, &)
+      Bind.bind(tk_pathname, sequence, &)
     end
 
     def unbind(sequence)

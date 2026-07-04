@@ -67,12 +67,12 @@ module Tk
     interp.eval(string)
   end
 
-  def execute_only(*args)
-    interp.eval(convert_arguments(*args))
+  def execute_only(*)
+    interp.eval(convert_arguments(*))
   end
 
-  def execute(*args)
-    interp.eval(convert_arguments(*args))
+  def execute(*)
+    interp.eval(convert_arguments(*))
     result.tap { |r| puts format('eval= %p', r) if $DEBUG }
   end
 
@@ -163,9 +163,9 @@ module Tk
     end
   end
 
-  def handle_callback(id, *args)
+  def handle_callback(id, *)
     callback = @callbacks.fetch(id.to_i)
-    callback.call(*args)
+    callback.call(*)
   end
 
   def register_object(parent, object)

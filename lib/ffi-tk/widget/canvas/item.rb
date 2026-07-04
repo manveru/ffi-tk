@@ -95,8 +95,8 @@ module Tk
         canvas.bbox(self)
       end
 
-      def bind(sequence = None, &command)
-        canvas.bind(self, sequence, &command)
+      def bind(sequence = None, &)
+        canvas.bind(self, sequence, &)
       end
 
       def coords(*coord_list)

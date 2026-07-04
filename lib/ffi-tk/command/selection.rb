@@ -16,12 +16,12 @@ module Tk
       Selection.get({ displayof: self }.merge(options))
     end
 
-    def selection_handle(options = {}, &command)
-      Selection.handle(self, options, &command)
+    def selection_handle(options = {}, &)
+      Selection.handle(self, options, &)
     end
 
-    def selection_own(options, &command)
-      Selection.own(self, options, &command)
+    def selection_own(options, &)
+      Selection.own(self, options, &)
     end
 
     module_function

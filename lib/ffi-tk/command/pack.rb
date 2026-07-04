@@ -9,16 +9,16 @@ module Tk
   module Pack
     # If the first argument to pack is a window name (any value starting with
     # "."), then the command is processed in the same way as [configure].
-    def self.pack(*args)
-      Tk.execute('pack', *args)
+    def self.pack(*)
+      Tk.execute('pack', *)
     end
 
     # The arguments consist of the names of one or more slave windows followed
     # by a hash of arguments that specify how to manage the slaves.
     # See THE PACKER ALGORITHM for details on how the options are used by the
     # packer.
-    def self.configure(*arguments)
-      Tk.execute('pack', 'configure', *arguments)
+    def self.configure(*)
+      Tk.execute('pack', 'configure', *)
     end
 
     # Removes each of the +slaves+ from the packing order for its master and

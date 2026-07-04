@@ -104,7 +104,7 @@ module FFI
         end
       end
 
-      def self.map_list_core(interp, obj, &block)
+      def self.map_list_core(interp, obj, &)
         objc_ptr = MemoryPointer.new(:int)
         objv_ptr = MemoryPointer.new(:pointer)
 
@@ -113,7 +113,7 @@ module FFI
 
           objv_ptr.get_pointer(0)
                   .read_array_of_pointer(objc_ptr.get_int(0))
-                  .map(&block)
+                  .map(&)
         else
           panic(interp, 'Tcl_ListObjGetElements')
         end
@@ -156,12 +156,12 @@ module FFI
         raise format('%s during call of: %p', message, function)
       end
 
-      def to_a(&block)
-        self.class.to_list(interp, obj, &block)
+      def to_a(&)
+        self.class.to_list(interp, obj, &)
       end
 
-      def to_a?(&block)
-        value = self.class.to_list(interp, obj, &block)
+      def to_a?(&)
+        value = self.class.to_list(interp, obj, &)
         value.empty? ? nil : value
       end
 

@@ -36,8 +36,8 @@ module Tk
     # is not already present on that list.
     # It is possible that no items will satisfy the constraints given by
     # +search_spec+ and +args+, in which case the command has no effect.
-    def addtag(tag, search_spec, *args)
-      execute_only(:addtag, tag, search_spec, *args)
+    def addtag(tag, search_spec, *)
+      execute_only(:addtag, tag, search_spec, *)
     end
 
     # Selects the item just after (above) the one given by +tag_or_id+ in the
@@ -325,8 +325,8 @@ module Tk
     # +search_command+ and +args+ have any of the forms accepted by the [addtag]
     # method.
     # The items are returned in stacking order, with the lowest item first.
-    def find(search_command, *args)
-      execute(:find, search_command, *args)
+    def find(search_command, *)
+      execute(:find, search_command, *)
     end
 
     def find_above(tag, tag_or_id)

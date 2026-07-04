@@ -52,12 +52,12 @@ module Tk
       slant: :symbol
     }.freeze
 
-    def self.execute(command, *args)
-      Tk.execute(:font, command, *args)
+    def self.execute(command, *)
+      Tk.execute(:font, command, *)
     end
 
-    def self.execute_only(command, *args)
-      Tk.execute_only(:font, command, *args)
+    def self.execute_only(command, *)
+      Tk.execute_only(:font, command, *)
     end
 
     # NOTE: the signature has been simplified to a required +font+ argument and

@@ -67,12 +67,12 @@ module Tk
       Lower.lower(self, below)
     end
 
-    def execute(command, *args)
-      Tk.execute(tk_pathname, command, *args)
+    def execute(command, *)
+      Tk.execute(tk_pathname, command, *)
     end
 
-    def execute_only(command, *args)
-      Tk.execute_only(tk_pathname, command, *args)
+    def execute_only(command, *)
+      Tk.execute_only(tk_pathname, command, *)
     end
 
     private

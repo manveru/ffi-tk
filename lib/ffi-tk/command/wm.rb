@@ -226,8 +226,8 @@ module Tk
     end
 
     # @see WM::protocol
-    def wm_protocol(name = None, command = None, &block)
-      WM.protocol(self, name, command, &block)
+    def wm_protocol(name = None, command = None, &)
+      WM.protocol(self, name, command, &)
     end
 
     # @see WM::resizable
