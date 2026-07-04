@@ -156,12 +156,6 @@ Lint/ConstantDefinitionInBlock:
     - 'spec/ffi-tk/tile/frame.rb'
     - 'spec/ffi-tk/tile/style.rb'
 
-# Offense count: 2
-Lint/DuplicateMethods:
-  Exclude:
-    - 'lib/ffi-tk/command/lower.rb'
-    - 'lib/ffi-tk/command/raise.rb'
-
 # Offense count: 1
 # Configuration parameters: AllowComments.
 Lint/EmptyWhen:
@@ -174,11 +168,6 @@ Lint/FloatComparison:
     - 'spec/ffi-tk/command/wm.rb'
     - 'spec/ffi-tk/tile/progressbar.rb'
     - 'spec/ffi-tk/widget/canvas.rb'
-
-# Offense count: 1
-Lint/FormatParameterMismatch:
-  Exclude:
-    - 'lib/ffi-tk/geometry.rb'
 
 # Offense count: 1
 Lint/IneffectiveAccessModifier:
