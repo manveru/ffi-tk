@@ -118,8 +118,8 @@ module Tk
     end
 
     BREAK
-  rescue StandardError => ex
-    FFI::Tcl::Interp.new(interp).obj_result = ex
+  rescue StandardError => e
+    FFI::Tcl::Interp.new(interp).obj_result = e
     ERROR
   end
   TCL_CALLBACK = method(:tcl_callback)
@@ -139,8 +139,8 @@ module Tk
     end
 
     BREAK
-  rescue StandardError => ex
-    FFI::Tcl::Interp.new(interp).obj_result = ex
+  rescue StandardError => e
+    FFI::Tcl::Interp.new(interp).obj_result = e
     ERROR
   end
   TCL_EVENT = method(:tcl_event)

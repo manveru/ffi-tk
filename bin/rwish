@@ -17,8 +17,8 @@ begin
   while line = Readline.readline('> ', true)
     begin
       p eval(line)
-    rescue StandardError => ex
-      puts "#{ex.class}: #{ex}", *ex.backtrace
+    rescue StandardError => e
+      puts "#{e.class}: #{e}", *e.backtrace
     end
   end
 rescue LoadError

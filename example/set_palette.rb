@@ -7,8 +7,8 @@ Tk.init
 def change_palette(background)
   Tk.set_palette(background)
   @exception.configure(text: '')
-rescue Exception => ex
-  @exception.configure(text: ex.message)
+rescue Exception => e
+  @exception.configure(text: e.message)
 end
 
 desc = <<~DESC

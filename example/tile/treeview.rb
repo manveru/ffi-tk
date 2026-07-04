@@ -17,8 +17,8 @@ class FileTree < Tk::Tile::Treeview
     bind('<<TreeviewOpen>>') do |_event|
       begin
         populate_tree(focus_item)
-      rescue Exception => ex
-        p ex
+      rescue Exception => e
+        p e
       end
 
       true
