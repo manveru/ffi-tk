@@ -105,7 +105,7 @@ module Tk
       info = Tk.execute('grid', 'info', slave).to_s
       hash = {}
 
-      info.scan(/(?:-(\w+))\s+([^-][\S]*)/) do
+      info.scan(/(?:-(\w+))\s+([^-]\S*)/) do
         key = Regexp.last_match(1).to_sym
         hash[key] = case key
         when :column, :row, :columnspan, :rowspan, :ipadx, :ipady, :padx, :pady

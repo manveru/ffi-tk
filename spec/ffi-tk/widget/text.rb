@@ -239,8 +239,8 @@ describe Tk::Text do
     end
 
     it 'searches by regular expression' do
-      text.search(/e[t]/,          '1.0', :end).should == ['1.13']
-      text.search(/E[T]/i,         '1.0', :end).should == ['1.13']
+      text.search(/et/,          '1.0', :end).should == ['1.13']
+      text.search(/ET/i,         '1.0', :end).should == ['1.13']
       text.search(/DOLORE\.\nEA/i, '1.0', :end).should == ['1.240']
     end
 
