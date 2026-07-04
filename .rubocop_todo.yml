@@ -7,12 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 1
-# Configuration parameters: Severity.
-Gemspec/RequiredRubyVersion:
-  Exclude:
-    - 'ffi-tk.gemspec'
-
-# Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: leading, trailing
@@ -426,12 +420,6 @@ Style/Documentation:
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-Style/Encoding:
-  Exclude:
-    - 'ffi-tk.gemspec'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
 Style/EvalWithLocation:
   Exclude:
     - 'lib/ffi-tk/tk.rb'
@@ -463,7 +451,6 @@ Style/FormatStringToken:
 Style/FrozenStringLiteralComment:
   Exclude:
     - '**/*.arb'
-    - 'ffi-tk.gemspec'
     - 'lib/ffi-tk/version.rb'
 
 # Offense count: 16
@@ -508,12 +495,6 @@ Style/IfUnlessModifier:
 # SupportedStyles: separated, grouped
 Style/MixinGrouping:
   Enabled: false
-
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Style/MultilineIfThen:
-  Exclude:
-    - 'ffi-tk.gemspec'
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
@@ -583,12 +564,6 @@ Style/RedundantParentheses:
   Exclude:
     - 'lib/ffi-tk/command/selection.rb'
 
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantPercentQ:
-  Exclude:
-    - 'ffi-tk.gemspec'
-
 # Offense count: 3
 # This cop supports safe autocorrection (--autocorrect).
 Style/RedundantRegexpCharacterClass:
@@ -657,7 +632,6 @@ Style/StringConcatenation:
 # SupportedStyles: single_quotes, double_quotes
 Style/StringLiterals:
   Exclude:
-    - 'ffi-tk.gemspec'
     - 'lib/ffi-tk/ffi/tcl.rb'
     - 'lib/ffi-tk/tk.rb'
     - 'lib/ffi-tk/version.rb'
