@@ -177,7 +177,7 @@ module Tk
       if collisions.empty?
         into.__send__(:include, ext)
       else
-        warn "Won't include %p with %p, %p exists" % [into, ext, collisions] if $DEBBUG
+        warn format("Won't include %p with %p, %p exists", into, ext, collisions) if $DEBBUG
       end
     end
   end

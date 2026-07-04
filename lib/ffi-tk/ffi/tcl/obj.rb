@@ -19,8 +19,8 @@ module FFI
 
       def inspect
         kvs = members.zip(values)
-        kvs.map! { |key, value| '%s=%s' % [key, value.inspect] }
-        '<%s %s>' % [self.class, kvs.join(' ')]
+        kvs.map! { |key, value| format('%s=%s', key, value.inspect) }
+        format('<%s %s>', self.class, kvs.join(' '))
       end
     end
 
@@ -41,7 +41,7 @@ module FFI
       end
 
       def inspect
-        '#<ObjType name=%p>' % [self[:name]]
+        format('#<ObjType name=%p>', self[:name])
       end
     end
 
@@ -58,7 +58,7 @@ module FFI
       end
 
       def inspect
-        '#<Obj bytes=%p type=%p>' % [self[:bytes], pretty_type]
+        format('#<Obj bytes=%p type=%p>', self[:bytes], pretty_type)
       end
     end
   end

@@ -44,7 +44,7 @@ module Tk
       if type = CGET_MAP[name.to_tcl_option]
         type_to_ruby(type, value)
       else
-        raise 'Unknown type for %p: %p' % [name, value]
+        raise format('Unknown type for %p: %p', name, value)
       end
     end
 
@@ -80,7 +80,7 @@ module Tk
         string = value.to_s
         string unless string.empty?
       else
-        raise 'Unknown type: %p: %p' % [type, value]
+        raise format('Unknown type: %p: %p', type, value)
       end
     end
 

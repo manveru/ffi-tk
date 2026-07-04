@@ -78,7 +78,7 @@ module FFI
 
       binding, file, line = BINDING, __FILE__, __LINE__ - 5
       ATTACHED_FUNCTIONS.each do |function, ruby_name|
-        eval(code % [ruby_name, function], binding, file, line)
+        eval(format(code, ruby_name, function), binding, file, line)
       end
 
       @thread_sender = ThreadSender.new
@@ -97,7 +97,7 @@ module FFI
 
       binding, file, line = BINDING, __FILE__, __LINE__ - 5
       ATTACHED_FUNCTIONS.each do |function, ruby_name|
-        eval(code % [ruby_name, function], binding, file, line)
+        eval(format(code, ruby_name, function), binding, file, line)
       end
 
       Interp.new(create_interp)

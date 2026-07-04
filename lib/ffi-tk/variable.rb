@@ -16,7 +16,7 @@ module Tk
     def get
       Tk.execute('set', name)
     rescue RuntimeError
-      raise NameError, "can't read %p: no such variable" % [name]
+      raise NameError, format("can't read %p: no such variable", name)
     end
 
     def set(value)

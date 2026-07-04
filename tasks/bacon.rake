@@ -19,7 +19,7 @@ task :bacon do
   summary_re = /(\d+) specifications \((\d+) requirements\), (\d+) failures, (\d+) errors/
 
   specs.each_with_index do |spec, idx|
-    print(left_format % [idx + 1, specs_size, spec])
+    print(format(left_format, idx + 1, specs_size, spec))
 
     Open3.popen3(FileUtils::RUBY, spec) do |_sin, sout, serr|
       out = sout.read.strip
@@ -27,7 +27,7 @@ task :bacon do
 
       # this is conventional, see spec/innate/state/fiber.rb for usage
       if out =~ /^Bacon::Error: (needed .*)/
-        puts(yellow % ('%6s %s' % ['', Regexp.last_match(1)]))
+        puts(yellow % (format('%6s %s', '', Regexp.last_match(1))))
       else
         match = out.match(summary_re)
         total = match&.captures&.map(&:to_i)

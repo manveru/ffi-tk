@@ -18,19 +18,19 @@ module Tk
         self.x = Integer(x)
         self.y = Integer(y)
       else
-        raise 'Invalid geometry: %p' % [tcl_string]
+        raise format('Invalid geometry: %p', tcl_string)
       end
     end
 
     def to_tcl
       if width && height && x && y
-        '=%dx%d%+d%+d' % [width, height, x, y]
+        format('=%dx%d%+d%+d', width, height, x, y)
       elsif width && height
-        '=%dx%d' % [width, height]
+        format('=%dx%d', width, height)
       elsif x && y
-        '=%+d%+d' % [x, y]
+        format('=%+d%+d', x, y)
       else
-        raise 'Incomplete geometry: %p' % [self]
+        raise format('Incomplete geometry: %p', self)
       end
     end
   end

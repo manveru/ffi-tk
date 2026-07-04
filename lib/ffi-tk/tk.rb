@@ -71,7 +71,7 @@ module Tk
 
   def execute(*args)
     interp.eval(convert_arguments(*args))
-    result.tap { |r| puts "eval= %p" % [r] if $DEBUG }
+    result.tap { |r| puts format("eval= %p", r) if $DEBUG }
   end
 
   def result

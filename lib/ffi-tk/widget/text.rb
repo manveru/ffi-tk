@@ -718,7 +718,7 @@ module Tk
       Event::Handler.register_custom(script) do |id|
         code = "%s tag bind %s %s { ::RubyFFI::event %d '' %s }"
         props = Event::Data::PROPERTIES.transpose[0].join(' ')
-        tcl = code % [tk_pathname, tag_name, sequence, id, props]
+        tcl = format(code, tk_pathname, tag_name, sequence, id, props)
         Tk.interp.eval(tcl)
         @events[name] = id
       end

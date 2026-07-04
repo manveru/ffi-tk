@@ -33,7 +33,7 @@ module Tk
         elsif argument.respond_to?(:to_tcl_option)
           receiver.execute(*invocation, argument.to_tcl_option)
         else
-          raise ArgumentError, 'Invalid argument: %p' % [argument]
+          raise ArgumentError, format('Invalid argument: %p', argument)
         end
 
       if result.respond_to?(:tcl_options_to_hash)

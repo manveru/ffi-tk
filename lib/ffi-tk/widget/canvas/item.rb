@@ -71,7 +71,7 @@ module Tk
       def self.options(*names)
         names.each do |name|
           type = OPTION_MAP.fetch(name)
-          class_eval(OPTIONS_CODE % [name, type, name], __FILE__, __LINE__)
+          class_eval(format(OPTIONS_CODE, name, type, name), __FILE__, __LINE__)
         end
       end
 
@@ -80,7 +80,7 @@ module Tk
       end
 
       def inspect
-        '#<%s %d>' % [self.class.name, id]
+        format('#<%s %d>', self.class.name, id)
       end
 
       def cget(option)

@@ -55,7 +55,7 @@ module Tk
         when :relheight, :relwidth, :relx, :rely
           [key, value.to_f]
         else
-          raise 'Unknown info pair: %p => %p' % [key, value]
+          raise format('Unknown info pair: %p => %p', key, value)
         end
       end
 

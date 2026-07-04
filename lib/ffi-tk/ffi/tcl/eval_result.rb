@@ -58,7 +58,7 @@ module FFI
           elsif type.nil?
             to_string(interp, obj)
           else
-            raise 'Unknown type: %p' % [type]
+            raise format('Unknown type: %p', type)
           end
         end
       end
@@ -95,7 +95,7 @@ module FFI
         if Tcl.get_double_from_obj(interp, obj, double_pointer) == 0
           double_pointer.get_double(0)
         else
-          raise "Couldn't get double from %p" % [obj]
+          raise format("Couldn't get double from %p", obj)
         end
       end
 
@@ -154,9 +154,9 @@ module FFI
         message = guess(interp, Obj.new(Tcl.get_obj_result(interp))).to_s
 
         if message.empty?
-          raise 'Failure during call of: %p' % [function]
+          raise format('Failure during call of: %p', function)
         else
-          raise '%s during call of: %p' % [message, function]
+          raise format('%s during call of: %p', message, function)
         end
       end
 

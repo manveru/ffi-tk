@@ -42,7 +42,7 @@ module FFI
             if ruby_obj.respond_to?(:to_tcl)
               ruby_obj.to_tcl
             else
-              raise ArgumentError, "Don't know how to set %p automatically" % [ruby_obj]
+              raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
             end
           end
 
@@ -81,23 +81,23 @@ module FFI
       def eval(string)
         if $DEBUG
           if string =~ /\n/
-            puts "\neval: %p" % [string]
+            puts format("\neval: %p", string)
           else
-            puts "\neval: %s" % [string]
+            puts format("\neval: %s", string)
           end
         end
 
         code = Tcl.eval_ex(self, string, string.bytesize, EVAL_DIRECT)
-        puts 'eval= %p' % [code] if $DEBUG
+        puts format('eval= %p', code) if $DEBUG
         return true if code == 0
 
         message = guess_result.to_s
-        puts 'eval= %p' % [message] if $DEBUG
+        puts format('eval= %p', message) if $DEBUG
 
         if message.empty?
-          raise 'Failure during eval of: %p' % [string]
+          raise format('Failure during eval of: %p', string)
         else
-          raise '%s during eval of: %p' % [message, string]
+          raise format('%s during eval of: %p', message, string)
         end
       end
     end

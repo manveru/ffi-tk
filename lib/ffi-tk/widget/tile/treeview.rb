@@ -270,7 +270,7 @@ module Tk
         end
 
         def inspect
-          '#<Tk::Treeview::Item @tk_parent=%p @id=%p>' % [tk_parent.tk_pathname, id]
+          format('#<Tk::Treeview::Item @tk_parent=%p @id=%p>', tk_parent.tk_pathname, id)
         end
 
         private :id=

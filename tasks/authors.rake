@@ -18,7 +18,7 @@ task :authors do
     io.puts '(Sorted by number of submitted patches, then alphabetically)'
     io.puts ''
     authors.sort_by { |(n, _e), c| [-c, n.downcase] }.each do |(name, email), count|
-      io.puts('%6d %s <%s>' % [count, name, email])
+      io.puts(format('%6d %s <%s>', count, name, email))
     end
   end
 end

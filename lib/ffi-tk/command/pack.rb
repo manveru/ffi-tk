@@ -46,7 +46,7 @@ module Tk
         when :after, :anchor, :before, :in
           [key, value]
         else
-          raise 'Unknown info pair: %p => %p' % [key, value]
+          raise format('Unknown info pair: %p => %p', key, value)
         end
       end
 

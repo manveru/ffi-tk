@@ -50,13 +50,13 @@ class FileTree < Tk::Tile::Treeview
         size = File.size(path)
 
         size = if size >= GB
-                 '%.1f GB' % [size / GB]
+                 format('%.1f GB', size / GB)
                elsif size >= MB
-                 '%.1f MB' % [size / MB]
+                 format('%.1f MB', size / MB)
                elsif size >= KB
-                 '%.1f KB' % [size / KB]
+                 format('%.1f KB', size / KB)
                else
-                 '%.1f bytes' % [size]
+                 format('%.1f bytes', size)
                end
 
         item.set(:size, size)
