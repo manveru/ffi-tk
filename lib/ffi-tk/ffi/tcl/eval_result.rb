@@ -36,32 +36,28 @@ module FFI
 
       def self.guess(interp, obj, fallback = nil)
         obj = Obj.new(obj) unless obj.respond_to?(:type)
-        # p obj: obj, obj_type: obj.type
         type = TYPES[obj.type.to_i]
 
         case type
-        when :list
-          to_list(interp, obj)
-        when :string, :pixel, :cmdName
+        when :list then to_list(interp, obj)
+        when :string, :pixel, :cmdName then to_string(interp, obj)
+        when :int then to_int(interp, obj)
+        when :double then to_double(interp, obj)
+        when :dict then to_dict(interp, obj)
+        when :window then to_window(interp, obj)
+        else guess_fallback(interp, obj, type, fallback)
+        end
+      end
+
+      def self.guess_fallback(interp, obj, type, fallback)
+        if fallback
+          __send__(fallback, interp, obj)
+        elsif type.nil? && obj.bytes == ''
+          nil
+        elsif type.nil?
           to_string(interp, obj)
-        when :int
-          to_int(interp, obj)
-        when :double
-          to_double(interp, obj)
-        when :dict
-          to_dict(interp, obj)
-        when :window
-          to_window(interp, obj)
         else
-          if fallback
-            __send__(fallback, interp, obj)
-          elsif type.nil? && obj.bytes == ''
-            nil
-          elsif type.nil?
-            to_string(interp, obj)
-          else
-            raise format('Unknown type: %p', type)
-          end
+          raise format('Unknown type: %p', type)
         end
       end
 
