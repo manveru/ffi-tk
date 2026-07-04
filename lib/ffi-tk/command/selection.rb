@@ -120,7 +120,7 @@ module Tk
       elsif window.is_a?(Hash)
         options = window
 
-        if cmd = (options[:command] || command)
+        if cmd = options[:command] || command
           command = register_command(:selection_own, &cmd)
           Tk.execute(:selection, :own, { command: command }.merge(options).to_tcl_options)
         else
