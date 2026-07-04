@@ -6,15 +6,15 @@ module Tk
       str = tcl_string.to_s
       self.original = str
 
-      if /^\=?(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
+      if /^=?(?<width>\d+)x(?<height>\d+)(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
         self.width = Integer(width)
         self.height = Integer(height)
         self.x = Integer(x)
         self.y = Integer(y)
-      elsif /^\=?(?<width>\d+)x(?<height>\d+)$/ =~ str
+      elsif /^=?(?<width>\d+)x(?<height>\d+)$/ =~ str
         self.width = Integer(width)
         self.height = Integer(height)
-      elsif /^\=?(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
+      elsif /^=?(?<x>[+-]\d+)(?<y>[+-]\d+)$/ =~ str
         self.x = Integer(x)
         self.y = Integer(y)
       else

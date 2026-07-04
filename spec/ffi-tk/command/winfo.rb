@@ -141,7 +141,7 @@ describe Tk::Winfo do
   end
 
   it 'knows which screen it is on' do
-    root.winfo_screen.should.match(/\:(.+)\.\d/) # :0.0
+    root.winfo_screen.should.match(/:(.+)\.\d/) # :0.0
   end
 
   it 'knows the number of cells in the default color map' do
