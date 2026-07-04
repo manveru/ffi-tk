@@ -42,7 +42,7 @@ module Tk
 
           hash
         elsif first =~ /^-/
-          ::Hash[each_slice(2).map { |key, value|
+          ::Hash[each_slice(2).map do |key, value|
             key = key.sub(/^-/, '').to_sym
 
             case hint = hints[key]
@@ -55,7 +55,7 @@ module Tk
             else
               [key, value]
             end
-          }]
+          end]
         else
           self
         end
