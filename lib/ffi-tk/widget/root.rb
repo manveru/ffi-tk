@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Tk
+  # The application's root window ('.'), created automatically by Tk.
   class Root < Toplevel
     # The root window '.' already exists in Tk; unlike other widgets it is not
     # created, so the normal Widget initialisation is intentionally skipped.

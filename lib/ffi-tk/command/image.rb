@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Create and manage images (photos and bitmaps).
+  # Wraps Tk's `image` command.
   module Image
     module_function
 

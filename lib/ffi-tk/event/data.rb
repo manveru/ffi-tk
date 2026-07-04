@@ -13,6 +13,7 @@ module Tk
     )
     # rubocop:enable Lint/StructNewOverride
 
+    # Decoded fields of a Tk event, with helpers to rebuild its option hash.
     class Data
       PROPERTIES = [
         ['%#', :Integer, :serial],

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Display a list of strings, one per line, with selectable entries.
+  # Wraps Tk's `listbox` command.
   class Listbox < Widget
     include Scrollable
     include Configure

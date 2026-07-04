@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Ring the display's bell.
+  # Wraps Tk's `bell` command.
   module Bell
     # This command rings the bell on the display for window and returns an empty
     # string.

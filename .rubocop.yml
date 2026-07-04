@@ -1,9 +1,12 @@
-inherit_from: .rubocop_todo.yml
 AllCops:
   StyleGuideBaseURL: https://github.com/bbatsov/ruby-style-guide
   # Gem requires Ruby >= 4.0 (see Rakefile GEMSPEC); RuboCop 1.80.2 only knows
   # up to 3.5, so we target the newest version it understands.
   TargetRubyVersion: 3.5
+  # Lock the cop set to what this config governs; adopting newer cops is a
+  # separate, deliberate step (run with --enable-pending-cops to preview).
+  NewCops: disable
+  SuggestExtensions: false
   Exclude:
     - 'pkg/**/*'
     - 'vendor/**/*'
@@ -90,6 +93,12 @@ Style/GlobalVars:
 Naming/MethodName:
   Exclude:
     - 'example/**/*'
+
+# Demo scripts and test fixtures are not library API; no class docs required.
+Style/Documentation:
+  Exclude:
+    - 'example/**/*'
+    - 'spec/**/*'
 
 # --- Metrics: pinned to the library's current shape ---
 # ffi-tk is a thin, wide FFI binding whose command wrappers mirror Tk's own

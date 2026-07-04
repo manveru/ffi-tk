@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # A container laying out its children in resizable, sash-separated panes.
+  # Wraps Tk's `panedwindow` command.
   class PanedWindow < Widget
     include Configure
     include Cget

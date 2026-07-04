@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 module FFI
+  # Low-level FFI bindings to the Tk C library (libtk).
   module Tk
     extend FFI::Library
     ffi_lib ::Tk::TK_LIBPATH
 
+    # FFI binding for Xlib's XColor struct (RGB components plus pixel value).
     class XColor < FFI::Struct
       layout(
         :pixel, :ulong,

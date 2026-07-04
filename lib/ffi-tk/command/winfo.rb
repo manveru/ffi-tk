@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Query window-system information about widgets.
+  # Wraps Tk's `winfo` command.
   module Winfo
     # @see Winfo.atom
     def winfo_atom(name)

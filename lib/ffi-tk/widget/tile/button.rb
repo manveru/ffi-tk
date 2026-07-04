@@ -2,6 +2,8 @@
 
 module Tk
   module Tile
+    # A themed push button.
+    # Wraps Tk's `ttk::button`.
     class Button < Tk::Button
       def self.tk_command
         'ttk::button'

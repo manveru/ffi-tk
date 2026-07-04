@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Native colour-chooser dialog (Tk's tk_chooseColor).
 module Tk
   module_function
 

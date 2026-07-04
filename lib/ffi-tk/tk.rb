@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+# Core extension routing plain-object value conversion for Tk.
 class Object
   undef :type if respond_to?(:type)
 end
 
+# Interpreter lifecycle and the main eval/execute entry points.
 module Tk
   @register = Hash.new(0)
   @widgets = {}

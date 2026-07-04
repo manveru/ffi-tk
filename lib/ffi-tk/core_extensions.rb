@@ -10,7 +10,9 @@ module Tk
 
   # A lot of conversion helpers...
 
+  # Ruby core-class extensions for converting to and from Tcl values.
   module CoreExtensions
+    # Tcl conversion helpers for Array (to_tcl, option-hash coercion).
     module Array
       def to_tcl
         TclString.new("{#{map(&:to_tcl).compact.join(' ')}}")
@@ -53,6 +55,7 @@ module Tk
       end
     end
 
+    # Tcl conversion helpers for Hash (option lists).
     module Hash
       def to_tcl
         pairs = map { |key, val| "#{key.to_tcl} #{val.to_tcl}" }
@@ -66,6 +69,7 @@ module Tk
       alias to_tcl_options? to_tcl_options
     end
 
+    # Tcl conversion helpers for Proc (callback registration).
     module Proc
       def to_tcl
         @id, @command = Tk.register_proc(self)
@@ -73,6 +77,7 @@ module Tk
       end
     end
 
+    # Tcl conversion helpers for Regexp.
     module Regexp
       def to_tcl
         embed = []
@@ -90,6 +95,7 @@ module Tk
       end
     end
 
+    # Tcl conversion helpers for String (quoting and escaping).
     module String
       def to_tcl
         TclString.new(%("#{gsub(/[\[\]{}$"\\]/, '\\\\\&')}"))
@@ -100,6 +106,7 @@ module Tk
       end
     end
 
+    # Tcl conversion helpers for Symbol (option names).
     module Symbol
       def to_tcl
         TclString.new(to_s.dump)
@@ -110,18 +117,21 @@ module Tk
       end
     end
 
+    # Tcl conversion helpers for Numeric.
     module Numeric
       def to_tcl
         TclString.new(to_s)
       end
     end
 
+    # Tcl conversion helpers for Float.
     module Float
       def tcl_to_ruby(_option, _hints)
         self
       end
     end
 
+    # Tcl conversion helpers for Integer.
     module Integer
       def tcl_to_ruby(option, hints)
         name = option.sub(/^-/, '').to_sym
@@ -141,18 +151,21 @@ module Tk
       end
     end
 
+    # Tcl conversion helper for true (renders as 1).
     module TrueClass
       def to_tcl
         TclString.new('1')
       end
     end
 
+    # Tcl conversion helper for false (renders as 0).
     module FalseClass
       def to_tcl
         TclString.new('0')
       end
     end
 
+    # Tcl conversion helper for nil (renders as an empty string).
     module NilClass
       def to_tcl
         TclString.new('""')

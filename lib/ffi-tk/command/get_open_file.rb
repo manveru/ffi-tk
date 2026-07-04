@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Native "open file" dialog (Tk's tk_getOpenFile).
 module Tk
   module_function
 

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 module Tk
+  # Ttk style naming helpers and the style command wrapper.
   module Tile
     def self.style(style, parent_name)
       [style, parent_name.to_s.split('::').last].join('.')
     end
 
+    # Query and modify the current Ttk theme's styles, layouts and element options.
+    # Wraps Tk's `ttk::style` command.
     module Style
       extend Tk::Configure
       extend Tk::Cget

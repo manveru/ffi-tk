@@ -2,6 +2,8 @@
 
 module Tk
   module Tile
+    # A resize handle for a window's bottom-right corner.
+    # Wraps Tk's `ttk::sizegrip`.
     class Sizegrip < Tk::Widget
       def self.tk_command
         'ttk::sizegrip'

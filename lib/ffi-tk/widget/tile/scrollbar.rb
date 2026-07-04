@@ -2,6 +2,8 @@
 
 module Tk
   module Tile
+    # A themed scrollbar.
+    # Wraps Tk's `ttk::scrollbar`.
     class Scrollbar < Tk::Scrollbar
       def self.tk_command
         'ttk::scrollbar'
@@ -28,12 +30,14 @@ module Tk
       end
     end
 
+    # A themed scrollbar preset to vertical orientation.
     class YScrollbar < Tk::Tile::Scrollbar
       def scrollbar_default
         configure orient: :vertical
       end
     end
 
+    # A themed scrollbar preset to horizontal orientation.
     class XScrollbar < Tk::Tile::Scrollbar
       def scrollbar_default
         configure orient: :horizontal

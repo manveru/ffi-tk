@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Native message box (Tk's tk_messageBox).
 module Tk
   module_function
 

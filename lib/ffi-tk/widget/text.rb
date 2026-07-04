@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # A multi-line text display and editor with tags, marks and embedded windows.
+  # Wraps Tk's `text` command.
   class Text < Widget
     include Scrollable
     include Configure

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # An entry with up/down arrows for stepping through values.
+  # Wraps Tk's `spinbox` command.
   class Spinbox < Widget
     include Configure
     include Cget

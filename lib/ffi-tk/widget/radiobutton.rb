@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # A button representing one of a set of mutually exclusive choices.
+  # Wraps Tk's `radiobutton` command.
   class RadioButton < Button
     include Configure
     include Cget

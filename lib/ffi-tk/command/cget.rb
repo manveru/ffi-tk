@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Read a widget's configuration option and coerce it to a Ruby value.
+  # Backs the shared `cget` command.
   module Cget
     OPTIONS_BY_TYPE = {
       integer: %w[

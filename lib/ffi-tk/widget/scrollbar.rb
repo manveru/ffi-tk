@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # A scrollbar controlling another widget's view.
+  # Wraps Tk's `scrollbar` command.
   class Scrollbar < Widget
     include Configure
     include Cget

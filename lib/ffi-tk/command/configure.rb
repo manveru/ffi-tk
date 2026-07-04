@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Query and set widget configuration options.
+  # Backs the shared `configure` command.
   module Configure
     # Query or modify the configuration options of the widget.
     # If no option is specified, returns a list describing all of the available

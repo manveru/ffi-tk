@@ -2,6 +2,7 @@
 
 # Manipulate Tk internal state
 module Tk
+  # Mixin for the `tk` command's application-level queries (scaling, appname, ...).
   module TkCmd
     # @see TkCmd.appname
     def tk_appname

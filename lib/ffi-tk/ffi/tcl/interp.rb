@@ -2,6 +2,8 @@
 
 module FFI
   module Tcl
+    # FFI wrapper around a Tcl interpreter (Tcl_Interp).
+    # Evaluates scripts and marshals results between Tcl and Ruby.
     class Interp < PrettyStruct
       layout(
         :result, :string,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # A menu of commands, cascades, checkbuttons and separators.
+  # Wraps Tk's `menu` command.
   class Menu < Widget
     include Configure
     include Cget

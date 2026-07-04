@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # A slider for choosing a numeric value from a range.
+  # Wraps Tk's `scale` command.
   class Scale < Widget
     include Configure
     include Cget

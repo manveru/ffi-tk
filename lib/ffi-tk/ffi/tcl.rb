@@ -7,6 +7,7 @@ require 'ffi-tk/ffi/tcl/time'
 require 'ffi-tk/ffi/tcl/eval_result'
 
 module FFI
+  # Low-level FFI bindings to the Tcl C library (libtcl).
   module Tcl
     extend FFI::Library
     ffi_lib ::Tk::TCL_LIBPATH

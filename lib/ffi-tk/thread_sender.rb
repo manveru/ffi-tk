@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Runs blocks on one dedicated thread so every Tcl call shares a single OS thread.
 class ThreadSender
   def initialize
     @queue = Queue.new

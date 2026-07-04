@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Loads the Tk command wrappers.
 module Tk
   require 'ffi-tk/command/choose_color'
   require 'ffi-tk/command/choose_directory'

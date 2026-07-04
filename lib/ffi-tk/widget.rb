@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module Tk
+  # Base class for all Tk widgets.
+  # Holds the widget's path name and parent, mixes in the shared Tk commands
+  # (geometry management, configuration, binding, window info, ...), and routes
+  # method calls to the Tk command backing each widget.
   class Widget
     include TkCmd
     include Place

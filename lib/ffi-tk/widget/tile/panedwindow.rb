@@ -2,6 +2,8 @@
 
 module Tk
   module Tile
+    # A themed container with resizable panes.
+    # Wraps Tk's `ttk::panedwindow`.
     class PanedWindow < Tk::PanedWindow
       def self.tk_command
         'ttk::panedwindow'

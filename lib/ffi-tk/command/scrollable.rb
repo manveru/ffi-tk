@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Tk
+  # Mixin giving a widget xview/yview scrolling and scrollbar wiring.
   module Scrollable
     # Returns a list containing two elements.
     # Each element is a real fraction between 0 and 1; together they describe

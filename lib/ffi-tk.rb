@@ -4,6 +4,8 @@ require 'ffi'
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
+# ffi-tk: talk to Tcl/Tk from Ruby through FFI.
+# Tk is the top-level namespace for the binding's widgets, commands and helpers.
 module Tk
   TCL_LIBPATH = ENV['TCL_LIBPATH'].to_s.split(':')
   TK_LIBPATH  = ENV['TK_LIBPATH'].to_s.split(':')
@@ -58,6 +60,7 @@ require 'ffi-tk/thread_sender'
 require 'ffi-tk/ffi/tcl'
 require 'ffi-tk/ffi/tk'
 
+# Autoloads for the widget and command classes.
 module Tk
   autoload :Button,      'ffi-tk/widget/button'
   autoload :Canvas,      'ffi-tk/widget/canvas'

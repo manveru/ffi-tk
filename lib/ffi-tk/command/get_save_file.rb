@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Native "save file" dialog (Tk's tk_getSaveFile).
 module Tk
   module_function
 

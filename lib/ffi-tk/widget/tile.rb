@@ -2,6 +2,9 @@
 
 # Ttk package merged Tcl/Tk core (Tcl/Tk 8.5+)
 module Tk
+  # The themed (Ttk) widget set, merged into the Tcl/Tk core in 8.5.
+  # Tile widgets mirror the classic Tk widgets but draw through the active
+  # theme; each wraps a `ttk::*` command.
   module Tile
     autoload :Entry,         'ffi-tk/widget/tile/entry'
     autoload :Frame,         'ffi-tk/widget/tile/frame'
@@ -33,6 +36,7 @@ module Tk
       Style.theme_use(theme)
     end
 
+    # Shared behaviour mixed into every Tile widget (themed state and style access).
     module TileWidget
       def ttk_state(new_state = None)
         if new_state == None

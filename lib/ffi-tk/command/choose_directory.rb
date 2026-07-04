@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Native directory-chooser dialog (Tk's tk_chooseDirectory).
 module Tk
   module_function
 

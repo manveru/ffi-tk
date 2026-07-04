@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Accessors for Tk's global library variables (tk_library, tk_version, ...).
 module Tk
   @library       = Variable.new('tk_library')
 

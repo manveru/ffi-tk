@@ -2,6 +2,7 @@
 
 module FFI
   module Tcl
+    # FFI binding for Tcl's Tcl_Time struct (seconds + microseconds).
     class TclTime < PrettyStruct
       layout(
         :sec,  :long, # Seconds

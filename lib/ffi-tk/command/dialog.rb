@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Modal message dialog with custom buttons (Tk's tk_dialog).
 module Tk
   module_function
 

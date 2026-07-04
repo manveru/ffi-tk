@@ -182,6 +182,7 @@ module Tk
       end
 
       Item = Struct.new(:tk_parent, :id)
+      # A single row in a Treeview, with its column values and attributes.
       class Item
         def initialize(tk_parent, id)
           self.tk_parent = tk_parent

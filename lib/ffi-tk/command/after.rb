@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Schedule commands to run after a delay or when the interpreter is idle.
+  # Wraps Tk's `after` command.
   module After
     module_function
 

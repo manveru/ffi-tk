@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Tk
+  # Associate Ruby callbacks with X events on a widget.
+  # Wraps Tk's `bind` command.
   module Bind
     def self.bind(tag, sequence = None, &block)
       if sequence == None

@@ -45,6 +45,7 @@ module FFI
       end
     end
 
+    # FFI wrapper around a Tcl value object (Tcl_Obj).
     class Obj < PrettyStruct
       layout(
         :refCount,    :int,
