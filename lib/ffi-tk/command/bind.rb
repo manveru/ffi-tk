@@ -3,7 +3,7 @@
 module Tk
   module Bind
     def self.bind(tag, sequence = None, &block)
-      if None == sequence
+      if sequence == None
         Tk.execute(:bind, tag).to_a
       elsif block
         Event::Handler.register(tag, sequence, &block)

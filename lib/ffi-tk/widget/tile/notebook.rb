@@ -31,7 +31,7 @@ module Tk
       # the value of that option. Otherwise, sets the -options
       # to the corresponding values.
       def tab(window, options = None)
-        if None == options
+        if options == None
           execute(:tab, window)
         else
           execute_only(:tab, window, options.to_tcl_options)
@@ -51,7 +51,7 @@ module Tk
       # (if different) is unmapped. If tabid is omitted, returns
       # the widget name of the currently selected pane.
       def select(window = None)
-        if None == window
+        if window == None
           execute(:select)
         else
           execute_only(:select, window)

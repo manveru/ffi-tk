@@ -146,7 +146,7 @@ module Tk
     # otherwise it just returns the spinbox's string.
     # If validation is on, it will occur when setting the string.
     def set(string = None)
-      if None == string
+      if string == None
         execute(:set)
       else
         execute_only(:set, string)
@@ -173,7 +173,7 @@ module Tk
     # Adjusts the view in the window so that the character given by index is
     # displayed at the left edge of the window.
     def xview(index = None)
-      if None == index
+      if index == None
         execute(:xview)
       else
         execute_only(:xview, index)

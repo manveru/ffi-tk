@@ -366,9 +366,9 @@ module Tk
       # the specified value.
       # See also COLUMN IDENTIFIERS.
       def set(item, column = None, value = None)
-        if None == column
+        if column == None
           execute(:set, item)
-        elsif None == value
+        elsif value == None
           execute(:set, item, column).to_s
         else
           execute_only(:set, item, column, value)

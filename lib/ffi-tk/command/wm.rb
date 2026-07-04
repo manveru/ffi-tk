@@ -612,7 +612,7 @@ module Tk
     # otherwise it returns the path name of window's current group leader, or nil
     # if window is not part of any group.
     def group(window, pathname = None)
-      if None == pathname
+      if pathname == None
         Tk.execute(:wm, :group, window)
       else
         Tk.execute_only(:wm, :group, window, pathname)
@@ -631,7 +631,7 @@ module Tk
     # window, or nil if window has no icon bitmap.
     # On the Windows operating system, an additional flag is supported:
     def iconbitmap(window, bitmap = None)
-      if None == bitmap
+      if bitmap == None
         Tk.execute(:wm, :iconbitmap, window)
       else
         Tk.execute_only(:wm, :iconbitmap, window, bitmap)
@@ -670,7 +670,7 @@ module Tk
     # Otherwise it returns the name of the current icon mask associated with
     # window, or nil if no mask is in effect.
     def iconmask(window, bitmap = None)
-      if None == bitmap
+      if bitmap == None
         Tk.execute(:wm, :iconmask, window).to_s?
       else
         Tk.execute_only(:wm, :iconmask, window, bitmap)
@@ -685,7 +685,7 @@ module Tk
     # case the window manager will normally display the window's title, as
     # specified with the wm title command).
     def iconname(window, new_name = None)
-      if None == new_name
+      if new_name == None
         Tk.execute(:wm, :iconname, window).to_s?
       else
         Tk.execute_only(:wm, :iconname, window, new_name)

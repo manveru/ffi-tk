@@ -10,7 +10,7 @@ module Tk
     def initialize(name, value = None)
       @name = name.freeze
       @tcl_name = "$#{name}"
-      set(value) unless None == value
+      set(value) unless value == None
     end
 
     def get

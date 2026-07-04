@@ -36,7 +36,7 @@ module Tk
       # the index of the current value in the list of -values or -1 if
       # the current value does not appear in the list.
       def current(newindex = None)
-        if None == newindex
+        if newindex == None
           execute(:current)
         else
           execute_only(:current, newindex)

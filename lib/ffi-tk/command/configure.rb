@@ -26,7 +26,7 @@ module Tk
 
     def self.common(receiver, invocation, argument, hints = {})
       result =
-        if None == argument
+        if argument == None
           receiver.execute(*invocation)
         elsif argument.respond_to?(:to_tcl_options)
           receiver.execute_only(*invocation, argument.to_tcl_options)

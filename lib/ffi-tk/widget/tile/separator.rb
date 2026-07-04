@@ -14,7 +14,7 @@ module Tk
       # Specifies the orientation of the separator.
       # horizontal or vertical
       def orient(orientation = None)
-        if None == orientation
+        if orientation == None
           cget(:orient)
         else
           configure orient: orientation

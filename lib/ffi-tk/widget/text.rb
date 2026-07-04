@@ -599,7 +599,7 @@ module Tk
     #        call the tcl/tk search function, this is new land!
     def search(pattern, from, to = None, *switches)
       switches << :regexp if pattern.class < CoreExtensions::Regexp
-      to = :end if None == to
+      to = :end if to == None
 
       switches.map! { |switch| switch.to_s.to_tcl_option }
       switches.uniq!
@@ -706,7 +706,7 @@ module Tk
     # The tag bindings will be invoked first, followed by bindings for the
     # window as a whole.
     def tag_bind(tag_name, sequence = None, &script)
-      if !script && None == sequence
+      if !script && sequence == None
         return Tk.execute(:tag, :bind, tag_name)
       elsif !script
         return Tk.execute(:tag, :bind, tag_name, sequence)
@@ -880,7 +880,7 @@ module Tk
     # annotation. See EMBEDDED WINDOWS for information on the options that are
     # supported. Returns an empty string.
     def window_create(index, options = None)
-      if None == argument
+      if argument == None
         execute(:window, :create, index)
       else
         execute(:window, :create, index, options.to_tcl_options)

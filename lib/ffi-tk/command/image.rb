@@ -28,11 +28,11 @@ module Tk
     # It is recommended to use a separate namespace for image names, like
     # "::img::logo" or "::img::large"
     def create(type, name = None, options = None)
-      if None == name
+      if name == None
         Tk.execute(:image, :create, type)
-      elsif None == options && name.respond_to?(:to_hash)
+      elsif options == None && name.respond_to?(:to_hash)
         Tk.execute(:image, :create, type, name.to_tcl_options)
-      elsif None != name && None != options
+      elsif name != None && options != None
         Tk.exeucte(:image, :create, type, name, options.to_tcl_options)
       end
     end

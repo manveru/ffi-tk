@@ -70,7 +70,7 @@ module Tk
     # of the listbox elements between first and last, inclusive.
     # Both first and last may have any of the standard forms for indices.
     def get(first, last = None)
-      if None == last
+      if last == None
         execute(:get, first).to_s
       else
         execute(:get, first, last).to_a

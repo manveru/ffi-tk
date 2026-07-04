@@ -32,7 +32,7 @@ module Tk
     # previous contents.
     # Window defaults to ".".
     def clear(window = None)
-      if None == window
+      if window == None
         Tk.execute_only(:clipboard, :clear)
       else
         Tk.execute_only(:clipboard, :clear, '-displayof', window)
@@ -100,8 +100,8 @@ module Tk
     # This is equivalent to `Selection.get(selection: :clipboard)`.
     def get(window = None, type = None)
       options = {}
-      options[:displayof] = window unless None == window
-      options[:type] = type.to_s.upcase unless None == type
+      options[:displayof] = window unless window == None
+      options[:type] = type.to_s.upcase unless type == None
 
       content = Tk.execute(:clipboard, :get, options.to_tcl_options).to_s
       content.force_encoding('UTF-8')
