@@ -326,7 +326,8 @@ module Tk
     # chosen.
     def containing(root_x, root_y, window = None)
       if window == None
-        Tk.execute(:winfo, :containing, root_x, root_y).to_s?
+        value = Tk.execute(:winfo, :containing, root_x, root_y).to_s
+        value.empty? ? nil : value
       else
         Tk.execute(:winfo, :containing, '-displayof', window, root_x, root_y)
       end

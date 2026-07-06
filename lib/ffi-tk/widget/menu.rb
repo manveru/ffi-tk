@@ -239,7 +239,8 @@ module Tk
     # If an error returns while executing the command, then the error is
     # returned without posting the menu.
     def post(x, y)
-      execute(:post, x, y).to_s?
+      value = execute(:post, x, y).to_s
+      value.empty? ? nil : value
     end
 
     # Posts the submenu associated with the cascade entry given by index, and

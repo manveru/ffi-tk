@@ -20,7 +20,8 @@ module Tk
     # that is currently active, or an empty string if no element is
     # active.
     def activate(element = None)
-      execute(:activate, element).to_s?
+      value = execute(:activate, element).to_s
+      value.empty? ? nil : value
     end
 
     # Returns a real number indicating the fractional change in the scrollbar

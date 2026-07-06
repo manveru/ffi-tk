@@ -43,6 +43,7 @@ module Tk
   #     Tk::Label.new(Tk.root, text: 'No directory selected')
   #   end
   def choose_directory(options = None)
-    Tk.execute(:tk_chooseDirectory, options.to_tcl_options?).to_s?
+    value = Tk.execute(:tk_chooseDirectory, options.to_tcl_options?).to_s
+    value.empty? ? nil : value
   end
 end
