@@ -48,7 +48,9 @@ module Tk
     # y in the spinbox.
     # Return value is one of: none, buttondown, buttonup, entry.
     def identify(x, y)
-      execute(:identify, x, y).to_sym
+      # Tk returns an empty string for a point outside the widget; keep that as
+      # nil (no element) instead of crashing on nil.to_sym.
+      execute(:identify, x, y)&.to_sym
     end
 
     # Returns the numerical index corresponding to index.
