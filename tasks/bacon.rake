@@ -3,6 +3,7 @@
 desc 'Run all bacon specs with pretty output'
 task :bacon do
   require 'open3'
+  require_relative 'support/headless_display'
 
   specs = PROJECT_SPECS
 
@@ -18,37 +19,39 @@ task :bacon do
   spec_format = '%d specifications (%d requirements), %d failures, %d errors'
   summary_re = /(\d+) specifications \((\d+) requirements\), (\d+) failures, (\d+) errors/
 
-  specs.each_with_index do |spec, idx|
-    print(format(left_format, idx + 1, specs_size, spec))
+  HeadlessDisplay.with_display do |env|
+    specs.each_with_index do |spec, idx|
+      print(format(left_format, idx + 1, specs_size, spec))
 
-    Open3.popen3(FileUtils::RUBY, spec) do |_sin, sout, serr|
-      out = sout.read.strip
-      err = serr.read.strip
+      Open3.popen3(env, FileUtils::RUBY, spec) do |_sin, sout, serr|
+        out = sout.read.strip
+        err = serr.read.strip
 
-      # this is conventional, see spec/innate/state/fiber.rb for usage
-      if out =~ /^Bacon::Error: (needed .*)/
-        puts(yellow % format('%6s %s', '', Regexp.last_match(1)))
-      else
-        match = out.match(summary_re)
-        total = match&.captures&.map(&:to_i)
+        # this is conventional, see spec/innate/state/fiber.rb for usage
+        if out =~ /^Bacon::Error: (needed .*)/
+          puts(yellow % format('%6s %s', '', Regexp.last_match(1)))
+        else
+          match = out.match(summary_re)
+          total = match&.captures&.map(&:to_i)
 
-        if total
-          totals = totals.zip(total).map { |a, b| a + b }
-          tests, _, failures, errors = total
+          if total
+            totals = totals.zip(total).map { |a, b| a + b }
+            tests, _, failures, errors = total
 
-          if tests.positive? && (failures + errors).zero?
-            puts((green % '%6d passed') % tests)
+            if tests.positive? && (failures + errors).zero?
+              puts((green % '%6d passed') % tests)
+            else
+              some_failed = true
+              puts(red % '       failed')
+              puts out unless out.empty?
+              puts err unless err.empty?
+            end
           else
             some_failed = true
             puts(red % '       failed')
             puts out unless out.empty?
             puts err unless err.empty?
           end
-        else
-          some_failed = true
-          puts(red % '       failed')
-          puts out unless out.empty?
-          puts err unless err.empty?
         end
       end
     end

@@ -64,12 +64,18 @@
               pkgs.tk
               pkgs.zip
               config.treefmt.build.wrapper # `treefmt` on PATH, same config as `nix fmt`
+            ]
+            # The spec runner (tasks/support/headless_display.rb) starts one
+            # private Xvfb plus openbox per `rake`/`rake coverage` run, so the
+            # suite is headless by default. A window manager is required, not
+            # optional: the bind/event specs synthesise key events that only
+            # reach a window with real keyboard focus. Set TK_SPEC_DISPLAY=:0
+            # to watch the specs on the desktop instead.
+            ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
+              pkgs.xorg-server # Xvfb
+              pkgs.openbox
+              pkgs.xprop # WM-readiness probe in headless_display.rb
             ];
-            # The specs need an X display and use `rake`. Locally they run
-            # against the ambient $DISPLAY. Headless CI would need not just Xvfb
-            # but a window manager — the bind/event specs synthesise key events
-            # that require real keyboard focus — so that is a deliberate CI
-            # concern, not a dev-shell dependency.
           };
         };
     };

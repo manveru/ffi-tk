@@ -3,16 +3,19 @@
 desc 'Run all specs under SimpleCov and report line coverage per file'
 task :coverage do
   require 'open3'
+  require_relative 'support/headless_display'
 
   ENV['COVERAGE'] = '1'
   specs = PROJECT_SPECS
   failed = []
 
-  specs.each_with_index do |spec, idx|
-    print(format("%4d/%d: %s\n", idx + 1, specs.size, spec))
-    out, status = Open3.capture2e(FileUtils::RUBY, spec)
-    summary = out[/(\d+) specifications .*/]
-    failed << spec unless status.success? && summary && out !~ / [1-9]\d* (failures|errors)/
+  HeadlessDisplay.with_display do |env|
+    specs.each_with_index do |spec, idx|
+      print(format("%4d/%d: %s\n", idx + 1, specs.size, spec))
+      out, status = Open3.capture2e(env, FileUtils::RUBY, spec)
+      summary = out[/(\d+) specifications .*/]
+      failed << spec unless status.success? && summary && out !~ / [1-9]\d* (failures|errors)/
+    end
   end
 
   # Merge every per-process result into one union and report.
