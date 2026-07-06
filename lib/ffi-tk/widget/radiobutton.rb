@@ -31,11 +31,11 @@ module Tk
     # Does just what would have happened if the user invoked the radiobutton
     # with the mouse: selects the button and invokes its associated Tcl
     # command, if there is one.
-    # The return value is the return value from the Tcl command, or an empty
-    # string if there is no command associated with the radiobutton.
+    # The return value is the return value from the Tcl command, or nil if
+    # there is no command associated with the radiobutton.
     # This command is ignored if the radiobutton's state is disabled.
     def invoke
-      execute_only(:invoke)
+      execute(:invoke)
     end
 
     # Selects the radiobutton and sets the associated variable to the value

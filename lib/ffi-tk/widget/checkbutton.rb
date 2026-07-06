@@ -10,16 +10,6 @@ module Tk
       'checkbutton'
     end
 
-    def initialize(parent = Tk.root, options = None, &block)
-      if block
-        super do |options|
-          options[:command] = register_command(:command, &block)
-        end
-      else
-        super
-      end
-    end
-
     # Deselects the checkbutton and sets the associated variable to its "off"
     # value.
     def deselect
@@ -39,11 +29,11 @@ module Tk
     # Does just what would have happened if the user invoked the checkbutton
     # with the mouse: toggle the selection state of the button and invoke the
     # Tcl command associated with the checkbutton, if there is one.
-    # The return value is the return value from the Tcl command, or an empty
-    # string if there is no command associated with the checkbutton.
+    # The return value is the return value from the Tcl command, or nil if
+    # there is no command associated with the checkbutton.
     # This command is ignored if the checkbutton's state is disabled.
     def invoke
-      execute_only(:invoke)
+      execute(:invoke)
     end
 
     # Selects the checkbutton and sets the associated variable to its "on"

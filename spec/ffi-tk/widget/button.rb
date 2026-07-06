@@ -21,4 +21,14 @@ describe Tk::Button do
     button = Tk::Button.new(text: 'Hello, World!')
     button.cget(:text).should == 'Hello, World!'
   end
+
+  it 'returns the command result from invoke' do
+    button = Tk::Button.new { [:clicked, 1] }
+    button.invoke.should == ['clicked', 1]
+    button.destroy
+
+    plain = Tk::Button.new(text: 'no command')
+    plain.invoke.should.nil?
+    plain.destroy
+  end
 end

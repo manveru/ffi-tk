@@ -20,14 +20,18 @@ module Tk
       'button'
     end
 
-    # TODO: implement custom procs
+    # Register a given block as the button's -command through Widget#initialize's
+    # options yield — registering into a local hash before super loses the
+    # command when the options hash is passed as the first argument (Widget then
+    # shifts it into place, discarding the second argument).
     def initialize(parent = Tk.root, options = None, &block)
       if block
-        options = {} unless options.respond_to?(:[]=)
-        options[:command] = register_command(:command, &block)
+        super do |opts|
+          opts[:command] = register_command(:command, &block)
+        end
+      else
+        super
       end
-
-      super
     end
 
     def destroy
@@ -35,8 +39,9 @@ module Tk
       super
     end
 
+    # Runs the button's -command and returns its result (nil without one).
     def invoke
-      execute_only('invoke')
+      execute(:invoke)
     end
 
     def flash

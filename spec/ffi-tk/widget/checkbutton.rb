@@ -20,6 +20,17 @@ describe Tk::CheckButton do
     value.to_boolean.should == false
   end
 
+  it 'toggles state and returns the command result from invoke' do
+    value = Tk::Variable.new('checkbutton_invoke_value')
+    cb = Tk::CheckButton.new(variable: value) { :toggled }
+
+    cb.invoke.should == 'toggled'
+    value.to_boolean.should == true
+    cb.invoke.should == 'toggled'
+    value.to_boolean.should == false
+    cb.destroy
+  end
+
   it 'assigns a command block on initialize' do
     toggled = false
     value = Tk::Variable.new('checkbutton_value')
