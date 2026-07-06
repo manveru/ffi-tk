@@ -144,18 +144,18 @@ module Tk
       # x and y, or the empty string if no such component is present at that
       # position. The following subcommands are supported:
       def identify_component(x, y)
-        execute(:identify, component, x, y)
+        execute(:identify, :component, x, y)
       end
 
       # Returns the item ID of the item at position y.
       def identify_row(x, y)
-        execute(:identify, row, x, y)
+        execute(:identify, :row, x, y)
       end
 
       # Returns the data column identifier of the cell at position x.
       # The tree column has ID #0.
       def identify_column(x, y)
-        execute(:identify, column, x, y)
+        execute(:identify, :column, x, y)
       end
 
       # Returns the integer index of item within its parent's list of children.
@@ -206,7 +206,7 @@ module Tk
         end
 
         def move(parent, index)
-          tk_parent.move_item(id, parent, index)
+          tk_parent.move(id, parent, index)
         end
 
         def delete
@@ -316,8 +316,6 @@ module Tk
       # hierarchy.
       def parent(item)
         id = execute(:parent, item)
-        p item
-        p id
         Item.new(self, id) if id
       end
 
@@ -342,22 +340,22 @@ module Tk
 
       # +items+ becomes the new selection.
       def selection_set(*items)
-        execute(:selection, :set, *items.flatten)
+        execute(:selection, :set, items.flatten)
       end
 
       # Add +items+ to the selection
       def selection_add(*items)
-        execute(:selection, :add, *items.flatten)
+        execute(:selection, :add, items.flatten)
       end
 
       # Remove +items+ from the selection
       def selection_remove(*items)
-        execute(:selection, :remove, *items.flatten)
+        execute(:selection, :remove, items.flatten)
       end
 
       # Toggle the selection state of each item in +items+.
       def selection_toggle(*items)
-        execute(:selection, :toggle, *items.flatten)
+        execute(:selection, :toggle, items.flatten)
       end
 
       # With one argument, returns a dictionary of column/value pairs for the
@@ -406,24 +404,10 @@ module Tk
         common_configure([:tag, :configure, tag_name], options)
       end
 
-      # Standard command for horizontal scrolling; see widget(n).
-      def xview(args)
-        execute(:xview, args)
-      end
-
-      # Standard command for vertical scrolling; see ttk::widget(n).
-      # Each item should have the same number of values as the -columns widget
-      # option. If there are fewer values than columns, the remaining values are
-      # assumed empty.
-      # If there are more values than columns, the extra values are ignored.
-      # Specifies the text foreground color.
-      # Specifies the cell or item background color.
-      # Generated whenever the selection changes.
-      # Generated just before setting the focus item to -open true.
-      # Generated just after setting the focus item to -open false.
-      def yview(args)
-        execute(:yview, args)
-      end
+      # Horizontal (xview/xview_moveto/xview_scroll) and vertical
+      # (yview/yview_moveto/yview_scroll) scrolling are provided by the
+      # Scrollable mixin, which queries the visible fractions with no argument
+      # and adjusts the view when given one.
     end
   end
 end
