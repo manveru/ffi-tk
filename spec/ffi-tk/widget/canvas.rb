@@ -166,6 +166,230 @@ describe Tk::Canvas do
     @win.width.should == 0
     @win.window.should == entry
   end
+
+  # A freshly built, packed, updated canvas isolated from the shared @canvas so
+  # item ids and the display list are predictable within a single spec.
+  def fresh_canvas(width = 200, height = 200)
+    cv = Tk::Canvas.new
+    cv.configure(width: width, height: height)
+    cv.pack
+    Tk.update
+    cv
+  end
+
+  it 'queries and sets coords' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+    cv.coords(rect).should == [10.0, 10.0, 50.0, 50.0]
+
+    cv.coords(rect, 20, 20, 60, 60)
+    cv.coords(rect).should == [20.0, 20.0, 60.0, 60.0]
+  end
+
+  it 'moves items by a delta' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+    cv.move(rect, 5, 7)
+    cv.coords(rect).should == [15.0, 17.0, 55.0, 57.0]
+  end
+
+  it 'scales items about an origin' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+    cv.scale(rect, 0, 0, 2, 3)
+    cv.coords(rect).should == [20.0, 30.0, 100.0, 150.0]
+  end
+
+  it 'adds and deletes tags with addtag_withtag/dtag' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+    cv.gettags(rect).should == []
+
+    cv.addtag_withtag('marked', rect)
+    cv.gettags(rect).should == ['marked']
+    cv.find_withtag('marked').should == [rect.id]
+
+    cv.dtag(rect, 'marked')
+    cv.gettags(rect).should == []
+  end
+
+  it 'tags every item with addtag_all' do
+    cv = fresh_canvas
+    a = cv.create_rectangle(0, 0, 10, 10)
+    b = cv.create_oval(20, 20, 30, 30)
+    cv.addtag_all('everything')
+    cv.find_withtag('everything').sort.should == [a.id, b.id].sort
+  end
+
+  it 'tags items by spatial relation' do
+    cv = fresh_canvas
+    inner = cv.create_rectangle(10, 10, 40, 40)
+    outer = cv.create_rectangle(100, 100, 150, 150)
+
+    cv.addtag_enclosed('enc', 0, 0, 60, 60)
+    cv.find_withtag('enc').should == [inner.id]
+
+    cv.addtag_overlapping('ov', 0, 0, 20, 20)
+    cv.find_withtag('ov').should == [inner.id]
+
+    cv.addtag_closest('near', 12, 12)
+    cv.find_withtag('near').should == [inner.id]
+
+    cv.addtag_above('stacked', inner)
+    cv.gettags(outer).should == ['stacked']
+
+    cv.addtag_below('lower', outer)
+    cv.gettags(inner).should.include 'lower'
+  end
+
+  it 'finds items with find variants' do
+    cv = fresh_canvas
+    low = cv.create_rectangle(10, 10, 40, 40)
+    high = cv.create_rectangle(100, 100, 150, 150)
+
+    cv.find_all.sort.should == [low.id, high.id].sort
+    cv.find_closest(12, 12).should == [low.id]
+    cv.find_enclosed(0, 0, 60, 60).should == [low.id]
+    cv.find_overlapping(0, 0, 20, 20).should == [low.id]
+    cv.find_above(low).should == [high.id]
+    cv.find_below(high).should == [low.id]
+    cv.find_withtag(low).should == [low.id]
+  end
+
+  it 'reports an integer bounding box' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+    box = cv.bbox(rect)
+    box.length.should == 4
+    box.all? { |n| n.is_a?(Integer) }.should == true
+    # Tk overestimates by ~1px; the box brackets the requested rectangle.
+    box[0].should <= 10
+    box[1].should <= 10
+    box[2].should >= 50
+    box[3].should >= 50
+    cv.bbox('no-such-tag').should.nil?
+  end
+
+  it 'converts window to canvas coordinates' do
+    cv = fresh_canvas
+    cv.canvasx(17).should == 17.0
+    cv.canvasy(23).should == 23.0
+    # gridspacing rounds to the nearest multiple.
+    cv.canvasx(17, 10).should == 20.0
+    cv.canvasy(23, 10).should == 20.0
+  end
+
+  it 'reports the item type as a symbol' do
+    cv = fresh_canvas
+    cv.type(cv.create_rectangle(0, 0, 10, 10)).should == :rectangle
+    cv.type(cv.create_oval(0, 0, 10, 10)).should == :oval
+    cv.type(cv.create_text(0, 0, text: 'x')).should == :text
+    cv.type('missing').should.nil?
+  end
+
+  it 'round-trips options via itemconfigure/itemcget' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(0, 0, 10, 10)
+    cv.itemconfigure(rect, fill: 'red', width: 3)
+    ['red', '#ff0000'].should.include cv.itemcget(rect, :fill)
+    # The typed accessor coerces the raw "3.0" itemcget value to an Integer.
+    rect.width.should == 3
+  end
+
+  it 'inserts, indexes and deletes characters in a text item' do
+    cv = fresh_canvas
+    text = cv.create_text(0, 0, text: 'Hello')
+    cv.index(text, :end).should == 5
+
+    cv.insert(text, 2, 'XX')
+    cv.itemcget(text, :text).should == 'HeXXllo'
+    cv.index(text, :end).should == 7
+
+    cv.dchars(text, 2, 3)
+    cv.itemcget(text, :text).should == 'Hello'
+  end
+
+  it 'sets focus and the insertion cursor on a text item' do
+    cv = fresh_canvas
+    text = cv.create_text(0, 0, text: 'Hello')
+    cv.focus(text)
+    cv.focus.should == text.id
+    cv.icursor(text, 2)
+    cv.index(text, :insert).should == 2
+  end
+
+  it 'manages the selection' do
+    cv = fresh_canvas
+    text = cv.create_text(0, 0, text: 'Hello')
+    cv.select_item.should.nil?
+
+    cv.select_from(text, 1)
+    cv.select_to(text, 3)
+    cv.select_item.should == text.id
+
+    cv.select_clear
+    cv.select_item.should.nil?
+  end
+
+  it 'reports the visible view fractions' do
+    cv = fresh_canvas
+    cv.xview.should == [0.0, 1.0]
+    cv.yview.should == [0.0, 1.0]
+  end
+
+  it 'renders postscript' do
+    cv = fresh_canvas
+    cv.create_rectangle(10, 10, 50, 50, fill: 'black')
+    ps = cv.postscript
+    ps.should.be.kind_of String
+    ps.should.not.be.empty
+    ps[0, 3].should == '%!P'
+  end
+
+  it 'creates an oval and round-trips a fill' do
+    cv = fresh_canvas
+    oval = cv.create_oval(0, 0, 30, 20, fill: 'red')
+    oval.coords.should == [0.0, 0.0, 30.0, 20.0]
+    ['red', '#ff0000'].should.include oval.fill
+    oval.type.should == :oval
+  end
+
+  it 'creates a bitmap item' do
+    cv = fresh_canvas
+    bitmap = cv.create_bitmap(15, 25, bitmap: 'error')
+    bitmap.coords.should == [15.0, 25.0]
+    bitmap.bitmap.should == 'error'
+    bitmap.type.should == :bitmap
+  end
+
+  it 'creates an image item' do
+    cv = fresh_canvas
+    image = cv.create_image(5, 6)
+    image.coords.should == [5.0, 6.0]
+    image.type.should == :image
+  end
+
+  it 'delegates through Canvas::Item instance methods' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+
+    rect.coords.should == [10.0, 10.0, 50.0, 50.0]
+    rect.type.should == :rectangle
+
+    rect.move(5, 5)
+    rect.coords.should == [15.0, 15.0, 55.0, 55.0]
+
+    rect.addtag('flagged')
+    rect.gettags.should == ['flagged']
+    rect.dtag('flagged')
+    rect.gettags.should == []
+
+    rect.configure(fill: 'blue')
+    ['blue', '#0000ff'].should.include rect.fill
+
+    rect.delete
+    cv.type(rect).should.nil?
+  end
 end
 
 # %w[ ].each{|name| puts "@line.%s.should == nil" % [name.delete(':,')] }

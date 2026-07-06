@@ -110,7 +110,8 @@ module Tk
     # items have empty bounding boxes (i.e. they have nothing to display) then
     # nil is returned.
     def bbox(*tags_or_ids)
-      execute(:bbox, *tags_or_ids).to_a?(&:to_i)
+      result = execute(:bbox, *tags_or_ids)
+      result&.map(&:to_i)
     end
 
     # This method associates +command+ with all the items given by +tag_or_id+
@@ -188,18 +189,18 @@ module Tk
 
     # Given a window x-coordinate in the canvas +screenx+, this command returns
     # the canvas x-coordinate that is displayed at that location.
-    # If +gridspacing+ is true, then the canvas coordinate is rounded to the
-    # nearest multiple of gridspacing units.
-    def canvasx(screenx, gridspacing = false)
-      execute(:canvasx, screenx, gridspacing ? :gridspacing : None)
+    # If +gridspacing+ is given, then the canvas coordinate is rounded to the
+    # nearest multiple of +gridspacing+ units.
+    def canvasx(screenx, gridspacing = None)
+      execute(:canvasx, screenx, gridspacing)
     end
 
     # Given a window y-coordinate in the canvas +screeny+ this command returns
     # the canvas y-coordinate that is displayed at that location.
-    # If +gridspacing+ is true, then the canvas coordinate is rounded to the
-    # nearest multiple of gridspacing units.
-    def canvasy(screeny, gridspacing = false)
-      execute(:canvasy, screeny, gridspacing ? :gridspacing : None)
+    # If +gridspacing+ is given, then the canvas coordinate is rounded to the
+    # nearest multiple of +gridspacing+ units.
+    def canvasy(screeny, gridspacing = None)
+      execute(:canvasy, screeny, gridspacing)
     end
 
     # Query or modify the coordinates that define an item.
@@ -329,8 +330,8 @@ module Tk
       execute(:find, search_command, *)
     end
 
-    def find_above(tag, tag_or_id)
-      execute(:find, tag, :above, tag_or_id)
+    def find_above(tag_or_id)
+      execute(:find, :above, tag_or_id)
     end
 
     def find_all
@@ -628,7 +629,8 @@ module Tk
     #   that is to be printed, in canvas coordinates, not window coordinates.
     #   Defaults to the coordinate of the top edge of the window.
     def postscript(options = {})
-      execute(:postscript, options.to_tcl_options).to_s?
+      value = execute(:postscript, options.to_tcl_options).to_s
+      value.empty? ? nil : value
     end
 
     # Move all of the items given by +tag_or_id+ to a new position in the
@@ -716,7 +718,7 @@ module Tk
     # this canvas.
     # If the selection is not in this canvas then nil is returned.
     def select_item
-      execute(:select, :item).to_s?
+      execute(:select, :item)
     end
 
     # Set the selection to consist of those characters of +tag_or_id+ between the
@@ -738,7 +740,8 @@ module Tk
     # in the display list is returned.
     # If +tag_or_id+ does not refer to any items at all then nil is returned.
     def type(tag_or_id)
-      execute(:type, tag_or_id).to_sym?
+      result = execute(:type, tag_or_id)
+      result&.to_sym
     end
 
     # Returns a list containing two elements.
