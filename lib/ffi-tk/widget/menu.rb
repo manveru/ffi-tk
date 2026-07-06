@@ -225,11 +225,7 @@ module Tk
     # default bindings normally take care of this before invoking the invoke
     # widget command.
     def invoke(index)
-      # A command entry's associated callback is a Ruby proc registered through
-      # the FFI callback bridge. Retrieving the invoke result (execute) while
-      # that proc is still on the C stack crashes the marshaller, so mirror
-      # Button#invoke and fire the entry without reading a result back.
-      execute_only(:invoke, index)
+      execute(:invoke, index)
     end
 
     # Arrange for the menu to be displayed on the screen at the root-window

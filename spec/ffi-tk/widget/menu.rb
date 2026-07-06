@@ -55,7 +55,9 @@ describe Tk::Menu do
     ran = []
     menu.add(:command, label: 'Go', command: proc { ran << :go })
 
-    menu.invoke(0)
+    # invoke returns the entry command's result — here the callback's own
+    # return value, marshalled back through the Tcl result.
+    menu.invoke(0).should == ['go']
     ran.should == [:go]
   end
 

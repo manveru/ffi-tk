@@ -102,8 +102,7 @@ describe Tk::Event do
   # Bind a handler that captures the delivered Event::Data, synthesize an event
   # with explicit fields, then assert those fields survive the %-substitution
   # round-trip into the struct. The handler only stashes the object; the wait
-  # loop reads it afterwards (retrieving an eval result inside the callback
-  # segfaults, see task #21).
+  # loop reads it afterwards.
   def capture(sequence, options)
     captured = nil
     entry = Tk::Entry.new('.')
