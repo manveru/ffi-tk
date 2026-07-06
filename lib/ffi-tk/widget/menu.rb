@@ -179,7 +179,7 @@ module Tk
     # by index.
     # Option may have any of the values accepted by the add widget command.
     def entrycget(index, option)
-      execute(:entrycget, index, option)
+      execute(:entrycget, index, option.to_tcl_option)
     end
 
     # This command is similar to the configure command, except that it applies
@@ -211,7 +211,7 @@ module Tk
       if options == None
         execute(:insert, index, type)
       else
-        execute(:insert, index, type, options.to_tcl_options)
+        execute(:insert, index, type, option_hash_to_tcl(options))
       end
     end
 
@@ -225,7 +225,11 @@ module Tk
     # default bindings normally take care of this before invoking the invoke
     # widget command.
     def invoke(index)
-      execute(:invoke, index)
+      # A command entry's associated callback is a Ruby proc registered through
+      # the FFI callback bridge. Retrieving the invoke result (execute) while
+      # that proc is still on the C stack crashes the marshaller, so mirror
+      # Button#invoke and fire the entry without reading a result back.
+      execute_only(:invoke, index)
     end
 
     # Arrange for the menu to be displayed on the screen at the root-window
