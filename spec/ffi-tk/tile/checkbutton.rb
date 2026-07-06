@@ -8,7 +8,4 @@ describe Tk::Tile::CheckButton do
     instance.class.should == Tk::Tile::CheckButton
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

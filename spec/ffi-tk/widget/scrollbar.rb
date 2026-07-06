@@ -8,7 +8,4 @@ describe Tk::Scrollbar do
     instance.class.should == Tk::Scrollbar
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

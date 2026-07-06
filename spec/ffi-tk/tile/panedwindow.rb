@@ -8,7 +8,4 @@ describe Tk::Tile::PanedWindow do
     instance.class.should == Tk::Tile::PanedWindow
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

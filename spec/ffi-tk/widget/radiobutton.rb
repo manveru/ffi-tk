@@ -8,7 +8,4 @@ describe Tk::RadioButton do
     instance.class.should == Tk::RadioButton
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

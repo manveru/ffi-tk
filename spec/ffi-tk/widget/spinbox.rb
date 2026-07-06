@@ -8,7 +8,4 @@ describe Tk::Spinbox do
     instance.class.should == Tk::Spinbox
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

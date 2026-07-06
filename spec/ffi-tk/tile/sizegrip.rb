@@ -8,7 +8,4 @@ describe Tk::Tile::Sizegrip do
     instance.class.should == Tk::Tile::Sizegrip
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

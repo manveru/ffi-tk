@@ -9,7 +9,7 @@ describe Tk::Label do
     instance.tk_parent.should == Tk.root
   end
 
-  it 'needs more specs' do
+  it 'round-trips its value' do
     label = Tk::Label.new
     label.value.should.nil?
     label.value = 'Hello, World!'

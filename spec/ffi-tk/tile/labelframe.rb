@@ -8,7 +8,4 @@ describe Tk::Tile::LabelFrame do
     instance.class.should == Tk::Tile::LabelFrame
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

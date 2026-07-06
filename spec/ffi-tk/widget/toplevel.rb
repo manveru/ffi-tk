@@ -8,7 +8,4 @@ describe Tk::Toplevel do
     instance.class.should == Tk::Toplevel
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

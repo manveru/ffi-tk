@@ -8,7 +8,4 @@ describe Tk::Message do
     instance.class.should == Tk::Message
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end

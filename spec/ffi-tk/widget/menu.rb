@@ -8,7 +8,4 @@ describe Tk::Menu do
     instance.class.should == Tk::Menu
     instance.tk_parent.should == Tk.root
   end
-
-  # it 'needs more specs' do
-  # end
 end

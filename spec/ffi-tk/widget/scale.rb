@@ -8,7 +8,4 @@ describe Tk::Scale do
     instance.class.should == Tk::Scale
     instance.tk_parent.should == Tk.root
   end
-
-  it 'needs more specs' do
-  end
 end
