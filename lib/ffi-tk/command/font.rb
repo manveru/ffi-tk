@@ -79,8 +79,11 @@ module Tk
       args << option.to_tcl_option unless option == None
       args << '--' << char.to_tcl unless char == None
 
-      array = execute(:actual, font, *args)
-      array.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
+      result = execute(:actual, font, *args)
+      # Querying a single -option returns just that value, not an option list.
+      return result unless option == None
+
+      result.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
     end
 
     def self.configure(fontname, argument = None)
@@ -93,6 +96,8 @@ module Tk
       if fontname.respond_to?(:to_tcl_options)
         options = fontname
         fontname = None
+        options = options.to_tcl_options
+      elsif options.respond_to?(:to_tcl_options)
         options = options.to_tcl_options
       end
 

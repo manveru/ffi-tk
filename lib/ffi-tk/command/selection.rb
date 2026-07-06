@@ -106,8 +106,8 @@ module Tk
     # If Tk is being used to retrieve the selection then the value is converted
     # back to a string at the requesting end, so format is irrelevant.
     def handle(window, options = {}, &command)
-      command = register_command(:selection_handle, &command)
-      Tk.execute_only(options.to_tcl_options, window, command)
+      _id, command = Tk.register_proc(command)
+      Tk.execute_only(:selection, :handle, options.to_tcl_options, window, command)
     end
 
     # The first form of selection own returns the path name of the window in
@@ -121,8 +121,8 @@ module Tk
         options = window
 
         if (cmd = options[:command] || command)
-          command = register_command(:selection_own, &cmd)
-          Tk.execute(:selection, :own, { command: command }.merge(options).to_tcl_options)
+          _id, command = Tk.register_proc(cmd)
+          Tk.execute(:selection, :own, options.merge(command: command).to_tcl_options)
         else
           Tk.execute(:selection, :own, options.to_tcl_options)
         end
