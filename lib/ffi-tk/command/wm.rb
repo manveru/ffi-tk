@@ -672,7 +672,7 @@ module Tk
     # window, or nil if no mask is in effect.
     def iconmask(window, bitmap = None)
       if bitmap == None
-        Tk.execute(:wm, :iconmask, window).to_s?
+        Tk.execute(:wm, :iconmask, window)
       else
         Tk.execute_only(:wm, :iconmask, window, bitmap)
       end
@@ -687,7 +687,7 @@ module Tk
     # specified with the wm title command).
     def iconname(window, new_name = None)
       if new_name == None
-        Tk.execute(:wm, :iconname, window).to_s?
+        Tk.execute(:wm, :iconname, window)
       else
         Tk.execute_only(:wm, :iconname, window, new_name)
       end
@@ -735,9 +735,9 @@ module Tk
     # hints are in effect then an empty string is returned).
     def iconposition(window, y = None, x = None)
       if y == None || x == None
-        Tk.execute_only(:wm, :iconposition, window)
+        Tk.execute(:wm, :iconposition, window)
       else
-        Tk.execute(:wm, :iconposition, window, y, x)
+        Tk.execute_only(:wm, :iconposition, window, y, x)
       end
     end
 
@@ -783,11 +783,11 @@ module Tk
     # maximum width and height currently in effect.
     # The maximum size defaults to the size of the screen.
     # See the sections on geometry management below for more information.
-    def maxsize(_window, width = None, height = None)
+    def maxsize(window, width = None, height = None)
       if width == None || height == None
-        Tk.execute(:wm, :maxsize)
+        Tk.execute(:wm, :maxsize, window)
       else
-        Tk.execute_only(:wm, :maxsize, width, height)
+        Tk.execute_only(:wm, :maxsize, window, width, height)
       end
     end
 
@@ -846,9 +846,9 @@ module Tk
     # command is invoked, unless the source has been set explicitly to program.
     def positionfrom(window, who = None)
       if who == None
-        Tk.execute_only(:wm, :positionfrom, window, who)
-      else
         Tk.execute(:wm, :positionfrom, window)
+      else
+        Tk.execute_only(:wm, :positionfrom, window, who)
       end
     end
 
@@ -974,7 +974,7 @@ module Tk
       if order == None || other_window == None
         Tk.execute(:wm, :stackorder, window)
       else
-        Tk.execute_only(:wm, :stackorder, window, order, other_window)
+        Tk.boolean(Tk.execute(:wm, :stackorder, window, order, other_window))
       end
     end
 

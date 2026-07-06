@@ -9,12 +9,10 @@ describe Tk::WM do
 
   # FIXME: following methods have no specs yet because image commands are missing.
   #  * WM.forget
-  #  * WM.iconbitmap
-  #  * WM.iconmask
-  #  * WM.iconname
-  #  * WM.iconphoto
-  #  * WM.iconposition
+  #  * WM.iconbitmap_default
+  #  * WM.iconphoto / WM.iconphoto_default
   #  * WM.iconwindow
+  #  * WM.manage
 
   describe 'WM.aspect' do
     should 'list current attributes' do
@@ -182,6 +180,234 @@ describe Tk::WM do
     it 'iconifies the window' do
       root.wm_iconify.should == true
       root.wm_deiconify.should == true
+    end
+  end
+
+  describe 'WM.maxsize' do
+    it 'queries the maximum size as [width, height]' do
+      top = Tk::Toplevel.new
+      max = top.wm_maxsize
+      max.class.should == Array
+      max.size.should == 2
+      max.all? { |n| n.to_i > 0 }.should == true
+      top.destroy
+    end
+
+    it 'sets and reads back the maximum size' do
+      top = Tk::Toplevel.new
+      top.wm_maxsize(800, 600)
+      top.wm_maxsize.should == [800, 600]
+      top.destroy
+    end
+  end
+
+  describe 'WM.minsize' do
+    it 'defaults to [1, 1]' do
+      top = Tk::Toplevel.new
+      top.wm_minsize.should == [1, 1]
+      top.destroy
+    end
+
+    it 'sets and reads back the minimum size' do
+      top = Tk::Toplevel.new
+      top.wm_minsize(120, 80)
+      top.wm_minsize.should == [120, 80]
+      top.destroy
+    end
+  end
+
+  describe 'WM.resizable' do
+    it 'is resizable in both dimensions by default' do
+      top = Tk::Toplevel.new
+      top.wm_resizable.should == [1, 1]
+      top.destroy
+    end
+
+    it 'sets and reads back resizability per dimension' do
+      top = Tk::Toplevel.new
+      Tk::WM.resizable(top, true, false)
+      top.wm_resizable.should == [1, 0]
+      Tk::WM.resizable(top, false, true)
+      top.wm_resizable.should == [0, 1]
+      top.destroy
+    end
+  end
+
+  describe 'WM.overrideredirect' do
+    it 'defaults to false' do
+      top = Tk::Toplevel.new
+      top.wm_overrideredirect.should == false
+      top.destroy
+    end
+
+    it 'sets and reads back the flag' do
+      top = Tk::Toplevel.new
+      top.wm_overrideredirect = true
+      top.wm_overrideredirect.should == true
+      top.wm_overrideredirect = false
+      top.wm_overrideredirect.should == false
+      top.destroy
+    end
+  end
+
+  describe 'WM.positionfrom' do
+    it 'has no source by default' do
+      top = Tk::Toplevel.new
+      top.wm_positionfrom.should.nil?
+      top.destroy
+    end
+
+    it 'sets and reads back the position source' do
+      top = Tk::Toplevel.new
+      top.wm_positionfrom = :user
+      top.wm_positionfrom.should == 'user'
+      top.wm_positionfrom = :program
+      top.wm_positionfrom.should == 'program'
+      top.destroy
+    end
+  end
+
+  describe 'WM.sizefrom' do
+    it 'has no source by default' do
+      top = Tk::Toplevel.new
+      top.wm_sizefrom.should.nil?
+      top.destroy
+    end
+
+    it 'sets and reads back the size source' do
+      top = Tk::Toplevel.new
+      top.wm_sizefrom = :user
+      top.wm_sizefrom.should == 'user'
+      top.wm_sizefrom = :program
+      top.wm_sizefrom.should == 'program'
+      top.destroy
+    end
+  end
+
+  describe 'WM.state' do
+    it 'reports the root window as normal' do
+      root.wm_state.should == 'normal'
+    end
+
+    it 'reflects withdraw and deiconify transitions' do
+      top = Tk::Toplevel.new
+      Tk.execute('update')
+      top.wm_withdraw
+      top.wm_state.should == 'withdrawn'
+      top.wm_deiconify
+      Tk.execute('update')
+      top.wm_state.should == 'normal'
+      top.destroy
+    end
+  end
+
+  describe 'WM.title' do
+    it 'sets and reads back the window title' do
+      top = Tk::Toplevel.new
+      top.wm_title = 'a fine title'
+      top.wm_title.should == 'a fine title'
+      top.destroy
+    end
+  end
+
+  describe 'WM.transient' do
+    it 'has no master by default' do
+      top = Tk::Toplevel.new
+      top.wm_transient.should.nil?
+      top.destroy
+    end
+
+    it 'sets and clears the transient master' do
+      master = Tk::Toplevel.new
+      top = Tk::Toplevel.new
+      top.wm_transient = master
+      top.wm_transient.should == master.tk_pathname
+      top.wm_transient = ''
+      top.wm_transient.should.nil?
+      top.destroy
+      master.destroy
+    end
+
+    it 'refuses to make a window transient of itself' do
+      top = Tk::Toplevel.new
+      -> { top.wm_transient = top }.should.raise(RuntimeError)
+      top.destroy
+    end
+  end
+
+  describe 'WM.stackorder' do
+    it 'returns the mapped toplevels including the queried window' do
+      top = Tk::Toplevel.new
+      next unless skip_unless_mapped(top)
+
+      order = Tk::WM.stackorder(top)
+      order.class.should == Array
+      order.should.include top.tk_pathname
+      top.destroy
+    end
+
+    it 'reports relative stacking with isabove/isbelow as complementary booleans' do
+      low = Tk::Toplevel.new
+      high = Tk::Toplevel.new
+      next unless skip_unless_mapped(low)
+      next unless skip_unless_mapped(high)
+
+      above = Tk::WM.stackorder(low, :isabove, high)
+      below = Tk::WM.stackorder(low, :isbelow, high)
+      [above, below].should == [above, below].map { |v| v == true || v == false ? v : :not_boolean }
+      above.should == !below
+      low.destroy
+      high.destroy
+    end
+  end
+
+  describe 'WM.protocol' do
+    it 'registers, queries, lists and deletes a protocol handler' do
+      top = Tk::Toplevel.new
+      top.wm_protocol('WM_DELETE_WINDOW') { :handled }
+      top.wm_protocol.should.include 'WM_DELETE_WINDOW'
+      top.wm_protocol('WM_DELETE_WINDOW').should.not.be.empty
+      top.wm_protocol('WM_DELETE_WINDOW', nil)
+      top.wm_protocol.should == []
+      top.destroy
+    end
+  end
+
+  describe 'WM.iconname' do
+    it 'has no icon name by default' do
+      top = Tk::Toplevel.new
+      top.wm_iconname.should.nil?
+      top.destroy
+    end
+
+    it 'sets and reads back the icon name' do
+      top = Tk::Toplevel.new
+      top.wm_iconname = 'shortname'
+      top.wm_iconname.should == 'shortname'
+      top.destroy
+    end
+  end
+
+  describe 'WM.iconmask' do
+    it 'has no icon mask by default' do
+      top = Tk::Toplevel.new
+      top.wm_iconmask.should.nil?
+      top.destroy
+    end
+  end
+
+  describe 'WM.iconposition' do
+    it 'has no icon position hint by default' do
+      top = Tk::Toplevel.new
+      top.wm_iconposition.should.nil?
+      top.destroy
+    end
+
+    it 'sets and reads back the icon position hint' do
+      top = Tk::Toplevel.new
+      top.wm_iconposition = [15, 25]
+      top.wm_iconposition.should == [15, 25]
+      top.destroy
     end
   end
 end
