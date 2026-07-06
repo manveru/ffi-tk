@@ -15,19 +15,10 @@ module Tk
         scrollbar_default
       end
 
-      # Specifies the orientation of the scrollbar.
-      # horizontal or vertical
-      def orient(orientation = None)
-        if orientation == None
-          cget(:orient)
-        else
-          configure orient: orientation
-        end
-      end
-
-      def command(&block)
-        configure(command: block) if block
-      end
+      # Orientation preset hook for the YScrollbar/XScrollbar subclasses; the
+      # base themed scrollbar keeps ttk's default. orient/command are inherited
+      # from Tk::Scrollbar and dispatch through this widget's configure/cget.
+      def scrollbar_default; end
     end
 
     # A themed scrollbar preset to vertical orientation.

@@ -2,6 +2,22 @@
 
 require_relative '../../helper'
 
+describe Tk::Tile::Scrollbar do
+  it 'initializes bare, keeping ttk default orientation' do
+    s = Tk::Tile::Scrollbar.new
+    s.class.should == Tk::Tile::Scrollbar
+    s.cget(:orient).should == :vertical
+  end
+
+  it 'round-trips orientation through the inherited orient method' do
+    s = Tk::Tile::Scrollbar.new
+    s.orient(:horizontal)
+    s.orient.should == :horizontal
+    s.orient(:vertical)
+    s.orient.should == :vertical
+  end
+end
+
 describe Tk::Tile::YScrollbar do
   it 'initializes' do
     instance = Tk::Tile::YScrollbar.new
