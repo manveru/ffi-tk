@@ -39,7 +39,7 @@ module Tk
     #   Bbox.bbox('.', 0, 0) # top left cell
     #   Bbox.bbox('.', 1, 1) # cell in second column and row
     #   Bbox.bbox('.', 0, 0, 1, 1) # cells from top left to second col/row
-    def self.bbox(master, _col1 = None, row1 = None, _col2 = None, row2 = None)
+    def self.bbox(master, column1 = None, row1 = None, column2 = None, row2 = None)
       bbox = Tk.execute('grid', 'bbox', master, column1, row1, column2, row2)
       bbox.map(&:to_i)
     end
@@ -102,20 +102,18 @@ module Tk
     # The first two elements of the list are "-in master" where master is
     # the slave's master.
     def self.info(slave)
-      info = Tk.execute('grid', 'info', slave).to_s
-      hash = {}
+      info = Tk.execute('grid', 'info', slave)
 
-      info.scan(/(?:-(\w+))\s+([^-]\S*)/) do
-        key = Regexp.last_match(1).to_sym
-        hash[key] = case key
-                    when :column, :row, :columnspan, :rowspan, :ipadx, :ipady, :padx, :pady
-                      Integer(Regexp.last_match(2))
-                    else
-                      Regexp.last_match(2).to_str
-                    end
+      info.to_h do |key, value|
+        key = key.sub(/^-/, '').to_sym
+        value = case key
+                when :column, :row, :columnspan, :rowspan, :ipadx, :ipady, :padx, :pady
+                  Integer(value)
+                else
+                  value
+                end
+        [key, value]
       end
-
-      hash
     end
 
     # Given x and y values in screen units relative to the master window, the
@@ -189,8 +187,8 @@ module Tk
     # returned, most recently manages first.
     # Option can be either -row or -column which causes only the slaves in the
     # row (or column) specified by value to be returned.
-    def self.slaves(_master, _options = {})
-      Tk.execute('grid', 'slaves')
+    def self.slaves(master, options = None)
+      Tk.execute('grid', 'slaves', master, options.to_tcl_options?)
     end
 
     # @see Grid::slave
