@@ -80,6 +80,15 @@ describe Tk::Grid do
     settings['-pad'].should == 5
   end
 
+  it 'queries a single column or row option as its current value' do
+    button('a').tap { |b| Tk::Grid.configure(b, column: 0, row: 0) }
+    Tk::Grid.columnconfigure(root, 0, weight: 3)
+    Tk::Grid.rowconfigure(root, 0, minsize: 20)
+
+    Tk::Grid.columnconfigure(root, 0, :weight).should == 3
+    Tk::Grid.rowconfigure(root, 0, :minsize).should == 20
+  end
+
   it 'toggles geometry propagation and reports the current state' do
     Tk::Grid.propagate(root, false)
     Tk::Grid.propagate(root).should == 0

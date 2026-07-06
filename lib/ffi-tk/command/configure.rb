@@ -25,21 +25,27 @@ module Tk
     end
 
     def self.common(receiver, invocation, argument, hints = {})
-      result =
-        if argument == None
-          receiver.execute(*invocation)
-        elsif argument.respond_to?(:to_tcl_options)
-          receiver.execute_only(*invocation, argument.to_tcl_options)
-        elsif argument.respond_to?(:to_tcl_option)
-          receiver.execute(*invocation, argument.to_tcl_option)
+      if argument == None
+        receiver.execute(*invocation).tcl_options_to_hash(hints)
+      elsif argument.respond_to?(:to_tcl_options)
+        receiver.execute_only(*invocation, argument.to_tcl_options)
+      elsif argument.respond_to?(:to_tcl_option)
+        # Single-option query returns the current value. Classic Tk commands
+        # answer with the [option, dbname, dbclass, default, current]
+        # describe-tuple — list-typed for most commands, string-typed for
+        # canvas itemconfigure (recognizable by its leading option name), so
+        # extract the last element. ttk commands answer with the bare value.
+        option = argument.to_tcl_option
+        result = receiver.execute(*invocation, option)
+        if result.is_a?(Array) && result.size == 5 && result.first == option
+          result.last
+        elsif result.is_a?(String) && result.start_with?("#{option} ")
+          Tk.execute(:lindex, result, :end)
         else
-          raise ArgumentError, format('Invalid argument: %p', argument)
+          result
         end
-
-      if result.respond_to?(:tcl_options_to_hash)
-        result.tcl_options_to_hash(hints)
       else
-        result
+        raise ArgumentError, format('Invalid argument: %p', argument)
       end
     end
 

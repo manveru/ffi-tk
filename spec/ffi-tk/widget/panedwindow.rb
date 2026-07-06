@@ -36,6 +36,10 @@ describe Tk::PanedWindow do
     tcl_eq(pw.panecget(pane, :minsize), '30').should == true
     # Tk normalises the sticky string; assert on the set of sides, not the order.
     pw.panecget(pane, :sticky).to_s.chars.sort.should == %w[e n s w]
+
+    # Single-option query returns the current value (from the describe-tuple).
+    tcl_eq(pw.paneconfigure(pane, :minsize), '30').should == true
+    pw.paneconfigure(pane, :sticky).to_s.chars.sort.should == %w[e n s w]
   end
 
   it 'places sashes and proxies and identifies components when mapped' do

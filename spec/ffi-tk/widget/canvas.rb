@@ -294,6 +294,10 @@ describe Tk::Canvas do
     ['red', '#ff0000'].should.include cv.itemcget(rect, :fill)
     # The typed accessor coerces the raw "3.0" itemcget value to an Integer.
     rect.width.should == 3
+
+    # Single-option query extracts the current value from canvas's
+    # string-typed describe-tuple.
+    ['red', '#ff0000'].should.include cv.itemconfigure(rect, :fill)
   end
 
   it 'inserts, indexes and deletes characters in a text item' do

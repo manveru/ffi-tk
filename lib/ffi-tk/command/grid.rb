@@ -74,7 +74,13 @@ module Tk
     # If only the master window and index is specified, all the current settings
     # are returned in a list of "-option value" pairs.
     def self.columnconfigure(master, index, options = None)
-      Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_options?)
+      # A single option name queries its current value, which grid returns as
+      # a bare scalar; None queries all settings; a Hash sets them.
+      if options != None && options.respond_to?(:to_tcl_option)
+        Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_option)
+      else
+        Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_options?)
+      end
     end
 
     # The arguments consist of the names of one or more slave windows followed
@@ -163,7 +169,13 @@ module Tk
     # If only the master window and index is specified, all the current settings
     # are returned in a list of "-option value" pairs.
     def self.rowconfigure(master, index, options = None)
-      Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_options?)
+      # A single option name queries its current value, which grid returns as
+      # a bare scalar; None queries all settings; a Hash sets them.
+      if options != None && options.respond_to?(:to_tcl_option)
+        Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_option)
+      else
+        Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_options?)
+      end
     end
 
     # Removes each of the slaves from grid for its master and unmaps their
