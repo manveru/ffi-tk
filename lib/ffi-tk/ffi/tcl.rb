@@ -35,9 +35,11 @@ module FFI
     attach_function :Tcl_ListObjIndex, %i[pointer pointer int pointer], :int
     attach_function :Tcl_ListObjLength, %i[pointer pointer pointer], :int
     attach_function :Tcl_NewBooleanObj, [:int], :pointer
+    attach_function :Tcl_NewDoubleObj, [:double], :pointer
     attach_function :Tcl_NewIntObj, [:int], :pointer
     attach_function :Tcl_NewListObj, %i[int pointer], :pointer
     attach_function :Tcl_NewStringObj, %i[string int], :pointer
+    attach_function :Tcl_NewWideIntObj, [:int64], :pointer
     attach_function :Tcl_NewDictObj, [], :pointer
     attach_function :Tcl_ObjGetVar2, %i[pointer pointer pointer int], :pointer
     attach_function :Tcl_ObjSetVar2, %i[pointer pointer pointer pointer int], :pointer

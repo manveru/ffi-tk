@@ -27,29 +27,47 @@ module FFI
       end
 
       def obj_result=(ruby_obj)
-        obj =
-          case ruby_obj
-          when true
-            Tcl.new_boolean_obj(1)
-          when false
-            Tcl.new_boolean_obj(0)
-          when String
-            Tcl.new_string_obj(ruby_obj, ruby_obj.bytesize)
-          when Integer
-            Tcl.new_int_obj(ruby_obj)
-          when Exception
-            string = [ruby_obj.message, *ruby_obj.backtrace].join("\n")
-            Tcl.new_string_obj(string, string.bytesize)
-          else
-            unless ruby_obj.respond_to?(:to_tcl)
-              raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
-            end
+        Tcl.set_obj_result(self, ruby_to_tcl_obj(ruby_obj))
+      end
 
-            ruby_obj.to_tcl
-
+      # Convert a Ruby value into a freshly allocated Tcl_Obj pointer.
+      # Tcl_SetObjResult takes ownership of the returned obj, so every branch
+      # must yield a real Tcl_Obj — passing a Ruby String here would make Tcl
+      # dereference the string bytes as a struct and crash later in
+      # Tcl_GetStringFromObj.
+      def ruby_to_tcl_obj(ruby_obj)
+        case ruby_obj
+        when nil
+          Tcl.new_string_obj('', 0)
+        when true
+          Tcl.new_boolean_obj(1)
+        when false
+          Tcl.new_boolean_obj(0)
+        when ::String
+          Tcl.new_string_obj(ruby_obj, ruby_obj.bytesize)
+        when ::Symbol
+          string = ruby_obj.to_s
+          Tcl.new_string_obj(string, string.bytesize)
+        when ::Integer
+          Tcl.new_wide_int_obj(ruby_obj)
+        when ::Float
+          Tcl.new_double_obj(ruby_obj)
+        when ::Array
+          elements = ruby_obj.map { |element| ruby_to_tcl_obj(element) }
+          pointer = ::FFI::MemoryPointer.new(:pointer, elements.size)
+          pointer.write_array_of_pointer(elements)
+          Tcl.new_list_obj(elements.size, pointer)
+        when Exception
+          string = [ruby_obj.message, *ruby_obj.backtrace].join("\n")
+          Tcl.new_string_obj(string, string.bytesize)
+        else
+          unless ruby_obj.respond_to?(:to_tcl)
+            raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
           end
 
-        Tcl.set_obj_result(self, obj)
+          string = ruby_obj.to_tcl.to_s
+          Tcl.new_string_obj(string, string.bytesize)
+        end
       end
 
       def wait_for_event(seconds = 0.0)
