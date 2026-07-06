@@ -52,16 +52,21 @@ describe FFI::Tcl::EvalResult do
     guess('expr 0x10').should == 16
   end
 
-  # SURPRISE: Tcl_GetIntFromObj reads a C 32-bit int, so an integer-typed value
-  # above 2**31-1 silently wraps around instead of returning the true value.
-  it 'silently wraps integer-typed values past the 32-bit boundary (int32 truncation bug)' do
+  # Integer-typed values are converted through Tcl's wide (64-bit) int, so
+  # values past the 32-bit boundary come back exact instead of wrapping.
+  it 'converts integer-typed values past the 32-bit boundary without wrapping' do
     guess('expr {2147483647}').should == 2_147_483_647
-    guess('expr {2147483648}').should == -2_147_483_648
+    guess('expr {2147483648}').should == 2_147_483_648
+    guess('expr {2147483648}').should == 2**31
   end
 
-  # SURPRISE: a value too large even for that wrap raises rather than converting.
-  it 'raises when an integer-typed value overflows Tcl_GetIntFromObj entirely' do
-    should.raise(RuntimeError) { guess('expr {9223372036854775807}') }
+  it 'converts the largest 64-bit signed integer exactly' do
+    guess('expr {9223372036854775807}').should == 9_223_372_036_854_775_807
+    guess('expr {9223372036854775807}').should == 2**63 - 1
+  end
+
+  it 'converts a negative value below the 32-bit boundary without wrapping' do
+    guess('expr {-2147483649}').should == -2_147_483_649
   end
 
   # --- :double branch -> Float --------------------------------------------
@@ -174,13 +179,24 @@ describe FFI::Tcl::EvalResult do
     guess('return -level 0 {}').should.be.nil
   end
 
-  # --- unhandled type ------------------------------------------------------
+  # --- :bytearray branch -> binary String ---------------------------------
 
-  # The guesser has no branch for Tcl bytearrays; they hit the else-clause of
-  # guess_fallback with a non-nil type and raise. Documents a real limitation.
-  it 'raises "Unknown type" for a Tcl bytearray result' do
-    should.raise(RuntimeError) { guess('binary format a5 hello') }
-      .message.should =~ /Unknown type: :bytearray/
+  # Tcl bytearrays (produced by `binary format` etc.) convert to a binary
+  # String carrying the exact bytes, in ASCII-8BIT encoding.
+  it 'converts a Tcl bytearray result to a binary String' do
+    value = guess('binary format a5 hello')
+    value.class.should == String
+    value.should == 'hello'
+    value.encoding.should == Encoding::ASCII_8BIT
+  end
+
+  it 'preserves NUL and padding bytes in a bytearray (no UTF-8 mangling)' do
+    # The \x00 is a Tcl escape (a literal NUL byte cannot ride through the
+    # NUL-terminated eval script). a3 pads/truncates to 3 bytes; the leading NUL
+    # must survive intact rather than becoming Tcl modified UTF-8 (0xC0 0x80).
+    value = guess('binary format a3 "\x00ab"')
+    value.bytes.should == [0, 97, 98]
+    value.encoding.should == Encoding::ASCII_8BIT
   end
 
   # --- instance converter methods -----------------------------------------

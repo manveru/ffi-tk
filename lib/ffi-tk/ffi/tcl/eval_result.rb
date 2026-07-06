@@ -43,6 +43,7 @@ module FFI
         when :string, :pixel, :cmdName then to_string(interp, obj)
         when :int then to_int(interp, obj)
         when :double then to_double(interp, obj)
+        when :bytearray then to_bytearray(interp, obj)
         when :dict then to_dict(interp, obj)
         when :window then to_window(interp, obj)
         else guess_fallback(interp, obj, type, fallback)
@@ -130,15 +131,27 @@ module FFI
       end
 
       def self.to_int(interp, obj)
-        int_pointer = MemoryPointer.new(:int)
+        # Convert through Tcl's wide (64-bit) int so integer-typed values above
+        # the 32-bit boundary neither wrap nor overflow (Tcl_GetIntFromObj reads
+        # a C 32-bit int and does both).
+        wide_pointer = MemoryPointer.new(:int64)
 
         if obj.bytes == ''
           '' # used by text widget -endline
-        elsif Tcl.get_int_from_obj(interp, obj, int_pointer).zero?
-          int_pointer.get_int(0)
+        elsif Tcl.get_wide_int_from_obj(interp, obj, wide_pointer).zero?
+          wide_pointer.get_int64(0)
         else
-          panic(interp, 'Tcl_GetIntFromObj')
+          panic(interp, 'Tcl_GetWideIntFromObj')
         end
+      end
+
+      # Tcl bytearray objects hold arbitrary binary data (e.g. `binary format`).
+      # Read the raw bytes directly; get_string_from_obj would mangle them,
+      # re-encoding NUL and high bytes as Tcl's modified UTF-8.
+      def self.to_bytearray(_interp, obj)
+        length_pointer = MemoryPointer.new(:int)
+        byte_pointer = Tcl.get_byte_array_from_obj(obj, length_pointer)
+        byte_pointer.read_bytes(length_pointer.get_int(0))
       end
 
       def self.to_string(_interp, obj)

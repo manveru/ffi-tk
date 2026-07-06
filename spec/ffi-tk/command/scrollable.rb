@@ -122,4 +122,54 @@ describe Tk::Scrollable do
     Tk.execute('update')
     listbox.xview[0].should == 0.0
   end
+
+  # --- scrollbar wiring ----------------------------------------------------
+
+  it 'wires a vertical scrollbar and sets its orientation' do
+    listbox = scrollable_listbox
+    scrollbar = Tk::Scrollbar.new('.')
+    listbox.yscrollbar(scrollbar)
+
+    scrollbar.orient.to_s.should == 'vertical'
+  end
+
+  it 'wires a horizontal scrollbar and sets its orientation' do
+    listbox = scrollable_listbox
+    scrollbar = Tk::Scrollbar.new('.')
+    listbox.xscrollbar(scrollbar)
+
+    scrollbar.orient.to_s.should == 'horizontal'
+  end
+
+  # The linkage round-trips: scrolling the listbox fires -yscrollcommand, which
+  # calls scrollbar.set, so the scrollbar's get reports the new visible range.
+  it 'propagates the vertical view to the wired scrollbar (yscrollcommand -> set)' do
+    listbox = scrollable_listbox
+    scrollbar = Tk::Scrollbar.new('.')
+    listbox.yscrollbar(scrollbar)
+    next unless skip_unless_mapped(listbox)
+
+    listbox.yview_moveto(0.0)
+    Tk.execute('update')
+    scrollbar.get.first.should == 0.0
+
+    listbox.yview_moveto(0.5)
+    Tk.execute('update')
+    scrollbar.get.first.should > 0.0
+  end
+
+  it 'propagates the horizontal view to the wired scrollbar (xscrollcommand -> set)' do
+    listbox = scrollable_listbox
+    scrollbar = Tk::Scrollbar.new('.')
+    listbox.xscrollbar(scrollbar)
+    next unless skip_unless_mapped(listbox)
+
+    listbox.xview_moveto(0.0)
+    Tk.execute('update')
+    scrollbar.get.first.should == 0.0
+
+    listbox.xview_moveto(0.3)
+    Tk.execute('update')
+    scrollbar.get.first.should > 0.0
+  end
 end

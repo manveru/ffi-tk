@@ -103,24 +103,6 @@ module Tk
       execute_only(:yview, :scroll, number, what)
     end
 
-    # Changes the view in the widget's window to make index visible.
-    #
-    # The widget chooses where index appears in the window:
-    # [1] If index is already visible somewhere in the window then the command
-    #     does nothing.
-    # [2] If index is only a few lines off-screen above the window then it will
-    #     be positioned at the top of the window.
-    # [3] If index is only a few lines off-screen below the window then it will
-    #     be positioned at the bottom of the window.
-    # [4] Otherwise, index will be centered in the window.
-    #
-    # The [yview_pickplace] method has been obsoleted by the [see] method.
-    # [see] handles both x- and y-motion to make a location visible, whereas the
-    # [yview_pickplace] mode only handles motion in y).
-    def yview_pickplace(index)
-      execute(:yview, '-pickplace', index)
-    end
-
     def yscrollbar(sbar)
       @yscrollbar = sbar
       @yscrollbar.orient :vertical

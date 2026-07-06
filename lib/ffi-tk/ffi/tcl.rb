@@ -22,6 +22,8 @@ module FFI
     attach_function :Tcl_GetBooleanFromObj, %i[pointer pointer pointer], :int
     attach_function :Tcl_GetDoubleFromObj, %i[pointer pointer pointer], :int
     attach_function :Tcl_GetIntFromObj, %i[pointer pointer pointer], :int
+    attach_function :Tcl_GetWideIntFromObj, %i[pointer pointer pointer], :int
+    attach_function :Tcl_GetByteArrayFromObj, %i[pointer pointer], :pointer
     attach_function :Tcl_GetObjResult, [:pointer], :pointer
     attach_function :Tcl_GetObjType, [:string], :pointer
     attach_function :Tcl_GetString, [:pointer], :string

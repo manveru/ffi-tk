@@ -11,6 +11,22 @@ module Tk
       'scrollbar'
     end
 
+    # Query or set the scrollbar orientation (:horizontal or :vertical).
+    # Orientation is a configure option, so route through configure/cget.
+    def orient(orientation = None)
+      if orientation == None
+        cget(:orient)
+      else
+        configure(orient: orientation)
+      end
+    end
+
+    # Register a block as the scrollbar's -command, invoked when the user drags
+    # or clicks the scrollbar (typically wired to the peer widget's xview/yview).
+    def command(&block)
+      configure(command: block) if block
+    end
+
     # Marks the element indicated by element as active, which causes it to be
     # displayed as specified by the activeBackground and activeRelief options.
     # The only element values understood by this command are arrow1, slider, or
