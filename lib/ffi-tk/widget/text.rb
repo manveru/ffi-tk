@@ -294,7 +294,8 @@ module Tk
     #
     # @see get_displaychars
     def get(index, *indices)
-      execute('get', index, *indices).to_s
+      result = execute('get', index, *indices)
+      result.is_a?(Array) ? result.map(&:to_s) : result.to_s
     end
 
     # Same as [get], but within each range, only those characters which are not
@@ -302,7 +303,8 @@ module Tk
     # This may have the effect that some of the returned ranges are empty
     # strings.
     def get_displaychars(index, *indices)
-      execute('get', '-displaychars', index, *indices).to_s
+      result = execute('get', '-displaychars', index, *indices)
+      result.is_a?(Array) ? result.map(&:to_s) : result.to_s
     end
 
     def image_cget(index, option)
@@ -882,7 +884,7 @@ module Tk
     # annotation. See EMBEDDED WINDOWS for information on the options that are
     # supported. Returns an empty string.
     def window_create(index, options = None)
-      if argument == None
+      if options == None
         execute(:window, :create, index)
       else
         execute(:window, :create, index, options.to_tcl_options)
