@@ -20,18 +20,15 @@ module Tk
     #   text.configure(width: 100, height: 200)
     #   text.configure(:width)
     #   text.configure
-    def configure(argument = None, hints = {})
-      schema = self.class.option_schema
-      return common_configure([:configure], argument, hints) unless schema
-
-      # The widget-level configure is itself a describe-tuple surface.
-      Configure.describe(self, [:configure], schema, argument)
+    def configure(argument = None)
+      # The widget-level configure is itself a describe-tuple surface, coerced
+      # by the receiver's declared Option schema.
+      Configure.describe(self, [:configure], self.class.option_schema, argument)
     end
 
     # Build the Tcl option hash for a menu entry-creation subcommand (menu
     # add/insert), registering a Ruby block as a Tcl command for any option the
-    # +schema+ types :command. Moved here from Cget so it consults an Option
-    # schema (the menu-entry schema) rather than the legacy global CGET_MAP.
+    # +schema+ types :command (consulting the menu-entry Option schema).
     def option_hash_to_tcl(hash, schema)
       hash.to_h do |key, value|
         value = register_command(key, &value) if schema.type_for(key) == :command
@@ -113,8 +110,8 @@ module Tk
 
     # Dispatch a flat "-opt val" subcommand surface: no argument reads the whole
     # surface, a Symbol/String reads one option's bare value, an option Hash sets
-    # them. Reads route through read_flat (type-directed coercion); sets stay a
-    # plain execute_only. The value-add over Configure.common is the schema path.
+    # them. Reads route through read_flat (type-directed coercion by the surface's
+    # Option schema); sets stay a plain execute_only.
     def self.flat(receiver, invocation, schema, argument)
       if argument == None
         read_flat(receiver, invocation, schema)
@@ -127,36 +124,7 @@ module Tk
       end
     end
 
-    def self.common(receiver, invocation, argument, hints = {})
-      if argument == None
-        receiver.execute(*invocation).tcl_options_to_hash(hints)
-      elsif argument.respond_to?(:to_tcl_options)
-        receiver.execute_only(*invocation, argument.to_tcl_options)
-      elsif argument.respond_to?(:to_tcl_option)
-        # Single-option query returns the current value. Classic Tk commands
-        # answer with the [option, dbname, dbclass, default, current]
-        # describe-tuple — list-typed for most commands, string-typed for
-        # canvas itemconfigure (recognizable by its leading option name), so
-        # extract the last element. ttk commands answer with the bare value.
-        option = argument.to_tcl_option
-        result = receiver.execute(*invocation, option)
-        if result.is_a?(Array) && result.size == 5 && result.first == option
-          result.last
-        elsif result.is_a?(String) && result.start_with?("#{option} ")
-          Tk.execute(:lindex, result, :end)
-        else
-          result
-        end
-      else
-        raise ArgumentError, format('Invalid argument: %p', argument)
-      end
-    end
-
     private
-
-    def common_configure(invocation, argument, hints = {})
-      Configure.common(self, invocation, argument, hints)
-    end
 
     def register_command(name, &block)
       arg =

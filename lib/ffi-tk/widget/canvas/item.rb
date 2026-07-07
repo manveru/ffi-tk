@@ -3,60 +3,6 @@
 module Tk
   class Canvas
     Item = Struct.new(:canvas, :id) do
-      OPTION_MAP = {
-        activebackground: :bitmap,
-        activebitmap: :bitmap,
-        activedash: :integer,
-        activefill: :color,
-        activeforeground: :bitmap,
-        activeimage: :string,
-        activeoutline: :color,
-        activeoutlinestipple: :bitmap,
-        activestipple: :bitmap,
-        activewidth: :integer,
-        anchor: :string,
-        arrow: :symbol,
-        arrowshape: :list,
-        background: :color,
-        bitmap: :bitmap,
-        capstyle: :symbol,
-        dash: :integer,
-        dashoffset: :integer,
-        disabledbackground: :bitmap,
-        disabledbitmap: :bitmap,
-        disableddash: :integer,
-        disabledfill: :color,
-        disabledforeground: :bitmap,
-        disabledimage: :string,
-        disabledoutline: :color,
-        disabledoutlinestipple: :bitmap,
-        disabledstipple: :bitmap,
-        disabledwidth: :integer,
-        extent: :float,
-        fill: :color,
-        font: :font,
-        foreground: :color,
-        height: :integer,
-        image: :string,
-        joinstyle: :symbol,
-        justify: :symbol,
-        offset: :string,
-        outline: :color,
-        outlineoffset: :integer,
-        outlinestipple: :bitmap,
-        smooth: :boolean,
-        splinesteps: :integer,
-        start: :float,
-        state: :symbol,
-        stipple: :bitmap,
-        style: :symbol,
-        tags: :list,
-        text: :string,
-        underline: :integer,
-        width: :integer,
-        window: :pathname
-      }.freeze
-
       class << self
         # This item type's frozen Option schema (canvas(3tk) item sections),
         # declared via item_options. nil on the abstract Item base.
@@ -64,8 +10,8 @@ module Tk
 
         # Declare this item type's Option schema and generate a typed reader per
         # option. Each reader routes through itemcget, so it coerces the raw Tcl
-        # string by the option's declared type (immune to shimmering). Replaces
-        # the legacy OPTION_MAP lookup as the source of truth for item options.
+        # string by the option's declared type (immune to shimmering). The
+        # per-type schema is the sole source of truth for an item's options.
         def item_options(types)
           @item_schema = Option::Schema.new(types: types)
           types.each_key { |name| define_method(name) { cget(name) } }

@@ -54,11 +54,11 @@ module Tk
       # it is interpreted modulo -maximum; that is, the progress bar
       # completes one 'cycle' when the -value increases by -maximum.
       def value
-        execute(:cget, '-value').to_f
+        cget(:value)
       end
 
       def phase
-        execute(:cget, '-phase').to_i
+        cget(:phase)
       end
 
       def identify(x, y)

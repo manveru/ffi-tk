@@ -17,42 +17,6 @@ module Tk
       def to_tcl
         TclString.new("{#{map(&:to_tcl).compact.join(' ')}}")
       end
-
-      # try to convert to a Hash.
-      # it may return an Array if this contains none.
-      def tcl_options_to_hash(hints = {})
-        if first.respond_to?(:to_ary)
-          hash = {}
-
-          each do |key, _, _, _, value|
-            next if !value || (value.respond_to?(:empty?) && value.empty?)
-
-            key = key.sub(/^-/, '').to_sym
-            hash[key] = coerce_tcl_value(value, hints[key])
-          end
-
-          hash
-        elsif first =~ /^-/
-          each_slice(2).to_h do |key, value|
-            key = key.sub(/^-/, '').to_sym
-            [key, coerce_tcl_value(value, hints[key])]
-          end
-        else
-          self
-        end
-      end
-
-      private
-
-      # Coerce a raw Tcl option value using the caller's type hint.
-      def coerce_tcl_value(value, hint)
-        case hint
-        when :boolean then Tk.boolean(value)
-        when :symbol then value.to_sym
-        when :float then Float(value)
-        else value
-        end
-      end
     end
 
     # Tcl conversion helpers for Hash (option lists).
@@ -124,28 +88,8 @@ module Tk
       end
     end
 
-    # Tcl conversion helpers for Float.
-    module Float
-      def tcl_to_ruby(_option, _hints)
-        self
-      end
-    end
-
     # Tcl conversion helpers for Integer.
     module Integer
-      def tcl_to_ruby(option, hints)
-        name = option.sub(/^-/, '').to_sym
-
-        return unless (type = hints[name])
-
-        case type
-        when :boolean
-          Tk.boolean(self)
-        else
-          self
-        end
-      end
-
       def to_boolean
         Tk.boolean(self)
       end
