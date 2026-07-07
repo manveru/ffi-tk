@@ -95,12 +95,13 @@ module Tk
     # Option schema for the embedded-window describe surface (text(3tk) EMBEDDED
     # WINDOWS, via window configure / window cget). -window names a widget
     # (:pathname, matching canvas item's -window); -stretch is a :boolean;
-    # -align a keyword set (:symbol); -create a Tcl script (:string);
+    # -align a keyword set (:symbol); -create is a Tcl script, so :command like
+    # every other script option (an unset -create then reads back nil, not "");
     # -padx/-pady screen distances (lossless :string).
     WINDOW_SCHEMA = Option::Schema.new(
       types: {
         align: :symbol,
-        create: :string,
+        create: :command,
         padx: :string,
         pady: :string,
         stretch: :boolean,

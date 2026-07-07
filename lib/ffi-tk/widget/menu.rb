@@ -29,7 +29,11 @@ module Tk
     # a checkbutton adds -onvalue/-offvalue/-variable, ...), so every entry
     # option across all types is declared here to cover any entry's describe
     # list. -columnbreak/-hidemargin/-indicatoron are booleans; -compound/-state
-    # keyword sets (:symbol); -image/-selectimage/-menu are name strings.
+    # keyword sets (:symbol); -image/-selectimage are name strings. -menu (the
+    # cascade's submenu) is set-only: Tk exposes it on `add`/`insert` but neither
+    # entrycget nor entryconfigure reports it, so its type never drives a read
+    # coercion and it stays :string (the pathname a set passes through) rather
+    # than the :pathname used for readable menu-naming options elsewhere.
     ENTRY_SCHEMA = Option::Schema.new(
       types: {
         activebackground: :color,

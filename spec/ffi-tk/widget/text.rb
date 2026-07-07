@@ -20,12 +20,15 @@ describe Tk::Text do
   # and must read back as that value coerced by its declared Option type.
   # Set-then-get is deterministic and platform-free, so the assertions are exact
   # (no acceptable-set hedging). -wrap is a keyword set (none/char/word,
-  # :symbol), NOT a boolean like spinbox's -wrap. Geometry/editability options
-  # end on their default value so `text` is left as the behaviour specs below
-  # expect. Options that need a fresh widget (empty-value rule, -tabs,
-  # -startline/-endline, the configure describe-shape) live BELOW the peer
-  # specs, which assert an exact pathname and tolerate no Text widget built
-  # before them.
+  # :symbol), NOT a boolean like spinbox's -wrap. The multi-value options are
+  # ordered to END on their default, so the shared `text` is left in its default
+  # geometry/spacing/editability state for the behaviour specs below (which the
+  # peer spec's exact-pathname check makes sensitive to any extra Text widget,
+  # so the sweep reuses `text` rather than building fresh ones). Appearance-only
+  # options (colours, borderwidth) are single-valued and left mutated: no
+  # behaviour spec reads them back. Options that need a fresh widget for a
+  # different reason (empty-value rule, -tabs, -startline/-endline, the
+  # configure describe-shape) live BELOW the peer specs.
   settable = {
     background: ['#ff0000', '#00ff00'],               # :color  -> String
     foreground: ['#0000ff', '#123456'],               # :color
@@ -48,17 +51,15 @@ describe Tk::Text do
     spacing1: %w[3 0],                                 # :string (screen distance)
     spacing2: %w[3 0],                                 # :string (screen distance)
     spacing3: %w[3 0],                                 # :string (screen distance)
-    maxundo: [0, 5],                                   # :integer
-    insertontime: [600, 300],                          # :integer (ms)
-    insertofftime: [300, 100],                         # :integer (ms)
+    maxundo: [5, 0],                                   # :integer (ends on default 0)
+    insertontime: [300, 600],                          # :integer (ms, ends on default 600)
+    insertofftime: [100, 300],                         # :integer (ms, ends on default 300)
     autoseparators: [false, true],                     # :boolean
     blockcursor: [true, false],                        # :boolean
     undo: [true, false],                               # :boolean
     exportselection: [false, true],                    # :boolean
     tabstyle: %i[wordprocessor tabular],               # :symbol
     insertunfocussed: %i[hollow solid none],           # :symbol (8.6 keyword set)
-    # These, like -spacing1..3 above, end on their default value so that `text`
-    # is left as the geometry/spacing-sensitive behaviour specs below expect.
     height: [10, 24],                                  # :integer (character count)
     width: [40, 80],                                   # :integer (character count)
     wrap: %i[none word char],                          # :symbol (keyword set)
@@ -603,7 +604,8 @@ describe Tk::Text do
     # window_cget coerces by the embedded-window schema (text(3tk) EMBEDDED
     # WINDOWS): -window names a widget (:pathname, resolved to the Widget
     # object, matching canvas item's -window); -stretch is a :boolean; -align a
-    # keyword set (:symbol); -padx/-pady screen distances (lossless :string).
+    # keyword set (:symbol); -create a Tcl script (:command, matching every
+    # other script option); -padx/-pady screen distances (lossless :string).
     it 'queries and round-trips embedded window options, coerced by type' do
       t = Tk::Text.new
       t.insert :end, "abc\n"
@@ -613,6 +615,7 @@ describe Tk::Text do
       t.window_cget('1.1', :window).should == button # :pathname -> the Widget
       t.window_cget('1.1', :stretch).should == false # :boolean default
       t.window_cget('1.1', :align).should == :center   # :symbol default
+      t.window_cget('1.1', :create).should.be.nil      # :command, unset -> nil
       t.window_cget('1.1', :padx).should == '0'        # :string default
 
       t.window_configure('1.1', stretch: true, align: 'top', padx: 4)

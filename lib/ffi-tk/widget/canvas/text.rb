@@ -11,8 +11,9 @@ module Tk
       # index (:integer, unlike the text *widget* tag's boolean -underline);
       # -angle is :float degrees; -justify/-anchor/-state keyword sets (:symbol);
       # -width the wrap length and -offset the stipple origin, both lossless
-      # :string. Tk reports -angle and -offset here even where the man page
-      # section omits them, so both are declared.
+      # :string. -offset is reported by Tk though the man page's text section
+      # omits it (unlike -angle, which the man page does document), so it is
+      # declared here explicitly.
       item_options(
         activefill: :color, activestipple: :bitmap, anchor: :symbol,
         angle: :float, disabledfill: :color, disabledstipple: :bitmap,

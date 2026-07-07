@@ -35,8 +35,10 @@ module Tk
     # Option schema for the per-pane describe surface (panedwindow(3tk)
     # paneconfigure / panecget). -height/-width/-minsize/-padx/-pady are screen
     # distances kept lossless as :string (see Standard's screen-distance note);
-    # -after/-before name a window (:string); -hide is a :boolean; -sticky a
-    # side string; -stretch a keyword set (:symbol).
+    # -after/-before are write-only positioning options that name a window when
+    # set but always read back empty (panecget reports ""), so they stay :string
+    # rather than the :pathname used for readable window-naming options; -hide is
+    # a :boolean; -sticky a side string; -stretch a keyword set (:symbol).
     PANE_SCHEMA = Option::Schema.new(
       types: {
         after: :string,

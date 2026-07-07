@@ -124,7 +124,7 @@ describe Tk::Canvas do
     @poly.activewidth.should == '0.0'
     @poly.disabledwidth.should == '0.0'
     @poly.joinstyle.should == :round
-    @poly.smooth.should == false             # :boolean
+    @poly.smooth.should == '0'               # :string (bool-or-method quad-state)
     @poly.splinesteps.should == 12           # :integer
   end
 
@@ -152,7 +152,7 @@ describe Tk::Canvas do
     @line.arrowshape.should == %w[8 10 3]    # :list of screen distances
     @line.capstyle.should == :butt
     @line.joinstyle.should == :round
-    @line.smooth.should == false             # :boolean
+    @line.smooth.should == '0'               # :string (bool-or-method quad-state)
     @line.splinesteps.should == 12           # :integer
   end
 
@@ -360,8 +360,14 @@ describe Tk::Canvas do
     line = cv.create_line(0, 0, 10, 10, 20, 0)
     cv.itemconfigure(line, arrow: 'both', smooth: true, splinesteps: 8)
     cv.itemcget(line, :arrow).should == :both     # :symbol
-    cv.itemcget(line, :smooth).should == true     # :boolean (bezier -> true)
+    cv.itemcget(line, :smooth).should == 'true'   # :string (boolean value)
     cv.itemcget(line, :splinesteps).should == 8   # :integer
+
+    # -smooth is quad-state: a boolean OR a smoothing-method name. A non-boolean
+    # method (raw/bezier/custom) must read back faithfully, not be flattened to
+    # a boolean (which would report the enabled 'raw' method as false).
+    cv.execute_only(:itemconfigure, line, '-smooth', 'raw')
+    cv.itemcget(line, :smooth).should == 'raw'    # :string, not false
 
     text = cv.create_text(0, 0, text: 'hi')
     cv.itemconfigure(text, justify: 'right', underline: 1)

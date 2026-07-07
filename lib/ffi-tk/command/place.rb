@@ -16,8 +16,10 @@ module Tk
   module Place
     # Option schema for the `place configure` describe surface (place(3tk)).
     # -x/-y/-width/-height are screen distances kept lossless as :string; the
-    # -rel* options are :float; -anchor/-bordermode are keyword sets (:symbol);
-    # -in names the master window (:string).
+    # -rel* options are :float; -anchor/-bordermode are keyword sets (:symbol).
+    # -in names the master window and reads back a real pathname, but stays
+    # :string to match Place.info's own parser (which keeps -in a string), so
+    # both of place's read surfaces report the master identically.
     CONFIGURE_SCHEMA = Option::Schema.new(
       types: {
         anchor: :symbol,

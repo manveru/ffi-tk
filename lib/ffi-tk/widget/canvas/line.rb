@@ -9,9 +9,12 @@ module Tk
     class Line < Item
       # Types from canvas(3tk) LINE ITEMS. -arrow/-capstyle/-joinstyle are
       # keyword sets (:symbol); -arrowshape is a 3-element screen-distance list
-      # (:list); -smooth is a genuine :boolean (bezier/raw read back as true);
-      # -splinesteps a positive :integer; -offset (which Tk reports here though
-      # the man page omits it) and the width/dash specs stay lossless :string.
+      # (:list); -smooth is quad-state (a boolean OR a smoothing-method name --
+      # bezier normalises to "true", but raw and custom methods read back as
+      # their own name), so it is :string, not :boolean: a :boolean would flatten
+      # the enabled "raw" method to false, inverting the truth. -splinesteps a
+      # positive :integer; -offset (which Tk reports here though the man page
+      # omits it) and the width/dash specs stay lossless :string.
       item_options(
         dash: :string, activedash: :string, disableddash: :string,
         dashoffset: :string, fill: :color, activefill: :color,
@@ -19,7 +22,7 @@ module Tk
         activestipple: :bitmap, disabledstipple: :bitmap, state: :symbol,
         tags: :list, width: :string, activewidth: :string,
         disabledwidth: :string, arrow: :symbol, arrowshape: :list,
-        capstyle: :symbol, joinstyle: :symbol, smooth: :boolean,
+        capstyle: :symbol, joinstyle: :symbol, smooth: :string,
         splinesteps: :integer
       )
     end
