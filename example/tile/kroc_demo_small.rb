@@ -16,8 +16,9 @@ THEMELIST = [
   ['xpnative', 'XP Native'],
   %w[aqua Aqua]
 ].freeze
-RUBY_THEMELIST = [].freeze
-RUBY_THEMELIST << ['kroc-rb', 'Kroc (by Ruby)', false]
+RUBY_THEMELIST = [
+  ['kroc-rb', 'Kroc (by Ruby)', false]
+].freeze
 
 def makeThemeControl(parent)
   frame = Tk::Tile::LabelFrame.new parent, text: 'Theme'
@@ -42,7 +43,7 @@ end
 makeThemeControl(Tk.root).pack side: 'left'
 
 BUTTONS = %w[open new save].freeze
-TOOLBARS = [].freeze
+TOOLBARS = []
 CHECKBOXES = %w[bold italic].freeze
 ICON = {}.freeze
 

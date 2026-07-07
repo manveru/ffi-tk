@@ -60,3 +60,14 @@ and the Tk library.
 They will have to be translated though, so it's still a lot of work.
 Our current examples should be removed sometime, they are more or less just
 proving that things run.
+
+### Known-broken examples (not caused by the option-typing work)
+
+[ ] example/tile/kroc_rb_demo.rb — incomplete fragment (marked "not ready,
+    needs photoimage and load_images"). Calls `Tk::Tile::Style.theme_create`
+    at top level with no `require '../../lib/ffi-tk'` and no `Tk.init`, so it
+    dies with `uninitialized constant Tk`. Needs photo-image / `load_images`
+    support before it can run at all.
+[ ] example/tkgo.rb — requires the external `gnugo` engine on PATH; fails with
+    `Errno::ENOENT (No such file or directory - gnugo)`. ffi-tk itself loads
+    fine. Either document the dependency or guard for a missing engine.
