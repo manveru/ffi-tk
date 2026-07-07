@@ -76,6 +76,14 @@ module Tk
     result.tap { |r| puts format('eval= %p', r) if $DEBUG }
   end
 
+  # Like #execute, but returns the result's raw Tcl string (never
+  # EvalResult.guess). The option path reads raw strings and coerces them by
+  # declared type, so it must not go through the shimmering-prone guesser.
+  def execute_string(*)
+    interp.eval(convert_arguments(*))
+    interp.result_string
+  end
+
   def result
     interp.guess_result
   end

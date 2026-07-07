@@ -26,6 +26,13 @@ module FFI
         Obj.new(Tcl.get_obj_result(self))
       end
 
+      # Raw string of the current result object, straight from
+      # Tcl_GetStringFromObj (never EvalResult.guess), so the option path reads
+      # values immune to Tcl shimmering.
+      def result_string
+        EvalResult.to_string(self, obj_result)
+      end
+
       def obj_result=(ruby_obj)
         Tcl.set_obj_result(self, ruby_to_tcl_obj(ruby_obj))
       end

@@ -90,6 +90,15 @@ module Tk
   require 'ffi-tk/event/handler'
   require 'ffi-tk/variable'
   require 'ffi-tk/command'
+
+  # Option typing core (schema + coercer + DSL). Required before widget.rb so
+  # the DSL is wired into Tk::Widget before any widget class loads.
+  require 'ffi-tk/option/description'
+  require 'ffi-tk/option/schema'
+  require 'ffi-tk/option/coercer'
+  require 'ffi-tk/option/standard'
+  require 'ffi-tk/option/dsl'
+
   require 'ffi-tk/widget'
 
   # require the real thing

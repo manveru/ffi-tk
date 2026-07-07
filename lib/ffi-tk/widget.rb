@@ -75,6 +75,10 @@ module Tk
       Tk.execute_only(tk_pathname, command, *)
     end
 
+    def execute_string(command, *)
+      Tk.execute_string(tk_pathname, command, *)
+    end
+
     private
 
     def assign_pathname
