@@ -15,56 +15,64 @@ describe Tk::Text do
     text.get('1.0', 'end').should == "Hello, World!\n"
   end
 
-  cget_options = {
-    autoseparators: [true],
-    background: %w[systemWindowBody #ffffff #282828],
-    bd: [0, 1],
-    bg: %w[systemWindowBody #ffffff #282828],
-    blockcursor: [false],
-    borderwidth: [0, 1],
-    cursor: ['xterm'],
-    endline: ['', 0],
-    exportselection: [true],
-    fg: %w[Black #000000 #ebdbb2],
-    font: %w[TkFixedFont],
-    foreground: %w[Black #000000 #ebdbb2],
-    height: [24],
-    highlightbackground: %w[systemWindowBody #d9d9d9],
-    highlightcolor: %w[Black #000000],
-    highlightthickness: [3, 1],
-    inactiveselectbackground: %w[systemHighlightSecondary #c3c3c3],
-    insertbackground: %w[Black #000000],
-    insertborderwidth: [0],
-    insertofftime: [300],
-    insertontime: [600],
-    insertwidth: [1, 2],
-    maxundo: [0],
-    padx: [1],
-    pady: [1],
-    relief: %i[flat sunken],
-    selectbackground: %w[systemHighlight #c3c3c3],
-    selectborderwidth: [1, 0],
-    selectforeground: [nil, '#000000'],
-    setgrid: [false],
-    spacing1: [0],
-    spacing2: [0],
-    spacing3: [0],
-    startline: [0, ''],
-    state: [['normal']],
-    tabs: [nil],
-    tabstyle: [:tabular],
-    takefocus: [false],
-    undo: [false, true],
-    width: [80],
-    wrap: [:char],
-    xscrollcommand: [nil],
-    yscrollcommand: [nil]
+  # --- cget: set-then-get, exact (the new bar) -----------------------------
+  # Every settable widget option is set to a concrete value on the shared `text`
+  # and must read back as that value coerced by its declared Option type.
+  # Set-then-get is deterministic and platform-free, so the assertions are exact
+  # (no acceptable-set hedging). -wrap is a keyword set (none/char/word,
+  # :symbol), NOT a boolean like spinbox's -wrap. Geometry/editability options
+  # end on their default value so `text` is left as the behaviour specs below
+  # expect. Options that need a fresh widget (empty-value rule, -tabs,
+  # -startline/-endline, the configure describe-shape) live BELOW the peer
+  # specs, which assert an exact pathname and tolerate no Text widget built
+  # before them.
+  settable = {
+    background: ['#ff0000', '#00ff00'],               # :color  -> String
+    foreground: ['#0000ff', '#123456'],               # :color
+    inactiveselectbackground: ['#222222'],            # :color
+    selectbackground: ['#334455'],                    # :color
+    selectforeground: ['#000000'],                    # :color
+    insertbackground: ['#010203'],                    # :color
+    highlightbackground: ['#0a0b0c'],                 # :color
+    highlightcolor: ['#0d0e0f'],                      # :color
+    cursor: %w[xterm hand2],                           # :string
+    font: ['TkFixedFont'],                             # :font   -> String
+    relief: %i[sunken raised flat],                    # :symbol
+    borderwidth: %w[4 2],                              # :string (screen distance)
+    highlightthickness: ['3'],                         # :string (screen distance)
+    insertwidth: ['3'],                                # :string (screen distance)
+    insertborderwidth: ['1'],                          # :string (screen distance)
+    selectborderwidth: ['2'],                          # :string (screen distance)
+    padx: ['5'],                                       # :string (screen distance)
+    pady: ['5'],                                       # :string (screen distance)
+    spacing1: %w[3 0],                                 # :string (screen distance)
+    spacing2: %w[3 0],                                 # :string (screen distance)
+    spacing3: %w[3 0],                                 # :string (screen distance)
+    maxundo: [0, 5],                                   # :integer
+    insertontime: [600, 300],                          # :integer (ms)
+    insertofftime: [300, 100],                         # :integer (ms)
+    autoseparators: [false, true],                     # :boolean
+    blockcursor: [true, false],                        # :boolean
+    undo: [true, false],                               # :boolean
+    exportselection: [false, true],                    # :boolean
+    tabstyle: %i[wordprocessor tabular],               # :symbol
+    insertunfocussed: %i[hollow solid none],           # :symbol (8.6 keyword set)
+    # These, like -spacing1..3 above, end on their default value so that `text`
+    # is left as the geometry/spacing-sensitive behaviour specs below expect.
+    height: [10, 24],                                  # :integer (character count)
+    width: [40, 80],                                   # :integer (character count)
+    wrap: %i[none word char],                          # :symbol (keyword set)
+    setgrid: [true, false],                            # :boolean
+    state: %i[disabled normal]                         # :symbol
   }
 
-  describe 'getting options via cget' do
-    cget_options.each do |key, values|
-      it "returns a member of #{values.inspect} for -#{key}" do
-        values.should.include text.cget(key)
+  describe 'reads each settable widget option back exactly (set-then-get)' do
+    settable.each do |option, values|
+      values.each do |value|
+        it "#{option} = #{value.inspect}" do
+          text.configure(option => value)
+          text.cget(option).should == value
+        end
       end
     end
   end
@@ -199,6 +207,60 @@ describe Tk::Text do
   it 'destroys the peer' do
     @peer.destroy
     text.peer_names.should == []
+  end
+
+  # --- widget option coercion needing a fresh widget -----------------------
+  # Placed below the peer specs, which assert the exact pathname .text0.text1
+  # and so tolerate no Text widget created before them; each spec here builds
+  # its own widget.
+  describe 'widget option coercion on fresh widgets' do
+    it 'reads -tabs as a list of tab stops (:list), empty -> []' do
+      t = Tk::Text.new
+      t.cget(:tabs).should == []
+      t.configure(tabs: %w[2c 4c])
+      t.cget(:tabs).should == %w[2c 4c]
+    end
+
+    it 'reads -startline/-endline as integer line indices, empty -> nil' do
+      t = Tk::Text.new
+      t.insert :end, "l1\nl2\nl3\nl4\n"
+      # empty by default (start at first / end at last line): :integer empty -> nil.
+      t.cget(:startline).should.be.nil
+      t.cget(:endline).should.be.nil
+      t.configure(startline: 2, endline: 4)
+      t.cget(:startline).should == 2
+      t.cget(:endline).should == 4
+    end
+
+    it 'takefocus is the empty string, not false (:string empty -> "")' do
+      Tk::Text.new.cget(:takefocus).should == ''
+    end
+
+    it 'xscrollcommand/yscrollcommand with no command are nil (:command empty -> nil)' do
+      t = Tk::Text.new
+      t.cget(:xscrollcommand).should.be.nil
+      t.cget(:yscrollcommand).should.be.nil
+    end
+
+    # configure faithfully reports Tk's describe-tuple as a typed
+    # OptionDescription (docs/adr/0001), not a bare value.
+    it 'configure(option) returns that option\'s OptionDescription' do
+      t = Tk::Text.new
+      t.configure(wrap: :word)
+      description = t.configure(:wrap)
+      description.should.be.is_a? Tk::OptionDescription
+      description.synonym?.should == false
+      description.name.should == :wrap
+      # -wrap coerces to a :symbol, never left a bare string.
+      description.value.should == :word
+      description.default.should == :char
+    end
+
+    it 'configure(alias) resolves to the canonical option description, as Tk does' do
+      description = Tk::Text.new.configure(:bg)
+      description.synonym?.should == false
+      description.name.should == :background
+    end
   end
 
   it 'searches for {}' do
@@ -462,6 +524,9 @@ describe Tk::Text do
       t.tag_configure('col', foreground: 'red', background: 'blue')
       t.tag_cget('col', :foreground).should == 'red'
       t.tag_cget('col', :background).should == 'blue'
+      # Per-tag configure stays on the legacy value-returning path (tag options
+      # are a later phase); the widget-level configure now returns typed
+      # OptionDescriptions, asserted above.
       t.tag_configure('col').should.be.kind_of(Hash)
     end
 

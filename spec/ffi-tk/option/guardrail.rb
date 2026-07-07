@@ -41,7 +41,9 @@ describe 'option schema name-completeness guardrail' do
     'Tk::Listbox' => -> { Tk::Listbox.new },
     'Tk::Spinbox' => -> { Tk::Spinbox.new },
     'Tk::Menu' => -> { Tk::Menu.new },
-    'Tk::PanedWindow' => -> { Tk::PanedWindow.new }
+    'Tk::PanedWindow' => -> { Tk::PanedWindow.new },
+    'Tk::Text' => -> { Tk::Text.new },
+    'Tk::Canvas' => -> { Tk::Canvas.new }
   }.each do |name, build|
     it "#{name}: every live option is declared; surplus only from the standard set" do
       widget =

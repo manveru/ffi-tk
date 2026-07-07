@@ -8,6 +8,37 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (text(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -height/-width are character counts (:integer), not screen distances;
+    # -endline/-startline are integer line indices and -maxundo an integer
+    # count (all empty -> nil). -wrap is a keyword set (none/char/word,
+    # :symbol) -- NOT a boolean like spinbox's -wrap; -state/-tabstyle/
+    # -insertunfocussed are keyword sets too. -autoseparators/-blockcursor/
+    # -undo are genuine :boolean. -spacing1..3 are screen distances (:string,
+    # lossless per the standard-set rule). -tabs is a Tcl list of tab stops
+    # (:list). -inactiveselectbackground is a :color. Tag/mark/image/window
+    # surfaces stay on the legacy path for a later phase.
+    classic_options
+    widget_options(
+      autoseparators: :boolean,
+      blockcursor: :boolean,
+      endline: :integer,
+      height: :integer,
+      inactiveselectbackground: :color,
+      insertunfocussed: :symbol,
+      maxundo: :integer,
+      spacing1: :string,
+      spacing2: :string,
+      spacing3: :string,
+      startline: :integer,
+      state: :symbol,
+      tabs: :list,
+      tabstyle: :symbol,
+      undo: :boolean,
+      width: :integer,
+      wrap: :symbol
+    )
+
     def self.tk_command
       'text'
     end

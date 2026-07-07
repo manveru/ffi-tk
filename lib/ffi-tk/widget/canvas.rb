@@ -27,6 +27,27 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (canvas(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -closeenough is a :float; -confine is a genuine :boolean; -state is a
+    # keyword set (normal/disabled/hidden, :symbol). -scrollregion is a
+    # coordinate list (:list). -height/-width/-xscrollincrement/
+    # -yscrollincrement are screen distances (:string, lossless per the
+    # standard-set rule). -offset is the stipple origin, a coordinate/keyword
+    # spec (:string). Item-level options stay on the legacy path for a later
+    # phase.
+    classic_options
+    widget_options(
+      closeenough: :float,
+      confine: :boolean,
+      height: :string,
+      offset: :string,
+      scrollregion: :list,
+      state: :symbol,
+      width: :string,
+      xscrollincrement: :string,
+      yscrollincrement: :string
+    )
+
     def self.tk_command
       'canvas'
     end

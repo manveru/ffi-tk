@@ -287,6 +287,33 @@ describe Tk::Canvas do
     cv.type('missing').should.nil?
   end
 
+  it 'coerces its widget-level options by declared type' do
+    cv = fresh_canvas
+    cv.configure(closeenough: 2.5, confine: false, state: :disabled,
+                 xscrollincrement: 10, yscrollincrement: 12,
+                 scrollregion: [0, 0, 400, 300])
+
+    cv.cget(:closeenough).should == 2.5     # :float
+    cv.cget(:confine).should == false       # :boolean
+    cv.cget(:state).should == :disabled     # :symbol (keyword set)
+    # screen distances stay lossless as strings, never converted to pixels.
+    cv.cget(:xscrollincrement).should == '10'
+    cv.cget(:yscrollincrement).should == '12'
+    cv.cget(:width).should == '200'
+    cv.cget(:height).should == '200'
+    # -scrollregion is a coordinate list (:list); elements stay strings.
+    cv.cget(:scrollregion).should == %w[0 0 400 300]
+  end
+
+  it 'configure(option) returns that option\'s OptionDescription' do
+    cv = fresh_canvas
+    cv.configure(confine: false)
+    description = cv.configure(:confine)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :confine
+    description.value.should == false
+  end
+
   it 'round-trips options via itemconfigure/itemcget' do
     cv = fresh_canvas
     rect = cv.create_rectangle(0, 0, 10, 10)
@@ -295,8 +322,10 @@ describe Tk::Canvas do
     # The typed accessor coerces the raw "3.0" itemcget value to an Integer.
     rect.width.should == 3
 
-    # Single-option query extracts the current value from canvas's
-    # string-typed describe-tuple.
+    # Per-item configure stays on the legacy value-returning path (item options
+    # are a later phase): a single-option query extracts the current value from
+    # canvas's string-typed describe-tuple, distinct from the widget-level
+    # configure above which now returns typed OptionDescriptions.
     ['red', '#ff0000'].should.include cv.itemconfigure(rect, :fill)
   end
 
