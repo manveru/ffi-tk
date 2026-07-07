@@ -23,15 +23,18 @@ describe Tk::Tile::Frame do
     frame.style(layout_style).should == true
   end
 
-  it 'sets borderwidth default 0' do
+  # ttk::frame reports -borderwidth as the raw screen-distance string (:string),
+  # so an unset border is "" and a set one is echoed verbatim ("10"), never a
+  # coerced pixel integer.
+  it 'sets borderwidth default (empty)' do
     frame = Frame.new(Tk.root)
-    frame.cget(:borderwidth).should == 0
+    frame.cget(:borderwidth).should == ''
 
     frame = Frame.new(Tk.root, borderwidth: 10)
-    frame.cget(:borderwidth).should == 10
+    frame.cget(:borderwidth).should == '10'
 
     frame.configure borderwidth: 20
-    frame.cget(:borderwidth).should == 20
+    frame.cget(:borderwidth).should == '20'
   end
 
   # One of the standard Tk border styles:
@@ -46,7 +49,7 @@ describe Tk::Tile::Frame do
 
   it 'sets cursor' do
     frame = Frame.new(Tk.root)
-    frame.cget(:cursor).should.nil?
+    frame.cget(:cursor).should == ''
 
     lambda do
       Frame.new(Tk.root, cursor: '.s.s.s.s')

@@ -9,9 +9,11 @@ describe Tk::Tile::Label do
     instance.tk_parent.should == Tk.root
   end
 
+  # #value reads -text, a :string option: an unset label reports "" (the empty
+  # instance of the type), not nil.
   it 'assigns a value' do
     label = Tk::Tile::Label.new
-    label.value.should.nil?
+    label.value.should == ''
     label.value = 'Hello, World!'
     label.value.should == 'Hello, World!'
   end

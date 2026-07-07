@@ -11,6 +11,11 @@ module Tk
       include Cget
       include TileWidget
 
+      # Option schema (ttk::separator WIDGET-SPECIFIC + ttk::widget STANDARD).
+      # -orient is horizontal/vertical (:symbol); everything else is standard.
+      ttk_options
+      widget_options(orient: :symbol)
+
       # Specifies the orientation of the separator.
       # horizontal or vertical
       def orient(orientation = None)

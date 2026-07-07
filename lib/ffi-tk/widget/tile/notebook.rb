@@ -11,6 +11,20 @@ module Tk
         'ttk::notebook'
       end
       include TileWidget
+      include Configure
+      include Cget
+
+      # Option schema (ttk::notebook WIDGET-SPECIFIC + ttk::widget STANDARD).
+      # -width/-height are screen distances reported verbatim (:string);
+      # -padding is a distance list (:list). Per-tab options (-text, -state,
+      # -sticky, ...) are set through the tab subcommand, not widget configure,
+      # so they are not part of this schema (Phase C).
+      ttk_options
+      widget_options(
+        height: :string,
+        padding: :list,
+        width: :string
+      )
 
       def initialize(parent = Tk.root, options = {})
         super

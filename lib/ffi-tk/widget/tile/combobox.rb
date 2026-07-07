@@ -13,6 +13,29 @@ module Tk
       include Configure
       include Cget
 
+      # Option schema (ttk::combobox WIDGET-SPECIFIC + shared entry options +
+      # ttk::widget STANDARD). -values is the drop-down list (:list); -height is
+      # the listbox row count (:integer); -state is normal/readonly/disabled
+      # (:symbol). The entry-family options mirror ttk::entry.
+      ttk_options
+      widget_options(
+        background: :color,
+        exportselection: :boolean,
+        font: :font,
+        foreground: :color,
+        height: :integer,
+        invalidcommand: :command,
+        justify: :symbol,
+        postcommand: :command,
+        show: :string,
+        state: :symbol,
+        textvariable: :variable,
+        validate: :symbol,
+        validatecommand: :command,
+        values: :list,
+        width: :integer
+      )
+
       def initialize(parent = Tk.root, options = {})
         super
       end

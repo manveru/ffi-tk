@@ -15,6 +15,21 @@ module Tk
       include Cget
       include TileWidget
 
+      # Option schema (ttk::progressbar WIDGET-SPECIFIC + ttk::widget STANDARD).
+      # -maximum/-value are real numbers (:float); -length is a screen distance
+      # reported verbatim (:string); -mode is determinate/indeterminate
+      # (:symbol); -phase is a read-only integer.
+      ttk_options
+      widget_options(
+        length: :string,
+        maximum: :float,
+        mode: :symbol,
+        orient: :symbol,
+        phase: :integer,
+        value: :float,
+        variable: :variable
+      )
+
       # Begin autoincrement mode
       # schedules a recurring timer event that calls step every
       # interval milliseconds. If omitted, interval defaults to

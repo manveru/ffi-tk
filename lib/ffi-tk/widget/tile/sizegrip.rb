@@ -12,6 +12,11 @@ module Tk
       include Cget
       include TileWidget
 
+      # Option schema: ttk::sizegrip has no widget-specific options of its own,
+      # only the ttk::widget STANDARD set (-class/-cursor/-style/-takefocus and
+      # the scroll-command placeholders).
+      ttk_options
+
       # # USAGE
       # Using pack:
       #   pack [ttk::frame $top.statusbar] -side bottom -fill x

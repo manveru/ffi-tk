@@ -10,6 +10,16 @@ module Tk
       end
       include TileWidget
 
+      # Option schema (ttk::scrollbar WIDGET-SPECIFIC + ttk::widget STANDARD).
+      # The themed scrollbar has only -command and -orient of its own; the
+      # classic -activerelief/-elementborderwidth/... are gone. YScrollbar and
+      # XScrollbar inherit this schema unchanged (same ttk::scrollbar command).
+      ttk_options
+      widget_options(
+        command: :command,
+        orient: :symbol
+      )
+
       def initialize(parent = Tk.root, options = {})
         super
         scrollbar_default

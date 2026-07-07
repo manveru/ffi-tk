@@ -20,11 +20,12 @@ require_relative '../../helper'
 #                  so a surplus name is only acceptable when it comes from there
 #                  -- never from a widget_options/option_aliases typo.
 describe 'option schema name-completeness guardrail' do
-  standard = Tk::Option::Standard::CLASSIC.names
+  classic_standard = Tk::Option::Standard::CLASSIC.names
+  ttk_standard = Tk::Option::Standard::TTK.names
 
   # Every classic widget migrated in Phase B, keyed by its builder. Root reuses
   # the already-created '.' window and inherits Toplevel's schema unchanged.
-  {
+  classic = {
     'Tk::Entry' => -> { Tk::Entry.new },
     'Tk::Button' => -> { Tk::Button.new },
     'Tk::CheckButton' => -> { Tk::CheckButton.new },
@@ -44,7 +45,41 @@ describe 'option schema name-completeness guardrail' do
     'Tk::PanedWindow' => -> { Tk::PanedWindow.new },
     'Tk::Text' => -> { Tk::Text.new },
     'Tk::Canvas' => -> { Tk::Canvas.new }
-  }.each do |name, build|
+  }
+
+  # Every instantiable themed (ttk) widget migrated in Phase B4. The classic
+  # subclassers (Tile::Entry < Tk::Entry, ...) override tk_command, so they
+  # declare their own themed schema rather than inherit the classic parent's;
+  # YScrollbar/XScrollbar inherit Tile::Scrollbar's tk_command unchanged and so
+  # share its schema. Themed widgets opt into the ttk (not classic) standard
+  # set, so their surplus is checked against that superset.
+  tile = {
+    'Tk::Tile::Entry' => -> { Tk::Tile::Entry.new },
+    'Tk::Tile::Frame' => -> { Tk::Tile::Frame.new },
+    'Tk::Tile::Button' => -> { Tk::Tile::Button.new },
+    'Tk::Tile::LabelFrame' => -> { Tk::Tile::LabelFrame.new },
+    'Tk::Tile::CheckButton' => -> { Tk::Tile::CheckButton.new },
+    'Tk::Tile::RadioButton' => -> { Tk::Tile::RadioButton.new },
+    'Tk::Tile::MenuButton' => -> { Tk::Tile::MenuButton.new },
+    'Tk::Tile::PanedWindow' => -> { Tk::Tile::PanedWindow.new },
+    'Tk::Tile::Label' => -> { Tk::Tile::Label.new },
+    'Tk::Tile::Scale' => -> { Tk::Tile::Scale.new },
+    'Tk::Tile::Scrollbar' => -> { Tk::Tile::Scrollbar.new },
+    'Tk::Tile::YScrollbar' => -> { Tk::Tile::YScrollbar.new },
+    'Tk::Tile::XScrollbar' => -> { Tk::Tile::XScrollbar.new },
+    'Tk::Tile::Notebook' => -> { Tk::Tile::Notebook.new },
+    'Tk::Tile::Separator' => -> { Tk::Tile::Separator.new },
+    'Tk::Tile::Sizegrip' => -> { Tk::Tile::Sizegrip.new },
+    'Tk::Tile::ComboBox' => -> { Tk::Tile::ComboBox.new },
+    'Tk::Tile::Progressbar' => -> { Tk::Tile::Progressbar.new },
+    'Tk::Tile::Treeview' => -> { Tk::Tile::Treeview.new }
+  }
+
+  cases = []
+  classic.each { |name, build| cases << [name, build, classic_standard] }
+  tile.each { |name, build| cases << [name, build, ttk_standard] }
+
+  cases.each do |name, build, standard|
     it "#{name}: every live option is declared; surplus only from the standard set" do
       widget =
         begin

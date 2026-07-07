@@ -30,6 +30,22 @@ module Tk
         'ttk::treeview'
       end
 
+      # Option schema (ttk::treeview WIDGET-SPECIFIC + ttk::widget STANDARD).
+      # -columns/-displaycolumns/-show are lists of identifiers (:list);
+      # -selectmode is extended/browse/none (:symbol); -height is a row count
+      # (:integer); -padding is a screen-distance list (:list). Column, item,
+      # heading and tag options are queried through their own subcommands, not
+      # widget cget/configure, so they are not part of this schema.
+      ttk_options
+      widget_options(
+        columns: :list,
+        displaycolumns: :list,
+        height: :integer,
+        padding: :list,
+        selectmode: :symbol,
+        show: :list
+      )
+
       # Delete all items
       def clear
         delete(*children(nil))

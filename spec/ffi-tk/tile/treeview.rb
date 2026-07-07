@@ -12,7 +12,7 @@ describe Tk::Tile::Treeview do
   list = Tk::Tile::Treeview.new
 
   it 'shows configuration' do
-    list.cget(:takefocus).should == false
+    list.cget(:takefocus).should == 'ttk::takefocus'
     list.cget(:columns).should == []
     list.cget(:displaycolumns).should == ['#all']
     list.cget(:show).should == %w[tree headings]
@@ -21,10 +21,10 @@ describe Tk::Tile::Treeview do
     list.cget(:padding).should == []
     list.cget(:xscrollcommand).should.nil?
     list.cget(:yscrollcommand).should.nil?
-    list.cget(:takefocus).should == false
-    list.cget(:cursor).should.nil?
-    list.cget(:style).should == []
-    list.cget(:class).should.nil?
+    list.cget(:takefocus).should == 'ttk::takefocus'
+    list.cget(:cursor).should == ''
+    list.cget(:style).should == ''
+    list.cget(:class).should == ''
   end
 
   it 'returns the widget state' do

@@ -50,12 +50,13 @@ describe Tk::Tile::Progressbar do
     pbar.cget(:mode).should == :indeterminate
   end
 
+  # -length is a screen distance, reported verbatim as a string (:string).
   it 'sets length' do
     pbar = Tk::Tile::Progressbar.new(Tk.root)
-    pbar.cget(:length).should == 100
+    pbar.cget(:length).should == '100'
 
     pbar = Tk::Tile::Progressbar.new(Tk.root, length: 200)
-    pbar.cget(:length).should == 200
+    pbar.cget(:length).should == '200'
   end
 
   it 'sets maximum' do

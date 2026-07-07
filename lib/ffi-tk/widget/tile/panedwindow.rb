@@ -10,6 +10,17 @@ module Tk
       end
       include TileWidget
 
+      # Option schema (ttk::panedwindow WIDGET-SPECIFIC + ttk::widget STANDARD).
+      # -orient is horizontal/vertical (:symbol); -width/-height are screen
+      # distances reported verbatim (:string). Per-pane -weight/-sticky belong
+      # to the pane subcommand, not the widget, so they are not declared here.
+      ttk_options
+      widget_options(
+        height: :string,
+        orient: :symbol,
+        width: :string
+      )
+
       # pathname add subwindow options...
       # Adds a new pane to the window.
       # subwindow must be a direct child of the paned window pathname.

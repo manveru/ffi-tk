@@ -20,14 +20,14 @@ describe Tk::Tile::Entry do
     @entry.cget(:validatecommand).should.nil?
     @entry.cget(:xscrollcommand).should.nil?
 
-    @entry.cget(:takefocus).should == false
+    @entry.cget(:takefocus).should == 'ttk::takefocus'
     @entry.cget(:textvariable).should.nil? # ""
   end
 
   it 'sets ttk-state independent of tk-state' do
-    @entry.cget(:state).should == ['normal']
+    @entry.cget(:state).should == :normal
     @entry.configure(state: 'normal').should == true
-    @entry.cget(:state).should == ['normal']
+    @entry.cget(:state).should == :normal
 
     @entry.state(:active).should == true
     @entry.state.should == ['active']
@@ -35,13 +35,13 @@ describe Tk::Tile::Entry do
     @entry.state(:disabled).should == true
     @entry.state.should == %w[active disabled]
 
-    @entry.cget(:state).should == ['normal']
+    @entry.cget(:state).should == :normal
   end
 
   it 'sets ttk-state independent of tk-state (or not?)' do
-    @entry.cget(:state).should == ['normal']
+    @entry.cget(:state).should == :normal
     @entry.configure(state: 'disabled').should == true
-    @entry.cget(:state).should == ['disabled']
+    @entry.cget(:state).should == :disabled
 
     @entry.state(:active).should == true
     @entry.state.should == %w[active disabled]
@@ -49,7 +49,7 @@ describe Tk::Tile::Entry do
     @entry.state(:disabled).should == true
     @entry.state.should == %w[active disabled]
 
-    @entry.cget(:state).should == ['disabled']
+    @entry.cget(:state).should == :disabled
   end
 
   # NOTE: fails on 'bacon spec/tile/*' but passes with 'ruby __FILE__'
