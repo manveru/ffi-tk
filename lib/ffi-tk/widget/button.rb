@@ -16,6 +16,20 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (button(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -width/-height are integer counts (characters / lines of text), NOT screen
+    # distances: Tk rejects a distance suffix like "2c" here. -default, -state
+    # and -overrelief are keyword sets (:symbol).
+    classic_options
+    widget_options(
+      command: :command,
+      default: :symbol,
+      height: :integer,
+      overrelief: :symbol,
+      state: :symbol,
+      width: :integer
+    )
+
     def self.tk_command
       'button'
     end

@@ -10,6 +10,14 @@ describe Tk::CheckButton do
     cb.destroy
   end
 
+  it 'reports -indicatoron as a boolean' do
+    cb = Tk::CheckButton.new
+    cb.cget(:indicatoron).should == true
+    cb.configure(indicatoron: false)
+    cb.cget(:indicatoron).should == false
+    cb.destroy
+  end
+
   it 'associates a variable with the value' do
     value = Tk::Variable.new('checkbutton_value')
     cb = Tk::CheckButton.new(variable: value)

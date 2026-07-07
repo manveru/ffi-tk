@@ -11,6 +11,13 @@ describe Tk::Scrollbar do
     instance.tk_parent.should == Tk.root
   end
 
+  it 'reports -width as a screen-distance string and -activerelief as a symbol' do
+    bar = Tk::Scrollbar.new
+    bar.configure(width: 20)
+    bar.cget(:width).should == '20'
+    bar.cget(:activerelief).should == :raised
+  end
+
   it 'round-trips the visible fractions through set/get' do
     bar = Tk::Scrollbar.new(orient: :vertical)
     bar.set(0.2, 0.6)

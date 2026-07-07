@@ -16,6 +16,16 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (label(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -width/-height are integer counts (characters / lines of text), not screen
+    # distances; -state is normal/active/disabled (:symbol).
+    classic_options
+    widget_options(
+      height: :integer,
+      state: :symbol,
+      width: :integer
+    )
+
     def self.tk_command
       'label'
     end

@@ -22,6 +22,18 @@ describe Tk::Button do
     button.cget(:text).should == 'Hello, World!'
   end
 
+  it 'reports -width/-height as integer counts, not screen distances' do
+    button = Tk::Button.new(text: 'x')
+    button.configure(width: 12, height: 3)
+    button.cget(:width).should == 12
+    button.cget(:height).should == 3
+  end
+
+  it 'reports -default as a keyword symbol' do
+    button = Tk::Button.new(text: 'x', default: :active)
+    button.cget(:default).should == :active
+  end
+
   it 'returns the command result from invoke' do
     button = Tk::Button.new { [:clicked, 1] }
     button.invoke.should == ['clicked', 1]

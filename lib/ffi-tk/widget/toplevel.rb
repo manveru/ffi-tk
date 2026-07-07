@@ -12,6 +12,24 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (toplevel(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -width/-height are screen distances (:string). -class/-colormap/-visual/
+    # -screen/-use are creation-only descriptor strings; -container is a boolean;
+    # -menu names the menubar widget (:pathname). Root inherits this schema for
+    # free (it does not override tk_command).
+    classic_options
+    widget_options(
+      class: :string,
+      colormap: :string,
+      container: :boolean,
+      height: :string,
+      menu: :pathname,
+      screen: :string,
+      use: :string,
+      visual: :string,
+      width: :string
+    )
+
     def self.tk_command
       'toplevel'
     end

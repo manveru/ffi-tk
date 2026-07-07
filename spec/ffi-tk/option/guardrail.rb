@@ -6,8 +6,8 @@ require_relative '../../helper'
 # schema must line up, so cget/configure never meet an option with no declared
 # type (which would raise Tk::UnknownOptionType at runtime).
 #
-# Two properties are checked against the running Tk, both here for the pilot
-# widget Tk::Entry (Phase B extends this file to every instantiable widget):
+# Two properties are checked against the running Tk, for every instantiable
+# widget that has been migrated to the Schema+Coercer path:
 #
 #   completeness - every option Tk actually reports IS declared. This is the
 #                  property that matters: an undeclared-but-real option is a
@@ -20,26 +20,45 @@ require_relative '../../helper'
 #                  so a surplus name is only acceptable when it comes from there
 #                  -- never from a widget_options/option_aliases typo.
 describe 'option schema name-completeness guardrail' do
-  it 'Tk::Entry: every live option is declared; surplus only from the standard set' do
-    entry =
-      begin
-        Tk::Entry.new
-      rescue StandardError => e
-        SpecHelper.skipped << "Tk::Entry guardrail skipped: #{e.class}: #{e.message}"
-        next
+  standard = Tk::Option::Standard::CLASSIC.names
+
+  # Every classic widget migrated in Phase B, keyed by its builder. Root reuses
+  # the already-created '.' window and inherits Toplevel's schema unchanged.
+  {
+    'Tk::Entry' => -> { Tk::Entry.new },
+    'Tk::Button' => -> { Tk::Button.new },
+    'Tk::CheckButton' => -> { Tk::CheckButton.new },
+    'Tk::RadioButton' => -> { Tk::RadioButton.new },
+    'Tk::MenuButton' => -> { Tk::MenuButton.new },
+    'Tk::Label' => -> { Tk::Label.new },
+    'Tk::Message' => -> { Tk::Message.new },
+    'Tk::Frame' => -> { Tk::Frame.new },
+    'Tk::LabelFrame' => -> { Tk::LabelFrame.new },
+    'Tk::Toplevel' => -> { Tk::Toplevel.new },
+    'Tk::Root' => -> { Tk.root },
+    'Tk::Scale' => -> { Tk::Scale.new },
+    'Tk::Scrollbar' => -> { Tk::Scrollbar.new }
+  }.each do |name, build|
+    it "#{name}: every live option is declared; surplus only from the standard set" do
+      widget =
+        begin
+          build.call
+        rescue StandardError => e
+          SpecHelper.skipped << "#{name} guardrail skipped: #{e.class}: #{e.message}"
+          next
+        end
+
+      declared = widget.class.option_schema.names
+      live = widget.configure.keys
+
+      # completeness: no real option lacks a declared type.
+      (live - declared).should == []
+
+      # soundness: any name the schema has but the widget does not must be a
+      # member of the shared standard-options dictionary, not a stray declaration.
+      (declared - live).each do |surplus|
+        standard.should.include surplus
       end
-
-    declared = Tk::Entry.option_schema.names
-    live = entry.configure.keys
-
-    # completeness: no real option lacks a declared type.
-    (live - declared).should == []
-
-    # soundness: any name the schema has but the widget does not must be a
-    # member of the shared standard-options dictionary, not a stray declaration.
-    standard = Tk::Option::Standard::CLASSIC.names
-    (declared - live).each do |surplus|
-      standard.should.include surplus
     end
   end
 end

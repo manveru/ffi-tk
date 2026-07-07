@@ -7,6 +7,29 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (scale(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -from/-to/-resolution/-bigincrement/-tickinterval are real values
+    # (:float); -digits is a plain integer. -length/-width/-sliderlength are
+    # screen distances (:string). -sliderrelief/-state are keyword sets.
+    classic_options
+    widget_options(
+      bigincrement: :float,
+      command: :command,
+      digits: :integer,
+      from: :float,
+      label: :string,
+      length: :string,
+      resolution: :float,
+      showvalue: :boolean,
+      sliderlength: :string,
+      sliderrelief: :symbol,
+      state: :symbol,
+      tickinterval: :float,
+      to: :float,
+      variable: :variable,
+      width: :string
+    )
+
     def self.tk_command
       'scale'
     end

@@ -10,6 +10,20 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (frame(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -width/-height are screen distances (Tk_GetPixels), so they keep the raw
+    # string per the standard-set screen-distance rule. -class/-colormap/-visual
+    # are creation-only descriptor strings; -container is a boolean.
+    classic_options
+    widget_options(
+      class: :string,
+      colormap: :string,
+      container: :boolean,
+      height: :string,
+      visual: :string,
+      width: :string
+    )
+
     def self.tk_command
       'frame'
     end

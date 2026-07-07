@@ -34,6 +34,16 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (message(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -aspect is a plain integer ratio (100*width/height). -width is a screen
+    # distance (Tk_GetPixels), so it keeps the raw string per the standard-set
+    # screen-distance rule.
+    classic_options
+    widget_options(
+      aspect: :integer,
+      width: :string
+    )
+
     def self.tk_command
       'message'
     end

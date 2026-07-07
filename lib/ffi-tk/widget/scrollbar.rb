@@ -7,6 +7,17 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (scrollbar(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -activerelief is a keyword (:symbol); -command is the view-change script
+    # prefix; -width/-elementborderwidth are screen distances (:string).
+    classic_options
+    widget_options(
+      activerelief: :symbol,
+      command: :command,
+      elementborderwidth: :string,
+      width: :string
+    )
+
     def self.tk_command
       'scrollbar'
     end
