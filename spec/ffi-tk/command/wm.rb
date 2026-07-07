@@ -357,7 +357,7 @@ describe Tk::WM do
 
       above = Tk::WM.stackorder(low, :isabove, high)
       below = Tk::WM.stackorder(low, :isbelow, high)
-      [above, below].should == [above, below].map { |v| v == true || v == false ? v : :not_boolean }
+      [above, below].should == [above, below].map { |v| [true, false].include?(v) ? v : :not_boolean }
       above.should == !below
       low.destroy
       high.destroy

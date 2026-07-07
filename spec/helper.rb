@@ -52,6 +52,7 @@ module SpecHelper
       Tk.execute('update')
       return true if widget.winfo_ismapped && widget.winfo_width > 1 && widget.winfo_height > 1
       return false if Time.now >= deadline
+
       sleep 0.01
     end
   end

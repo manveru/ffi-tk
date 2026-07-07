@@ -62,7 +62,7 @@ describe FFI::Tcl::EvalResult do
 
   it 'converts the largest 64-bit signed integer exactly' do
     guess('expr {9223372036854775807}').should == 9_223_372_036_854_775_807
-    guess('expr {9223372036854775807}').should == 2**63 - 1
+    guess('expr {9223372036854775807}').should == (2**63) - 1
   end
 
   it 'converts a negative value below the 32-bit boundary without wrapping' do

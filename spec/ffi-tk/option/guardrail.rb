@@ -75,9 +75,8 @@ describe 'option schema name-completeness guardrail' do
     'Tk::Tile::Treeview' => -> { Tk::Tile::Treeview.new }
   }
 
-  cases = []
-  classic.each { |name, build| cases << [name, build, classic_standard] }
-  tile.each { |name, build| cases << [name, build, ttk_standard] }
+  cases = classic.map { |name, build| [name, build, classic_standard] } +
+          tile.map { |name, build| [name, build, ttk_standard] }
 
   cases.each do |name, build, standard|
     it "#{name}: every live option is declared; surplus only from the standard set" do

@@ -151,7 +151,7 @@ describe 'Tk::Tile::Treeview coverage' do
   end
 
   it 'reads and writes cell values by column' do
-    tv, (a,) = build(columns: %i[size owner], rows: [['a', '10', 'root']])
+    tv, (a,) = build(columns: %i[size owner], rows: [%w[a 10 root]])
 
     tv.set(a, :size).should == '10'
     tv.set(a).should == %w[size 10 owner root]
@@ -263,7 +263,7 @@ describe 'Tk::Tile::Treeview coverage' do
   end
 
   it 'identifies the row and column under a point' do
-    tv, (a,) = build(columns: %i[size], rows: [['a', '1']])
+    tv, (a,) = build(columns: %i[size], rows: [%w[a 1]])
     next unless skip_unless_mapped(tv)
 
     box = tv.bbox(a)
