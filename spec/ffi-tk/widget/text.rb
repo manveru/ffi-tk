@@ -516,18 +516,65 @@ describe Tk::Text do
       t.tag_names.should.not.include('gone')
     end
 
-    it 'round-trips tag options through tag_configure and tag_cget' do
+    # tag_cget coerces each tag option by its declared type (text(3tk) TAGS).
+    # A tag -underline/-overstrike/-elide is a genuine :boolean (unlike the
+    # widget-level integer -underline); -justify/-relief/-wrap/-tabstyle are
+    # keyword sets (:symbol); screen-distance options (-borderwidth, -lmargin1,
+    # -offset, -spacing1..3) stay lossless :string; -tabs is a :list; the
+    # stipples are :bitmap.
+    it 'round-trips tag options through tag_configure and tag_cget, coerced by type' do
       t = Tk::Text.new
       t.insert :end, "abc\n"
       t.tag_add('col', '1.0', '1.2')
+
+      # empty-value rule: an unset colour is nil, an unset list is [].
       t.tag_cget('col', :foreground).should.be.nil
-      t.tag_configure('col', foreground: 'red', background: 'blue')
-      t.tag_cget('col', :foreground).should == 'red'
-      t.tag_cget('col', :background).should == 'blue'
-      # Per-tag configure stays on the legacy value-returning path (tag options
-      # are a later phase); the widget-level configure now returns typed
-      # OptionDescriptions, asserted above.
-      t.tag_configure('col').should.be.kind_of(Hash)
+      t.tag_cget('col', :tabs).should == []
+
+      t.tag_configure('col',
+                      foreground: 'red', background: 'blue',
+                      underline: true, elide: true, justify: 'center',
+                      relief: 'raised', borderwidth: 2, lmargin1: 5,
+                      wrap: 'word', tabstyle: 'wordprocessor')
+
+      t.tag_cget('col', :foreground).should == 'red' # :color
+      t.tag_cget('col', :background).should == 'blue'   # :color
+      t.tag_cget('col', :underline).should == true      # :boolean, not integer
+      t.tag_cget('col', :elide).should == true          # :boolean
+      t.tag_cget('col', :justify).should == :center      # :symbol
+      t.tag_cget('col', :relief).should == :raised       # :symbol
+      t.tag_cget('col', :borderwidth).should == '2'      # :string (lossless)
+      t.tag_cget('col', :lmargin1).should == '5'         # :string (screen dist)
+      t.tag_cget('col', :wrap).should == :word           # :symbol
+      t.tag_cget('col', :tabstyle).should == :wordprocessor
+    end
+
+    it 'tag_configure(option) returns that tag option\'s coerced OptionDescription' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      t.tag_add('col', '1.0', '1.2')
+      t.tag_configure('col', foreground: 'red', underline: true)
+
+      colour = t.tag_configure('col', :foreground)
+      colour.should.be.is_a? Tk::OptionDescription
+      colour.name.should == :foreground
+      colour.value.should == 'red'
+
+      # the describe-tuple's value is coerced by the option's type, so a boolean
+      # tag option reads back as a Ruby boolean, not "1".
+      t.tag_configure('col', :underline).value.should == true
+    end
+
+    it 'tag_configure lists every tag option as a coerced OptionDescription' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      t.tag_add('col', '1.0', '1.2')
+      t.tag_configure('col', justify: 'right')
+
+      descriptions = t.tag_configure('col')
+      descriptions.should.be.is_a? Hash
+      descriptions[:justify].value.should == :right
+      descriptions[:foreground].value.should.be.nil # unset :color -> nil
     end
 
     it 'reorders tag priority with lower and raise' do
@@ -553,18 +600,105 @@ describe Tk::Text do
       t.window_names.should == [button.tk_pathname]
     end
 
-    it 'queries an embedded window option via window_cget' do
+    # window_cget coerces by the embedded-window schema (text(3tk) EMBEDDED
+    # WINDOWS): -window names a widget (:pathname, resolved to the Widget
+    # object, matching canvas item's -window); -stretch is a :boolean; -align a
+    # keyword set (:symbol); -padx/-pady screen distances (lossless :string).
+    it 'queries and round-trips embedded window options, coerced by type' do
       t = Tk::Text.new
       t.insert :end, "abc\n"
       button = Tk::Button.new(t, text: 'x')
       t.window_create('1.1', window: button)
-      t.window_cget('1.1', :window).should == button.tk_pathname
+
+      t.window_cget('1.1', :window).should == button # :pathname -> the Widget
+      t.window_cget('1.1', :stretch).should == false # :boolean default
+      t.window_cget('1.1', :align).should == :center   # :symbol default
+      t.window_cget('1.1', :padx).should == '0'        # :string default
+
+      t.window_configure('1.1', stretch: true, align: 'top', padx: 4)
+      t.window_cget('1.1', :stretch).should == true
+      t.window_cget('1.1', :align).should == :top
+      t.window_cget('1.1', :padx).should == '4'
+    end
+
+    it 'window_configure(option) returns that option\'s coerced OptionDescription' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      button = Tk::Button.new(t, text: 'x')
+      t.window_create('1.1', window: button)
+
+      description = t.window_configure('1.1', :window)
+      description.should.be.is_a? Tk::OptionDescription
+      description.name.should == :window
+      description.value.should == button
+
+      t.window_configure('1.1', :stretch).value.should == false
+    end
+
+    it 'window_configure lists every embedded window option as an OptionDescription' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      button = Tk::Button.new(t, text: 'x')
+      t.window_create('1.1', window: button)
+
+      descriptions = t.window_configure('1.1')
+      descriptions.should.be.is_a? Hash
+      descriptions.keys.sort.should == %i[align create padx pady stretch window]
+      descriptions[:align].value.should == :center
+      descriptions[:window].value.should == button
     end
 
     it 'returns an empty list when no windows are embedded' do
       t = Tk::Text.new
       t.insert :end, "abc\n"
       t.window_names.should == []
+    end
+  end
+
+  describe 'Text embedded images' do
+    # image_cget/image_configure coerce by the embedded-image schema (text(3tk)
+    # EMBEDDED IMAGES): -image/-name are name strings (:string); -align a
+    # keyword set (:symbol); -padx/-pady screen distances (:string). This also
+    # covers the image_cget fix: it previously never passed the option to Tk.
+    it 'queries and round-trips embedded image options, coerced by type' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      image = Tk.execute('image', 'create', 'photo').to_s
+      t.image_create('1.0', image: image)
+
+      t.image_cget('1.0', :image).should == image # :string
+      t.image_cget('1.0', :align).should == :center # :symbol default
+      t.image_cget('1.0', :padx).should == '0'      # :string default
+
+      t.image_configure('1.0', align: 'top', padx: 3)
+      t.image_cget('1.0', :align).should == :top
+      t.image_cget('1.0', :padx).should == '3'
+    end
+
+    it 'image_configure(option) returns that option\'s coerced OptionDescription' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      image = Tk.execute('image', 'create', 'photo').to_s
+      t.image_create('1.0', image: image)
+
+      description = t.image_configure('1.0', :image)
+      description.should.be.is_a? Tk::OptionDescription
+      description.name.should == :image
+      description.value.should == image
+
+      t.image_configure('1.0', :align).value.should == :center
+    end
+
+    it 'image_configure lists every embedded image option as an OptionDescription' do
+      t = Tk::Text.new
+      t.insert :end, "abc\n"
+      image = Tk.execute('image', 'create', 'photo').to_s
+      t.image_create('1.0', image: image)
+
+      descriptions = t.image_configure('1.0')
+      descriptions.should.be.is_a? Hash
+      descriptions.keys.sort.should == %i[align image name padx pady]
+      descriptions[:align].value.should == :center
     end
   end
 

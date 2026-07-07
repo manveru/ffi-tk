@@ -39,6 +39,75 @@ module Tk
       wrap: :symbol
     )
 
+    # Option schema for the per-tag describe surface (text(3tk) TAGS, via tag
+    # configure / tag cget). Tk reports no synonyms here. A tag's -underline,
+    # -overstrike and -elide are genuine :boolean (unlike the widget-level
+    # integer -underline); -justify/-relief/-wrap/-tabstyle are keyword sets
+    # (:symbol); the screen-distance options (-borderwidth, -lmargin1/2,
+    # -offset, -rmargin, -spacing1..3) stay lossless :string; -tabs is a Tcl
+    # :list; -bgstipple/-fgstipple are :bitmap; the rest are :color.
+    TAG_SCHEMA = Option::Schema.new(
+      types: {
+        background: :color,
+        bgstipple: :bitmap,
+        borderwidth: :string,
+        elide: :boolean,
+        fgstipple: :bitmap,
+        font: :font,
+        foreground: :color,
+        justify: :symbol,
+        lmargin1: :string,
+        lmargin2: :string,
+        lmargincolor: :color,
+        offset: :string,
+        overstrike: :boolean,
+        overstrikefg: :color,
+        relief: :symbol,
+        rmargin: :string,
+        rmargincolor: :color,
+        selectbackground: :color,
+        selectforeground: :color,
+        spacing1: :string,
+        spacing2: :string,
+        spacing3: :string,
+        tabs: :list,
+        tabstyle: :symbol,
+        underline: :boolean,
+        underlinefg: :color,
+        wrap: :symbol
+      }
+    )
+
+    # Option schema for the embedded-image describe surface (text(3tk) EMBEDDED
+    # IMAGES, via image configure / image cget). -image/-name are name strings
+    # (:string, matching canvas item's -image); -align is a keyword set
+    # (:symbol); -padx/-pady screen distances (lossless :string).
+    IMAGE_SCHEMA = Option::Schema.new(
+      types: {
+        align: :symbol,
+        image: :string,
+        name: :string,
+        padx: :string,
+        pady: :string
+      }
+    )
+
+    # Option schema for the embedded-window describe surface (text(3tk) EMBEDDED
+    # WINDOWS, via window configure / window cget). -window names a widget
+    # (:pathname, matching canvas item's -window); -stretch is a :boolean;
+    # -align a keyword set (:symbol); -create a Tcl script (:string);
+    # -padx/-pady screen distances (lossless :string).
+    WINDOW_SCHEMA = Option::Schema.new(
+      types: {
+        align: :symbol,
+        create: :string,
+        padx: :string,
+        pady: :string,
+        stretch: :boolean,
+        window: :pathname
+      }
+    )
+
     def self.tk_command
       'text'
     end
@@ -339,8 +408,10 @@ module Tk
     end
 
     def image_cget(index, option)
-      option = tcl_option(option)
-      Cget.option_to_ruby(option, execute('image', 'cget', index))
+      Option::Coercer.coerce(
+        IMAGE_SCHEMA.type_for(option),
+        execute_string(:image, :cget, index, option.to_tcl_option)
+      )
     end
 
     # Query or modify the configuration options for an embedded image.
@@ -355,7 +426,7 @@ module Tk
     # returns an empty string.
     # See EMBEDDED IMAGES for information on the options that are supported.
     def image_configure(index, options = None)
-      common_configure([:image, :configure, index], options)
+      Configure.describe(self, [:image, :configure, index], IMAGE_SCHEMA, options)
     end
 
     # This command creates a new image annotation, which will appear in the text
@@ -773,8 +844,10 @@ module Tk
     # Option may have any of the values accepted by the pathName tag
     # configure widget command.
     def tag_cget(tag_name, option)
-      value = execute(:tag, :cget, tag_name, option.to_tcl_option)
-      Cget.option_to_ruby(option, value)
+      Option::Coercer.coerce(
+        TAG_SCHEMA.type_for(option),
+        execute_string(:tag, :cget, tag_name, option.to_tcl_option)
+      )
     end
 
     # This command is similar to the pathName configure widget command except
@@ -791,7 +864,7 @@ module Tk
     # this case the command returns an empty string.
     # See TAGS above for details on the options available for tags.
     def tag_configure(tag_name, options = None)
-      common_configure([:tag, :configure, tag_name], options)
+      Configure.describe(self, [:tag, :configure, tag_name], TAG_SCHEMA, options)
     end
 
     # Deletes all tag information for each of the tagName arguments.
@@ -891,7 +964,10 @@ module Tk
     # configuration option, which must be one of the ones listed in the section
     # EMBEDDED WINDOWS.
     def window_cget(index, option)
-      execute(:window, :cget, index, option.to_tcl_option)
+      Option::Coercer.coerce(
+        WINDOW_SCHEMA.type_for(option),
+        execute_string(:window, :cget, index, option.to_tcl_option)
+      )
     end
 
     # Query or modify the configuration options for an embedded window.
@@ -906,7 +982,7 @@ module Tk
     # command returns an empty string.
     # See EMBEDDED WINDOWS for information on the options that are supported.
     def window_configure(index, options = None)
-      common_configure([:window, :configure, index], options)
+      Configure.describe(self, [:window, :configure, index], WINDOW_SCHEMA, options)
     end
 
     # This command creates a new window annotation, which will appear in the
