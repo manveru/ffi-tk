@@ -7,13 +7,20 @@ module Tk
     # :start and :extent options) and displayed in one of several ways
     # (specified by the :style option).
     class Arc < Item
-      options(
-        :dash, :activedash, :disableddash, :dashoffset, :fill, :activefill,
-        :disabledfill, :offset, :outline, :activeoutline, :disabledoutline,
-        :outlineoffset, :outlinestipple, :activeoutlinestipple,
-        :disabledoutlinestipple, :stipple, :activestipple, :disabledstipple,
-        :state, :tags, :width, :activewidth, :disabledwidth, :extent, :start,
-        :style
+      # Types from canvas(3tk) ARC ITEMS + COMMON ITEM OPTIONS. Dash patterns
+      # and coordinate/screen-distance specs (-dash, -dashoffset, -offset,
+      # -outlineoffset, -width group) stay lossless :string; -extent/-start are
+      # :float degrees; -style/-state are keyword sets (:symbol).
+      item_options(
+        dash: :string, activedash: :string, disableddash: :string,
+        dashoffset: :string, fill: :color, activefill: :color,
+        disabledfill: :color, offset: :string, outline: :color,
+        activeoutline: :color, disabledoutline: :color, outlineoffset: :string,
+        outlinestipple: :bitmap, activeoutlinestipple: :bitmap,
+        disabledoutlinestipple: :bitmap, stipple: :bitmap,
+        activestipple: :bitmap, disabledstipple: :bitmap, state: :symbol,
+        tags: :list, width: :string, activewidth: :string,
+        disabledwidth: :string, extent: :float, start: :float, style: :symbol
       )
     end
   end

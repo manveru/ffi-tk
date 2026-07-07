@@ -16,7 +16,7 @@ describe Tk::Canvas do
 
     @text.activefill.should.nil?
     @text.activestipple.should.nil?
-    @text.anchor.should == 'center'
+    @text.anchor.should == :center           # :symbol (keyword set)
     @text.disabledfill.should.nil?
     @text.disabledstipple.should.nil?
     ['black', '#000000'].should.include @text.fill
@@ -26,8 +26,8 @@ describe Tk::Canvas do
     @text.stipple.should.nil?
     @text.tags.should == []
     @text.text.should == 'Hello, World!'
-    @text.underline.should == -1
-    @text.width.should == 0
+    @text.underline.should == -1             # :integer character index
+    @text.width.should == '0'                # :string (screen distance, wrap)
   end
 
   it 'creates a rectangle' do
@@ -35,18 +35,19 @@ describe Tk::Canvas do
     @rect.id.should == 2
     @rect.canvas.should == @canvas
 
-    @rect.dash.should == 0
-    @rect.activedash.should == 0
-    @rect.disableddash.should == 0
-    @rect.dashoffset.should == 0
+    # dash patterns are lossless :string (empty by default), not :integer.
+    @rect.dash.should == ''
+    @rect.activedash.should == ''
+    @rect.disableddash.should == ''
+    @rect.dashoffset.should == '0'           # :string (screen distance)
     @rect.fill.should.nil?
     @rect.activefill.should.nil?
     @rect.disabledfill.should.nil?
-    @rect.offset.should == '0,0'
+    @rect.offset.should == '0,0'             # :string (coordinate spec)
     ['black', '#000000'].should.include @rect.outline
     @rect.activeoutline.should.nil?
     @rect.disabledoutline.should.nil?
-    @rect.outlineoffset.should == 0
+    @rect.outlineoffset.should == '0,0'      # :string (coordinate spec)
     @rect.outlinestipple.should.nil?
     @rect.activeoutlinestipple.should.nil?
     @rect.disabledoutlinestipple.should.nil?
@@ -55,9 +56,10 @@ describe Tk::Canvas do
     @rect.disabledstipple.should.nil?
     @rect.state.should.nil?
     @rect.tags.should == []
-    @rect.width.should == 1
-    @rect.activewidth.should == 0
-    @rect.disabledwidth.should == 0
+    # outline widths are lossless screen distances (:string), reported as floats.
+    @rect.width.should == '1.0'
+    @rect.activewidth.should == '0.0'
+    @rect.disabledwidth.should == '0.0'
   end
 
   it 'creates an arc' do
@@ -65,10 +67,10 @@ describe Tk::Canvas do
     @arc.id.should == 3
     @arc.canvas.should == @canvas
 
-    @arc.dash.should == 0
-    @arc.activedash.should == 0
-    @arc.disableddash.should == 0
-    @arc.dashoffset.should == 0
+    @arc.dash.should == ''
+    @arc.activedash.should == ''
+    @arc.disableddash.should == ''
+    @arc.dashoffset.should == '0'
     @arc.fill.should.nil?
     @arc.activefill.should.nil?
     @arc.disabledfill.should.nil?
@@ -76,7 +78,7 @@ describe Tk::Canvas do
     ['black', '#000000'].should.include @arc.outline
     @arc.activeoutline.should.nil?
     @arc.disabledoutline.should.nil?
-    @arc.outlineoffset.should == 0.0
+    @arc.outlineoffset.should == '0,0'
     @arc.outlinestipple.should.nil?
     @arc.activeoutlinestipple.should.nil?
     @arc.disabledoutlinestipple.should.nil?
@@ -85,11 +87,11 @@ describe Tk::Canvas do
     @arc.disabledstipple.should.nil?
     @arc.state.should.nil?
     @arc.tags.should == []
-    @arc.width.should == 1
-    @arc.activewidth.should == 0
-    @arc.disabledwidth.should == 0
-    @arc.extent.should == 90.0
-    @arc.start.should == 0
+    @arc.width.should == '1.0'
+    @arc.activewidth.should == '0.0'
+    @arc.disabledwidth.should == '0.0'
+    @arc.extent.should == 90.0 # :float degrees
+    @arc.start.should == 0.0 # :float degrees
     @arc.style.should == :pieslice
   end
 
@@ -98,10 +100,10 @@ describe Tk::Canvas do
     @poly.id.should == 4
     @poly.canvas.should == @canvas
 
-    @poly.dash.should == 0
-    @poly.activedash.should == 0
-    @poly.disableddash.should == 0
-    @poly.dashoffset.should == 0
+    @poly.dash.should == ''
+    @poly.activedash.should == ''
+    @poly.disableddash.should == ''
+    @poly.dashoffset.should == '0'
     ['black', '#000000'].should.include @poly.fill
     @poly.activefill.should.nil?
     @poly.disabledfill.should.nil?
@@ -109,6 +111,7 @@ describe Tk::Canvas do
     @poly.outline.should.nil?
     @poly.activeoutline.should.nil?
     @poly.disabledoutline.should.nil?
+    @poly.outlineoffset.should == '0,0'
     @poly.outlinestipple.should.nil?
     @poly.activeoutlinestipple.should.nil?
     @poly.disabledoutlinestipple.should.nil?
@@ -117,12 +120,12 @@ describe Tk::Canvas do
     @poly.disabledstipple.should.nil?
     @poly.state.should.nil?
     @poly.tags.should == []
-    @poly.width.should == 1
-    @poly.activewidth.should == 0
-    @poly.disabledwidth.should == 0
+    @poly.width.should == '1.0'
+    @poly.activewidth.should == '0.0'
+    @poly.disabledwidth.should == '0.0'
     @poly.joinstyle.should == :round
-    @poly.smooth.should == false
-    @poly.splinesteps.should == 12
+    @poly.smooth.should == false             # :boolean
+    @poly.splinesteps.should == 12           # :integer
   end
 
   it 'creates a line' do
@@ -130,10 +133,10 @@ describe Tk::Canvas do
     @line.id.should == 5
     @line.canvas.should == @canvas
 
-    @line.dash.should == 0
-    @line.activedash.should == 0
-    @line.disableddash.should == 0
-    @line.dashoffset.should == 0
+    @line.dash.should == ''
+    @line.activedash.should == ''
+    @line.disableddash.should == ''
+    @line.dashoffset.should == '0'
     ['black', '#000000'].should.include @line.fill
     @line.activefill.should.nil?
     @line.disabledfill.should.nil?
@@ -142,15 +145,15 @@ describe Tk::Canvas do
     @line.disabledstipple.should.nil?
     @line.state.should.nil?
     @line.tags.should == []
-    @line.width.should == 1
-    @line.activewidth.should == 0
-    @line.disabledwidth.should == 0
+    @line.width.should == '1.0'
+    @line.activewidth.should == '0.0'
+    @line.disabledwidth.should == '0.0'
     @line.arrow.should == :none
-    @line.arrowshape.should == %w[8 10 3]
+    @line.arrowshape.should == %w[8 10 3]    # :list of screen distances
     @line.capstyle.should == :butt
     @line.joinstyle.should == :round
-    @line.smooth.should == false
-    @line.splinesteps.should == 12
+    @line.smooth.should == false             # :boolean
+    @line.splinesteps.should == 12           # :integer
   end
 
   it 'creates a window' do
@@ -161,10 +164,10 @@ describe Tk::Canvas do
 
     @win.state.should.nil?
     @win.tags.should == []
-    @win.anchor.should == 'center'
-    @win.height.should == 0
-    @win.width.should == 0
-    @win.window.should == entry
+    @win.anchor.should == :center            # :symbol (keyword set)
+    @win.height.should == '0'                # :string (screen distance)
+    @win.width.should == '0'                 # :string (screen distance)
+    @win.window.should == entry              # :pathname -> the Widget
   end
 
   # A freshly built, packed, updated canvas isolated from the shared @canvas so
@@ -314,19 +317,73 @@ describe Tk::Canvas do
     description.value.should == false
   end
 
-  it 'round-trips options via itemconfigure/itemcget' do
+  it 'round-trips options via itemconfigure/itemcget, coerced by the item schema' do
     cv = fresh_canvas
     rect = cv.create_rectangle(0, 0, 10, 10)
     cv.itemconfigure(rect, fill: 'red', width: 3)
-    ['red', '#ff0000'].should.include cv.itemcget(rect, :fill)
-    # The typed accessor coerces the raw "3.0" itemcget value to an Integer.
-    rect.width.should == 3
+    ['red', '#ff0000'].should.include cv.itemcget(rect, :fill) # :color
+    # -width is a lossless screen distance (:string), reported as a float.
+    cv.itemcget(rect, :width).should == '3.0'
+    rect.width.should == '3.0' # typed reader routes through cget
 
-    # Per-item configure stays on the legacy value-returning path (item options
-    # are a later phase): a single-option query extracts the current value from
-    # canvas's string-typed describe-tuple, distinct from the widget-level
-    # configure above which now returns typed OptionDescriptions.
-    ['red', '#ff0000'].should.include cv.itemconfigure(rect, :fill)
+    # itemconfigure now routes through the item's Option schema, so a
+    # single-option query returns that option's coerced OptionDescription
+    # (matching the widget-level configure), not a bare value.
+    description = cv.itemconfigure(rect, :fill)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :fill
+    ['red', '#ff0000'].should.include description.value
+  end
+
+  it 'itemconfigure lists every item option as a coerced OptionDescription' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(0, 0, 10, 10)
+    cv.itemconfigure(rect, fill: 'red', width: 2)
+
+    descriptions = cv.itemconfigure(rect)
+    descriptions.should.be.is_a? Hash
+    ['red', '#ff0000'].should.include descriptions[:fill].value  # :color
+    descriptions[:width].value.should == '2.0'                   # :string
+    descriptions[:state].value.should.be.nil                     # unset :symbol
+    descriptions[:dash].value.should == ''                       # unset :string
+  end
+
+  it 'coerces item options by their declared type across item types' do
+    cv = fresh_canvas
+
+    arc = cv.create_arc(0, 0, 40, 40)
+    cv.itemconfigure(arc, extent: 120, start: 30, style: 'chord')
+    cv.itemcget(arc, :extent).should == 120.0 # :float
+    cv.itemcget(arc, :start).should == 30.0      # :float
+    cv.itemcget(arc, :style).should == :chord    # :symbol
+
+    line = cv.create_line(0, 0, 10, 10, 20, 0)
+    cv.itemconfigure(line, arrow: 'both', smooth: true, splinesteps: 8)
+    cv.itemcget(line, :arrow).should == :both     # :symbol
+    cv.itemcget(line, :smooth).should == true     # :boolean (bezier -> true)
+    cv.itemcget(line, :splinesteps).should == 8   # :integer
+
+    text = cv.create_text(0, 0, text: 'hi')
+    cv.itemconfigure(text, justify: 'right', underline: 1)
+    cv.itemcget(text, :justify).should == :right  # :symbol
+    cv.itemcget(text, :underline).should == 1      # :integer
+
+    button = Tk::Button.new(Tk.root, text: 'x')
+    win = cv.create_window(60, 60, window: button)
+    cv.itemcget(win, :window).should == button     # :pathname -> the Widget
+    cv.itemcget(win, :anchor).should == :center # :symbol
+  end
+
+  it 'itemcget resolves the item schema from a bare tag or id' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(0, 0, 10, 10)
+    cv.addtag_withtag('marker', rect)
+    cv.itemconfigure('marker', fill: 'blue')
+
+    # Passing the raw integer id (not the Item) still coerces by type, because
+    # itemcget resolves the schema through the canvas's `type` query.
+    ['blue', '#0000ff'].should.include cv.itemcget(rect.id, :fill)
+    cv.itemcget(rect.id, :width).should == '1.0'
   end
 
   it 'inserts, indexes and deletes characters in a text item' do

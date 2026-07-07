@@ -57,21 +57,28 @@ module Tk
         window: :pathname
       }.freeze
 
-      def self.create(canvas, type, id)
-        klass = Canvas.const_get(type.to_s.capitalize)
-        klass.new(canvas, id)
-      end
+      class << self
+        # This item type's frozen Option schema (canvas(3tk) item sections),
+        # declared via item_options. nil on the abstract Item base.
+        attr_reader :item_schema
 
-      OPTIONS_CODE = <<~RUBY
-        def %s
-          Cget.type_to_ruby(%p, canvas.itemcget(id, %p))
+        # Declare this item type's Option schema and generate a typed reader per
+        # option. Each reader routes through itemcget, so it coerces the raw Tcl
+        # string by the option's declared type (immune to shimmering). Replaces
+        # the legacy OPTION_MAP lookup as the source of truth for item options.
+        def item_options(types)
+          @item_schema = Option::Schema.new(types: types)
+          types.each_key { |name| define_method(name) { cget(name) } }
         end
-      RUBY
 
-      def self.options(*names)
-        names.each do |name|
-          type = OPTION_MAP.fetch(name)
-          class_eval(format(OPTIONS_CODE, name, type, name), __FILE__, __LINE__)
+        # The Item subclass implementing canvas item +type+ (:rectangle ->
+        # Canvas::Rectangle).
+        def class_for(type)
+          Canvas.const_get(type.to_s.capitalize)
+        end
+
+        def create(canvas, type, id)
+          class_for(type).new(canvas, id)
         end
       end
 

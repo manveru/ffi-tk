@@ -33,8 +33,8 @@ module Tk
     # coordinate list (:list). -height/-width/-xscrollincrement/
     # -yscrollincrement are screen distances (:string, lossless per the
     # standard-set rule). -offset is the stipple origin, a coordinate/keyword
-    # spec (:string). Item-level options stay on the legacy path for a later
-    # phase.
+    # spec (:string). Per-item options carry their own schemas per item type
+    # (see Canvas::Item and its subclasses), consulted by itemcget/itemconfigure.
     classic_options
     widget_options(
       closeenough: :float,
@@ -465,7 +465,9 @@ module Tk
     # If +tag_or_id+ is a tag that refers to more than one item, the first (lowest)
     # such item is used.
     def itemcget(tag_or_id, option)
-      execute(:itemcget, tag_or_id, option.to_tcl_option)
+      schema = item_option_schema(tag_or_id)
+      Option::Coercer.coerce(schema.type_for(option),
+                             execute_string(:itemcget, tag_or_id, option.to_tcl_option))
     end
 
     # This command is similar to the configure widget command except that it
@@ -484,7 +486,17 @@ module Tk
     # create widget command when the item(s) were created; see the sections
     # describing individual item types below for details on the legal options.
     def itemconfigure(tag_or_id, options = None)
-      common_configure([:itemconfigure, tag_or_id], options)
+      Configure.describe(self, [:itemconfigure, tag_or_id],
+                         item_option_schema(tag_or_id), options)
+    end
+
+    # The Option schema for the item named by +tag_or_id+. A Canvas::Item
+    # carries its type's schema directly; a bare tag or id is resolved through
+    # the canvas's own `type` query. Backs the schema-directed coercion of
+    # itemcget and itemconfigure.
+    def item_option_schema(tag_or_id)
+      klass = tag_or_id.is_a?(Item) ? tag_or_id.class : Item.class_for(type(tag_or_id))
+      klass.item_schema
     end
 
     # Move all of the items given by +tag_or_id+ to a new position in the display
