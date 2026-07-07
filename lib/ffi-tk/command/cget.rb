@@ -35,9 +35,17 @@ module Tk
       options.each { |option| map["-#{option}"] = type }
     end.freeze
 
+    # Read one option's value and coerce it to Ruby. When the receiver's class
+    # has a declared Option schema, coercion is type-directed from the raw Tcl
+    # string (immune to shimmering); otherwise the legacy CGET_MAP path runs
+    # (transition rule — removed once every widget has a schema).
     def cget(option)
-      option = option.to_tcl_option
-      Cget.option_to_ruby(option, execute('cget', option))
+      if (schema = self.class.option_schema)
+        Option::Coercer.coerce(schema.type_for(option), execute_string('cget', option.to_tcl_option))
+      else
+        tcl = option.to_tcl_option
+        Cget.option_to_ruby(tcl, execute('cget', tcl))
+      end
     end
 
     module_function

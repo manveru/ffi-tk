@@ -21,7 +21,52 @@ module Tk
     #   text.configure(:width)
     #   text.configure
     def configure(argument = None, hints = {})
-      common_configure([:configure], argument, hints)
+      schema = self.class.option_schema
+      return common_configure([:configure], argument, hints) unless schema
+
+      if argument == None
+        Configure.read_descriptions(self, [:configure], schema)
+      elsif argument.respond_to?(:to_tcl_options)
+        execute_only(:configure, argument.to_tcl_options)
+      elsif argument.respond_to?(:to_tcl_option)
+        Configure.read_descriptions(self, [:configure], schema, argument)
+      else
+        raise ArgumentError, format('Invalid argument: %p', argument)
+      end
+    end
+
+    # Parse Tk's describe-tuple output into OptionDescription(s), coercing the
+    # value and default fields by the schema's declared Option type. Reads raw
+    # Tcl strings (never EvalResult.guess), faithful to Tk's `configure`:
+    #   no option  -> Hash{name => OptionDescription} for every option,
+    #                 INCLUDING synonym (alias) entries;
+    #   one option -> that option's single OptionDescription.
+    def self.read_descriptions(receiver, invocation, schema, option = None)
+      if option == None
+        rows = Option::Coercer.split_list(receiver.execute_string(*invocation))
+        rows.each_with_object({}) do |row, descriptions|
+          description = describe_row(Option::Coercer.split_list(row), schema)
+          descriptions[description.name] = description
+        end
+      else
+        fields = Option::Coercer.split_list(receiver.execute_string(*invocation, option.to_tcl_option))
+        describe_row(fields, schema)
+      end
+    end
+
+    # Turn one describe-tuple, already split into its raw string fields, into an
+    # OptionDescription. Tk reports an alias as the 2-field synonym form
+    # {-alias -canonical}; every other option as the 5-field normal form
+    # {-name dbName dbClass default current}.
+    def self.describe_row(fields, schema)
+      name = Option::Schema.normalize(fields.first)
+      return OptionDescription.new(name, nil, nil, nil, nil, Option::Schema.normalize(fields.last)) if fields.size == 2
+
+      _option, db_name, db_class, default, value = fields
+      type = schema.type_for(name)
+      OptionDescription.new(name, db_name, db_class,
+                            Option::Coercer.coerce(type, default),
+                            Option::Coercer.coerce(type, value), nil)
     end
 
     def self.common(receiver, invocation, argument, hints = {})

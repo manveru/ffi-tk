@@ -24,6 +24,25 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (entry(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -width is a genuine character count (:integer); -show is the display
+    # character (:string); -state is normal/disabled/readonly (:symbol);
+    # -validate is none/focus/focusin/focusout/key/all (:symbol). -vcmd/-invcmd
+    # are Tk's documented synonyms for -validatecommand/-invalidcommand.
+    classic_options
+    widget_options(
+      disabledbackground: :color,
+      disabledforeground: :color,
+      invalidcommand: :command,
+      readonlybackground: :color,
+      show: :string,
+      state: :symbol,
+      validate: :symbol,
+      validatecommand: :command,
+      width: :integer
+    )
+    option_aliases vcmd: :validatecommand, invcmd: :invalidcommand
+
     def self.tk_command
       'entry'
     end

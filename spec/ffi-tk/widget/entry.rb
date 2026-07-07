@@ -5,58 +5,115 @@ require_relative '../../helper'
 describe Tk::Entry do
   entry = Tk::Entry.new
 
-  cget_options = {
-    background: ['systemWindowBody', '#ffffff', '#282828'],
-    bd: [2, 1],
-    bg: ['systemWindowBody', '#ffffff', '#282828'],
-    borderwidth: [2, 1],
-    cursor: ['xterm'],
-    disabledbackground: ['systemWindowBody', '#d9d9d9'],
-    disabledforeground: ['#a3a3a3'],
-    exportselection: [true],
-    fg: ['Black', '#000000', '#ebdbb2'],
-    font: ['TkTextFont'],
-    foreground: ['Black', '#000000', '#ebdbb2'],
-    highlightbackground: ['systemWindowBody', '#d9d9d9'],
-    highlightcolor: ['Black', '#000000'],
-    highlightthickness: [3, 1],
-    insertbackground: ['Black', '#000000'],
-    insertborderwidth: [0],
-    insertofftime: [300],
-    insertontime: [600],
-    insertwidth: [1, 2],
-    invalidcommand: [nil],
-    invcmd: [nil],
-    justify: [:left],
-    readonlybackground: ['systemWindowBody', '#d9d9d9'],
-    relief: [:sunken],
-    selectbackground: ['systemHighlight', '#c3c3c3'],
-    selectborderwidth: [1, 0],
-    selectforeground: [nil, '#000000'],
-    show: [nil],
-    state: [['normal']],
-    takefocus: [false],
-    textvariable: [nil],
-    validate: [:none],
-    validatecommand: [nil],
-    vcmd: [nil],
-    width: [20],
-    xscrollcommand: [nil]
+  # --- cget: set-then-get, exact (the new bar) -----------------------------
+  # Every settable option is set to a concrete value and must read back as that
+  # value coerced by its declared Option type. Set-then-get is deterministic and
+  # platform-free, so the assertions are exact (no acceptable-set hedging).
+  # State/validate lists end on the benign value (:normal/:none) so the widget
+  # is left editable for the behaviour specs below.
+  settable = {
+    justify: %i[left right center],                 # :symbol
+    relief: %i[sunken raised flat],                 # :symbol
+    background: ['#ff0000', '#00ff00'],             # :color   -> String
+    foreground: ['#0000ff', '#123456'],             # :color   -> String
+    disabledbackground: ['#222222'],                # :color   -> String
+    readonlybackground: ['#333333'],                # :color   -> String
+    cursor: %w[xterm hand2],                        # :string
+    borderwidth: %w[4 2],                           # :string  (screen distance)
+    selectborderwidth: ['2'],                       # :string  (screen distance)
+    highlightthickness: ['3'],                      # :string  (screen distance)
+    insertwidth: ['3'],                             # :string  (screen distance)
+    show: ['*', ''],                                # :string
+    width: [10, 30],                                # :integer (character count)
+    insertontime: [500, 250],                       # :integer (milliseconds)
+    state: %i[disabled readonly normal],            # :symbol
+    validate: %i[focus key none]                    # :symbol
   }
 
-  describe 'getting options via cget' do
-    cget_options.each do |key, values|
-      it "returns a member of #{values.inspect} for -#{key}" do
-        values.should.include entry.cget(key)
+  describe 'reads each settable option back exactly (set-then-get)' do
+    settable.each do |option, values|
+      values.each do |value|
+        it "#{option} = #{value.inspect}" do
+          entry.configure(option => value)
+          entry.cget(option).should == value
+        end
       end
     end
   end
 
-  it 'configures a single option' do
-    entry.configure(validate: :focus)
-    entry.cget(:validate).should == :focus
+  it 'coerces :boolean options to true/false, never a string' do
+    entry.configure(exportselection: true)
+    entry.cget(:exportselection).should == true
+    entry.configure(exportselection: false)
+    entry.cget(:exportselection).should == false
+  end
+
+  it 'follows an alias to the canonical value (bg -> background)' do
+    entry.configure(bg: '#0a0b0c')
+    entry.cget(:background).should == '#0a0b0c'
+    entry.cget(:bg).should == '#0a0b0c'
+  end
+
+  # --- cget: unset options follow the empty-value rule ---------------------
+  # These run before the behaviour specs bind a validatecommand, so the command
+  # options are genuinely empty here. nil means "no object bound"; it is never a
+  # flattened empty string, and an empty :string option stays "".
+  describe 'unset options follow the empty-value rule' do
+    it 'textvariable with nothing bound is nil (:variable empty -> nil)' do
+      entry.cget(:textvariable).should.be.nil
+    end
+
+    it 'validatecommand with no command is nil (:command empty -> nil)' do
+      entry.cget(:validatecommand).should.be.nil
+    end
+
+    it 'invalidcommand with no command is nil' do
+      entry.cget(:invalidcommand).should.be.nil
+    end
+
+    it 'xscrollcommand with no command is nil' do
+      entry.cget(:xscrollcommand).should.be.nil
+    end
+
+    it 'takefocus is the empty string, not false (:string empty -> "")' do
+      entry.cget(:takefocus).should == ''
+    end
+  end
+
+  # --- configure: faithful Tk describe semantics ---------------------------
+  it 'configure(option) returns that option\'s OptionDescription' do
     entry.configure(validate: :none)
-    entry.cget(:validate).should == :none
+    description = entry.configure(:validate)
+    description.should.be.is_a? Tk::OptionDescription
+    description.synonym?.should == false
+    description.name.should == :validate
+    description.db_name.should == 'validate'
+    description.db_class.should == 'Validate'
+    description.default.should == :none
+    description.value.should == :none
+  end
+
+  it 'configure(alias) faithfully resolves to the canonical option description, as Tk does' do
+    # Tk resolves a single-option query on a synonym to the canonical option's
+    # full 5-field describe-tuple; the 2-field synonym form appears only in the
+    # bulk listing (asserted below). So this is the -background description, not
+    # a synonym marker -- faithful 1:1 (docs/adr/0001).
+    description = entry.configure(:bg)
+    description.should.be.is_a? Tk::OptionDescription
+    description.synonym?.should == false
+    description.name.should == :background
+    description.db_name.should == 'background'
+  end
+
+  it 'configure (no argument) returns a description per option, synonyms included' do
+    descriptions = entry.configure
+    descriptions.should.be.is_a? Hash
+    descriptions[:background].should.be.is_a? Tk::OptionDescription
+    descriptions[:background].synonym?.should == false
+    descriptions[:bg].synonym?.should == true
+    descriptions[:bg].synonym_for.should == :background
+    descriptions[:vcmd].synonym_for.should == :validatecommand
+    descriptions[:state].value.should == :normal
   end
 
   it 'configures more options at once' do
@@ -69,6 +126,7 @@ describe Tk::Entry do
     entry.cget(:justify).should == :left
   end
 
+  # --- widget behaviour (unchanged by the option-typing work) --------------
   it "returns the entry's string" do
     entry.get.should == ''
   end
@@ -158,8 +216,3 @@ describe Tk::Entry do
     entry.validate.should == false
   end
 end
-
-# puts
-# entry.configure.map{|c| c.first[1..-1] }.each{|k,v|
-#   puts "entry.cget(%-20p).should == %p" % [k.to_sym, entry.cget(k)]
-# }
