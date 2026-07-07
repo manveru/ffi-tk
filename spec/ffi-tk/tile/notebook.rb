@@ -73,7 +73,12 @@ describe Tk::Tile::Notebook do
     nb.add(f2, text: 'first tab').should == true
 
     nb.tab(f2, state: :disabled).should == true
-    nb.tab(f2).should.include 'disabled'
+
+    tab = nb.tab(f2)
+    tab[:state].should == :disabled
+    tab[:text].should == 'first tab'
+    tab[:sticky].should == 'nsew'
+    tab[:underline].should == -1
   end
 
   it 'forgets the specified tab' do

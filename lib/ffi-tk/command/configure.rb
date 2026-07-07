@@ -69,6 +69,43 @@ module Tk
                             Option::Coercer.coerce(type, value), nil)
     end
 
+    # Read a Tk "-option value ..." flat surface (font actual/configure, wm
+    # attributes, tk caret, treeview column/heading/item/tag, notebook tab,
+    # panedwindow pane) and coerce every value by the surface's declared Option
+    # type. Reads the raw Tcl string (never EvalResult.guess), so it is immune
+    # to shimmering:
+    #   bulk (option == None) -> Hash{name => coerced value}, INCLUDING
+    #                            empty-valued options (empty-value rule);
+    #   one option            -> that option's coerced bare value.
+    # The caller places the queried option token into +invocation+ itself, so a
+    # surface whose grammar is not plain "... -option" (font actual's `-- char`)
+    # stays faithful; +option+ only names the type to coerce the single value.
+    def self.read_flat(receiver, invocation, schema, option = None)
+      raw = receiver.execute_string(*invocation)
+      return Option::Coercer.coerce(schema.type_for(option), raw) unless option == None
+
+      Option::Coercer.split_list(raw).each_slice(2).each_with_object({}) do |(name, value), flat|
+        key = Option::Schema.normalize(name)
+        flat[key] = Option::Coercer.coerce(schema.type_for(key), value)
+      end
+    end
+
+    # Dispatch a flat "-opt val" subcommand surface: no argument reads the whole
+    # surface, a Symbol/String reads one option's bare value, an option Hash sets
+    # them. Reads route through read_flat (type-directed coercion); sets stay a
+    # plain execute_only. The value-add over Configure.common is the schema path.
+    def self.flat(receiver, invocation, schema, argument)
+      if argument == None
+        read_flat(receiver, invocation, schema)
+      elsif argument.respond_to?(:to_tcl_options)
+        receiver.execute_only(*invocation, argument.to_tcl_options)
+      elsif argument.respond_to?(:to_tcl_option)
+        read_flat(receiver, invocation + [argument.to_tcl_option], schema, argument)
+      else
+        raise ArgumentError, format('Invalid argument: %p', argument)
+      end
+    end
+
     def self.common(receiver, invocation, argument, hints = {})
       if argument == None
         receiver.execute(*invocation).tcl_options_to_hash(hints)

@@ -21,6 +21,10 @@ module Tk
         width: :string
       )
 
+      # Option schema for the flat `pane` subcommand surface
+      # (ttk_panedwindow(3tk)): -weight is the sole pane option, an integer.
+      PANE_SCHEMA = Option::Schema.new(types: { weight: :integer })
+
       # pathname add subwindow options...
       # Adds a new pane to the window.
       # subwindow must be a direct child of the paned window pathname.
@@ -59,8 +63,8 @@ module Tk
       # If no -option is specified, returns a dictionary of the pane option
       # values. If one -option is specified, returns the value of that option.
       # Otherwise, sets the -options to the corresponding values.
-      def pane(pane, options = {})
-        common_configure([:pane, pane], options)
+      def pane(pane, options = None)
+        Configure.flat(self, [:pane, pane], PANE_SCHEMA, options)
       end
 
       # pathname sashpos index ?newpos?

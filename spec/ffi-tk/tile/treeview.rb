@@ -53,9 +53,9 @@ describe Tk::Tile::Treeview do
     @item0.options.should == {
       text: 'something',
       image: '',
-      values: '',
-      open: 0,
-      tags: ''
+      values: [],
+      open: false,
+      tags: []
     }
   end
 
@@ -64,7 +64,7 @@ describe Tk::Tile::Treeview do
       width: 200,
       minwidth: 20,
       stretch: true,
-      anchor: 'w',
+      anchor: :w,
       id: ''
     }
   end
@@ -95,9 +95,9 @@ describe Tk::Tile::Treeview do
     list.heading('#0').should == {
       text: '',
       image: '',
-      anchor: 'center',
-      command: '',
-      state: ''
+      anchor: :center,
+      command: nil,
+      state: []
     }
   end
 end
@@ -172,8 +172,9 @@ describe 'Tk::Tile::Treeview coverage' do
     tv.tag_configure(:hot, :foreground).should == 'red'
     tv.tag_configure(:hot)[:foreground].should == 'red'
 
-    # An undefined tag yields the full option hash with empty values.
-    tv.tag_configure(:cold)[:foreground].should == ''
+    # An undefined tag yields the full option hash; an empty :color coerces to
+    # nil (no colour bound), per the empty-value rule.
+    tv.tag_configure(:cold)[:foreground].should.nil?
   end
 
   it 'moves an item to a new parent and index' do
@@ -239,9 +240,9 @@ describe 'Tk::Tile::Treeview coverage' do
     tv, (a,) = build(rows: [['a']])
     child = tv.insert(a.id, :end, text: 'child')
 
-    tv.item(a, :open).should == 0
+    tv.item(a, :open).should == false
     tv.see(child)
-    tv.item(a, :open).should == 1
+    tv.item(a, :open).should == true
   end
 
   it 'scrolls via the Scrollable xview/yview mixed into treeview' do

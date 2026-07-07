@@ -37,6 +37,9 @@ describe Tk::WM do
       attrs[:topmost].should == false
       attrs[:zoomed].should == false
       attrs[:fullscreen].should == false
+      # Empty-valued options are included per the empty-value rule; the X11
+      # -type attribute is an empty :list here.
+      attrs[:type].should == []
     end
 
     it 'queries one attribute' do

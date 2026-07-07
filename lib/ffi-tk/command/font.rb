@@ -45,12 +45,19 @@ module Tk
       TclString.new(@font)
     end
 
-    FONT_CONFIGURE_HINTS = {
-      underline: :boolean,
-      overstrike: :boolean,
-      weight: :symbol,
-      slant: :symbol
-    }.freeze
+    # Option schema for the flat `font actual` / `font configure` surfaces
+    # (font(3tk)). -size is an integer (points, or pixels when negative);
+    # -weight (normal|bold) and -slant (roman|italic) are enums (:symbol).
+    OPTION_SCHEMA = Option::Schema.new(
+      types: {
+        family: :string,
+        size: :integer,
+        weight: :symbol,
+        slant: :symbol,
+        underline: :boolean,
+        overstrike: :boolean
+      }
+    )
 
     def self.execute(command, *)
       Tk.execute(:font, command, *)
@@ -74,22 +81,18 @@ module Tk
       option = options.fetch(:option, None)
       char = options.fetch(:char, None)
 
-      args = []
-      args << '-displayof' << window unless window == None
-      args << option.to_tcl_option unless option == None
-      args << '--' << char.to_tcl unless char == None
+      # The option token must precede the `-- char` terminator, so it is placed
+      # in the invocation here rather than appended by read_flat.
+      invocation = [:font, :actual, font]
+      invocation << '-displayof' << window unless window == None
+      invocation << option.to_tcl_option unless option == None
+      invocation << '--' << char.to_tcl unless char == None
 
-      result = execute(:actual, font, *args)
-      # Querying a single -option returns just that value, not an option list.
-      return result unless option == None
-
-      result.tcl_options_to_hash(FONT_CONFIGURE_HINTS)
+      Configure.read_flat(Tk, invocation, OPTION_SCHEMA, option)
     end
 
     def self.configure(fontname, argument = None)
-      Configure.common(
-        self, [:configure, fontname], argument, FONT_CONFIGURE_HINTS
-      )
+      Configure.flat(Tk, [:font, :configure, fontname], OPTION_SCHEMA, argument)
     end
 
     def self.create(fontname, options = None)

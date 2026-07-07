@@ -394,26 +394,21 @@ module Tk
     # not be the same as the value most recently set if the window manager has
     # not yet processed the request or if it does not support the attribute.
     def attributes(window, options = None)
-      if options == None
-        result = Tk.execute(:wm, :attributes, window)
-        result.tcl_options_to_hash(WM_ATTRIBUTES_HINTS)
-      elsif options.respond_to?(:to_tcl_options)
-        Tk.execute_only(:wm, :attributes, window, options.to_tcl_options)
-      elsif options.respond_to?(:to_tcl_option)
-        option = options.to_tcl_option
-        value = Tk.execute(:wm, :attributes, window, options.to_tcl_option)
-        value.tcl_to_ruby(option, WM_ATTRIBUTES_HINTS)
-      else
-        raise ArgumentError
-      end
+      Configure.flat(Tk, [:wm, :attributes, window], ATTRIBUTES_SCHEMA, options)
     end
 
-    WM_ATTRIBUTES_HINTS = {
-      alpha: :float,
-      topmost: :boolean,
-      zoomed: :boolean,
-      fullscreen: :boolean
-    }.freeze
+    # Option schema for the flat `wm attributes` surface (wm(3tk)). -alpha is a
+    # float; -topmost/-zoomed/-fullscreen are booleans; the X11-only -type is a
+    # list of window-type identifiers (empty here, so it coerces to []).
+    ATTRIBUTES_SCHEMA = Option::Schema.new(
+      types: {
+        alpha: :float,
+        topmost: :boolean,
+        zoomed: :boolean,
+        fullscreen: :boolean,
+        type: :list
+      }
+    )
 
     # If name is specified, this command stores name (which should be the name
     # of the host on which the application is executing) in window's

@@ -46,6 +46,38 @@ module Tk
         show: :list
       )
 
+      # Per-surface Option schemas for the column/heading/item/tag subcommands
+      # (ttk_treeview(3tk)). These are queried through their own subcommands, not
+      # widget cget/configure, so they are separate from the widget schema above.
+      # Treeview column -width/-minwidth report pixel counts (:integer), unlike
+      # the classic screen-distance options. The heading subcommand also reports
+      # a dash-less `state {}` (a ttk state spec, hence :list) that the man page
+      # omits. Empty :color/:command/:symbol/:font values coerce to nil.
+      COLUMN_SCHEMA = Option::Schema.new(
+        types: {
+          id: :string, anchor: :symbol, minwidth: :integer,
+          stretch: :boolean, width: :integer
+        }
+      )
+      HEADING_SCHEMA = Option::Schema.new(
+        types: {
+          text: :string, image: :string, anchor: :symbol,
+          command: :command, state: :list
+        }
+      )
+      ITEM_SCHEMA = Option::Schema.new(
+        types: {
+          text: :string, image: :string, values: :list,
+          open: :boolean, tags: :list
+        }
+      )
+      TAG_SCHEMA = Option::Schema.new(
+        types: {
+          text: :string, image: :string, anchor: :symbol,
+          background: :color, foreground: :color, font: :font
+        }
+      )
+
       # Delete all items
       def clear
         delete(*children(nil))
@@ -109,7 +141,7 @@ module Tk
       #
       # Use +column+ '#0' to configure the tree column.
       def column(column, options = None)
-        common_configure([:column, column], options, stretch: :boolean)
+        Configure.flat(self, [:column, column], COLUMN_SCHEMA, options)
       end
 
       # Deletes each of the items in +items+ and all of their descendants.
@@ -153,7 +185,7 @@ module Tk
       # -command script A script to evaluate when the heading label is pressed.
       # Use pathname heading #0 to configure the tree column heading.
       def heading(column, options = None)
-        common_configure([:heading, column], options)
+        Configure.flat(self, [:heading, column], HEADING_SCHEMA, options)
       end
 
       # Returns a description of the specified component under the point given by
@@ -309,7 +341,7 @@ module Tk
       # Otherwise, the item's options are updated with the specified values.
       # See ITEM OPTIONS for the list of available options.
       def item(item, options = None)
-        common_configure([:item, item], options)
+        Configure.flat(self, [:item, item], ITEM_SCHEMA, options)
       end
 
       # Moves item to position index in parent's list of children.
@@ -417,7 +449,7 @@ module Tk
       # settings for tagName.
       # See TAG OPTIONS for the list of available options.
       def tag_configure(tag_name, options = None)
-        common_configure([:tag, :configure, tag_name], options)
+        Configure.flat(self, [:tag, :configure, tag_name], TAG_SCHEMA, options)
       end
 
       # Horizontal (xview/xview_moveto/xview_scroll) and vertical

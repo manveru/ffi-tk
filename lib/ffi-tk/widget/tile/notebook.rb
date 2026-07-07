@@ -26,6 +26,17 @@ module Tk
         width: :string
       )
 
+      # Option schema for the flat `tab` subcommand surface (ttk_notebook(3tk)).
+      # -state (normal|disabled|hidden) and -compound are enums (:symbol);
+      # -sticky is a combination of n/s/e/w characters kept verbatim (:string);
+      # -padding is a screen-distance list; -underline is a character index.
+      TAB_SCHEMA = Option::Schema.new(
+        types: {
+          state: :symbol, sticky: :string, padding: :list,
+          text: :string, image: :string, compound: :symbol, underline: :integer
+        }
+      )
+
       def initialize(parent = Tk.root, options = {})
         super
       end
@@ -45,11 +56,7 @@ module Tk
       # the value of that option. Otherwise, sets the -options
       # to the corresponding values.
       def tab(window, options = None)
-        if options == None
-          execute(:tab, window)
-        else
-          execute_only(:tab, window, options.to_tcl_options)
-        end
+        Configure.flat(self, [:tab, window], TAB_SCHEMA, options)
       end
 
       # Inserts a pane at the specified position. pos is either

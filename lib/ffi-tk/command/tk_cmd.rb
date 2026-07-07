@@ -81,11 +81,17 @@ module Tk
     # window if none is given.
     def caret(window, options = None)
       if options == None
-        Tk.execute(:tk, :caret, window).tcl_options_to_hash
+        Configure.read_flat(Tk, [:tk, :caret, window], CARET_SCHEMA)
       else
         Tk.execute_only(:tk, :caret, window, options.to_tcl_options)
       end
     end
+
+    # Option schema for the flat `tk caret` surface (tk(3tk)): -x/-y are
+    # window-relative coordinates and -height is the caret height, all integers.
+    CARET_SCHEMA = Option::Schema.new(
+      types: { x: :integer, y: :integer, height: :integer }
+    )
 
     # Sets and queries the current scaling factor used by Tk to convert between
     # physical units (for example, points, inches, or millimeters) and pixels.
