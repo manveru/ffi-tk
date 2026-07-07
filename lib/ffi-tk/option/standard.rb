@@ -8,19 +8,28 @@ module Tk
     # are two schemas; a widget opts into exactly one via the DSL.
     #
     # Types are sourced from the Tk 8.6 man pages (options(3tk) for CLASSIC,
-    # ttk_widget(3tk) for TTK). Screen-distance options (borderwidth, padx, ...)
-    # are typed :integer: Tk reports them as pixel counts.
+    # ttk_widget(3tk) for TTK). Screen-distance options (borderwidth, padx,
+    # selectborderwidth, ...) are typed :string, not :integer: a widget built on
+    # the old Tk_ConfigureWidget path reports cget for them as the ORIGINAL
+    # distance string ("2m", "3c", "2i"), while a Tk_SetOptions widget reports a
+    # pixel count -- and it varies per (widget, option), so Label -borderwidth
+    # gives "2m" but Listbox -borderwidth gives "8", and Text -selectborderwidth
+    # gives "2m" but Text -insertwidth gives "8". One shared type must serve
+    # every classic widget losslessly, so it keeps the raw string; a consumer
+    # that wants pixels converts on demand. Genuine integers (an -underline
+    # index, the millisecond options) stay :integer -- they never take a
+    # distance suffix.
     module Standard
       # options(3tk) STANDARD OPTIONS, plus the documented aliases bg/fg/bd.
       CLASSIC = Schema.new(
         types: {
           activebackground: :color,
-          activeborderwidth: :integer,
+          activeborderwidth: :string,
           activeforeground: :color,
           anchor: :symbol,
           background: :color,
           bitmap: :bitmap,
-          borderwidth: :integer,
+          borderwidth: :string,
           compound: :symbol,
           cursor: :string,
           disabledforeground: :color,
@@ -29,23 +38,28 @@ module Tk
           foreground: :color,
           highlightbackground: :color,
           highlightcolor: :color,
-          highlightthickness: :integer,
+          highlightthickness: :string,
+          # An image is referenced by its Tk image name; cget reports "" when
+          # none is bound. Typed :string (the vocabulary has no :image type),
+          # deliberately preserving Tk's "" rather than reshaping it to nil --
+          # faithful to cget, per docs/adr/0001. The nil-means-unbound reading
+          # is a conscious trade, not an oversight.
           image: :string,
           insertbackground: :color,
-          insertborderwidth: :integer,
+          insertborderwidth: :string,
           insertofftime: :integer,
           insertontime: :integer,
-          insertwidth: :integer,
+          insertwidth: :string,
           jump: :boolean,
           justify: :symbol,
           orient: :symbol,
-          padx: :integer,
-          pady: :integer,
+          padx: :string,
+          pady: :string,
           relief: :symbol,
           repeatdelay: :integer,
           repeatinterval: :integer,
           selectbackground: :color,
-          selectborderwidth: :integer,
+          selectborderwidth: :string,
           selectforeground: :color,
           setgrid: :boolean,
           takefocus: :string,
@@ -53,7 +67,7 @@ module Tk
           textvariable: :variable,
           troughcolor: :color,
           underline: :integer,
-          wraplength: :integer,
+          wraplength: :string,
           xscrollcommand: :command,
           yscrollcommand: :command
         },
