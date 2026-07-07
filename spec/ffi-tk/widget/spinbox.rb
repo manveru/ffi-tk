@@ -11,6 +11,41 @@ describe Tk::Spinbox do
     instance.tk_parent.should == Tk.root
   end
 
+  it 'coerces its numeric and keyword options by declared type' do
+    sb = Tk::Spinbox.new
+    sb.configure(from: 1.5, to: 9.5, increment: 0.5, width: 8, buttonuprelief: :flat)
+
+    sb.cget(:from).should == 1.5
+    sb.cget(:to).should == 9.5
+    sb.cget(:increment).should == 0.5
+    # -width is a character count (:integer), not a screen distance.
+    sb.cget(:width).should == 8
+    sb.cget(:buttonuprelief).should == :flat
+    sb.cget(:state).should == :normal
+  end
+
+  it 'reports -wrap as a genuine boolean, not a keyword symbol' do
+    sb = Tk::Spinbox.new(wrap: true)
+    sb.cget(:wrap).should == true
+    sb.configure(wrap: false)
+    sb.cget(:wrap).should == false
+  end
+
+  it 'reads -values back as a list of strings' do
+    sb = Tk::Spinbox.new(values: %w[red green blue])
+    sb.cget(:values).should == %w[red green blue]
+    # empty by default -> the empty instance of :list, never nil.
+    Tk::Spinbox.new.cget(:values).should == []
+  end
+
+  it 'follows the vcmd/invcmd aliases to their canonical commands (empty -> nil)' do
+    sb = Tk::Spinbox.new
+    sb.cget(:validatecommand).should.be.nil
+    sb.cget(:vcmd).should.be.nil
+    sb.cget(:invalidcommand).should.be.nil
+    sb.cget(:invcmd).should.be.nil
+  end
+
   it 'round-trips a value through set/get and steps with the spin buttons' do
     sb = Tk::Spinbox.new(from: 1, to: 10, increment: 1)
 

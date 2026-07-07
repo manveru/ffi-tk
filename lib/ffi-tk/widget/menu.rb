@@ -7,6 +7,22 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (menu(3tk) widget-level WIDGET-SPECIFIC + options(3tk)
+    # STANDARD). Only the menu-as-a-whole options are declared here; per-entry
+    # options (add/entryconfigure) are typed separately in a later phase.
+    # -tearoff is a :boolean; -type is a keyword (menubar/tearoff/normal) and
+    # -postcommand/-tearoffcommand are scripts (:command); -selectcolor a
+    # :color; -title a :string.
+    classic_options
+    widget_options(
+      postcommand: :command,
+      selectcolor: :color,
+      tearoff: :boolean,
+      tearoffcommand: :command,
+      title: :string,
+      type: :symbol
+    )
+
     def self.tk_command
       'menu'
     end

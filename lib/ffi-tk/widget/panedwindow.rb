@@ -7,6 +7,31 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (panedwindow(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -height/-width and the -handle*/-sash*/-proxyborderwidth dimensions are
+    # screen distances (:string), kept as their raw string per the standard-set
+    # screen-distance rule. -opaqueresize/-showhandle are :boolean;
+    # -proxyrelief/-sashrelief are keyword sets (:symbol); -sashcursor a cursor
+    # spec (:string); -proxybackground a :color. These are widget-level options
+    # only; per-pane options (paneconfigure) are typed separately in a later
+    # phase.
+    classic_options
+    widget_options(
+      handlepad: :string,
+      handlesize: :string,
+      height: :string,
+      opaqueresize: :boolean,
+      proxybackground: :color,
+      proxyborderwidth: :string,
+      proxyrelief: :symbol,
+      sashcursor: :string,
+      sashpad: :string,
+      sashrelief: :symbol,
+      sashwidth: :string,
+      showhandle: :boolean,
+      width: :string
+    )
+
     def self.tk_command
       'panedwindow'
     end

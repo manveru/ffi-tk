@@ -7,6 +7,36 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (spinbox(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -from/-to/-increment are real values (:float); -width is a character count
+    # (:integer). -wrap is a genuine :boolean (unlike text's :symbol -wrap).
+    # -values is a proper Tcl list (:list); -format is a printf spec (:string).
+    # -button*relief and -state/-validate are keyword sets (:symbol);
+    # -buttoncursor is a cursor spec (:string). -vcmd/-invcmd are Tk's documented
+    # synonyms for -validatecommand/-invalidcommand, like entry.
+    classic_options
+    widget_options(
+      buttonbackground: :color,
+      buttoncursor: :string,
+      buttondownrelief: :symbol,
+      buttonuprelief: :symbol,
+      command: :command,
+      disabledbackground: :color,
+      format: :string,
+      from: :float,
+      increment: :float,
+      invalidcommand: :command,
+      readonlybackground: :color,
+      state: :symbol,
+      to: :float,
+      validate: :symbol,
+      validatecommand: :command,
+      values: :list,
+      width: :integer,
+      wrap: :boolean
+    )
+    option_aliases vcmd: :validatecommand, invcmd: :invalidcommand
+
     def self.tk_command
       'spinbox'
     end

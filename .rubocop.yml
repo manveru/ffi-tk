@@ -163,6 +163,7 @@ Metrics/ClassLength:
     - 'lib/ffi-tk/ffi/tcl/eval_result.rb'
     - 'lib/ffi-tk/widget/canvas.rb'
     - 'lib/ffi-tk/widget/canvas/item.rb'
+    - 'lib/ffi-tk/widget/spinbox.rb'
     - 'lib/ffi-tk/widget/text.rb'
     - 'lib/ffi-tk/widget/tile/treeview.rb'
 Metrics/ModuleLength:

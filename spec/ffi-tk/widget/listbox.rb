@@ -11,6 +11,27 @@ describe Tk::Listbox do
     instance.tk_parent.should == Tk.root
   end
 
+  it 'coerces its options by declared type (set-then-get)' do
+    list = Tk::Listbox.new
+    list.configure(height: 12, width: 30, activestyle: :none, selectmode: :extended, state: :disabled)
+
+    # -height/-width are line/character counts, not screen distances.
+    list.cget(:height).should == 12
+    list.cget(:width).should == 30
+    list.cget(:activestyle).should == :none
+    list.cget(:selectmode).should == :extended
+    list.cget(:state).should == :disabled
+  end
+
+  it 'binds -listvariable to a Tk::Variable, nil when unset' do
+    list = Tk::Listbox.new
+    list.cget(:listvariable).should.be.nil
+
+    var = Tk::Variable.new('listbox_items')
+    list.configure(listvariable: var)
+    list.cget(:listvariable).should.be.kind_of(Tk::Variable)
+  end
+
   it 'Make sure we get contents of the list' do
     list = Tk::Listbox.new
     list.insert 0, 'first line'

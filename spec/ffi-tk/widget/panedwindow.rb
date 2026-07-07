@@ -11,6 +11,40 @@ describe Tk::PanedWindow do
     instance.tk_parent.should == Tk.root
   end
 
+  it 'coerces its widget-level options by declared type' do
+    pw = Tk::PanedWindow.new(orient: :vertical)
+    pw.configure(opaqueresize: false, showhandle: true, sashrelief: :ridge, proxyrelief: :groove)
+
+    pw.cget(:opaqueresize).should == false
+    pw.cget(:showhandle).should == true
+    pw.cget(:sashrelief).should == :ridge
+    pw.cget(:proxyrelief).should == :groove
+    pw.cget(:orient).should == :vertical
+  end
+
+  it 'keeps screen-distance options as their raw string' do
+    pw = Tk::PanedWindow.new
+    pw.configure(sashwidth: 6, handlesize: 10, width: 200, height: 150)
+
+    # screen distances are kept lossless as strings, not converted to pixels.
+    pw.cget(:sashwidth).should == '6'
+    pw.cget(:handlesize).should == '10'
+    pw.cget(:width).should == '200'
+    pw.cget(:height).should == '150'
+  end
+
+  # The widget-level configure now reports Tk's full describe-tuple as a typed
+  # OptionDescription (docs/adr/0001), not a bare value; per-pane paneconfigure
+  # (below) still answers with the current value via the legacy path.
+  it 'configure(option) returns that option\'s OptionDescription' do
+    pw = Tk::PanedWindow.new
+    pw.configure(showhandle: true)
+    description = pw.configure(:showhandle)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :showhandle
+    description.value.should == true
+  end
+
   it 'adds panes, round-trips the pane list, and forgets them' do
     pw = Tk::PanedWindow.new(orient: :horizontal)
     left = Tk::Frame.new(pw)

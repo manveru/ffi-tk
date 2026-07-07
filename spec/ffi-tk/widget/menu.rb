@@ -11,6 +11,30 @@ describe Tk::Menu do
     instance.tk_parent.should == Tk.root
   end
 
+  it 'coerces its widget-level options by declared type' do
+    menu = Tk::Menu.new(tearoff: false)
+    menu.cget(:tearoff).should == false
+    menu.configure(tearoff: true)
+    menu.cget(:tearoff).should == true
+
+    # -type is fixed at creation; it is a keyword set (:symbol).
+    menu.cget(:type).should == :normal
+
+    menu.configure(selectcolor: '#ff0000', title: 'File')
+    menu.cget(:selectcolor).should == '#ff0000'
+    menu.cget(:title).should == 'File'
+    # a script option with nothing bound is nil, never a flattened "".
+    menu.cget(:postcommand).should.be.nil
+  end
+
+  it 'configure(option) returns that option\'s OptionDescription' do
+    menu = Tk::Menu.new(tearoff: false)
+    description = menu.configure(:tearoff)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :tearoff
+    description.value.should == false
+  end
+
   it 'adds entries of each type and reports their type back' do
     menu = Tk::Menu.new(tearoff: false)
     sub = Tk::Menu.new(menu)

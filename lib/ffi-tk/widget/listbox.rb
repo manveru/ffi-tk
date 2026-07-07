@@ -8,6 +8,20 @@ module Tk
     include Configure
     include Cget
 
+    # Option schema (listbox(3tk) WIDGET-SPECIFIC + options(3tk) STANDARD).
+    # -height/-width are line/character counts (:integer), not screen distances.
+    # -activestyle/-selectmode/-state are keyword sets (:symbol); -listvariable
+    # names the global holding the element list (:variable).
+    classic_options
+    widget_options(
+      activestyle: :symbol,
+      height: :integer,
+      listvariable: :variable,
+      selectmode: :symbol,
+      state: :symbol,
+      width: :integer
+    )
+
     def self.tk_command
       'listbox'
     end
