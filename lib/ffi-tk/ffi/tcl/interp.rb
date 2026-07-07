@@ -44,37 +44,33 @@ module FFI
       # Tcl_GetStringFromObj.
       def ruby_to_tcl_obj(ruby_obj)
         case ruby_obj
-        when nil
-          Tcl.new_string_obj('', 0)
-        when true
-          Tcl.new_boolean_obj(1)
-        when false
-          Tcl.new_boolean_obj(0)
-        when ::String
-          Tcl.new_string_obj(ruby_obj, ruby_obj.bytesize)
-        when ::Symbol
-          string = ruby_obj.to_s
-          Tcl.new_string_obj(string, string.bytesize)
-        when ::Integer
-          Tcl.new_wide_int_obj(ruby_obj)
-        when ::Float
-          Tcl.new_double_obj(ruby_obj)
-        when ::Array
-          elements = ruby_obj.map { |element| ruby_to_tcl_obj(element) }
-          pointer = ::FFI::MemoryPointer.new(:pointer, elements.size)
-          pointer.write_array_of_pointer(elements)
-          Tcl.new_list_obj(elements.size, pointer)
-        when Exception
-          string = [ruby_obj.message, *ruby_obj.backtrace].join("\n")
-          Tcl.new_string_obj(string, string.bytesize)
+        when nil then Tcl.new_string_obj('', 0)
+        when true then Tcl.new_boolean_obj(1)
+        when false then Tcl.new_boolean_obj(0)
+        when ::String then new_string_obj(ruby_obj)
+        when ::Symbol then new_string_obj(ruby_obj.to_s)
+        when ::Integer then Tcl.new_wide_int_obj(ruby_obj)
+        when ::Float then Tcl.new_double_obj(ruby_obj)
+        when ::Array then new_list_obj(ruby_obj)
+        when Exception then new_string_obj([ruby_obj.message, *ruby_obj.backtrace].join("\n"))
         else
           unless ruby_obj.respond_to?(:to_tcl)
             raise ArgumentError, format("Don't know how to set %p automatically", ruby_obj)
           end
 
-          string = ruby_obj.to_tcl.to_s
-          Tcl.new_string_obj(string, string.bytesize)
+          new_string_obj(ruby_obj.to_tcl.to_s)
         end
+      end
+
+      def new_string_obj(string)
+        Tcl.new_string_obj(string, string.bytesize)
+      end
+
+      def new_list_obj(array)
+        elements = array.map { |element| ruby_to_tcl_obj(element) }
+        pointer = ::FFI::MemoryPointer.new(:pointer, elements.size)
+        pointer.write_array_of_pointer(elements)
+        Tcl.new_list_obj(elements.size, pointer)
       end
 
       def wait_for_event(seconds = 0.0)
