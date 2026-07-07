@@ -23,6 +23,41 @@ module Tk
       type: :symbol
     )
 
+    # Option schema for the per-entry describe surface (menu(3tk) add /
+    # entryconfigure / entrycget). Types are sourced from the Tk 8.6 menu man
+    # page; the reported option set varies by entry type (a cascade adds -menu,
+    # a checkbutton adds -onvalue/-offvalue/-variable, ...), so every entry
+    # option across all types is declared here to cover any entry's describe
+    # list. -columnbreak/-hidemargin/-indicatoron are booleans; -compound/-state
+    # keyword sets (:symbol); -image/-selectimage/-menu are name strings.
+    ENTRY_SCHEMA = Option::Schema.new(
+      types: {
+        activebackground: :color,
+        activeforeground: :color,
+        accelerator: :string,
+        background: :color,
+        bitmap: :bitmap,
+        columnbreak: :boolean,
+        command: :command,
+        compound: :symbol,
+        font: :font,
+        foreground: :color,
+        hidemargin: :boolean,
+        image: :string,
+        indicatoron: :boolean,
+        label: :string,
+        menu: :string,
+        offvalue: :string,
+        onvalue: :string,
+        selectcolor: :color,
+        selectimage: :string,
+        state: :symbol,
+        underline: :integer,
+        value: :string,
+        variable: :variable
+      }
+    )
+
     def self.tk_command
       'menu'
     end
@@ -169,7 +204,7 @@ module Tk
       if options == None
         execute(:add, type)
       else
-        execute(:add, type, option_hash_to_tcl(options))
+        execute(:add, type, option_hash_to_tcl(options, ENTRY_SCHEMA))
       end
     end
 
@@ -195,7 +230,10 @@ module Tk
     # by index.
     # Option may have any of the values accepted by the add widget command.
     def entrycget(index, option)
-      execute(:entrycget, index, option.to_tcl_option)
+      Option::Coercer.coerce(
+        ENTRY_SCHEMA.type_for(option),
+        execute_string(:entrycget, index, option.to_tcl_option)
+      )
     end
 
     # This command is similar to the configure command, except that it applies
@@ -208,7 +246,7 @@ module Tk
     # options for entry index (see Tk_ConfigureInfo for information on the
     # format of this list).
     def entryconfigure(index, options = None)
-      common_configure([:entryconfigure, index], options)
+      Configure.describe(self, [:entryconfigure, index], ENTRY_SCHEMA, options)
     end
 
     # Returns the numerical index corresponding to index, or none if index was
@@ -227,7 +265,7 @@ module Tk
       if options == None
         execute(:insert, index, type)
       else
-        execute(:insert, index, type, option_hash_to_tcl(options))
+        execute(:insert, index, type, option_hash_to_tcl(options, ENTRY_SCHEMA))
       end
     end
 

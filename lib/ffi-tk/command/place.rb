@@ -14,6 +14,26 @@ module Tk
   # example, the slave has a fixed width and height but is centered inside the
   # master.
   module Place
+    # Option schema for the `place configure` describe surface (place(3tk)).
+    # -x/-y/-width/-height are screen distances kept lossless as :string; the
+    # -rel* options are :float; -anchor/-bordermode are keyword sets (:symbol);
+    # -in names the master window (:string).
+    CONFIGURE_SCHEMA = Option::Schema.new(
+      types: {
+        anchor: :symbol,
+        bordermode: :symbol,
+        height: :string,
+        width: :string,
+        x: :string,
+        y: :string,
+        relheight: :float,
+        relwidth: :float,
+        relx: :float,
+        rely: :float,
+        in: :string
+      }
+    )
+
     # Arrange for the placer to manage the geometry of a +window+.
     # The remaining arguments consist of a hash that specifies the way in which
     # +window+'s geometry is managed.
@@ -34,7 +54,7 @@ module Tk
     # option(s) to have the given value(s); in this case the command returns
     # nil.
     def self.configure(window, options = None)
-      Configure.common(Tk, [:place, :configure, window], options)
+      Configure.describe(Tk, [:place, :configure, window], CONFIGURE_SCHEMA, options)
     end
 
     def self.forget(window)

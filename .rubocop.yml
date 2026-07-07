@@ -172,6 +172,10 @@ Metrics/ModuleLength:
     - 'lib/ffi-tk/command/wm.rb'
     - 'lib/ffi-tk/ffi/tcl/eval_result.rb'
     - 'lib/ffi-tk/tk.rb'
+    # Configure is the central dispatch + describe/flat coercion hub every
+    # cget/configure surface routes through; it grows with the option-typing
+    # architecture by design (see docs/adr/0001), like the wide wrappers above.
+    - 'lib/ffi-tk/command/configure.rb'
 Metrics/BlockLength:
   Exclude:
     - 'tasks/**/*'

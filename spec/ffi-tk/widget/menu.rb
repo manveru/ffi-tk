@@ -53,15 +53,41 @@ describe Tk::Menu do
     tcl_eq(menu.type(4), 'cascade').should == true
   end
 
-  it 'round-trips entry options through entrycget/entryconfigure' do
+  it 'round-trips entry options through entrycget/entryconfigure, coerced by type' do
     menu = Tk::Menu.new(tearoff: false)
     menu.add(:command, label: 'Save', accelerator: 'Ctrl+S')
 
     menu.entrycget(0, :label).should == 'Save'
     menu.entrycget(0, :accelerator).should == 'Ctrl+S'
+    # -columnbreak is a :boolean, coerced from Tk's "0"/"1" to false/true.
+    menu.entrycget(0, :columnbreak).should == false
+    # -underline is an :integer.
+    menu.entrycget(0, :underline).should == -1
 
     menu.entryconfigure(0, label: 'Store')
     menu.entrycget(0, :label).should == 'Store'
+  end
+
+  it 'entryconfigure(option) returns that entry option\'s OptionDescription' do
+    menu = Tk::Menu.new(tearoff: false)
+    menu.add(:command, label: 'Save')
+
+    description = menu.entryconfigure(0, :label)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :label
+    description.value.should == 'Save'
+  end
+
+  it 'entryconfigure lists the entry\'s options as coerced OptionDescriptions' do
+    menu = Tk::Menu.new(tearoff: false)
+    menu.add(:command, label: 'Save')
+
+    descriptions = menu.entryconfigure(0)
+    descriptions.should.be.is_a? Hash
+    descriptions[:label].should.be.is_a? Tk::OptionDescription
+    descriptions[:label].value.should == 'Save'
+    # a script option with nothing bound is nil, never a flattened "".
+    descriptions[:command].value.should.be.nil
   end
 
   it 'inserts an entry before an existing one' do

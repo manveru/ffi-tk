@@ -24,14 +24,18 @@ module Tk
       schema = self.class.option_schema
       return common_configure([:configure], argument, hints) unless schema
 
-      if argument == None
-        Configure.read_descriptions(self, [:configure], schema)
-      elsif argument.respond_to?(:to_tcl_options)
-        execute_only(:configure, argument.to_tcl_options)
-      elsif argument.respond_to?(:to_tcl_option)
-        Configure.read_descriptions(self, [:configure], schema, argument)
-      else
-        raise ArgumentError, format('Invalid argument: %p', argument)
+      # The widget-level configure is itself a describe-tuple surface.
+      Configure.describe(self, [:configure], schema, argument)
+    end
+
+    # Build the Tcl option hash for a menu entry-creation subcommand (menu
+    # add/insert), registering a Ruby block as a Tcl command for any option the
+    # +schema+ types :command. Moved here from Cget so it consults an Option
+    # schema (the menu-entry schema) rather than the legacy global CGET_MAP.
+    def option_hash_to_tcl(hash, schema)
+      hash.to_h do |key, value|
+        value = register_command(key, &value) if schema.type_for(key) == :command
+        [key.to_tcl_option, value]
       end
     end
 
@@ -84,9 +88,26 @@ module Tk
       raw = receiver.execute_string(*invocation)
       return Option::Coercer.coerce(schema.type_for(option), raw) unless option == None
 
-      Option::Coercer.split_list(raw).each_slice(2).each_with_object({}) do |(name, value), flat|
+      Option::Coercer.split_list(raw).each_slice(2).with_object({}) do |(name, value), flat|
         key = Option::Schema.normalize(name)
         flat[key] = Option::Coercer.coerce(schema.type_for(key), value)
+      end
+    end
+
+    # Dispatch a describe-tuple "-opt val" subcommand surface (listbox item,
+    # menu entry, panedwindow pane, place): no argument reads every option's
+    # OptionDescription, a Symbol/String reads one option's OptionDescription,
+    # an option Hash sets them. Reads route through read_descriptions
+    # (type-directed coercion of value/default); sets stay a plain execute_only.
+    def self.describe(receiver, invocation, schema, argument)
+      if argument == None
+        read_descriptions(receiver, invocation, schema)
+      elsif argument.respond_to?(:to_tcl_options)
+        receiver.execute_only(*invocation, argument.to_tcl_options)
+      elsif argument.respond_to?(:to_tcl_option)
+        read_descriptions(receiver, invocation, schema, argument)
+      else
+        raise ArgumentError, format('Invalid argument: %p', argument)
       end
     end
 

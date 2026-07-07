@@ -95,21 +95,5 @@ module Tk
         end
       list.map(&:to_s)
     end
-
-    def option_hash_to_tcl(hash)
-      result = {}
-
-      hash.each do |key, value|
-        case CGET_MAP[option = key.to_tcl_option]
-        when :command
-          command = register_command(key, &value)
-          result[option] = command
-        else
-          result[option] = value
-        end
-      end
-
-      result
-    end
   end
 end

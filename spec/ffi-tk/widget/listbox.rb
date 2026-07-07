@@ -79,13 +79,38 @@ describe Tk::Listbox do
     tcl_eq(list.index(:active), 2).should == true
   end
 
-  it 'round-trips item options through itemcget/itemconfigure' do
+  it 'round-trips item colors through itemcget/itemconfigure, coerced by type' do
     list = Tk::Listbox.new
     list.insert(:end, 'a')
 
-    list.itemcget(0, :background).should.nil?
-    list.itemconfigure(0, background: 'red')
+    # an unset item colour is nil (empty-value rule), never a flattened "".
+    list.itemcget(0, :background).should.be.nil
+    list.itemconfigure(0, background: 'red', selectforeground: 'blue')
     list.itemcget(0, :background).should == 'red'
+    list.itemcget(0, :selectforeground).should == 'blue'
+    # -bg follows its alias to -background.
+    list.itemcget(0, :bg).should == 'red'
+  end
+
+  it 'itemconfigure(option) returns that item option\'s OptionDescription' do
+    list = Tk::Listbox.new
+    list.insert(:end, 'a')
+    list.itemconfigure(0, background: 'red')
+
+    description = list.itemconfigure(0, :background)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :background
+    description.value.should == 'red'
+  end
+
+  it 'itemconfigure lists every item option, synonyms included' do
+    list = Tk::Listbox.new
+    list.insert(:end, 'a')
+
+    descriptions = list.itemconfigure(0)
+    descriptions.should.be.is_a? Hash
+    descriptions.keys.sort.should == %i[background bg fg foreground selectbackground selectforeground]
+    descriptions[:bg].synonym_for.should == :background
   end
 
   it 'reports the nearest element and a mapped element bbox' do

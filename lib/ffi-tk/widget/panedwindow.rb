@@ -32,6 +32,26 @@ module Tk
       width: :string
     )
 
+    # Option schema for the per-pane describe surface (panedwindow(3tk)
+    # paneconfigure / panecget). -height/-width/-minsize/-padx/-pady are screen
+    # distances kept lossless as :string (see Standard's screen-distance note);
+    # -after/-before name a window (:string); -hide is a :boolean; -sticky a
+    # side string; -stretch a keyword set (:symbol).
+    PANE_SCHEMA = Option::Schema.new(
+      types: {
+        after: :string,
+        before: :string,
+        height: :string,
+        hide: :boolean,
+        minsize: :string,
+        padx: :string,
+        pady: :string,
+        sticky: :string,
+        stretch: :symbol,
+        width: :string
+      }
+    )
+
     def self.tk_command
       'panedwindow'
     end
@@ -113,7 +133,10 @@ module Tk
     # Query a management option for window.
     # Option may be any value allowed by the paneconfigure subcommand.
     def panecget(window, option)
-      execute(:panecget, window, option.to_tcl_option)
+      Option::Coercer.coerce(
+        PANE_SCHEMA.type_for(option),
+        execute_string(:panecget, window, option.to_tcl_option)
+      )
     end
 
     # Query or modify the management options for +window+.
@@ -211,7 +234,7 @@ module Tk
     #     width may later be adjusted by the movement of sashes in the
     #     panedwindow. Size may be any value accepted by Tk_GetPixels.
     def paneconfigure(window, options = None)
-      common_configure([:paneconfigure, window], options)
+      Configure.describe(self, [:paneconfigure, window], PANE_SCHEMA, options)
     end
 
     # Returns an ordered list of the widgets managed by +window+.

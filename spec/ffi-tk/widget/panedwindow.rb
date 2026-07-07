@@ -33,9 +33,9 @@ describe Tk::PanedWindow do
     pw.cget(:height).should == '150'
   end
 
-  # The widget-level configure now reports Tk's full describe-tuple as a typed
-  # OptionDescription (docs/adr/0001), not a bare value; per-pane paneconfigure
-  # (below) still answers with the current value via the legacy path.
+  # Both the widget-level configure and per-pane paneconfigure (below) report
+  # Tk's full describe-tuple as a typed OptionDescription (docs/adr/0001), not a
+  # bare value.
   it 'configure(option) returns that option\'s OptionDescription' do
     pw = Tk::PanedWindow.new
     pw.configure(showhandle: true)
@@ -59,21 +59,39 @@ describe Tk::PanedWindow do
     tcl_eq(pw.panes, [left.tk_pathname]).should == true
   end
 
-  it 'configures panes and reads the options back' do
+  it 'configures panes and reads the options back, coerced by type' do
     pw = Tk::PanedWindow.new(orient: :horizontal)
     pane = Tk::Frame.new(pw)
     pane.configure(width: 100, height: 100)
     pw.add(pane)
 
-    pw.paneconfigure(pane, minsize: 30, sticky: 'nsew')
+    pw.paneconfigure(pane, minsize: 30, sticky: 'nsew', hide: false)
 
-    tcl_eq(pw.panecget(pane, :minsize), '30').should == true
+    # -minsize is a lossless screen-distance :string; -hide a :boolean,
+    # -stretch a :symbol keyword set.
+    pw.panecget(pane, :minsize).should == '30'
     # Tk normalises the sticky string; assert on the set of sides, not the order.
-    pw.panecget(pane, :sticky).to_s.chars.sort.should == %w[e n s w]
+    pw.panecget(pane, :sticky).chars.sort.should == %w[e n s w]
+    pw.panecget(pane, :hide).should == false
+    pw.panecget(pane, :stretch).should == :last
 
-    # Single-option query returns the current value (from the describe-tuple).
-    tcl_eq(pw.paneconfigure(pane, :minsize), '30').should == true
-    pw.paneconfigure(pane, :sticky).to_s.chars.sort.should == %w[e n s w]
+    # Single-option query now returns the full describe-tuple as an
+    # OptionDescription, not a bare value.
+    description = pw.paneconfigure(pane, :minsize)
+    description.should.be.is_a? Tk::OptionDescription
+    description.name.should == :minsize
+    description.value.should == '30'
+  end
+
+  it 'paneconfigure lists every pane option as a coerced OptionDescription' do
+    pw = Tk::PanedWindow.new(orient: :horizontal)
+    pane = Tk::Frame.new(pw)
+    pw.add(pane)
+
+    descriptions = pw.paneconfigure(pane)
+    descriptions.should.be.is_a? Hash
+    descriptions[:stretch].value.should == :last
+    descriptions[:hide].value.should == false
   end
 
   it 'places sashes and proxies and identifies components when mapped' do

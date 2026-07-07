@@ -22,6 +22,22 @@ module Tk
       width: :integer
     )
 
+    # Option schema for the per-item describe surface (listbox(3tk)
+    # itemconfigure / itemcget). All four item options are colours; Tk also
+    # reports the -bg/-fg synonyms, so they are declared as aliases.
+    ITEM_SCHEMA = Option::Schema.new(
+      types: {
+        background: :color,
+        foreground: :color,
+        selectbackground: :color,
+        selectforeground: :color
+      },
+      aliases: {
+        bg: :background,
+        fg: :foreground
+      }
+    )
+
     def self.tk_command
       'listbox'
     end
@@ -113,7 +129,10 @@ module Tk
     # option. Option may have any of the values accepted by the listbox
     # itemconfigure command.
     def itemcget(index, option)
-      execute(:itemcget, index, option.to_tcl_option)
+      Option::Coercer.coerce(
+        ITEM_SCHEMA.type_for(option),
+        execute_string(:itemcget, index, option.to_tcl_option)
+      )
     end
 
     # Query or modify the configuration options of an item in the listbox.
@@ -139,7 +158,7 @@ module Tk
     # displaying the item while it is selected.
     # It may have any of the forms accepted by Tk_GetColor.
     def itemconfigure(index, options = None)
-      common_configure([:itemconfigure, index], options)
+      Configure.describe(self, [:itemconfigure, index], ITEM_SCHEMA, options)
     end
 
     # Given a y-coordinate within the listbox window, this command returns the
