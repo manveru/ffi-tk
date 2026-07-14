@@ -43,7 +43,7 @@ end
 makeThemeControl(Tk.root).pack side: 'left'
 
 BUTTONS = %w[open new save].freeze
-TOOLBARS = []
+TOOLBARS = [] # rubocop:disable Style/MutableConstant -- accumulated below (TOOLBARS << ...)
 CHECKBOXES = %w[bold italic].freeze
 ICON = {}.freeze
 

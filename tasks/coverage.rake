@@ -38,7 +38,8 @@ task :coverage do
 
   merged = {}
   Dir['coverage/raw/*.dump'].each do |dump|
-    Marshal.load(File.binread(dump)).each do |path, cov|
+    # Coverage's own raw dumps, written by our spec processes above; trusted input.
+    Marshal.load(File.binread(dump)).each do |path, cov| # rubocop:disable Security/MarshalLoad
       lines = cov[:lines] || cov['lines']
       acc = (merged[path] ||= [])
       lines.each_with_index do |hit, i|
@@ -54,20 +55,21 @@ task :coverage do
   result = SimpleCov::Result.new(coverage)
 
   rows = result.files
-                .select { |f| f.filename.include?('/lib/') }
-                .map { |f| [f.filename.sub("#{Dir.pwd}/", ''), f.covered_percent, f.lines_of_code] }
-                .sort_by { |_rel, pct, _loc| pct }
+               .select { |f| f.filename.include?('/lib/') }
+               .map { |f| [f.filename.sub("#{Dir.pwd}/", ''), f.covered_percent, f.lines_of_code] }
+               .sort_by { |_rel, pct, _loc| pct }
 
   puts
-  puts format('%-52<file>s %7<cov>s %6<loc>s', file: 'FILE', cov: 'COV%', loc: 'LOC')
+  header_fmt = '%-52s %7s %6s'
+  puts format(header_fmt, 'FILE', 'COV%', 'LOC')
   puts('-' * 68)
-  rows.each { |rel, pct, loc| puts format('%-52<f>s %6.1<p>f%% %6<l>d', f: rel, p: pct, l: loc) }
+  rows.each { |rel, pct, loc| puts format('%-52s %6.1f%% %6d', rel, pct, loc) }
   puts('-' * 68)
-  puts format('overall line coverage: %.2<p>f%%  (%<n>d lib files, %<z>d at 0%%)',
-              p: result.covered_percent, n: rows.size, z: rows.count { |_r, pct, _l| pct.zero? })
+  puts format('overall line coverage: %.2f%%  (%d lib files, %d at 0%%)',
+              result.covered_percent, rows.size, rows.count { |_r, pct, _l| pct.zero? })
 
   SimpleCov::Formatter::HTMLFormatter.new.format(result)
-  puts "html report: coverage/index.html"
+  puts 'html report: coverage/index.html'
 
   unless failed.empty?
     warn "\n#{failed.size} spec file(s) failed under coverage run:"

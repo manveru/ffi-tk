@@ -595,7 +595,7 @@ describe Tk::Canvas do
   it 'scans and scrolls the view via scan_mark/scan_dragto and x/yview setters' do
     cv = fresh_canvas
     cv.configure(scrollregion: [0, 0, 2000, 2000])
-    (0..40).each { |i| cv.create_rectangle(i * 60, i * 60, i * 60 + 10, i * 60 + 10) }
+    (0..40).each { |i| cv.create_rectangle(i * 60, i * 60, (i * 60) + 10, (i * 60) + 10) }
 
     lambda do
       cv.scan_mark(0, 0)

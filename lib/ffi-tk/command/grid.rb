@@ -11,8 +11,8 @@ module Tk
     # grid configure, either a window name (any value starting with .) or one of
     # the characters x or ^ (see the RELATIVE PLACEMENT section below), then the
     # command is processed in the same way as grid configure.
-    def self.slave(*arguments)
-      configure(*arguments)
+    def self.slave(*)
+      configure(*)
     end
 
     # The anchor value controls how to place the grid within the master when no

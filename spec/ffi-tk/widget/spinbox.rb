@@ -132,7 +132,10 @@ describe Tk::Spinbox do
   it 'drives the scan without raising' do
     sb = Tk::Spinbox.new(from: 0, to: 100)
     sb.pack
-    -> { sb.scan_mark(0); sb.scan_dragto(10) }.should.not.raise
+    lambda {
+      sb.scan_mark(0)
+      sb.scan_dragto(10)
+    }.should.not.raise
   end
 
   it 'adjusts the selection and reports the selected element' do
@@ -144,7 +147,7 @@ describe Tk::Spinbox do
   end
 
   it 'scrolls the horizontal view via xview, xview_moveto and xview_scroll' do
-    sb = Tk::Spinbox.new(values: [('x' * 200)])
+    sb = Tk::Spinbox.new(values: ['x' * 200])
     sb.pack
     lambda do
       sb.xview(50)
