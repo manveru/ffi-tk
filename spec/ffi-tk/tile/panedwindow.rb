@@ -27,6 +27,47 @@ describe Tk::Tile::PanedWindow do
     pw.pane(child, :weight).should == 3
   end
 
+  it 'inserts a pane at a position and reads its option back' do
+    pw = Tk::Tile::PanedWindow.new(orient: :horizontal)
+    child = Tk::Tile::Frame.new(pw)
+    pw.insert(:end, child, weight: 2)
+    pw.pane(child, :weight).should == 2
+  end
+
+  it 'forgets a managed pane' do
+    pw = Tk::Tile::PanedWindow.new(orient: :horizontal)
+    child = Tk::Tile::Frame.new(pw)
+    pw.add(child, weight: 1)
+    pw.pane(child, :weight).should == 1 # managed
+
+    pw.forget(child)
+    -> { pw.pane(child, :weight) }.should.raise(RuntimeError) # no longer managed
+  end
+
+  it 'queries and sets a sash position' do
+    pw = Tk::Tile::PanedWindow.new(orient: :horizontal)
+    pw.pack
+    left = Tk::Tile::Frame.new(pw, width: 100, height: 100)
+    right = Tk::Tile::Frame.new(pw, width: 100, height: 100)
+    pw.add(left, weight: 1)
+    pw.add(right, weight: 1)
+    next unless skip_unless_mapped(pw)
+
+    pw.sashpos(0).should.be.is_a? Integer
+    pw.sashpos(0, 60).should == 60
+  end
+
+  it 'identifies the sash under a point (empty off a sash)' do
+    pw = Tk::Tile::PanedWindow.new(orient: :horizontal)
+    pw.pack
+    pw.add(Tk::Tile::Frame.new(pw, width: 100, height: 100), weight: 1)
+    pw.add(Tk::Tile::Frame.new(pw, width: 100, height: 100), weight: 1)
+    next unless skip_unless_mapped(pw)
+
+    # a corner is never over a sash
+    pw.identify(0, 0).to_s.should == ''
+  end
+
   it 'does not expose classic-only subcommands ttk::panedwindow lacks' do
     pw = Tk::Tile::PanedWindow.new
     pw.respond_to?(:panecget).should == false
