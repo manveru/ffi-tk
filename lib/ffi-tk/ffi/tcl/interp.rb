@@ -37,6 +37,30 @@ module FFI
         Tcl.set_obj_result(self, ruby_to_tcl_obj(ruby_obj))
       end
 
+      # Set the result from a callback's return value. Tk ignores the result of
+      # an ordinary -command/bind script, so a value with no Tcl representation
+      # (an arbitrary object returned as the block's tail expression) is
+      # best-effort: dropped to an empty result rather than raised as a spurious
+      # Tcl error. Convertible values still round-trip for the callbacks
+      # (validation, scrollbar) that legitimately return a result.
+      def callback_result=(ruby_obj)
+        self.obj_result = tcl_convertible?(ruby_obj) ? ruby_obj : nil
+      end
+
+      # Whether ruby_to_tcl_obj can build a Tcl_Obj for this value. The type
+      # list mirrors the dispatch in ruby_to_tcl_obj and must stay in sync with
+      # it; anything else (an arbitrary object with no #to_tcl) has no Tcl
+      # representation. Lets callers with a discardable value (a callback whose
+      # return is coincidental) skip it rather than force a conversion error.
+      def tcl_convertible?(ruby_obj)
+        case ruby_obj
+        when nil, true, false, ::String, ::Symbol, ::Integer, ::Float, ::Array, Exception
+          true
+        else
+          ruby_obj.respond_to?(:to_tcl)
+        end
+      end
+
       # Convert a Ruby value into a freshly allocated Tcl_Obj pointer.
       # Tcl_SetObjResult takes ownership of the returned obj, so every branch
       # must yield a real Tcl_Obj — passing a Ruby String here would make Tcl

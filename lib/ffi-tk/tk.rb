@@ -153,7 +153,7 @@ module Tk
     catch :callback_break do
       catch :callback_continue do
         result = handle_callback(id, *args)
-        FFI::Tcl::Interp.new(interp).obj_result = result
+        FFI::Tcl::Interp.new(interp).callback_result = result
 
         return OK
       end

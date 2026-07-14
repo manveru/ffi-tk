@@ -43,6 +43,17 @@ describe 'Ruby callback results' do
     callback_result(false).should == 0
   end
 
+  # A Tk -command / bind block's return value is coincidental: Tk ignores it
+  # for ordinary commands. So a block whose tail expression is an arbitrary Ruby
+  # object (a dialog, a Thread from a spawn helper) must NOT be forced through
+  # ruby_to_tcl_obj and blow up the callback with a spurious Tcl error. It is
+  # treated as no result.
+  it 'ignores an inconvertible callback return value instead of erroring' do
+    inconvertible = Object.new
+    -> { callback_result(inconvertible) }.should.not.raise
+    callback_result(inconvertible).should.nil?
+  end
+
   it 'raises the exception message through the Tcl error path' do
     id, command = Tk.register_proc(proc { raise 'boom' })
     -> { Tk.interp.eval(command) }.should.raise(RuntimeError)
