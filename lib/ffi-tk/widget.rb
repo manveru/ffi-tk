@@ -18,6 +18,7 @@ module Tk
     include Pack
     include Grab
     include Selection
+    include Bell
 
     attr_reader :tk_parent, :tk_pathname
 

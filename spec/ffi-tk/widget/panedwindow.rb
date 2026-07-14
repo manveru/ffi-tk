@@ -59,6 +59,30 @@ describe Tk::PanedWindow do
     tcl_eq(pw.panes, [left.tk_pathname]).should == true
   end
 
+  it 'adds a pane with management options in one call' do
+    pw = Tk::PanedWindow.new(orient: :horizontal)
+    pane = Tk::Frame.new(pw)
+    pane.configure(width: 100, height: 100)
+
+    pw.add(pane, minsize: 40)
+    pw.panecget(pane, :minsize).should == '40'
+  end
+
+  it 'records a sash position with sash_mark and moves it with sash_dragto' do
+    pw = Tk::PanedWindow.new(orient: :horizontal)
+    pw.pack
+    left = Tk::Frame.new(pw, width: 100, height: 100)
+    right = Tk::Frame.new(pw, width: 100, height: 100)
+    pw.add(left, right)
+    next unless skip_unless_mapped(pw)
+
+    start = pw.sash_coord(0).first
+    pw.sash_mark(0, start, 5)
+    pw.sash_dragto(0, start + 30, 5)
+    Tk.execute('update')
+    pw.sash_coord(0).first.should > start
+  end
+
   it 'configures panes and reads the options back, coerced by type' do
     pw = Tk::PanedWindow.new(orient: :horizontal)
     pane = Tk::Frame.new(pw)

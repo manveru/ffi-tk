@@ -16,4 +16,8 @@ describe Tk::Bell do
   it 'accepts an explicit displayof' do
     Tk::Bell.bell(displayof: '.').should == true
   end
+
+  it 'rings on the widget itself through the Widget#bell delegator' do
+    Tk::Button.new('.', text: 'ring').bell.should == true
+  end
 end

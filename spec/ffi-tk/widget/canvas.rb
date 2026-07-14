@@ -564,6 +564,44 @@ describe Tk::Canvas do
     # sel.last follows the adjusted end; the selection still belongs to the item.
     cv.select_item.should == text.id
   end
+
+  it 'tags matching items with addtag and finds them by tag' do
+    cv = fresh_canvas
+    a = cv.create_rectangle(0, 0, 10, 10)
+    cv.create_rectangle(100, 100, 110, 110)
+
+    # tag every item enclosed by a region that only covers the first rectangle
+    cv.addtag('inside', :enclosed, -1, -1, 20, 20)
+    cv.find(:withtag, 'inside').should == [a.id]
+  end
+
+  it 'queries an item/tag binding with the no-script form of #bind' do
+    cv = fresh_canvas
+    cv.create_rectangle(0, 0, 10, 10, tags: 'r')
+
+    # no binding yet -> the list form is empty
+    cv.bind('r').to_a.should == []
+
+    cv.bind('r', '<Button-1>') { |_e| }
+    cv.bind('r', '<Button-1>').to_s.should =~ /RubyFFI::event/
+  end
+
+  it 'scans and scrolls the view via scan_mark/scan_dragto and x/yview setters' do
+    cv = fresh_canvas
+    cv.configure(scrollregion: [0, 0, 2000, 2000])
+    (0..40).each { |i| cv.create_rectangle(i * 60, i * 60, i * 60 + 10, i * 60 + 10) }
+
+    lambda do
+      cv.scan_mark(0, 0)
+      cv.scan_dragto(5, 5)
+      cv.xview_moveto(0.5)
+      cv.xview_scroll(1, :units)
+      cv.yview_moveto(0.5)
+      cv.yview_scroll(1, :units)
+    end.should.not.raise
+    cv.xview[0].should > 0.0
+    cv.yview[0].should > 0.0
+  end
 end
 
 # %w[ ].each{|name| puts "@line.%s.should == nil" % [name.delete(':,')] }

@@ -82,7 +82,9 @@ module Tk
     # of the values that may be supplied for the type argument to image
     # create).
     def types
-      Tk.execute(:image, :types).to_a(&:to_sym)
+      # execute already returns a plain Array here, and Array#to_a ignores the
+      # block -- map explicitly so this matches #type and yields symbols.
+      Tk.execute(:image, :types).to_a.map(&:to_sym)
     end
   end
 end

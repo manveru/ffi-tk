@@ -17,4 +17,17 @@ describe Tk::RadioButton do
     value.get.should == 'chosen'
     rb.destroy
   end
+
+  it 'selects and deselects through the variable, and flashes without raising' do
+    value = Tk::Variable.new('radiobutton_select_value')
+    rb = Tk::RadioButton.new(variable: value, value: 'on')
+    rb.pack
+
+    rb.select
+    value.get.should == 'on'
+    rb.deselect
+    value.get.to_s.should == '' # deselect empties the variable (empty -> nil)
+    -> { rb.flash }.should.not.raise
+    rb.destroy
+  end
 end

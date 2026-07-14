@@ -52,4 +52,28 @@ describe Tk::Image do
     Image.height('::img::sized').should == 30
     Image.delete('::img::sized')
   end
+
+  it 'reports an image type as a symbol' do
+    photo = Image.create('photo')
+    Image.type(photo).should == :photo
+    Image.delete(photo)
+  end
+
+  it 'lists the valid image types as symbols (matching #type)' do
+    types = Image.types
+    types.should.be.is_a? Array
+    types.should.include :photo
+    types.should.include :bitmap
+    types.all? { |t| t.is_a?(Symbol) }.should == true
+  end
+
+  it 'reports whether an image is in use by a widget' do
+    photo = Image.create('photo', width: 8, height: 8)
+    Image.inuse(photo).should == false
+    label = Tk::Label.new('.', image: photo)
+    label.pack
+    Image.inuse(photo).should == true
+    label.destroy
+    Image.delete(photo)
+  end
 end

@@ -39,6 +39,21 @@ describe Tk::CheckButton do
     cb.destroy
   end
 
+  it 'flips the variable via #toggle and flashes without raising' do
+    value = Tk::Variable.new('checkbutton_toggle_value')
+    cb = Tk::CheckButton.new(variable: value)
+    cb.pack
+
+    value.to_boolean.should == false
+    cb.toggle
+    value.to_boolean.should == true
+    cb.toggle
+    value.to_boolean.should == false
+
+    -> { cb.flash }.should.not.raise
+    cb.destroy
+  end
+
   it 'assigns a command block on initialize' do
     toggled = false
     value = Tk::Variable.new('checkbutton_value')

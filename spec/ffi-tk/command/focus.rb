@@ -60,4 +60,13 @@ describe Tk::Focus do
     # lastfor reports a real window within the same toplevel as +first+.
     [first.tk_pathname, second.tk_pathname].should.include(Tk::Focus.focus(first, :lastfor))
   end
+
+  it 'rejects an unknown focus option' do
+    entry = Tk::Entry.new('.')
+    -> { Tk::Focus.focus(entry, :bogus) }.should.raise(ArgumentError)
+  end
+
+  it 'switches to the implicit follows-mouse focus model' do
+    -> { Tk::Focus.follows_mouse }.should.not.raise
+  end
 end

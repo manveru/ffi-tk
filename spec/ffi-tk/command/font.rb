@@ -153,4 +153,16 @@ describe Tk::Font do
     font.configure[:size].should == 10
     font.configure[:family].should == 'DejaVu Sans'
   end
+
+  it 'rejects a font spec that is neither a string nor a hash' do
+    -> { Tk::Font.new(42) }.should.raise(ArgumentError)
+  end
+
+  it 'exposes actual_hash and renders the font name via to_tcl' do
+    font = Tk::Font.new(family: 'DejaVu Sans', size: 11)
+    font.actual_hash[:family].should == 'DejaVu Sans'
+    font.actual_hash[:size].should == 11
+    # to_tcl carries the underlying named-font token
+    font.to_tcl.to_s.should =~ /\Afont\d+\z/
+  end
 end
