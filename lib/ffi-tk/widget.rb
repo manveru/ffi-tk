@@ -16,6 +16,8 @@ module Tk
     include Bind
     include Destroy
     include Pack
+    include Grab
+    include Selection
 
     attr_reader :tk_parent, :tk_pathname
 

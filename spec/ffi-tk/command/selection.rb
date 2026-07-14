@@ -43,4 +43,22 @@ describe Tk::Selection do
     Tk::Selection.get.should == 'HANDLED-BY-RUBY'
     fired.should == true
   end
+
+  # Widget now includes Selection, so a widget can drive the X-selection through
+  # instance delegators that forward self as the window. A Label is used because
+  # it does not override selection_clear with widget-selection semantics.
+  describe 'Widget#selection_* delegators forward self' do
+    it 'claims, handles, reads and clears the selection through the widget' do
+      label = Tk::Label.new('.', text: 'holder')
+
+      label.selection_own({})
+      Tk::Selection.own.should == label.tk_pathname
+
+      label.selection_handle({}) { |_offset, _max| 'FROM-LABEL' }
+      label.selection_get.should == 'FROM-LABEL'
+
+      label.selection_clear
+      Tk::Selection.own.should.be.nil
+    end
+  end
 end

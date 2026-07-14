@@ -40,4 +40,25 @@ describe Tk::Grab do
     Tk::Grab.release(frame)
     Tk::Grab.current(frame).should == ''
   end
+
+  # The instance delegators (Widget includes Grab) forward self as the window.
+  # Only ever exercise the LOCAL forms; a global grab would lock the display.
+  describe 'Widget#grab_* delegators forward self' do
+    it 'grab_set_local / grab_current / grab_release round-trip' do
+      next unless skip_unless_mapped(frame)
+
+      frame.grab_current.should == ''
+      frame.grab_set_local
+      frame.grab_current.should == frame.tk_pathname
+      frame.grab_release
+      frame.grab_current.should == ''
+    end
+
+    it 'grab_local sets a local grab through the widget' do
+      next unless skip_unless_mapped(frame)
+
+      frame.grab_local
+      frame.grab_current.should == frame.tk_pathname
+    end
+  end
 end
