@@ -1,3 +1,1514 @@
+[20af097 | 2026-07-14 12:44:57 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Cover ttk::panedwindow forget/insert/identify/sashpos
+
+    Round-trip specs for the themed panedwindow subcommands that had no
+    coverage: insert (with a pane option), forget (pane no longer managed),
+    sashpos (query and set, mapped), and identify (empty off a sash). No new
+    bugs. Coverage 96.25% -> 96.37%; suite 869 specs / 2461 requirements, 0
+    failures.
+
+[a02f67d | 2026-07-14 12:42:22 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Cover treeview/tile/vars/button helpers; fix two wrapper bugs
+
+    Bugs fixed:
+    - Treeview#children (set form) splatted the new children as separate
+      trailing arguments (`children item c1 c2`), but ttk::treeview wants
+      them as a single Tcl list (`children item {c1 c2}`) -- the old form
+      raised "wrong # args". Now passes the flattened array as one arg.
+    - Tk::Tile.style raised NoMethodError on its first call: tile.rb
+      delegated to a nonexistent Tk::Tile::Style.style, and only a second
+      call worked (by which point referencing Style had autoloaded
+      style.rb, whose duplicate definition silently overrode the broken
+      one). The naming helper is now defined once, inline in tile.rb, with
+      the duplicate removed from style.rb.
+    
+    New specs: Treeview clear / children-setter / state / Item
+    insert+children+see; Tk::Tile style/set_theme/grid (new spec file);
+    tkvars library= and text_redraw; Button#flash; Canvas Item#inspect;
+    WM iconphoto= setters and protocol re-registration (proc release).
+    
+    Coverage 95.79% -> 96.25%; suite 865 specs / 2455 requirements, 0
+    failures.
+
+[be7243e | 2026-07-14 12:33:27 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Cover image/scale/font/panedwindow/canvas helpers; fix Image.types
+
+    Continues the coverage-driven pass over reachable helper methods with
+    round-trip assertions.
+    
+    Bug fixed:
+    - Image.types returned Tcl strings, not symbols, because execute yields
+      a plain Array there and Array#to_a silently drops the block passed to
+      `.to_a(&:to_sym)`. Now maps explicitly, matching Image.type's :photo.
+    
+    Also wired Bell into Widget (like Grab/Selection last commit): the
+    Widget#bell delegator was dead code (no widget included Bell); no name
+    collisions.
+    
+    New specs: Image type/types/inuse; Focus bad-option raise and
+    follows_mouse; Tk.set_palette (both forms, new spec file); Scale
+    set/get/coords/identify; RadioButton select/deselect/flash; CheckButton
+    toggle/flash; Font init-raise/actual_hash/to_tcl; classic PanedWindow
+    add-with-options and sash_mark/sash_dragto; Canvas addtag/find, the
+    no-script #bind query form, and scan/xview/yview scroll setters.
+    
+    Coverage 94.76% -> 95.79%; suite 852 specs / 2431 requirements, 0
+    failures.
+
+[6dd374e | 2026-07-14 12:24:28 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Cover winfo main-window branches and callback break/continue
+
+    - Winfo: call atom/atomname/interps/pathname/containing as module
+      methods with no window, exercising the default-main-window branch
+      (the instance delegators always pass self, so it was never hit).
+    - Callback: register procs that call Tk.callback_break /
+      callback_continue and eval them; tcl_callback turns the catch into a
+      Tcl BREAK/CONTINUE return code, observable as the "outside of a loop"
+      error at top level. Covers callback_break/continue and the
+      tcl_callback break/continue arms.
+    
+    The tcl_event break/continue/error arms need real X event dispatch,
+    which hangs headlessly, so they remain an intentional gap. Coverage
+    94.47% -> 94.76%.
+
+[b979913 | 2026-07-14 12:18:02 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Cover clipboard/place/pack/bindtags/variable/spinbox/listbox/menu helpers
+
+    Round-trip specs over the remaining never-executed delegator and helper
+    call sites, exercised against the real interpreter:
+    
+    - Clipboard: clipboard_* widget delegators + Clipboard.set shortcut
+    - Place: place_configure/info/slaves/forget delegators
+    - Pack: pack_slaves and pack_propagate delegators
+    - Bindtags: Widget#bindtags query/rewrite; BindTag#bind/unbind/to_tcl
+    - Variable: to_i/to_f/to_boolean and the string-valued <=> (documents
+      that comparison is by Tcl string value, not numeric)
+    - Spinbox: scan, selection_adjust/element, xview family
+    - Listbox: value=/clear and scan/see
+    - Menu: insert (no-options), xposition/yposition, postcascade, clone
+    
+    No new bugs in this batch. Coverage 93.27% -> 94.47%; suite 827 specs /
+    2384 requirements, 0 failures.
+
+[a41efda | 2026-07-14 12:11:13 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Mix Grab and Selection into Widget; cover the delegators
+
+    The grab_* and selection_* instance delegators (which forward self as
+    the target window) were dead code: no widget included Grab or
+    Selection, so `widget.grab_set_local` / `widget.selection_own` raised
+    NoMethodError. Only the module functions were reachable.
+    
+    Widget now includes both, matching the Ruby tk gem idiom. Grab has no
+    name collisions. Selection's selection_clear is still overridden by the
+    widget-selection versions on Entry/Spinbox/Listbox (those win as
+    directly-defined class methods); plain widgets get the X-selection
+    form. Full suite stays green, so the private module_function copies
+    injected by include (clear/get/own/...) collide with nothing.
+    
+    Specs exercise the local grab delegators (grab_set_local/grab_local/
+    grab_current/grab_release -- never the global forms, which lock the
+    display) and the selection delegators via a Label
+    (own/handle/get/clear round-trip).
+
+[8e502c7 | 2026-07-14 12:02:33 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Cover untested wrapper paths; fix Item#bind and tk_appname
+
+    A coverage-driven pass over never-executed wrapper call sites
+    (90.57% -> 93.00% line coverage) exercising delegators and helper
+    methods against the real interpreter with round-trip assertions.
+    
+    Three real bugs surfaced and fixed en route:
+    
+    - Canvas#bind interpolated tag_or_id raw via %s in the custom-script
+      branch, so binding through Canvas::Item#bind sent the item's struct
+      dump instead of its numeric canvas id ("wrong # args"). Now uses
+      to_tcl, matching the query branch.
+    - TkCmd#tk_appname (getter) passed self as the new name, silently
+      renaming the interpreter to the widget path instead of querying.
+    - TkCmd#tk_appname= passed two args to the one-arg appname (which has
+      no window form), raising ArgumentError. `tk appname` is
+      interpreter-global; both delegators now forward correctly.
+    
+    New specs: Entry value/cursor/xview helpers; Canvas::Item bbox/bind/
+    raise/lower/scale/dchars/icursor/index/focus/select_*; Widget#grid_*
+    delegators; tk appname/scaling/inactive/useinputmethods/
+    windowingsystem (incl. -displayof branches); WM manage/forget, state
+    setter, iconphoto(_default), iconmask set, wm_stackorder; Text debug/
+    edit_modified/image_names/rsearch/window_create/copy/cut/paste and the
+    cursor-motion position helpers.
+    
+    WM.iconbitmap_default is documented as X11-untestable (its -default
+    flag is Windows-only). Full suite: 806 specs / 2338 requirements, 0
+    failures.
+
+[26f7ced | 2026-07-14 11:43:21 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Make coverage near-free: raw Coverage dumps, merge once
+
+    The coverage run took ~24s longer than `rake bacon` (36s) even after clearing
+    the stale resultset. Cause: each of the ~72 spec processes ran SimpleCov's full
+    at_exit result-processing and merged into a shared resultset file that grew as
+    the run progressed (O(n^2)). Measured: Ruby's stdlib Coverage adds no
+    detectable per-process overhead (0.080s vs 0.087s bare load), so the entire
+    delta was SimpleCov machinery, not the coverage instrumentation itself.
+    
+    Each spec process now tracks with Coverage.start(lines: true) and dumps its raw
+    result to coverage/raw/<pid>.dump. tasks/coverage.rake unions the dumps and
+    does a single SimpleCov pass (add_not_loaded_files reproduces track_files 0%
+    files; add_filter drops specs), preserving the exact report and HTML.
+    
+    Result: identical numbers (90.57%, 3092/3414, 107 files, 1 at 0%), full run
+    down from ~61s to ~39s -- the coverage delta over `rake bacon` is now ~2s.
+
+[79db884 | 2026-07-14 11:33:53 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Clear coverage resultset before each run
+
+    SimpleCov merges every process's result into coverage/.resultset.json and
+    keeps prior runs' entries for merge_timeout (24h, set in spec/helper.rb).
+    Nothing cleared it between runs (CLEAN.include('') was a no-op globbing the
+    empty string), so the file accumulated 500+ command_names and grew to ~97MB.
+    Every one of the ~72 spec processes then re-parsed and rewrote it at exit:
+    measured 1.56s/process against the bloated file vs 0.22s against a fresh one,
+    ~95s of pure waste per run and growing.
+    
+    rm the coverage dir at the start of the task, and fix the CLEAN glob to point
+    at coverage/. Run time is now a stable ~61s (down from ~2.5min and climbing);
+    resultset holds 72 entries / 14MB as intended.
+
+[6d23f15 | 2026-07-14 11:25:05 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix heap overflow in EvalResult.to_dict search cursor
+
+    Tcl_DictObjFirst fills a full Tcl_DictSearch struct (24 bytes on LP64), but
+    to_dict allocated a bare MemoryPointer(:pointer) of 8 bytes, so Tcl wrote 16
+    bytes past the buffer into adjacent heap on every dict->Hash conversion. The
+    corruption was silent (results stayed correct), which is why no spec caught it.
+    
+    Add a properly-sized TclDictSearch FFI struct (FFI computes size/alignment per
+    platform) and allocate it in to_dict.
+
+[c4a9837 | 2026-07-14 11:18:43 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix low-severity wrapper issues and tag-rebind crash
+
+    Continues the untested-wrapper cleanup with the low-severity findings, and
+    fixes a medium bug uncovered while doing so.
+    
+    Rebind crash (medium): re-binding a text or canvas tag raised ArgumentError
+    because unregister_event called Event::Handler.unregister(id) — but that
+    method takes (tag, sequence) and is keyed for top-level `bind`, not the ids
+    returned by register_custom. Add Handler.unregister_block(id) to release a
+    callback from the store by id; text/canvas #unregister_event now use it, and
+    canvas #bind's cleanup is wired up (was commented-out dead code).
+    
+    Low-severity:
+    - pack.propagate: default None + return the query result (mirrors Grid.propagate;
+      the old default `true` made the query form unreachable)
+    - winfo.pathname: -displayo -> -displayof (previously only worked via Tcl's
+      option-prefix matching)
+    - choose_color: return nil on cancel, matching its docstring and siblings
+    - eval_result#to_sym?: drop the redundant double .to_sym
+    - ObjType#to_i: return the struct address (pointer.to_i), not the name field
+    
+    Left open: Selection.own's Hash branch (own({command: ...})) needs a window
+    argument and command-quoting rework with ambiguous intended semantics; flagged
+    rather than guessed. Full suite: 766 specs / 2250 requirements, 0 failures.
+
+[33f5614 | 2026-07-14 11:08:19 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix bugs in never-executed Tk command wrappers
+
+    A coverage-driven hunt (88.88% line coverage, ~145 never-run Tk.execute
+    call sites) surfaced defects hiding in untested wrapper branches, starting
+    with the reported `Tk.exeucte` typo and missing Tk::Image.width. Each fix
+    below lands with a RED->GREEN spec that reproduces the bug and closes the
+    coverage gap.
+    
+    - image: fix `exeucte` typo, add Image.width, correct height/width docstrings
+    - text#tag_bind: query used Tk.execute (top-level) -> invalid command "tag";
+      use bare execute; unregister_event deleted by id not name
+    - text#scan_dargto -> scan_dragto
+    - pack#pack_configure: serialize options via to_tcl_options (was raw Hash)
+    - grid.slave: delegate to configure (dropped literal `slave` that prefix-
+      matched `slaves` and silently ran a query instead of placing)
+    - tk useinputmethods: guard the query form (truthy None forced it on)
+    - wm#iconwindow: swap execute/execute_only so the getter returns the path
+    - tile/treeview#tag_bind: register the real ::RubyFFI::event trampoline
+    - tile/panedwindow: undef classic sash_/proxy_/panecget/paneconfigure that
+      ttk::panedwindow does not support
+    - option_menu: derive a unique variable per pathname (was one shared global)
+    - eval_result.to_window: return the path string (was a `p` debug stub)
+    - interp#wait_for_event: extract testable #tcl_time with corrected us math
+      (was busy-polling ~1000x too fast); canvas#yview: pin Float return
+
+[e5e16e9 | 2026-07-07 22:19:50 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix frozen-array mutation in kroc_demo_small example; file broken examples
+
+[4e72681 | 2026-07-07 22:00:34 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Extract helpers from ruby_to_tcl_obj to clear Metrics offenses
+
+[22310ba | 2026-07-07 20:25:34 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix correctable rubocop offenses in specs
+
+[7e6acb1 | 2026-07-07 20:25:34 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Record option-typing design context and ADR 0001
+
+[99c0e59 | 2026-07-07 19:47:35 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Address review backlog: faithful option types and comment fixes
+
+    - canvas line/polygon -smooth: :boolean -> :string. -smooth is quad-state
+      (boolean OR smoothing-method name); :boolean flattened the enabled 'raw'
+      method to false, inverting the truth. Now reads back faithfully.
+    - text embedded-window -create: :string -> :command, matching every other
+      script option (an unset -create reads back nil, not "").
+    - Document why the set-only/write-only window-naming options stay :string:
+      menu entry -menu (not cget-able), panedwindow -after/-before (always read
+      empty), place -in (kept consistent with Place.info's own string parser).
+    - Fix inaccurate man-page comments (polygon -outlineoffset, canvas text
+      -angle are both documented) and the line -smooth comment.
+    - text spec: order the multi-value set-then-get options to end on their
+      defaults so the shared widget is left in its default state.
+    
+    Specs updated for the new smooth/create semantics (no new spec files;
+    +2 requirements).
+
+[d3955dc | 2026-07-07 19:47:25 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Delete legacy cget/configure machinery and hints (Phase E)
+
+    Every widget now carries an Option schema, so the transition-rule fallbacks
+    are dead: drop Cget::OPTIONS_BY_TYPE/CGET_MAP/option_to_ruby/type_to_ruby/
+    list_to_ruby, Configure.common and common_configure, the hints params, the
+    Array#tcl_options_to_hash / coerce_tcl_value / Integer#tcl_to_ruby /
+    Float#tcl_to_ruby core extensions, and Canvas::Item::OPTION_MAP. cget and
+    configure now route unconditionally through the Schema+Coercer path.
+    
+    Route Tile::Progressbar#value/#phase through cget (the declared :float/
+    :integer schema) instead of a hand-coerced execute(:cget).to_f/.to_i, so
+    every cget read goes through Coercer.
+
+[6157992 | 2026-07-07 19:15:46 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Route canvas item surfaces through per-type Option schemas (Phase C)
+
+[0751ce3 | 2026-07-07 18:52:47 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Route text tag/image/window surfaces through Option schemas (Phase C)
+
+    Give the text widget's per-tag (tag configure/tag cget), embedded-image
+    (image configure/image cget) and embedded-window (window configure/window
+    cget) describe surfaces each a frozen Option::Schema and route them through
+    Configure.describe + Option::Coercer, so every *cget coerces by declared type
+    and every single *configure query returns a typed OptionDescription. Types are
+    sourced from the Tk 8.6 text(3tk) TAGS / EMBEDDED IMAGES / EMBEDDED WINDOWS
+    sections; a tag -underline/-overstrike/-elide is a genuine :boolean (unlike the
+    widget-level integer -underline), -window follows canvas item's -window as
+    :pathname, screen distances stay lossless :string. Fix the latent image_cget
+    bug: it called an undefined tcl_option helper and never passed the option to
+    Tk, so it always raised.
+
+[820f738 | 2026-07-07 18:35:11 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Route Phase C describe surfaces through Configure.read_descriptions
+
+    Give listbox itemconfigure/itemcget, menu entryconfigure/entrycget,
+    panedwindow paneconfigure/panecget and place configure each a per-surface
+    Option::Schema and route them through the new Configure.describe dispatcher,
+    so every *cget sibling coerces by declared type and every *configure single
+    query returns a typed OptionDescription (no raw reads remain). Move
+    option_hash_to_tcl from Cget into Configure, consulting the menu-entry schema
+    for :command detection. Collapse the identical widget-level configure into the
+    shared describe dispatcher.
+
+[b1f59d7 | 2026-07-07 18:02:26 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Route Phase C flat -opt val surfaces through Configure.read_flat
+
+    Add Configure.read_flat/flat and per-surface Option schemas for wm
+    attributes, font actual/configure, tk caret, treeview
+    column/heading/item/tag, notebook tab and panedwindow pane. Bulk queries
+    now return type-coerced Hashes including empty-valued options; single
+    queries return coerced bare values. Absorbs WM_ATTRIBUTES_HINTS and
+    FONT_CONFIGURE_HINTS.
+
+[8967d79 | 2026-07-07 17:35:59 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Declare Option schemas for tile widgets (Phase B4)
+
+[76fa2a0 | 2026-07-07 17:04:15 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Declare Option schemas for text and canvas (Phase B3)
+
+    Add classic_options + widget_options declarations for the two biggest classic
+    widgets, routing their widget-level cget/configure through the Schema+Coercer
+    path. Types come from each widget's 3tk man page:
+    
+    - text -height/-width are character counts (:integer); -endline/-startline
+      integer line indices and -maxundo an integer count (empty -> nil). -wrap is a
+      keyword set (none/char/word, :symbol), NOT a boolean like spinbox's -wrap;
+      -state/-tabstyle/-insertunfocussed are keyword sets too. -autoseparators/
+      -blockcursor/-undo are genuine :boolean; -spacing1..3 stay :string (screen
+      distances); -tabs is a Tcl list of tab stops (:list);
+      -inactiveselectbackground a :color.
+    - canvas -closeenough is a :float; -confine a genuine :boolean; -state a
+      keyword set (normal/disabled/hidden, :symbol); -scrollregion a coordinate
+      list (:list); -offset the stipple origin (:string); -height/-width/
+      -xscrollincrement/-yscrollincrement stay :string (screen distances).
+    
+    Item-level (canvas) and tag/mark/image/window (text) surfaces stay on the
+    legacy value-returning path for a later phase.
+    
+    Rewrite text's cget table to the set-then-get bar (exact for settables,
+    empty-value rule, describe-shape via OptionDescription); the fresh-widget
+    option specs sit below the peer specs so the exact .text0.text1 pathname
+    assertion still holds. Add widget-level coercion + configure-describe specs for
+    canvas, annotate the per-item/per-tag legacy paths, and extend the
+    name-completeness guardrail to Tk::Text and Tk::Canvas.
+
+[66de277 | 2026-07-07 16:38:20 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Declare Option schemas for classic widgets (Phase B2)
+
+    Add classic_options + widget_options declarations for listbox, spinbox,
+    menu and panedwindow, routing their widget-level cget/configure through the
+    Schema+Coercer path. Types come from each widget's 3tk man page:
+    
+    - listbox -height/-width are line/character counts (:integer); -activestyle/
+      -selectmode/-state are keyword sets; -listvariable is a :variable.
+    - spinbox -from/-to/-increment are :float, -width a character count
+      (:integer), -wrap a genuine :boolean (unlike text's :symbol -wrap),
+      -values a :list; it gains vcmd/invcmd aliases like entry. Excluded from
+      Metrics/ClassLength (like text/canvas): its method surface plus schema
+      legitimately exceeds 100 lines.
+    - menu declares only widget-level options (-tearoff :boolean, -type :symbol,
+      -postcommand/-tearoffcommand :command, -selectcolor :color, -title
+      :string); per-entry options stay on the legacy path for a later phase.
+    - panedwindow screen dimensions (-height/-width/-sash*/-handle*) stay
+      :string per the screen-distance rule; -opaqueresize/-showhandle :boolean,
+      -proxyrelief/-sashrelief :symbol.
+    
+    Extend the name-completeness guardrail to all four widgets and add
+    type-proving round-trip specs, including the widget-level configure ->
+    OptionDescription shape for menu and panedwindow. Per-pane paneconfigure
+    keeps its legacy value-returning shape (a later phase, like entryconfigure).
+
+[d12c5f4 | 2026-07-07 16:19:16 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Declare Option schemas for classic widgets (Phase B1)
+
+    Add classic_options + widget_options declarations for button, checkbutton,
+    radiobutton, menubutton, label, message, frame, labelframe, toplevel, scale
+    and scrollbar, routing their cget/configure through the Schema+Coercer path.
+    Root inherits Toplevel's schema unchanged. Types come from each widget's
+    3tk man page: button-family -width/-height are integer counts (Tk rejects a
+    distance suffix) while frame/toplevel/message screen dimensions stay :string
+    per the standard-set screen-distance rule; -menu/-labelwidget are :pathname.
+    
+    Extend the name-completeness guardrail to every migrated classic widget and
+    add type-proving round-trip specs. Update Label#value to the empty-value rule
+    (:string empty -> "", not the legacy nil).
+
+[385c85c | 2026-07-07 15:52:21 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Pilot Entry on the option Schema+Coercer path
+
+    Declare Tk::Entry's option schema (classic_options + entry(3tk) widget_options
+    + vcmd/invcmd aliases) and route its cget/configure through the new
+    type-directed path:
+    
+    - Cget#cget: when the class has an Option schema, coerce the raw cget string by
+      the declared type via Coercer; legacy CGET_MAP path otherwise.
+    - Configure: add read_descriptions, parsing Tk's describe-tuples into
+      OptionDescription(s) -- bulk Hash{name => description} including synonym
+      entries, single option one description -- with value/default coerced; set
+      path unchanged. Configure.common still serves unmigrated widgets (transition
+      rule).
+    - Rewrite spec/ffi-tk/widget/entry.rb to the set-then-get bar; drop the buggy
+      state [normal]-list and nil-for-empty-string assertions per the empty-value
+      rule; configure(:x) now asserts an OptionDescription.
+    - Add spec/ffi-tk/option/guardrail.rb (Entry) and a shared standard-option
+      type-pinning spec.
+    
+    A single-option configure query on an alias faithfully resolves to the
+    canonical option's describe-tuple (Tk resolves it), matching docs/adr/0001;
+    the 2-element synonym form appears only in the bulk listing.
+
+[3958646 | 2026-07-07 15:17:18 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Type screen-distance standard options :string, not :integer
+
+    Classic widgets on the Tk_ConfigureWidget path report cget for
+    screen-distance options as the original distance string ("2m", "2i"),
+    not a pixel integer, and whether a widget/option yields the raw string
+    or pixels varies per (widget, option). One shared standard type serves
+    every classic widget, so :integer made Coercer.coerce crash on
+    legitimate values (Integer("2m")). Keep the raw string losslessly;
+    genuine integers (underline index, millisecond options) stay :integer.
+    Document image :string as a deliberate, faithful-to-cget choice.
+
+[9c65c81 | 2026-07-07 15:02:11 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Add option typing core: Schema, Coercer, standard sets, DSL, read plumbing
+
+    Phase A of the option-typing unification. Introduces lib/ffi-tk/option/:
+    - Coercer.coerce(type, raw): the one type-directed Tcl-string -> Ruby
+      converter, immune to shimmering, with the empty-value rule.
+    - Schema: frozen value object (type_for/canonical/names/merge), defines
+      Tk::UnknownOptionType; no ancestor fallback.
+    - Standard::CLASSIC / TTK schemas sourced from options(3tk)/ttk_widget(3tk).
+    - OptionDescription struct (normal + synonym forms).
+    - DSL (classic_options/ttk_options/widget_options/option_aliases/
+      option_schema) extended into Tk::Widget; schema inherited only when
+      tk_command is inherited unchanged.
+    
+    Adds raw-string read plumbing (Interp#result_string, Tk.execute_string,
+    Widget#execute_string) that bypasses EvalResult.guess.
+    
+    Nothing consumes the new code yet; Cget/Configure untouched.
+
+[e8149e5 | 2026-07-06 14:22:49 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Run specs headless on one private Xvfb + openbox
+
+    The bacon and coverage tasks spawned one ruby process per spec file, each
+    creating a mapped Tk root on the ambient $DISPLAY, so a full run popped ~61
+    windows on the desktop.
+    
+    Add tasks/support/headless_display.rb: it starts a single private Xvfb (via
+    -displayfd, so it picks a free display and signals readiness with no lockfile
+    race) plus one openbox for the whole run, and passes DISPLAY to every spec
+    subprocess. A window manager is mandatory, not optional -- the bind/event specs
+    synthesise key events that are only delivered to a window with real keyboard
+    focus, which bare Xvfb never grants; the helper polls xprop
+    _NET_SUPPORTING_WM_CHECK so the first spec cannot race WM startup. Both
+    processes are torn down in ensure. TK_SPEC_DISPLAY=:0 restores the old
+    visible-on-desktop behaviour.
+    
+    Xvfb/openbox chatter (harmless xkbcomp F23/F24 keymap warnings from
+    xkeyboard-config, socket-probe noise, openbox default-config messages) is
+    redirected to tmp/xserver.log -- persisted and announced, not discarded, so
+    real server errors stay diagnosable.
+    
+    flake.nix gains xorg-server, openbox and xprop on Linux; the "headless is a
+    deliberate CI concern" comment is replaced accordingly.
+
+[8c8568b | 2026-07-06 10:50:27 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Return command results from button-family invoke; fix block wiring
+
+    Button, CheckButton and RadioButton#invoke used execute_only since the
+    original callback-bridge work, discarding the -command result that
+    their own docstrings promise ('the return value is the return value
+    from the Tcl command'). All three now use execute and return the Ruby
+    callback's value marshalled through the Tcl result (nil without a
+    command), with round-trip specs for each.
+    
+    Writing the radiobutton spec exposed a latent initializer bug:
+    Button#initialize registered a given block's command into a local
+    options hash before calling super, so Widget#initialize's
+    hash-as-parent shift discarded it — Button.new(options) { block }
+    silently lost the command and leaked the registered callback. It now
+    registers through Widget#initialize's options yield. That made
+    CheckButton's identical override redundant — previously it only worked
+    because the two bugs cancelled: Button dropped its misregistered
+    command and Widget's yield then registered the right one. The override
+    is deleted; CheckButton inherits the fixed version.
+
+[d757661 | 2026-07-06 10:41:34 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Restore Menu#invoke result now that callback results are safe
+
+    Menu#invoke was switched to execute_only as a workaround for the
+    callback-result segfault, discarding the invoke result. With
+    obj_result= fixed to build real Tcl_Objs, retrieving the result is
+    safe and meaningful again: invoke returns the entry command's result —
+    for a Ruby proc entry, the proc's own return value marshalled through
+    the Tcl result. The menu spec now asserts that round-trip, and the
+    stale segfault reference in the event spec comment is dropped.
+    
+    Button/CheckButton/RadioButton#invoke keep their execute_only from the
+    original callback-bridge design — they predate the workaround and were
+    never changed for it.
+
+[0de2c70 | 2026-07-06 10:36:16 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix segfault when Ruby callbacks return non-primitive values
+
+    Interp#obj_result= handed Tcl_SetObjResult a Ruby String (the to_tcl
+    command-embedding form) for any callback return value that was not a
+    String, Integer, boolean, or Exception. FFI coerces the String to a
+    raw byte pointer, Tcl dereferences those bytes as a Tcl_Obj, and the
+    process segfaults in Tcl_GetStringFromObj when the result is next
+    retrieved — reliably reproducible with a callback returning nil. This
+    was previously misdiagnosed as a callback re-entrancy problem; entries
+    without a Ruby proc were unaffected because obj_result= never ran.
+    
+    Every branch now builds a real Tcl_Obj (new ruby_to_tcl_obj): nil maps
+    to the empty result, Symbols to their string, Integers go through the
+    newly attached Tcl_NewWideIntObj (the old Tcl_NewIntObj silently
+    truncated results above 32 bits), Floats through Tcl_NewDoubleObj, and
+    Arrays recursively become genuine Tcl list objects, so lists round-trip
+    typed instead of as a braced string. spec/ffi-tk/callback.rb pins the
+    full matrix, including the exception error path.
+
+[a999f24 | 2026-07-06 10:31:17 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Make single-option configure queries return the current value
+
+    Settle the query contract: passing a Symbol/String option to a
+    configure-style method returns that option's current value, matching
+    cget semantics.
+    
+    Previously the form was broken everywhere it mattered:
+    Grid.columnconfigure/rowconfigure crashed (Symbol has no
+    to_tcl_options?), and Configure.common pushed the classic
+    [option, dbname, dbclass, default, current] describe-tuple through
+    tcl_options_to_hash, which mis-sliced it into garbage pairs — or
+    crashed on Integer keys.
+    
+    Configure.common now recognises the describe-tuple by shape (five
+    elements, first equals the queried option — class alone cannot
+    distinguish it from ttk options whose bare value is itself a list,
+    e.g. treeview item values) and extracts the current value; canvas
+    itemconfigure answers with a string-typed tuple, extracted via lindex.
+    ttk bare values pass through untouched. Grid gains the single-option
+    branch and returns Tcl's native scalar.
+    
+    Specs cover grid column/row single-option queries, panedwindow
+    describe-tuple extraction, and canvas string-tuple extraction.
+
+[0d6f8a7 | 2026-07-06 10:15:36 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Deduplicate tile scrollbar orient/command; fix bare instantiation
+
+    Tile::Scrollbar duplicated the orient and command methods it now
+    inherits from Tk::Scrollbar (added there for the Scrollable helper
+    fix); the inherited versions dispatch through the widget's own
+    configure/cget, so the copies were redundant. Removing them exposed
+    that a bare Tk::Tile::Scrollbar.new raised NoMethodError: initialize
+    calls scrollbar_default, which only the YScrollbar/XScrollbar presets
+    defined. The base class now provides it as a no-op hook, keeping ttk's
+    default orientation, with specs covering bare instantiation and the
+    inherited orient round-trip.
+
+[7a1ad57 | 2026-07-06 10:09:26 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix int64 conversion, bytearray results, and scrollbar linkage
+
+    Three tracked correctness bugs, each with specs proving the fix:
+    
+    - EvalResult#to_int converted through a 32-bit pointer: 2**31 silently
+      wrapped negative and larger values raised from Tcl_GetIntFromObj.
+      Attach Tcl_GetWideIntFromObj and convert through :int64; 2**63-1 now
+      round-trips exactly. The characterization specs that pinned the
+      wrapping behavior are replaced with correct-value assertions.
+    - The result guesser had no :bytearray branch, raising 'Unknown type'
+      for any binary result. Attach Tcl_GetByteArrayFromObj and return the
+      raw bytes as an ASCII-8BIT string — get_string_from_obj cannot be
+      used here because it re-encodes NUL and high bytes as Tcl modified
+      UTF-8, corrupting the data.
+    - Scrollable#yscrollbar/#xscrollbar called Scrollbar#orient, which did
+      not exist, so attaching a scrollbar to a scrollable widget raised
+      NoMethodError. Add orient and command to Tk::Scrollbar (mirroring
+      the tile scrollbar) and prove the scrollcommand linkage end-to-end:
+      scrolling the listbox moves scrollbar.get. Delete yview_pickplace,
+      which wrapped a subcommand removed in Tk 8.6.
+
+[413d76d | 2026-07-06 09:52:48 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand treeview and event specs; fix five Treeview bugs
+
+    Treeview: self-contained coverage specs for selection lifecycle (list
+    and Item forms), cell get/set by column, tag_configure round-trips,
+    move/reattach after detach, sibling navigation, focus item, exists,
+    see opening ancestors, Scrollable xview/yview, and identify (mapped
+    guard). Event: field marshalling specs asserting captured Event::Data
+    values for synthesized KeyPress/ButtonPress/Motion events.
+    
+    Treeview bugs fixed at the root:
+    - identify_component/identify_row/identify_column passed undefined
+      locals instead of the subcommand symbols, raising NameError on every
+      call.
+    - Item#move called nonexistent Treeview#move_item.
+    - selection set/add/remove/toggle splatted the items, but ttk expects
+      a single item list argument.
+    - parent leaked two debug p calls on every invocation.
+    - a duplicated xview override shadowed the Scrollable mixin's version.
+    
+    No event/data or event/handler changes needed — the field marshalling
+    was correct; it just had no specs.
+
+[09adab3 | 2026-07-06 09:38:50 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand font/selection specs, add focus and scrollable specs; fix four bugs
+
+    Font: named-font create/configure/actual round-trips (including the
+    single-option scalar form and per-char queries), measure/metrics
+    invariants, families, and the Font instance API. Selection: own/clear
+    query round-trip and an in-process handle+get round-trip serving a
+    Ruby-provided string. Focus (new file): force+query, next/prev
+    traversal, lastfor. Scrollable (new file): xview/yview fraction
+    round-trips through a placed Listbox.
+    
+    Bugs fixed at the root:
+    - Font.create with a name and options skipped to_tcl_options, sending
+      bare option names Tcl rejects.
+    - Font.actual with a single option called tcl_options_to_hash on a
+      scalar, raising NoMethodError; scalars now return directly.
+    - Selection.handle called register_command, which is private to
+      Configure and undefined here, and omitted the 'selection handle'
+      command words entirely; rewritten via Tk.register_proc.
+    - Selection.own's command branch had the same undefined call plus a
+      merge-order bug letting the raw proc clobber the registered command
+      string.
+
+[e9b3a7c | 2026-07-06 09:27:07 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand spinbox and panedwindow specs; fix spinbox identify crash
+
+    Spinbox: value stepping and clamping through the spin buttons, text
+    editing (delete/insert/get, icursor/index), selection lifecycle,
+    validate, xview, and mapped bbox/identify. PanedWindow: pane
+    add/list/forget round-trip, paneconfigure/panecget, sash and proxy
+    placement round-trips, identify on a sash.
+    
+    Spinbox#identify called .to_sym on the result, raising NoMethodError
+    for any point outside the widget (Tk returns an empty string, guessed
+    to nil); it now returns nil for no element.
+    
+    Known gap left in place: paneconfigure's query forms crash in the
+    shared Array#tcl_options_to_hash slicing; tracked with the
+    single-option query API work rather than patched locally.
+
+[035149f | 2026-07-06 09:19:48 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand menu/listbox/scrollbar specs; fix three Menu bugs
+
+    Round-trip specs for menu entries (add/insert of every entry type,
+    entrycget/entryconfigure, index/type/delete, invoke side effects,
+    post/unpost), listbox items (insert/get/delete, selection lifecycle,
+    itemconfigure, bbox, nearest, yview via the shared Scrollable module)
+    and scrollbar (set/get fractions, activate, delta scaling, fraction,
+    identify with deterministic place-based geometry).
+    
+    Menu bugs fixed at the root:
+    - entrycget sent the option name without the leading dash, raising
+      'unknown option' on every call; it now uses to_tcl_option like
+      Listbox#itemcget.
+    - insert bypassed option_hash_to_tcl (unlike add), so command procs
+      were registered globally, skipped command-type detection, and leaked
+      past widget destroy; it now goes through option_hash_to_tcl.
+    - invoke used execute, and retrieving the Tcl result while a Ruby proc
+      callback was still on the C stack segfaults in Tcl_GetStringFromObj;
+      it now uses execute_only, matching Button#invoke. The underlying
+      callback/result re-entrancy bug in the FFI bridge is tracked
+      separately.
+
+[1488eae | 2026-07-06 09:05:23 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Remove stale 'needs more specs' placeholders
+
+    Coverage measurement showed these markers were miscalibrated: most sat
+    in files whose widgets were already at or near full line coverage,
+    while the real gaps were in files without markers. Coverage data now
+    drives spec priority, so the placeholders only add noise. The label
+    spec's block actually contained a real value round-trip and is renamed
+    rather than removed.
+
+[655f128 | 2026-07-06 09:01:55 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Add EvalResult conversion specs; fix six nil.to_s? crashes
+
+    New spec/ffi-tk/eval_result.rb (35 specs) drives every reachable
+    branch of the Tcl result guesser end-to-end: int/double/list/dict/
+    string/empty dispatch, recursive lists, dict flattening, the
+    never-auto-converted booleans, numeric-looking strings staying
+    strings, and all instance converters.
+    
+    Sweep fix for a recurring crash family: Tk.execute and widget#execute
+    return already-guessed Ruby values (String/nil/Array/Hash), never an
+    EvalResult, so calling .to_s? on them raises NoMethodError whenever a
+    result is empty. Six callers fixed to handle empty results directly:
+    Menu#post, Scrollbar#activate, Winfo.containing, ChooseDirectory,
+    GetOpenFile, GetSaveFile (the latter three crashed on dialog cancel).
+    The three cget.rb call sites guard with respond_to? and are safe.
+    
+    Two deeper FFI bugs are documented by characterization specs but not
+    fixed here (need a decision): to_int converts through a 32-bit
+    pointer, silently wrapping values above 2^31-1; and the guesser has
+    no :bytearray branch, so binary results raise 'Unknown type'.
+
+[6964f42 | 2026-07-06 08:54:08 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand canvas specs; fix six broken Canvas methods
+
+    Grow spec/ffi-tk/widget/canvas.rb from 7 to 27 specs (195
+    requirements) with round-trip coverage of item creation for every
+    type, coords query/set, move deltas, tag operations, find variants,
+    icursor/index/insert/dchars, scale, selection lifecycle, canvasx/y,
+    scan, and postscript.
+    
+    Six bugs fixed at the root, all on previously unexercised paths:
+    - bbox called .to_a? and type called .to_sym? on already-guessed Ruby
+      values (NoMethodError on every call); handle nil explicitly instead.
+    - postscript and select_item called .to_s? the same way; postscript
+      now maps empty to nil itself, select_item returns the guessed value.
+    - canvasx/canvasy sent the literal symbol 'gridspacing' to Tcl instead
+      of the numeric grid spacing, so any spacing argument errored; they
+      now pass the value through (None when omitted).
+    - find_above sent 'find <tag> above <id>', an argument order Tcl
+      rejects; it now sends 'find above <id>' per the Tk manual.
+
+[b883502 | 2026-07-06 08:45:57 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand text widget specs; fix multi-range get and window_create
+
+    Grow spec/ffi-tk/widget/text.rb from 76 to 106 specs with round-trip
+    coverage of the previously untested paths (count variants, compare,
+    dump segments, edit undo/redo/modified stack, mark gravity/next/prev,
+    search variants, tag range/query methods, window embedding, view
+    scrolling).
+    
+    Two bugs fixed at the root:
+    - Text#get / #get_displaychars called .to_s on the result even when
+      multiple ranges were requested, where Tcl returns a list — mangling
+      it into a single inspect-style string. Multi-range calls now return
+      an Array of strings.
+    - Text#window_create referenced an undefined local 'argument' instead
+      of its 'options' parameter, raising NameError on every call.
+
+[7efea91 | 2026-07-06 08:37:04 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Expand wm command specs; fix six broken WM methods
+
+    Round-trip specs against live Tk for the WM parse layer (maxsize,
+    minsize, resizable, overrideredirect, positionfrom, sizefrom, state,
+    title, transient, stackorder, protocol lifecycle, iconname, iconmask,
+    iconposition) — 50 specs, up from 24. Probing the uncovered paths
+    surfaced six broken methods, fixed at the root:
+    
+    - maxsize dropped its window argument (query and set both raised in
+      Tcl); pass the window through.
+    - positionfrom and iconposition had their query/set branches swapped
+      (query ran execute_only and returned true; set ignored its values).
+    - stackorder's isabove/isbelow form used execute_only, discarding the
+      boolean and always returning true; it now parses the actual result.
+    - iconname and iconmask queries called .to_s? on an already-guessed
+      Ruby value (NoMethodError on every query); drop the call —
+      guess_result already yields nil for empty results.
+    
+    Destructive window-state specs use dedicated toplevels and destroy
+    them. Excluded (pre-existing missing Tk image commands, FIXME updated):
+    forget, iconbitmap_default, iconphoto, iconwindow, manage. Setting
+    state=:iconic is WM-dependent (does not stick under this WM) and is
+    deliberately not asserted.
+
+[795606f | 2026-07-06 08:28:49 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Add grid command specs; fix three broken Grid methods
+
+    The Grid module had no specs and 44% line coverage. Writing round-trip
+    specs against live Tk surfaced three methods broken on every call:
+    
+    - Grid.bbox referenced undefined locals column1/column2 (params were
+      named _col1/_col2), raising NameError on any call. Rename the params
+      so the column arguments are actually passed to Tcl.
+    - Grid.slaves ignored both its arguments and ran 'grid slaves' without
+      a master, which Tcl rejects (wrong # args). It now forwards the
+      master and supports the -row/-column filter options.
+    - Grid.info stringified the already-parsed result Hash and regex-scanned
+      it, matching nothing and always returning {}. It now maps the parsed
+      hash directly (as Pack.info does), coercing numeric options.
+    
+    The specs cover configure/info/slaves/bbox/columnconfigure/rowconfigure/
+    propagate/anchor/size/location/forget/remove with values observed from
+    live Tk; bbox geometry assertions are skip_unless_mapped-guarded.
+
+[4735824 | 2026-07-04 18:03:02 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Add specs for after, bell, and grab commands; fix two grab bugs
+
+    These three command modules had no specs (0% coverage). Writing the grab
+    spec surfaced two bugs, fixed here:
+    
+    - grab_global called the misspelled Grab.globa (NameError on use); it now
+      calls Grab.global and drops the unused window argument to match the other
+      grab_* instance helpers.
+    - Grab.current(window) called .to_s? on the interpreter result, which is nil
+      when no grab is active, raising NoMethodError. It now uses .to_s, returning
+      the documented empty string.
+    
+    The grab spec exercises the local set/current/release round-trip and uses
+    skip_unless_mapped since 'grab set' requires a viewable window. The after
+    specs assert the idle and delayed callbacks actually fire (real event-loop
+    round-trip). Bell is fire-and-forget, so its specs cover the option-building
+    paths and confirm each call returns.
+
+[55cadb1 | 2026-07-04 16:56:27 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Add coverage measurement and spec support kit
+
+    Add SimpleCov as a dev dependency and a `rake coverage` task that runs
+    each spec under coverage and reports per-file line coverage (baseline
+    72.7%). SimpleCov is gated behind COVERAGE and started in helper.rb
+    before ffi-tk loads, with a per-process command_name so the
+    subprocess-per-file runner's results merge.
+    
+    Add a tkinter-inspired spec support kit to helper.rb: reset_root! for
+    per-spec isolation, tcl_eq for tolerant Tcl value comparison,
+    requires_tk?/tk_patchlevel for version gating, and mapped?/
+    skip_unless_mapped so mapping-dependent specs skip rather than fail on
+    a headless/WM-less display. Ignore the generated coverage/ report dir.
+
+[712e123 | 2026-07-04 14:26:44 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: document the Tcl theme-settings eval
+
+    Style/DocumentDynamicEvalDefinition fires on any interpolated string
+    passed to a method named eval. Here Tk.eval hands the string to the Tcl
+    interpreter (not Ruby) and defines no methods, but the cop cannot know
+    that. Add an inline comment showing the interpolated Tcl command, which
+    satisfies the cop and documents what is run.
+
+[2954245 | 2026-07-04 14:22:48 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: disable Naming/PredicateMethod (incompatible convention)
+
+    In this binding a trailing `?` marks a nilable/safe variant, not a
+    boolean predicate: to_a?/to_s?/to_sym? return the converted value or
+    nil, and to_tcl_options? is the None-safe form of to_tcl_options. A few
+    genuinely-boolean methods keep bare Tk-subcommand names (Entry#validate,
+    Entry#selection_present) or are converters parallel to to_i/to_f
+    (Tk::Tk#boolean). All 12 offenses were false positives, so disable the
+    cop. Also scope Style/ReturnNilInPredicateMethodDefinition out of
+    eval_result.rb, where the nilable variants return nil by design.
+
+[c76bd85 | 2026-07-04 14:19:46 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: allow empty blocks in specs
+
+    Lint/EmptyBlock: specs use empty blocks intentionally as
+    `it 'needs more specs' do end` placeholders and as no-op callbacks
+    (proc {}, widget.postcommand {}) in raise-nothing assertions. Scope the
+    cop out of spec/, matching the other spec-idiom exclusions.
+
+[f73aa4b | 2026-07-04 14:18:39 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: pass a block to to_h in core_extensions
+
+    Style/MapToHash (surfaced by the prior Hash[] -> to_h change): fold the
+    map+to_h into to_h { ... }. Suite green.
+
+[1842edd | 2026-07-04 14:17:58 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: use grep_v in the tkgo demo
+
+    Style/SelectByRegexp: reject { |name| name =~ /pass/i } is grep_v(/pass/i).
+    Example-only; syntax verified.
+
+[49cf995 | 2026-07-04 14:17:41 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: prefer Array#to_h over Hash[]
+
+    Style/HashConversion: the pack/place info parsers and the Tcl option
+    coercion in core_extensions build arrays of [key, value] pairs; convert
+    them with to_h instead of Hash[...]. Suite green.
+
+[17d6704 | 2026-07-04 14:16:33 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: apply remaining safe autocorrections
+
+    - Style/SuperArguments + Style/SuperWithArgsParentheses: super now
+      forwards its arguments implicitly (checkbutton) / parenthesizes them
+      (event/data).
+    - Layout/EmptyLinesAfterModuleInclusion: blank line after extend/include
+      in the FFI modules and Tile::Style.
+    - Style/RedundantHeredocDelimiterQuotes: the eventloop codegen heredoc
+      has no interpolation, so the quoted delimiter is redundant.
+    - Style/RedundantRegexpArgument: gsub(/%/, ...) -> gsub('%', ...).
+
+[c118b50 | 2026-07-04 14:15:24 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: adopt anonymous argument and block forwarding
+
+    Autocorrect Style/ArgumentsForwarding and Naming/BlockForwarding. These
+    delegators forwarded rest/block arguments by name; the names were
+    generic and add nothing over the anonymous forms in thin pass-through
+    wrappers. Adopt the cop default.
+
+[f2e87e9 | 2026-07-04 14:15:24 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: enable pending cops
+
+    Flip AllCops NewCops from disable to enable, adopting the newer cops
+    (1.30-1.79) that were deferred from the drive-todo-to-zero effort.
+    Offenses are driven to zero in the following commits.
+
+[b358435 | 2026-07-04 14:07:28 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Document all public classes/modules and remove the RuboCop todo
+
+    Author top-level documentation for the 80 remaining undocumented library
+    classes and modules in the established house style: a one-line summary plus a
+    short note on the Tk command each wraps (paraphrased, not copied from the Tk
+    man pages). This closes Style/Documentation. Demo scripts and test fixtures
+    carry no class docs (example/** and spec/** excluded).
+    
+    With that the auto-generated .rubocop_todo.yml is empty, so delete it and drop
+    the `inherit_from`. Lock the cop set (NewCops: disable) and silence the
+    extension suggestion so `nix fmt` runs clean and quiet.
+    
+    Result: `.rubocop_todo.yml` is gone -- RuboCop inspects 183 files with zero
+    offenses, treefmt reports no changes, and the suite is green (380 specs).
+
+[fa6c873 | 2026-07-04 13:51:52 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: own the Metrics thresholds in .rubocop.yml (promote from todo)
+
+    After refactoring the complexity hotspots (type_to_ruby, tcl_options_to_hash,
+    guess), the remaining Metrics offenders are inherent to a thin, wide FFI
+    binding. Pin the thresholds at the library's current shape as owned, commented
+    config instead of the auto-generated todo's inflated values:
+    
+    - MethodLength 29, AbcSize 29, CyclomaticComplexity 15, PerceivedComplexity 14,
+      ParameterLists 6/4 -- global, with example/spec exempt.
+    - ClassLength and ModuleLength keep RuboCop's default Max (100); only the
+      specific classes/modules that mirror large Tk widgets/commands are excluded.
+    - BlockLength keeps the default Max (25), excluding rake's task DSL and
+      test/demo blocks.
+    
+    Regenerated todo now holds only Style/Documentation. Real config passes clean;
+    suite green (380).
+
+[c299400 | 2026-07-04 13:47:45 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Extract guess_fallback from EvalResult.guess
+
+    The type-dispatch case is inherent, but its else branch held a 4-way fallback
+    (explicit fallback, empty-string nil, nil->string, else raise). Extract it to
+    .guess_fallback, collapse the dispatch to one-liners, and drop a commented-out
+    debug line. cyclo 12->8; AbcSize/PerceivedComplexity/MethodLength now within
+    default. Suite green (380).
+
+[08bf0ab | 2026-07-04 13:45:44 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Reduce complexity of the Tcl type-conversion helpers
+
+    - Cget.type_to_ruby: extract the :list branch (a nested case plus its
+      explanatory comment) into #list_to_ruby (cyclo 18->15, length 29->23).
+    - Array#tcl_options_to_hash: the boolean/symbol/float value coercion was
+      duplicated across both option-format branches; extract a private
+      #coerce_tcl_value helper (cyclo 14->8, length 35->16), removing the
+      duplication.
+    
+    Suite green (380). Both stay above RuboCop's strict defaults because the
+    remaining branching is inherent type dispatch; a tightened Metrics config
+    (committed separately) owns those thresholds.
+
+[a2112df | 2026-07-04 13:20:52 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: promote reviewed style choices and test/example relaxations to .rubocop.yml
+
+    Move the intentional, reviewed exceptions out of the auto-generated todo into
+    owned, commented config in .rubocop.yml:
+    
+    Style choices:
+    - Naming/MethodParameterName MinNameLength 1 (Tk coord/dim params x,y,w,h,...)
+    - Style/FormatStringToken: unannotated (Tk/C-style %s/%d tokens)
+    - Naming/FileName exclude lib/ffi-tk.rb (hyphenated gem entry file)
+    - Naming/AccessorMethodName exclude grab.rb, tile.rb (set_* are Tk commands)
+    - Naming/ConstantName exclude tile.rb (Tile::Font enum-style constants, public API)
+    - Style/OptionalBooleanParameter exclude pack.rb, canvas.rb (positional API)
+    
+    Test/example idioms (path-scoped):
+    - spec/**: Lint/Void (bacon should), Lint/FloatComparison, Lint/ConstantDefinitionInBlock, Layout/LineLength
+    - example/**: Lint/RescueException, Style/GlobalVars, Naming/MethodName
+    - Lint/ConstantDefinitionInBlock also for the two `Struct.new(...) do` bodies
+      (eval_result.rb, canvas/item.rb) whose constants belong to the struct class.
+    
+    Regenerated todo now holds only Metrics/* and Style/Documentation. Real config
+    passes clean.
+
+[1ae96b8 | 2026-07-04 13:20:52 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix Tk::Tile::Style.configure silently discarding its options hash
+
+    Style.configure(style = nil, options = {}) is meant to accept a bare options
+    hash as the first argument (like Style.map), but its hash-detection branch was
+    `(style; style = nil)` -- a bare `style` void expression where it should have
+    been `options = style`. So Style.configure(foo: bar) threw the hash away and
+    configured nothing. Mirror the corrected Style.map form. Lint/Void flagged the
+    dead expression. Suite green (380).
+
+[a0b0119 | 2026-07-04 13:16:13 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: fix IneffectiveAccessModifier and ShadowedArgument
+
+    - Configure.common sat under a `private` that cannot make singleton methods
+      private, and it is called with an explicit receiver (Configure.common), so it
+      must stay public. Move it above `private` (which now governs only the instance
+      helpers). Behaviour unchanged.
+    - Tile::Style.map used an `&&`-with-newline trick that reassigned the `options`
+      argument (Lint/ShadowedArgument). Rewrite as a plain `if style.is_a?(Hash)`
+      guard. Suite green (380).
+
+[4d6f1e1 | 2026-07-04 13:16:13 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix $DEBBUG typo that disabled the include-collision warning
+
+    core_extensions.rb guarded a collision warning with $DEBBUG (double B), an
+    always-nil undefined global, so the branch never fired. Corrected to Ruby's
+    built-in $DEBUG. This also clears Style/GlobalVars (built-in globals are allowed).
+
+[d0d9f0e | 2026-07-04 13:10:18 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: prune todo entries resolved by manual lint fixes
+
+[e84eb9b | 2026-07-04 13:10:11 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: snake_case clone params, rename TkkStyleCmd, wrap long comment
+
+    - Naming/VariableName: Menu#clone(newPathname, cloneType) -> (new_pathname, clone_type).
+    - Naming/ConstantName: TkkStyleCmd -> TTK_STYLE_CMD (also fixes the Tkk typo;
+      no other references existed).
+    - Layout/LineLength: wrap the 140-char X11-attributes comment in wm.rb.
+    Suite green (380).
+
+[6455141 | 2026-07-04 13:08:03 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: disable false-positive lints and reword NOTE comment
+
+    Additive-only (comments/directives), no behavior change:
+    - Security/Eval: inline-disable the deliberate metaprogramming/REPL evals
+      (rwish x2, tcl.rb codegen x2, obj.rb accessor-gen), each pre-approved.
+    - Lint/MissingSuper: Root and Text::Peer intentionally bypass the normal Widget
+      init (root '.' pre-exists; peer uses 'peer create') -> disable with comment.
+    - Lint/StructNewOverride: Event::Data :count mirrors Tk's %c field and is meant
+      to override Struct#count -> disable around the Struct.new with a note.
+    - Lint/EmptyWhen: comment the intentional pass-through branch in Data#to_event.
+    - Style/CommentAnnotation: put the note text on the NOTE: line in font.rb.
+    Suite green (380).
+
+[3140452 | 2026-07-04 12:57:06 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: prune todo entries resolved by layout convergence
+
+[5928046 | 2026-07-04 12:56:58 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: converge layout residue from the unsafe batch
+
+    The --only unsafe autocorrects (StructInheritance, ClassAndModuleChildren)
+    left the reassigned Struct constants under-indented; a safe convergence pass
+    fixes IndentationConsistency/Width, BlockAlignment, CommentIndentation and
+    ExtraSpacing. Suite green (380).
+
+[0d997a9 | 2026-07-04 12:55:52 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: prune todo entries resolved by the unsafe-autocorrect batch
+
+    Regenerated after YodaCondition, StructInheritance, SlicingWithRange,
+    StringConcatenation, MutableConstant, ClassAndModuleChildren, NumericPredicate,
+    FrozenStringLiteralComment, Lint/Loop and Lint/AssignmentInCondition. Real
+    config passes clean; remaining entries are the promote candidates
+    (MethodParameterName, FormatStringToken, Metrics/*, Documentation), the spec/example
+    relaxations (Void, FloatComparison, ConstantDefinitionInBlock, ScriptPermission,
+    RescueException, GlobalVars), and the remaining manual lints.
+
+[e9914fa | 2026-07-04 12:55:33 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Disable Naming/MemoizedInstanceVariableName for tk_pathname memoization
+
+    assign_pathname memoizes into @tk_pathname, which is a named attribute
+    (attr_reader :tk_pathname) read across widget/bind/root/tk/tile. The cop's
+    autocorrect renamed it to @assign_pathname to match the method name, orphaning
+    every reader (132 errors). The ivar correctly matches the attribute, not the
+    method, so disable the cop at that line with an explanation.
+
+[12e2bae | 2026-07-04 12:53:53 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Lint/AssignmentInCondition (unsafe, suite verified)
+
+[e4b152a | 2026-07-04 12:53:38 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Lint/Loop (unsafe, suite verified)
+
+[2c2ae4a | 2026-07-04 12:53:08 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/NumericPredicate (unsafe, suite verified)
+
+[7ffc692 | 2026-07-04 12:52:53 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/ClassAndModuleChildren (unsafe, suite verified)
+
+[98be20f | 2026-07-04 12:52:10 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: freeze constants (Style/MutableConstant), handling each honestly
+
+    The blanket `.freeze` autocorrect broke library loading (froze a hash still
+    being populated at load: FrozenError in tcl.rb). Each of the three offenders
+    needs different treatment:
+    
+    - tcl.rb ATTACHED_FUNCTIONS: build via each_with_object then freeze.
+    - cget.rb CGET_MAP: was assembled by a lambda mutating a bare `{}`; restructure
+      into a frozen OPTIONS_BY_TYPE data hash transformed once into a frozen map
+      (68 entries, identical contents).
+    - eval_result.rb TYPES: a genuinely mutable per-interpreter cache (cleared and
+      repopulated at runtime by reset_types), so freezing is wrong here -> inline
+      `# rubocop:disable Style/MutableConstant` with an explanatory comment.
+    
+    Suite green (380 specs, cget exercised by the entry/text specs).
+
+[c89b607 | 2026-07-04 12:49:00 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Emit rubocop-clean version.rb from the reversion generator
+
+    version.rb is generated by 'rake reversion'; its style is dictated by the
+    generator, so its offenses (Style/FrozenStringLiteralComment,
+    Style/MutableConstant, Style/ClassAndModuleChildren) can only be fixed at the
+    source. Update the generator to emit a frozen_string_literal comment, nested
+    FFI/Tk modules (derived from PROJECT_MODULE), and a single-quoted VERSION, and
+    regenerate the committed file (version pinned to avoid a date bump).
+
+[3746da9 | 2026-07-04 12:43:09 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/StringConcatenation (unsafe, suite verified)
+
+[0a4227d | 2026-07-04 12:42:53 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/SlicingWithRange (unsafe, suite verified)
+
+[eae8dfd | 2026-07-04 12:42:38 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/StructInheritance (unsafe, suite verified)
+
+[0289a13 | 2026-07-04 12:42:23 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/YodaCondition (unsafe, suite verified)
+
+[cc8b130 | 2026-07-04 12:40:38 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: prune todo entries resolved by the safe-autocorrect batch
+
+    Regenerated .rubocop_todo.yml via --auto-gen-config. Real config now passes
+    clean; remaining entries are the promote/relax candidates (Lint/Void, Documentation,
+    Naming/MethodParameterName, Style/FormatStringToken, Metrics/*), the unsafe-autocorrect
+    cops, and the manual lints still to be addressed.
+
+[d970613 | 2026-07-04 12:40:07 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: converge safe layout/whitespace cops
+
+    The per-cop `--only` autocorrect loop skips RuboCop's normal inter-cop
+    convergence, so structural fixes (GuardClause, ConditionalAssignment,
+    RedundantReturn) left mis-indented bodies and trailing-whitespace blank
+    lines that dependent layout cops would normally clean up. A full safe
+    autocorrect pass (all cops except Lint/Void) converges them:
+    IndentationConsistency/Width, ElseAlignment, EndAlignment, CaseIndentation,
+    BlockEndNewline, MultilineBlockLayout, TrailingWhitespace, DefWithParentheses,
+    and the tcl.rb heredoc array layout. Also chmod +x on the six example
+    scripts (Lint/ScriptPermission). Suite green (380 specs).
+
+[8285268 | 2026-07-04 12:36:10 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Lint/UselessAssignment
+
+[e4bcb52 | 2026-07-04 12:36:09 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Lint/UnusedMethodArgument
+
+[bfb4125 | 2026-07-04 12:36:07 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Lint/RedundantRequireStatement
+
+[d8b65b4 | 2026-07-04 12:36:06 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Naming/RescuedExceptionsVariableName
+
+[cec6fce | 2026-07-04 12:36:04 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/SymbolArray
+
+[365d612 | 2026-07-04 12:36:03 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/StringLiterals
+
+[29674cd | 2026-07-04 12:36:01 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/SingleLineMethods
+
+[68e34a0 | 2026-07-04 12:36:00 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/Semicolon
+
+[aa2d53b | 2026-07-04 12:35:59 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/RescueStandardError
+
+[e314b4e | 2026-07-04 12:35:57 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/RedundantReturn
+
+[b66a0a5 | 2026-07-04 12:35:56 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/RedundantRegexpEscape
+
+[b79fb48 | 2026-07-04 12:35:55 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/RedundantRegexpCharacterClass
+
+[b46277b | 2026-07-04 12:35:53 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/RedundantParentheses
+
+[19b71f5 | 2026-07-04 12:35:52 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/RedundantFileExtensionInRequire
+
+[3f222ed | 2026-07-04 12:35:50 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/PercentLiteralDelimiters
+
+[981aa46 | 2026-07-04 12:35:49 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/ParallelAssignment
+
+[f5dda08 | 2026-07-04 12:35:47 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/OrAssignment
+
+[f2a5e51 | 2026-07-04 12:35:46 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/MultipleComparison
+
+[996d3b1 | 2026-07-04 12:35:44 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/MixinGrouping
+
+[e289938 | 2026-07-04 12:35:43 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/IfUnlessModifier
+
+[93a7294 | 2026-07-04 12:35:41 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/IfInsideElse
+
+[9f0f583 | 2026-07-04 12:35:40 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/GuardClause
+
+[bb751f8 | 2026-07-04 12:35:37 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/FormatString
+
+[9a85ace | 2026-07-04 12:35:36 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/ExpandPathArguments
+
+[875c76a | 2026-07-04 12:35:34 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/ConditionalAssignment
+
+[15fb835 | 2026-07-04 12:35:33 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/CommentAnnotation
+
+[e025f6c | 2026-07-04 12:35:32 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Style/BlockDelimiters
+
+[6aaa354 | 2026-07-04 12:35:30 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/SpaceInsideReferenceBrackets
+
+[6ad7e96 | 2026-07-04 12:35:29 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/SpaceInsideBlockBraces
+
+[8b9082d | 2026-07-04 12:35:28 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/SpaceBeforeBlockBraces
+
+[8626906 | 2026-07-04 12:35:25 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/MultilineMethodCallIndentation
+
+[0b0be38 | 2026-07-04 12:35:24 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/MultilineArrayBraceLayout
+
+[fefcd75 | 2026-07-04 12:35:22 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/LeadingCommentSpace
+
+[ba48a22 | 2026-07-04 12:35:21 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/HeredocIndentation
+
+[fabf27b | 2026-07-04 12:35:20 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/HashAlignment
+
+[05457f7 | 2026-07-04 12:35:18 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/ExtraSpacing
+
+[806a463 | 2026-07-04 12:35:17 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/EmptyLineAfterMagicComment
+
+[4da181d | 2026-07-04 12:35:14 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/EmptyLineAfterGuardClause
+
+[96b82ff | 2026-07-04 12:35:13 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/EmptyComment
+
+[642a453 | 2026-07-04 12:35:11 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * RuboCop: autocorrect Layout/DotPosition
+
+[95d6a78 | 2026-07-04 12:30:55 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix broken Tk::Lower / Tk::Raise stacking-order modules
+
+    Both modules paired a same-named instance method with a `module_function`
+    def of the same name, so the second def clobbered the first (Lint/DuplicateMethods):
+    
+    - Lower.lower was `def lower(below = None)` after module_function: wrong arity
+      (Lower.lower(self, below) -> ArgumentError given 2, expected 0..1) and
+      referenced an undefined local `window`. Completely broken; no coverage.
+    - Raise#raise (the public delegator) was overwritten by the module_function
+      `raise(window, above)`, so the instance path bound `above` to `window`.
+    
+    Nothing includes these modules (Widget defines #raise/#lower itself and calls
+    the module functions), so the instance delegators were dead. Rewrite each to
+    the destroy.rb idiom: a single `def self.NAME(window, ...)` module function.
+    This also resolves the `# FIXME: shadow Kernel#raise` note for the module
+    (Widget#raise remains the intentional widget API).
+    
+    Adds spec/ffi-tk/command/{lower,raise}.rb covering both arities and the
+    Widget delegators. Also drops the now-fixed Lint/FormatParameterMismatch
+    (geometry) and Lint/DuplicateMethods todo entries.
+
+[f74ffdc | 2026-07-04 12:25:07 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix TkGeometry#to_tcl malformed format strings; populate original
+
+    Two format strings in #to_tcl were broken (no test coverage existed):
+    - size-only: '=%dx%d%' raised ArgumentError (incomplete format specifier)
+      on every call -> '=%dx%d'
+    - position-only: '=+d%+d' silently emitted '=+d<y>' and dropped x (only one
+      %-specifier) -> '=%+d%+d'
+    
+    Also assign the previously-dead Struct member 'original' in #initialize.
+    Both output forms verified valid against real Tk wm geometry. Adds
+    spec/ffi-tk/geometry.rb (display-independent) covering parse, serialise,
+    the two regressions, and full round-trip.
+
+[c22525c | 2026-07-04 12:22:30 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Declare Ruby >= 4.0 floor and exclude generated gemspec from RuboCop
+
+    - Rakefile GEMSPEC: add required_ruby_version '>= 4.0' (the source; ffi-tk.gemspec
+      is generated from it via Gem::Specification#to_ruby)
+    - .rubocop.yml: TargetRubyVersion 3.1 -> 3.5 (highest RuboCop 1.80.2 supports;
+      gem itself requires 4.0), exclude the generated ffi-tk.gemspec
+    - Drop now-moot todo entries: Gemspec/RequiredRubyVersion, Style/Encoding,
+      Style/MultilineIfThen, Style/RedundantPercentQ (all gemspec-only), and the
+      ffi-tk.gemspec lines from Style/FrozenStringLiteralComment & Style/StringLiterals
+
+[3b63aa7 | 2026-07-04 04:54:21 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Fix :list cget coercion and loosen environment-brittle specs
+
+    EvalResult.to_list type-guesses each element from Tcl's cached obj type,
+    so a list option like -padding came back as [10] or ['10'] depending on
+    shimmering. Pin :list cget options to string elements, matching Tk
+    semantics (they may hold screen distances like '2m') and every :list
+    spec expectation.
+    
+    Loosen assertions that depend on the host's Tk version, fonts, and
+    colour theme: canvas item colours accept 'black' or '#000000', text
+    -background/displaylines/ypixels accept the observed ranges, and
+    winfo rgb('green') asserts shape and range rather than an exact value.
+
+[252414b | 2026-07-04 04:54:10 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Modernize gems and flake devShell
+
+    Trim the Gemfile to what is actually used (ffi, rake, and bacon/pry for
+    dev) and regenerate Gemfile.lock and gemset.nix against Ruby 4.0
+    (ffi 1.17.4, rake 13.4.2, pure-ruby platform).
+    
+    Provide gems via bundlerEnv so the ruby-4.0 gem environment stays clean:
+    the previous shell mixed pkgs.bundler (2.7.2) and pkgs.rubocop (built
+    against ruby 3.4) into GEM_PATH, shadowing ruby 4.0's own bundler and
+    breaking native extensions. rubocop is reached via treefmt instead.
+    
+    Drop xvfb-run: the specs run against the ambient $DISPLAY, and a bare
+    Xvfb has no window manager so the focus-dependent event specs hang.
+    
+    Refresh .rubocop_todo.yml for the current tree.
+
+[4c79148 | 2026-07-04 04:53:55 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Port to Ruby 4.0
+
+    Proc.new without a block is a hard error since Ruby 3.0, so capture the
+    block explicitly with &block in thread_sender, command/bind,
+    command/after, and widget/checkbutton.
+    
+    tasks/bacon.rake dropped require 'scanf' and 'matrix' (both removed from
+    the stdlib); parse the bacon summary with a regexp and sum totals with
+    plain arrays instead.
+    
+    Rakefile drops the deprecated Gem::Specification#has_rdoc=.
+
+[ac78b94 | 2026-07-04 04:03:39 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Modernize RuboCop config for RuboCop 1.80
+
+    The old .rubocop_todo.yml referenced renamed/moved cops and aborted
+    the linter. Regenerate it against RuboCop 1.80 (1568 offenses catalogued)
+    so `nix flake check` passes.
+    
+    - Bump TargetRubyVersion 2.3 -> 3.1 (2.3 unsupported)
+    - Exclude pkg/ and vendor/ build artifacts
+
+[7925c39 | 2026-07-04 04:03:31 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Replace shell.nix with flake-parts flake
+
+    Add a flake.nix built on flake-parts with treefmt-nix wired in:
+    - devShell on ruby_4_0 with bundler, bundix, rubocop, tcl/tk, zip
+    - treefmt as `nix fmt` and a `nix flake check`
+    - linting: nixfmt, deadnix, statix (Nix); rubocop (Ruby)
+    
+    Update stale package attrs: ruby_2_4 -> ruby_4_0, tcl-8_6 -> tcl.
+    Reformat gemset.nix with nixfmt.
+
+[44c80bb | 2018-02-25 11:21:54 UTC] Michael Fellinger <michael.fellinger@xing.com>
+
+  * update all the gems
+
+[bac7712 | 2018-02-25 11:20:16 UTC] Michael Fellinger <michael.fellinger@xing.com>
+
+  * Fix colorpicker and authors
+
 [7fee25f | 2018-02-20 17:14:49 UTC] Michael Fellinger <michael.fellinger@xing.com>
 
   * Version 2018.02.20

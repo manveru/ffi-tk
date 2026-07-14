@@ -28,7 +28,24 @@ GEMSPEC = Gem::Specification.new do |s|
   s.homepage     = 'http://github.com/manveru/ffi-tk'
   s.platform     = Gem::Platform::RUBY
   s.version      = PROJECT_VERSION
-  s.files        = `git ls-files`.split("\n").sort
+  # A curated manifest, not `git ls-files`: the git listing sweeps in dev/CI
+  # infra (flake.nix, gemset.nix, .rubocop.yml, tasks/, spec/, Gemfile, ...)
+  # that has no place in a published gem, and it silently yields an empty list
+  # when building from a tarball with no .git. These globs ship only what a
+  # consumer needs: the library, the rwish executable, licenses, and top-level
+  # docs. `rake gemspec` freezes the expanded list into ffi-tk.gemspec.
+  s.files        = Dir[
+    'lib/**/*.rb',
+    'bin/*',
+    'doc/*',
+    'README.md',
+    'CHANGELOG',
+    'AUTHORS',
+    'TODO.md',
+    'ffi-tk.gemspec'
+  ].sort
+  s.bindir       = 'bin'
+  s.executables  = ['rwish']
   s.require_path = 'lib'
   s.required_ruby_version = '>= 4.0'
   s.required_rubygems_version = '>= 1.3.3'
