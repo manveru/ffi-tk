@@ -71,7 +71,7 @@ module FFI
       def self.to_dict(interp, obj)
         out = {}
 
-        search = MemoryPointer.new(:pointer)
+        search = TclDictSearch.new
         done = MemoryPointer.new(:int)
         key_ptr = MemoryPointer.new(:pointer)
         value_ptr = MemoryPointer.new(:pointer)

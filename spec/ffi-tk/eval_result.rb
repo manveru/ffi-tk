@@ -116,6 +116,11 @@ describe FFI::Tcl::EvalResult do
     value.should == { 'k' => 'v', 'k2' => 'v2' }
   end
 
+  it 'iterates a multi-entry dict correctly through the search cursor' do
+    guess('dict create a 1 b 2 c 3 d 4 e 5')
+      .should == { 'a' => '1', 'b' => '2', 'c' => '3', 'd' => '4', 'e' => '5' }
+  end
+
   # SURPRISE: dict values are pulled with get_string_from_obj, NOT re-guessed,
   # so a nested dict comes back as its flat string representation, not a Hash.
   it 'does not recursively convert dict values (nested dict stays a String)' do

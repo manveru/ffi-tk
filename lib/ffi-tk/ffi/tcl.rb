@@ -4,6 +4,7 @@ require 'ffi-tk/ffi/tcl/obj'
 require 'ffi-tk/ffi/tcl/interp'
 require 'ffi-tk/ffi/tcl/cmd_proc'
 require 'ffi-tk/ffi/tcl/time'
+require 'ffi-tk/ffi/tcl/dict_search'
 require 'ffi-tk/ffi/tcl/eval_result'
 
 module FFI
