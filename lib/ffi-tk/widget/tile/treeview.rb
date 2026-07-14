@@ -102,7 +102,10 @@ module Tk
         if new_children.empty?
           execute(:children, item).to_a.map { |child| Item.new(self, child) }
         else
-          execute(:children, item, *new_children.flatten)
+          # `treeview children item ?newchildren?` takes the new children as a
+          # single Tcl list, not as separate trailing arguments -- splatting
+          # them raises "wrong # args".
+          execute(:children, item, new_children.flatten)
         end
       end
 

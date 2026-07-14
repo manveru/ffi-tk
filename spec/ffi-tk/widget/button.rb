@@ -43,4 +43,11 @@ describe Tk::Button do
     plain.invoke.should.nil?
     plain.destroy
   end
+
+  it 'flashes without raising' do
+    button = Tk::Button.new(text: 'flash me')
+    button.pack
+    -> { button.flash }.should.not.raise
+    button.destroy
+  end
 end

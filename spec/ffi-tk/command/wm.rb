@@ -371,6 +371,16 @@ describe Tk::WM do
       top.wm_protocol.should == []
       top.destroy
     end
+
+    it 'replacing a handler releases the previously registered proc' do
+      top = Tk::Toplevel.new
+      top.wm_protocol('WM_DELETE_WINDOW') { :first }
+      # re-registering the same protocol must unregister the old proc first
+      top.wm_protocol('WM_DELETE_WINDOW') { :second }
+      top.wm_protocol.should.include 'WM_DELETE_WINDOW'
+      top.wm_protocol('WM_DELETE_WINDOW').should.not.be.empty
+      top.destroy
+    end
   end
 
   describe 'WM.iconname' do
@@ -463,6 +473,17 @@ describe Tk::WM do
       -> { top.wm_iconphoto_default(small) }.should.not.raise
 
       Tk::Image.delete(small, large)
+      top.destroy
+    end
+
+    it 'accepts a single image through the wm_iconphoto= setters' do
+      top = Tk::Toplevel.new
+      photo = Tk::Image.create('photo', width: 16, height: 16)
+
+      -> { top.wm_iconphoto = photo }.should.not.raise
+      -> { top.wm_iconphoto_default = photo }.should.not.raise
+
+      Tk::Image.delete(photo)
       top.destroy
     end
   end

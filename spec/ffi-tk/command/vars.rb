@@ -31,4 +31,22 @@ describe 'tkvars' do
   it 'does not have text_relayout set' do
     -> { Tk.text_relayout }.should.raise(NameError)
   end
+
+  it 'switches to a different library path and back' do
+    original = Tk.library
+    Tk.library = '/tmp/some-other-tk-library'
+    Tk.library.should == '/tmp/some-other-tk-library'
+    Tk.library = original
+    Tk.library.should == original
+  end
+
+  it 'reports the text_redraw debug variable once a text widget sets it' do
+    t = Tk::Text.new
+    t.pack
+    t.debug(true)
+    t.insert('1.0', "trigger a redraw\n")
+    Tk.execute('update')
+    # the variable exists and reads back (its exact contents are Tk-internal)
+    -> { Tk.text_redraw }.should.not.raise
+  end
 end

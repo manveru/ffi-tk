@@ -271,6 +271,43 @@ describe 'Tk::Tile::Treeview coverage' do
     tv.yview.first.should > top_before
   end
 
+  it 'deletes every top-level item via clear' do
+    tv, = build(rows: [['a'], ['b'], ['c']])
+    tv.children(nil).size.should == 3
+    tv.clear
+    tv.children(nil).should == []
+  end
+
+  it 'replaces an item child list via the children setter' do
+    tv, (a, b) = build(rows: [['a'], ['b']])
+    x = tv.insert(a.id, :end, text: 'x')
+    y = tv.insert(b.id, :end, text: 'y')
+
+    # move both x and y under a by rewriting a's child list
+    tv.children(a.id, x.id, y.id)
+    tv.children(a).map(&:id).sort.should == [x.id, y.id].sort
+    tv.children(b).should == []
+  end
+
+  it 'modifies and queries widget state' do
+    tv, = build(rows: [['a']])
+    tv.state(:disabled)
+    tv.state.should.include 'disabled'
+    tv.state('!disabled')
+    tv.state.should.not.include 'disabled'
+  end
+
+  it 'inserts, lists children and sees through Item delegators' do
+    tv, (a,) = build(rows: [['a']])
+
+    child = a.insert(:end, text: 'child') # Item#insert
+    a.children.map(&:id).should == [child.id] # Item#children (query)
+
+    tv.item(a, :open).should == false
+    child.see # Item#see opens ancestors
+    tv.item(a, :open).should == true
+  end
+
   it 'identifies the row and column under a point' do
     tv, (a,) = build(columns: %i[size], rows: [%w[a 1]])
     next unless skip_unless_mapped(tv)

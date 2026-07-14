@@ -497,6 +497,12 @@ describe Tk::Canvas do
     cv.type(rect).should.nil?
   end
 
+  it 'renders an item as #<Class id> via Item#inspect' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(0, 0, 10, 10)
+    rect.inspect.should == "#<Tk::Canvas::Rectangle #{rect.id}>"
+  end
+
   it 'reports an item bounding box through Item#bbox' do
     cv = fresh_canvas
     rect = cv.create_rectangle(10, 10, 50, 50)

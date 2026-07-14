@@ -28,8 +28,13 @@ module Tk
 
     autoload :Style,         'ffi-tk/widget/tile/style'
 
+    # Build a dotted ttk style name from a base style and a widget/parent path,
+    # keeping only the leaf of a ::-qualified name. Defined here (not via Style)
+    # so it does not depend on the Style autoload having fired first -- the old
+    # `Style.style` delegation targeted a method that never existed and raised
+    # NoMethodError on the first call.
     def self.style(style, parent_name)
-      Style.style(style, parent_name)
+      [style, parent_name.to_s.split('::').last].join('.')
     end
 
     def self.set_theme(theme)
