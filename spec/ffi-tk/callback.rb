@@ -49,4 +49,23 @@ describe 'Ruby callback results' do
   ensure
     Tk.unregister_proc(id)
   end
+
+  # callback_break / callback_continue throw, and tcl_callback turns the catch
+  # into a Tcl BREAK / CONTINUE return code. At the top level (no enclosing
+  # loop) Tcl reports that as an error, which is how we observe the code here.
+  it 'propagates callback_break as a Tcl break return code' do
+    id, command = Tk.register_proc(proc { Tk.callback_break })
+    -> { Tk.interp.eval(command) }
+      .should.raise(RuntimeError).message.should =~ /invoked "break" outside of a loop/
+  ensure
+    Tk.unregister_proc(id)
+  end
+
+  it 'propagates callback_continue as a Tcl continue return code' do
+    id, command = Tk.register_proc(proc { Tk.callback_continue })
+    -> { Tk.interp.eval(command) }
+      .should.raise(RuntimeError).message.should =~ /invoked "continue" outside of a loop/
+  ensure
+    Tk.unregister_proc(id)
+  end
 end

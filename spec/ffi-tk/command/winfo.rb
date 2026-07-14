@@ -234,6 +234,28 @@ describe Tk::Winfo do
     root.winfo_y.should == 0
   end
 
+  # The instance delegators always pass self as the display-of window, so the
+  # module methods' default-window (main-window) branch needs a direct call.
+  describe 'module methods against the application main window' do
+    it 'round-trips atom and atomname without an explicit window' do
+      id = Tk::Winfo.atom('STRING')
+      id.should == 31
+      Tk::Winfo.atomname(id).should == 'STRING'
+    end
+
+    it 'lists interpreters including tk' do
+      Tk::Winfo.interps.should.include 'tk'
+    end
+
+    it 'maps a window id back to its pathname' do
+      Tk::Winfo.pathname(entry.winfo_id).should == entry.tk_pathname
+    end
+
+    it 'reports nil for a point containing no window' do
+      Tk::Winfo.containing(-100, -100).should.be.nil
+    end
+  end
+
   # TODO: check real screen values? (xrandr only)
   # For now it checks for a minimum of 320 x 200
   #
