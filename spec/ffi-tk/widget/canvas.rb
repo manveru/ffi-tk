@@ -496,6 +496,74 @@ describe Tk::Canvas do
     rect.delete
     cv.type(rect).should.nil?
   end
+
+  it 'reports an item bounding box through Item#bbox' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 50, 50)
+
+    box = rect.bbox
+    box.should.be.is_a? Array
+    box.size.should == 4
+    box.all? { |n| n.is_a?(Integer) }.should == true
+    # bbox is a slightly inflated version of the geometry, so it brackets it.
+    (box[0] <= 10 && box[1] <= 10).should == true
+    (box[2] >= 50 && box[3] >= 50).should == true
+  end
+
+  it 'binds an item event through Item#bind without leaking on rebind' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(0, 0, 10, 10)
+    rect.bind('<Button-1>') { |_e| }
+    rect.bind('<Button-1>') { |_e| } # rebind must not raise
+    Tk.execute(cv.tk_pathname, :bind, rect, '<Button-1>').to_s.should =~ /RubyFFI::event/
+  end
+
+  it 'raises and lowers an item in the display list through Item#raise/#lower' do
+    cv = fresh_canvas
+    low = cv.create_rectangle(0, 0, 10, 10, tags: 'low')
+    high = cv.create_rectangle(0, 0, 10, 10, tags: 'high')
+
+    # high was created last, so it starts on top.
+    cv.find_above(low).should == [high.id]
+    low.raise
+    cv.find_above(high).should == [low.id]
+    low.lower
+    cv.find_above(low).should == [high.id]
+  end
+
+  it 'scales an item about an origin through Item#scale' do
+    cv = fresh_canvas
+    rect = cv.create_rectangle(10, 10, 20, 20)
+    rect.scale(0, 0, 2, 3)
+    rect.coords.should == [20.0, 30.0, 40.0, 60.0]
+  end
+
+  it 'edits and indexes a text item through Item#dchars/#icursor/#index/#focus' do
+    cv = fresh_canvas
+    text = cv.create_text(0, 0, text: 'Hello')
+    text.index(:end).should == 5
+
+    text.focus
+    cv.focus.should == text.id
+    text.icursor(2)
+    text.index(:insert).should == 2
+
+    text.dchars(0, 1)
+    cv.itemcget(text, :text).should == 'llo'
+  end
+
+  it 'selects text-item characters through Item#select_from/#select_to/#select_adjust' do
+    cv = fresh_canvas
+    text = cv.create_text(0, 0, text: 'Hello')
+
+    text.select_from(1)
+    text.select_to(3)
+    cv.select_item.should == text.id
+
+    text.select_adjust(4)
+    # sel.last follows the adjusted end; the selection still belongs to the item.
+    cv.select_item.should == text.id
+  end
 end
 
 # %w[ ].each{|name| puts "@line.%s.should == nil" % [name.delete(':,')] }

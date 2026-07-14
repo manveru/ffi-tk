@@ -202,7 +202,9 @@ module Tk
       Event::Handler.register_custom(script) do |id|
         code = '%s bind %s %s { ::RubyFFI::event %d %s %s }'
         props = Event::Data::PROPERTIES.transpose[0].join(' ')
-        tcl = format(code, tk_pathname, tag_or_id, sequence, id, sequence, props)
+        # tag_or_id may be a Canvas::Item, whose bare to_s is a struct dump;
+        # to_tcl yields the item's numeric canvas id (and quotes a string tag).
+        tcl = format(code, tk_pathname, tag_or_id.to_tcl, sequence, id, sequence, props)
         Tk.interp.eval(tcl)
         @events[name] = id
       end

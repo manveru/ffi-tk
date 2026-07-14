@@ -791,5 +791,85 @@ describe Tk::Text do
     end
   end
 
+  describe 'Text#debug' do
+    it 'sets and queries the consistency-check debug flag' do
+      t = Tk::Text.new
+      t.debug(true)
+      t.debug.should == true
+      t.debug(false)
+      t.debug.should == false
+    end
+  end
+
+  describe 'Text#edit_modified (query form)' do
+    it 'reflects the modified flag after an insert' do
+      t = Tk::Text.new
+      t.edit_modified(false)
+      t.edit_modified.should == 0
+      t.insert('1.0', 'dirty')
+      t.edit_modified.should == 1
+    end
+  end
+
+  describe 'Text#image_names' do
+    it 'is empty on a text with no embedded images' do
+      t = Tk::Text.new
+      t.image_names.should.be.nil
+    end
+  end
+
+  describe 'Text#rsearch' do
+    it 'searches backwards, finding the last match before the others' do
+      t = Tk::Text.new
+      t.insert('1.0', "line one\nline two\nline three\n")
+      # forwards finds the first "line"; backwards finds the last.
+      t.search('line', '1.0', 'end').should == ['1.0']
+      t.rsearch('line', 'end', '1.0').should == ['3.0']
+    end
+  end
+
+  describe 'Text#window_create (no options)' do
+    it 'creates an empty embedded-window slot when given no options' do
+      t = Tk::Text.new
+      t.pack
+      t.insert('1.0', "abc\n")
+      # The no-options form makes an annotation with no widget yet, so it adds
+      # no name to window_names but must not raise.
+      -> { t.window_create('1.1') }.should.not.raise
+      t.window_names.should == []
+    end
+  end
+
+  describe 'Text clipboard verbs' do
+    it 'copy/cut/paste drive the tk_text* helpers without raising' do
+      t = Tk::Text.new
+      t.pack
+      t.insert('1.0', 'clipboard text')
+      t.tag_add('sel', '1.0', '1.9')
+      lambda do
+        t.copy
+        t.cut
+        t.paste
+      end.should.not.raise
+    end
+  end
+
+  describe 'Text cursor-motion position helpers' do
+    it 'return valid line.char indices for word/line/page motion' do
+      t = Tk::Text.new
+      t.pack
+      t.insert('1.0', "first line here\nsecond line here\nthird line here\n")
+      index_re = /\A\d+\.\d+\z/
+
+      t.tk_prev_word_pos('2.7').should =~ index_re
+      t.tk_next_word_pos('2.7').should =~ index_re
+      t.tk_next_word_pos_end('2.7').should =~ index_re
+      t.tk_prev_line_pos(1).should =~ index_re
+      t.tk_next_line_pos(1).should =~ index_re
+      t.tk_prev_page_pos(1).should =~ index_re
+      t.tk_next_page_pos(1).should =~ index_re
+    end
+  end
+
   # TODO: image handling
 end

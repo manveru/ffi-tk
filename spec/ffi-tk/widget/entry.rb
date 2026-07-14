@@ -215,4 +215,46 @@ describe Tk::Entry do
     entry.configure validatecommand: ->(*_args) { false }
     entry.validate.should == false
   end
+
+  # --- value/cursor convenience helpers (round-trip through the widget) -----
+  it 'reads and writes the whole string via value/value=' do
+    entry.value = 'convenience'
+    entry.value.should == 'convenience'
+    entry.get.should == 'convenience'
+  end
+
+  it 'empties the entry via clear' do
+    entry.value = 'not empty'
+    entry.clear
+    entry.value.should == ''
+  end
+
+  it 'reads and moves the insertion cursor via cursor/cursor=' do
+    entry.value = 'abcdef'
+    entry.cursor = 3
+    entry.cursor.should == 3
+    entry.cursor = :end
+    entry.cursor.should == 6
+  end
+
+  # --- xview: query returns two fractions, the setters just move the view ---
+  it 'returns the visible horizontal span as two fractions with no index' do
+    entry.value = 'x' * 500
+    span = entry.xview
+    span.should.be.is_a? Array
+    span.size.should == 2
+    span[0].should.be.is_a? Float
+    span[1].should.be.is_a? Float
+    span[0].should <= span[1]
+  end
+
+  it 'shifts the view with xview(index), xview_moveto and xview_scroll' do
+    entry.value = 'x' * 500
+    lambda do
+      entry.xview(100)
+      entry.xview_moveto(0.5)
+      entry.xview_scroll(2, :units)
+    end.should.not.raise
+    entry.xview[0].should > 0.0
+  end
 end

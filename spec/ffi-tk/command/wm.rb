@@ -7,12 +7,9 @@ Tk.init
 describe Tk::WM do
   root = Tk.root
 
-  # FIXME: following methods have no specs yet because image commands are missing.
-  #  * WM.forget
-  #  * WM.iconbitmap_default
-  #  * WM.iconphoto / WM.iconphoto_default
-  #  * WM.iconwindow
-  #  * WM.manage
+  # WM.iconbitmap_default is intentionally not exercised: it always passes the
+  # `-default` flag, which `wm iconbitmap` only accepts on Windows. On X11 (where
+  # the suite runs) it raises "wrong # args", so there is nothing to assert here.
 
   describe 'WM.aspect' do
     should 'list current attributes' do
@@ -422,6 +419,72 @@ describe Tk::WM do
       top.wm_iconwindow.should == icon.tk_pathname
       top.destroy
       icon.destroy
+    end
+  end
+
+  # A frame is not a wm-managed window, so `wm state` on it raises until
+  # `wm manage` promotes it to a stand-alone toplevel; `wm forget` reverts it.
+  describe 'WM.manage and WM.forget' do
+    it 'promotes a frame to a managed toplevel and back (wm_manage/wm_forget)' do
+      frame = Tk::Frame.new(root)
+      -> { frame.wm_state }.should.raise(RuntimeError)
+
+      frame.wm_manage
+      # once managed, wm state answers with a valid toplevel state (the exact
+      # value is window-manager dependent: normal or iconic).
+      %w[normal iconic withdrawn].should.include frame.wm_state
+
+      frame.wm_forget
+      -> { frame.wm_state }.should.raise(RuntimeError)
+      frame.destroy
+    end
+  end
+
+  describe 'WM.state (explicit new_state)' do
+    it 'sets the state directly through wm_state=' do
+      top = Tk::Toplevel.new
+      Tk.execute('update')
+      top.wm_state = 'withdrawn'
+      top.wm_state.should == 'withdrawn'
+      top.wm_state = 'normal'
+      Tk.execute('update')
+      top.wm_state.should == 'normal'
+      top.destroy
+    end
+  end
+
+  describe 'WM.iconphoto and WM.iconphoto_default' do
+    it 'accepts one or more photo images as the titlebar icon' do
+      top = Tk::Toplevel.new
+      small = Tk::Image.create('photo', width: 16, height: 16)
+      large = Tk::Image.create('photo', width: 32, height: 32)
+
+      -> { top.wm_iconphoto(small, large) }.should.not.raise
+      -> { top.wm_iconphoto_default(small) }.should.not.raise
+
+      Tk::Image.delete(small, large)
+      top.destroy
+    end
+  end
+
+  describe 'WM.iconmask (set)' do
+    it 'sets a bitmap mask and reads it back through wm_iconmask=' do
+      top = Tk::Toplevel.new
+      top.wm_iconmask = 'info'
+      top.wm_iconmask.should == 'info'
+      top.destroy
+    end
+  end
+
+  describe 'WM.stackorder (instance delegator)' do
+    it 'returns the mapped toplevels through wm_stackorder' do
+      top = Tk::Toplevel.new
+      next unless skip_unless_mapped(top)
+
+      order = top.wm_stackorder
+      order.class.should == Array
+      order.should.include top.tk_pathname
+      top.destroy
     end
   end
 end

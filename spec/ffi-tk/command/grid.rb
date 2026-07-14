@@ -148,4 +148,87 @@ describe Tk::Grid do
     Tk::Grid.remove(drop)
     Tk::Grid.slaves(root).should == [keep.tk_pathname]
   end
+
+  # --- instance delegators: each grid_* mixin method forwards self as the ----
+  # window and must behave exactly like the Tk::Grid.* form it wraps.
+  describe 'Widget#grid_* delegators forward self to Tk::Grid' do
+    before { reset_root! }
+
+    it 'grid_configure/grid_info place the slave and read the placement back' do
+      b = Tk::Button.new(root)
+      b.grid_configure(column: 1, row: 2, padx: 4)
+      info = b.grid_info
+      info[:column].should == 1
+      info[:row].should == 2
+      info[:padx].should == 4
+    end
+
+    it 'grid_slave places the slave like grid_configure' do
+      b = Tk::Button.new(root)
+      b.grid_slave(column: 2, row: 3)
+      b.grid_info[:column].should == 2
+      b.grid_info[:row].should == 3
+    end
+
+    it 'grid_forget drops the slave from its master set' do
+      keep = Tk::Button.new(root)
+      drop = Tk::Button.new(root)
+      keep.grid_configure(column: 0, row: 0)
+      drop.grid_configure(column: 1, row: 0)
+      drop.grid_forget
+      root.grid_slaves.should == [keep.tk_pathname]
+    end
+
+    it 'grid_remove drops the slave but remembers its config' do
+      b = Tk::Button.new(root)
+      b.grid_configure(column: 1, row: 1, sticky: 'ew')
+      b.grid_remove
+      root.grid_slaves.should.be.nil # empty Tcl list -> nil, as Tk::Grid.slaves
+      # re-managing restores the remembered sticky
+      b.grid_configure
+      b.grid_info[:sticky].should == 'ew'
+    end
+
+    it 'grid_bbox and grid_location resolve a mapped cell' do
+      b = Tk::Button.new(root)
+      b.grid_configure(column: 0, row: 0)
+      next unless skip_unless_mapped(b)
+
+      box = root.grid_bbox(0, 0)
+      box.size.should == 4
+      box.all? { |n| n.is_a?(Integer) }.should == true
+      tcl_eq(root.grid_location(2, 2), [0, 0]).should == true
+    end
+
+    it 'grid_columnconfigure/grid_rowconfigure set and query cell properties' do
+      Tk::Button.new(root).grid_configure(column: 0, row: 0)
+      root.grid_columnconfigure(0, weight: 3)
+      root.grid_rowconfigure(0, minsize: 20)
+      root.grid_columnconfigure(0, :weight).should == 3
+      root.grid_rowconfigure(0, :minsize).should == 20
+    end
+
+    it 'grid_propagate toggles and reports geometry propagation' do
+      root.grid_propagate(false)
+      root.grid_propagate.should == 0
+      root.grid_propagate(true)
+      root.grid_propagate.should == 1
+    end
+
+    it 'grid_anchor sets and queries the master anchor' do
+      root.grid_anchor('se')
+      root.grid_anchor.should == 'se'
+      root.grid_anchor('nw')
+      root.grid_anchor.should == 'nw'
+    end
+
+    it 'grid_size and grid_slaves report the managed grid' do
+      a = Tk::Button.new(root)
+      b = Tk::Button.new(root)
+      a.grid_configure(column: 0, row: 0)
+      b.grid_configure(column: 2, row: 1)
+      tcl_eq(root.grid_size, [3, 2]).should == true
+      root.grid_slaves.should == [b.tk_pathname, a.tk_pathname]
+    end
+  end
 end

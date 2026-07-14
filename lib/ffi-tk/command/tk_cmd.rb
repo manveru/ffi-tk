@@ -5,13 +5,15 @@ module Tk
   # Mixin for the `tk` command's application-level queries (scaling, appname, ...).
   module TkCmd
     # @see TkCmd.appname
+    # `tk appname` is interpreter-global with no -displayof form, so the query
+    # takes no argument (passing self would rename the app to the widget path).
     def tk_appname
-      TkCmd.appname(self)
+      TkCmd.appname
     end
 
     # @see TkCmd.appname
     def tk_appname=(new_name)
-      TkCmd.appname(self, new_name)
+      TkCmd.appname(new_name)
     end
 
     # @see TkCmd.caret
