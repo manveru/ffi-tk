@@ -8,12 +8,19 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ inputs.treefmt-nix.flakeModule ];
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.git-hooks.flakeModule
+      ];
 
       systems = [
         "x86_64-linux"
@@ -49,12 +56,48 @@
               # Ruby
               rubocop.enable = true;
             };
+            # treefmt-nix routes only *.rb to rubocop by default, which would
+            # leave the Rakefile and tasks/*.rake unguarded -- exactly the files
+            # that rotted before. rubocop's own default Include covers these, so
+            # widen treefmt to match, keeping the gate and a bare `rubocop` run
+            # in agreement.
+            settings.formatter.rubocop = {
+              includes = [
+                "*.rb"
+                "*.rake"
+                "*.gemspec"
+                "Rakefile"
+                "Gemfile"
+              ];
+              # treefmt hands rubocop explicit paths; without --force-exclusion
+              # rubocop ignores AllCops/Exclude for explicitly-passed files and
+              # would lint the generated, excluded ffi-tk.gemspec (141 offenses).
+              # This makes per-file runs honour Exclude like a bare `rubocop`.
+              options = [ "--force-exclusion" ];
+            };
+          };
+
+          # A git pre-commit hook that runs treefmt (rubocop + nix formatters)
+          # over staged files and blocks the commit on any offense. This is what
+          # keeps rubocop from silently rotting: it can no longer be skipped by
+          # forgetting to run `nix flake check`. The hook's treefmt package is
+          # auto-wired to the treefmt config above by the git-hooks flakeModule.
+          # Installed into .git/hooks by the devShell shellHook below.
+          pre-commit = {
+            # Only install the local git hook; don't also add a hooks run to
+            # `nix flake check` (treefmt-nix already provides that check, and
+            # no CI runs it — this stays a purely local guardrail).
+            check.enable = false;
+            settings.hooks.treefmt.enable = true;
           };
 
           devShells.default = pkgs.mkShell {
             SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
             TCL_LIBPATH = "${pkgs.tcl}/lib/libtcl8.6.so";
             TK_LIBPATH = "${pkgs.tk}/lib/libtk8.6.so";
+
+            # Installs the pre-commit hook into .git/hooks on shell entry.
+            shellHook = config.pre-commit.installationScript;
 
             packages = [
               gems # rake, bacon, pry, ffi as bundle wrappers on PATH
