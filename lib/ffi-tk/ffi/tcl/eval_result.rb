@@ -62,8 +62,10 @@ module FFI
         end
       end
 
+      # A :window-typed Tcl_Obj's string representation is its path name, so
+      # resolve it the same way as any string result.
       def self.to_window(interp, obj)
-        p interp: interp, obj: obj
+        to_string(interp, obj)
       end
 
       def self.to_dict(interp, obj)

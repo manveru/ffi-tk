@@ -585,7 +585,7 @@ module Tk
     # in the widget, to produce the effect of dragging the text at high speed
     # through the window.
     # The return value is nil.
-    def scan_dargto(x, y)
+    def scan_dragto(x, y)
       execute_only(:scan, :dragto, x, y)
     end
 
@@ -814,9 +814,9 @@ module Tk
     # window as a whole.
     def tag_bind(tag_name, sequence = None, &script)
       if !script && sequence == None
-        return Tk.execute(:tag, :bind, tag_name)
+        return execute(:tag, :bind, tag_name)
       elsif !script
-        return Tk.execute(:tag, :bind, tag_name, sequence)
+        return execute(:tag, :bind, tag_name, sequence)
       end
 
       # create name for command
@@ -836,7 +836,7 @@ module Tk
     def unregister_event(name, id = @events[name])
       return unless id
 
-      @events.delete(id)
+      @events.delete(name)
       Event::Handler.unregister(id)
     end
 

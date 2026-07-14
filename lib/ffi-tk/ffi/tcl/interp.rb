@@ -74,14 +74,17 @@ module FFI
       end
 
       def wait_for_event(seconds = 0.0)
-        if seconds && seconds > 0.0
-          seconds, microseconds = (seconds * 1000).divmod(1000)
-          time = TclTime.new(seconds, microseconds)
-        else
-          time = nil
-        end
+        Tcl.wait_for_event(tcl_time(seconds))
+      end
 
-        Tcl.wait_for_event(time)
+      # Split a duration in seconds into a Tcl_Time (whole seconds + the
+      # remainder in microseconds). Returns nil for a non-positive duration,
+      # which tells Tcl_WaitForEvent to block/poll rather than time out.
+      def tcl_time(seconds)
+        return nil unless seconds && seconds > 0.0
+
+        whole = seconds.to_i
+        TclTime.new(whole, ((seconds - whole) * 1_000_000).round)
       end
 
       def do_one_event(flag = 0)

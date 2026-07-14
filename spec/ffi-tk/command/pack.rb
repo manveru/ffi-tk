@@ -19,4 +19,14 @@ describe Tk::Pack do
     Tk::Pack.forget(@button)
     -> { Tk::Pack.info(@button) }.should.raise
   end
+
+  it 'reconfigures packing options via #pack_configure' do
+    b = Tk::Button.new('.')
+    b.pack
+    b.pack_configure(padx: 7, side: :left)
+    info = b.pack_info
+    info[:padx].should == 7
+    info[:side].should == :left
+    b.pack_forget
+  end
 end

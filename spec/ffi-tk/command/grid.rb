@@ -30,6 +30,15 @@ describe Tk::Grid do
     }
   end
 
+  it 'places a slave like grid configure when the first arg is a window (#slave)' do
+    b = button('a')
+    Tk::Grid.slave(b, column: 1, row: 2)
+
+    info = Tk::Grid.info(b)
+    info[:column].should == 1
+    info[:row].should == 2
+  end
+
   it 'lists the managed slaves, most recently managed first' do
     b0 = button('0')
     b1 = button('1')

@@ -751,9 +751,9 @@ module Tk
     # window.
     def iconwindow(window, pathname = None)
       if pathname == None
-        Tk.execute_only(:wm, :iconwindow, window)
+        Tk.execute(:wm, :iconwindow, window)
       else
-        Tk.execute(:wm, :iconwindow, window, pathname)
+        Tk.execute_only(:wm, :iconwindow, window, pathname)
       end
     end
 

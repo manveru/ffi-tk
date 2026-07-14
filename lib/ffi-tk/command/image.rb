@@ -35,7 +35,7 @@ module Tk
       elsif options == None && name.respond_to?(:to_hash)
         Tk.execute(:image, :create, type, name.to_tcl_options)
       elsif name != None && options != None
-        Tk.exeucte(:image, :create, type, name, options.to_tcl_options)
+        Tk.execute(:image, :create, type, name, options.to_tcl_options)
       end
     end
 
@@ -51,9 +51,14 @@ module Tk
       Tk.execute(:image, :delete, *names)
     end
 
-    # Returns a decimal string giving the height of image name in pixels.
+    # Returns the height of image name in pixels as an Integer.
     def height(name)
       Tk.execute(:image, :height, name)
+    end
+
+    # Returns the width of image name in pixels as an Integer.
+    def width(name)
+      Tk.execute(:image, :width, name)
     end
 
     # Returns a boolean value indicating whether or not the image given by name

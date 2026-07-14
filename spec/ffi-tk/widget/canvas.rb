@@ -427,10 +427,12 @@ describe Tk::Canvas do
     cv.select_item.should.nil?
   end
 
-  it 'reports the visible view fractions' do
+  it 'reports the visible view fractions as floats' do
     cv = fresh_canvas
     cv.xview.should == [0.0, 1.0]
     cv.yview.should == [0.0, 1.0]
+    cv.xview.all? { |n| n.is_a?(Float) }.should == true
+    cv.yview.all? { |n| n.is_a?(Float) }.should == true
   end
 
   it 'renders postscript' do

@@ -822,7 +822,7 @@ module Tk
     # These are the same values passed to scrollbars via the -yscrollcommand
     # option.
     def yview
-      execute(:yview)
+      execute(:yview).to_a(&:to_f)
     end
 
     # Adjusts the view in the window so that fraction of the canvas's area is

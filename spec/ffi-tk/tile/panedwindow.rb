@@ -26,4 +26,13 @@ describe Tk::Tile::PanedWindow do
     pw.pane(child, weight: 3)
     pw.pane(child, :weight).should == 3
   end
+
+  it 'does not expose classic-only subcommands ttk::panedwindow lacks' do
+    pw = Tk::Tile::PanedWindow.new
+    pw.respond_to?(:panecget).should == false
+    pw.respond_to?(:paneconfigure).should == false
+    pw.respond_to?(:sash_coord).should == false
+    pw.respond_to?(:proxy_place).should == false
+    -> { pw.panecget(0, :weight) }.should.raise(NoMethodError)
+  end
 end

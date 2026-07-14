@@ -177,6 +177,15 @@ describe 'Tk::Tile::Treeview coverage' do
     tv.tag_configure(:cold)[:foreground].should.nil?
   end
 
+  it 'binds a tag event through the RubyFFI event trampoline' do
+    tv, = build(rows: [['a']])
+    tv.tag_bind('hot', '<Button-1>') { |_e| }
+
+    # Querying the bound script must reveal the real ::RubyFFI::event trampoline
+    # (which delivers event data), not a bare callback with no substitutions.
+    tv.tag_bind('hot', '<Button-1>').to_s.should =~ /RubyFFI::event/
+  end
+
   it 'moves an item to a new parent and index' do
     tv, (a, b) = build(rows: [['a'], ['b']])
     child = tv.insert(a.id, :end, text: 'child')

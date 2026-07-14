@@ -77,7 +77,7 @@ module Tk
     end
 
     def pack_configure(options = {})
-      Tk.execute_only('pack', 'configure', self, options)
+      Tk.execute_only('pack', 'configure', self, options.to_tcl_options)
       self
     end
 

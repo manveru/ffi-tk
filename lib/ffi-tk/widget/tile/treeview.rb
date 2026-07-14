@@ -437,7 +437,22 @@ module Tk
       # The binding script undergoes %-substitutions before evaluation; see
       # bind(n) for details.
       def tag_bind(tag_name, sequence = None, &script)
-        execute(:tag, :bind, tag_name, sequence, script)
+        unless script
+          return execute(:tag, :bind, tag_name) if sequence == None
+
+          return execute(:tag, :bind, tag_name, sequence)
+        end
+
+        name = "#{tk_pathname}_#{tag_name}".scan(/\w+/).join('_')
+        @events ||= {}
+
+        Event::Handler.register_custom(script) do |id|
+          code = "%s tag bind %s %s { ::RubyFFI::event %d '' %s }"
+          props = Event::Data::PROPERTIES.transpose[0].join(' ')
+          tcl = format(code, tk_pathname, tag_name, sequence, id, props)
+          Tk.interp.eval(tcl)
+          @events[name] = id
+        end
       end
 
       # Query or modify the options for the specified tagName.

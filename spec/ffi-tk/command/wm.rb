@@ -413,4 +413,15 @@ describe Tk::WM do
       top.destroy
     end
   end
+
+  describe 'WM.iconwindow' do
+    should 'set an icon window and read it back' do
+      top = Tk::Toplevel.new
+      icon = Tk::Toplevel.new
+      top.wm_iconwindow = icon
+      top.wm_iconwindow.should == icon.tk_pathname
+      top.destroy
+      icon.destroy
+    end
+  end
 end

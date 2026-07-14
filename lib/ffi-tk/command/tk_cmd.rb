@@ -151,11 +151,11 @@ module Tk
     # If the boolean argument is omitted, the current state is returned.
     # This is turned on by default for the main display.
     def useinputmethods(boolean = None, window = None)
-      if window == None
-        Tk.execute(:tk, :useinputmethods, boolean ? true : false)
-      else
-        Tk.execute(:tk, :useinputmethods, '-displayof', window, boolean ? true : false)
-      end
+      args = [:tk, :useinputmethods]
+      args.push('-displayof', window) unless window == None
+      return Tk.boolean(Tk.execute(*args)) if boolean == None
+
+      Tk.execute(*args, boolean ? true : false)
     end
 
     def windowingsystem

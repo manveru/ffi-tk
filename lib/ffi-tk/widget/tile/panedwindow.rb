@@ -21,6 +21,13 @@ module Tk
         width: :string
       )
 
+      # ttk::panedwindow has no sash/proxy subcommands and no per-pane
+      # cget/configure (use #pane and #sashpos instead), so drop the classic
+      # wrappers inherited from Tk::PanedWindow rather than emit invalid Tcl.
+      undef_method :sash_coord, :sash_dragto, :sash_mark, :sash_place,
+                   :proxy_coord, :proxy_forget, :proxy_place,
+                   :panecget, :paneconfigure
+
       # Option schema for the flat `pane` subcommand surface
       # (ttk_panedwindow(3tk)): -weight is the sole pane option, an integer.
       PANE_SCHEMA = Option::Schema.new(types: { weight: :integer })

@@ -763,5 +763,23 @@ describe Tk::Text do
     end
   end
 
+  describe 'Text#tag_bind' do
+    it 'queries tag bindings against the widget, not a bogus top-level command' do
+      t = Tk::Text.new
+      t.pack
+      t.tag_bind('mytag').should.nil?               # query all bindings for a tag
+      t.tag_bind('mytag', '<Button-1>').should.nil? # query one sequence's script
+    end
+  end
+
+  describe 'Text#scan_dragto' do
+    it 'exposes a correctly spelled scan_dragto that drives the scan' do
+      t = Tk::Text.new
+      t.pack
+      t.scan_mark(0, 0)
+      t.scan_dragto(0, 10).should == true
+    end
+  end
+
   # TODO: image handling
 end

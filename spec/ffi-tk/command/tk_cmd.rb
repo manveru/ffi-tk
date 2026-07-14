@@ -22,4 +22,13 @@ describe Tk::TkCmd do
       root.tk_caret.should == { height: 15, x: 7, y: 9 }
     end
   end
+
+  describe 'TkCmd.useinputmethods' do
+    it 'queries the current state without forcing it on' do
+      Tk::TkCmd.useinputmethods(false)
+      Tk::TkCmd.useinputmethods.should == false
+      Tk::TkCmd.useinputmethods(true)
+      Tk::TkCmd.useinputmethods.should == true
+    end
+  end
 end

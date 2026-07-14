@@ -252,4 +252,14 @@ describe FFI::Tcl::EvalResult do
   it 'inspect wraps the string form' do
     eval_result('set x hello').inspect.should == '#<EvalResult hello>'
   end
+
+  # A :window-typed result must resolve to the window's path-name string, not a
+  # debug dump. (The :window internal type is unreachable via plain eval, so the
+  # converter contract is exercised directly.)
+  it 'to_window returns the window path-name string' do
+    interp = Tk.interp
+    interp.eval('set x .')
+    obj = FFI::Tcl::Obj.new(FFI::Tcl.get_obj_result(interp))
+    FFI::Tcl::EvalResult.to_window(interp, obj).should == '.'
+  end
 end
