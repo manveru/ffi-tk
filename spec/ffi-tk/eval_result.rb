@@ -227,6 +227,11 @@ describe FFI::Tcl::EvalResult do
     eval_result('set x hello').to_sym.should == :hello
   end
 
+  it 'to_sym? symbolizes the string form, nil when empty' do
+    eval_result('set x hello').to_sym?.should == :hello
+    eval_result('set x {}').to_sym?.should.be.nil
+  end
+
   it 'to_i returns an Integer, and "" for an empty object (text -endline convention)' do
     eval_result('set x 42').to_i.should == 42
     eval_result('set x {}').to_i.should == ''

@@ -20,6 +20,14 @@ describe Tk::Pack do
     -> { Tk::Pack.info(@button) }.should.raise
   end
 
+  it 'toggles geometry propagation and reports the current state' do
+    f = Tk::Frame.new('.')
+    Tk::Pack.propagate(f, false)
+    Tk::Pack.propagate(f).should == 0
+    Tk::Pack.propagate(f, true)
+    Tk::Pack.propagate(f).should == 1
+  end
+
   it 'reconfigures packing options via #pack_configure' do
     b = Tk::Button.new('.')
     b.pack

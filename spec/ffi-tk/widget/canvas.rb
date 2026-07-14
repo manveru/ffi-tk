@@ -427,6 +427,14 @@ describe Tk::Canvas do
     cv.select_item.should.nil?
   end
 
+  it 'rebinds an item/tag event without leaking the old handler' do
+    cv = fresh_canvas
+    cv.create_rectangle(0, 0, 10, 10, tags: 'r')
+    cv.bind('r', '<Button-1>') { |_e| }
+    cv.bind('r', '<Button-1>') { |_e| } # rebind must not raise
+    Tk.execute(cv.tk_pathname, :bind, 'r', '<Button-1>').to_s.should =~ /RubyFFI::event/
+  end
+
   it 'reports the visible view fractions as floats' do
     cv = fresh_canvas
     cv.xview.should == [0.0, 1.0]

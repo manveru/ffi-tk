@@ -432,7 +432,7 @@ module Tk
       if window == None
         Tk.execute(:winfo, :pathname, id).to_s
       else
-        Tk.execute(:winfo, :pathname, '-displayo', window, id).to_s
+        Tk.execute(:winfo, :pathname, '-displayof', window, id).to_s
       end
     end
 

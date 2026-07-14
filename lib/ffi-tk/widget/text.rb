@@ -837,7 +837,7 @@ module Tk
       return unless id
 
       @events.delete(name)
-      Event::Handler.unregister(id)
+      Event::Handler.unregister_block(id)
     end
 
     # This command returns the current value of the option named option

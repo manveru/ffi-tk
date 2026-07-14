@@ -99,6 +99,10 @@ describe Tk::Winfo do
     root.winfo_pathname(entry.winfo_id).should == entry.tk_pathname
   end
 
+  it 'looks up a pathname on a specific display via -displayof' do
+    Tk::Winfo.pathname(entry.winfo_id, root).should == entry.tk_pathname
+  end
+
   it 'knows location of pointer x coordinate' do
     root.winfo_pointerx.class.should == Integer
   end

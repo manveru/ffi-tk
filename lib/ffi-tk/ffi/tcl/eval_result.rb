@@ -185,7 +185,7 @@ module FFI
       end
 
       def to_sym?
-        value = self.class.to_string(interp, obj).to_sym
+        value = self.class.to_string(interp, obj)
         value.empty? ? nil : value.to_sym
       end
 

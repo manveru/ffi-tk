@@ -37,7 +37,7 @@ module FFI
       )
 
       def to_i
-        pointer.get_pointer(0).to_i
+        pointer.to_i
       end
 
       def inspect

@@ -50,6 +50,13 @@ module Tk
         id
       end
 
+      # Release a callback registered via register_block/register_custom by its
+      # id (as returned at registration). Used to clean up custom bindings (e.g.
+      # widget tag bindings) that are keyed by id rather than by [tag, sequence].
+      def unregister_block(id)
+        @mutex.synchronize { @store[id] = nil if id }
+      end
+
       def unregister(tag, sequence)
         key = [tag, sequence]
 

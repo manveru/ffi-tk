@@ -60,8 +60,8 @@ module Tk
     # If boolean is omitted then the command returns 0 or 1 to indicate whether
     # propagation is currently enabled for master.
     # Propagation is enabled by default.
-    def self.propagate(master, boolean = true)
-      Tk.execute_only('pack', 'propagate', master, boolean)
+    def self.propagate(master, boolean = None)
+      Tk.execute('pack', 'propagate', master, boolean)
     end
 
     # Returns a list of all of the slaves in the packing order for master. The
@@ -90,7 +90,7 @@ module Tk
       Pack.info(self)
     end
 
-    def pack_propagate(boolean = true)
+    def pack_propagate(boolean = None)
       Pack.propagate(self, boolean)
     end
 

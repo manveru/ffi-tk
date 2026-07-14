@@ -197,7 +197,7 @@ module Tk
 
       name = tag_or_id.to_s.scan(/\w+/).join('_')
       @events ||= {}
-      # unregister_event(name)
+      unregister_event(name)
 
       Event::Handler.register_custom(script) do |id|
         code = '%s bind %s %s { ::RubyFFI::event %d %s %s }'
@@ -206,6 +206,15 @@ module Tk
         Tk.interp.eval(tcl)
         @events[name] = id
       end
+    end
+
+    # Release the callback previously bound under +name+ (see #bind) so rebinding
+    # the same tag/id does not leak the old handler.
+    def unregister_event(name, id = @events[name])
+      return unless id
+
+      @events.delete(name)
+      Event::Handler.unregister_block(id)
     end
 
     # Given a window x-coordinate in the canvas +screenx+, this command returns

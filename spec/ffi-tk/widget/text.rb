@@ -772,6 +772,16 @@ describe Tk::Text do
     end
   end
 
+  describe 'Text#tag_bind rebind' do
+    it 'rebinds a tag without raising, keeping the binding live' do
+      t = Tk::Text.new
+      t.pack
+      t.tag_bind('rb', '<Button-1>') { |_e| }
+      t.tag_bind('rb', '<Button-1>') { |_e| } # rebind must not raise
+      t.tag_bind('rb', '<Button-1>').to_s.should =~ /RubyFFI::event/
+    end
+  end
+
   describe 'Text#scan_dragto' do
     it 'exposes a correctly spelled scan_dragto that drives the scan' do
       t = Tk::Text.new
