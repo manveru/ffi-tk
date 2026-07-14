@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
 # Each spec runs in its own process (see tasks/bacon.rake / tasks/coverage.rake).
-# When COVERAGE is set, start SimpleCov before ffi-tk loads so every require is
-# tracked, and give each process a unique command_name so results merge instead
-# of overwriting one another.
+# When COVERAGE is set, track with the stdlib Coverage library (near-zero
+# overhead) and dump this process's raw result to its own file before ffi-tk
+# even loads. tasks/coverage.rake unions every dump and does a single SimpleCov
+# pass at the end. This avoids SimpleCov's per-process at_exit result-processing
+# and shared-resultset merge, which added ~24s across the ~72 spec processes.
 if ENV['COVERAGE']
-  require 'simplecov'
-  SimpleCov.start do
-    command_name "spec-#{$PROGRAM_NAME}-#{Process.pid}"
-    track_files 'lib/**/*.rb'
-    add_filter '/spec/'
-    merge_timeout 86_400
+  require 'coverage'
+  Coverage.start(lines: true)
+  at_exit do
+    lib = File.expand_path('../lib', __dir__)
+    result = Coverage.result.select { |file, _| file.start_with?(lib) }
+    dir = File.expand_path('../coverage/raw', __dir__)
+    require 'fileutils'
+    FileUtils.mkdir_p(dir)
+    File.binwrite(File.join(dir, "#{Process.pid}.dump"), Marshal.dump(result))
   end
 end
 

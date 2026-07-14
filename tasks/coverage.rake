@@ -27,11 +27,31 @@ task :coverage do
     end
   end
 
-  # Merge every per-process result into one union and report.
+  # Union every per-process raw Coverage dump, then do ONE SimpleCov pass:
+  # track_files fills in never-loaded lib files (0%), add_filter drops specs.
   require 'simplecov'
-  SimpleCov.track_files 'lib/**/*.rb'
-  SimpleCov.add_filter '/spec/'
-  result = SimpleCov::ResultMerger.merged_result
+  SimpleCov.configure do
+    track_files 'lib/**/*.rb'
+    add_filter '/spec/'
+    enable_coverage :line
+  end
+
+  merged = {}
+  Dir['coverage/raw/*.dump'].each do |dump|
+    Marshal.load(File.binread(dump)).each do |path, cov|
+      lines = cov[:lines] || cov['lines']
+      acc = (merged[path] ||= [])
+      lines.each_with_index do |hit, i|
+        next if hit.nil?
+
+        acc[i] = [acc[i] || 0, hit].max
+      end
+    end
+  end
+
+  coverage = merged.transform_values { |lines| { 'lines' => lines } }
+  coverage = SimpleCov.send(:add_not_loaded_files, coverage)
+  result = SimpleCov::Result.new(coverage)
 
   rows = result.files
                 .select { |f| f.filename.include?('/lib/') }
