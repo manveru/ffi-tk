@@ -17,7 +17,9 @@ module FFI
     attach_function :Tcl_AppendAllObjTypes, %i[pointer pointer], :int
     attach_function :Tcl_CreateInterp, [], :pointer
     attach_function :Tcl_DeleteInterp, [:pointer], :void
-    attach_function :Tcl_DoOneEvent, [:int], :int
+    # blocking: true releases the GVL while these wait in C, so Ruby threads
+    # and signal delivery stay alive during event-loop pauses.
+    attach_function :Tcl_DoOneEvent, [:int], :int, blocking: true
     attach_function :Tcl_EvalEx, %i[pointer string int int], :int
     attach_function :Tcl_GetBoolean, %i[pointer string pointer], :int
     attach_function :Tcl_GetBooleanFromObj, %i[pointer pointer pointer], :int
@@ -46,7 +48,7 @@ module FFI
     attach_function :Tcl_ObjSetVar2, %i[pointer pointer pointer pointer int], :pointer
     attach_function :Tcl_ParseVar, %i[pointer pointer pointer], :pointer
     attach_function :Tcl_SetObjResult, %i[pointer pointer], :void
-    attach_function :Tcl_WaitForEvent, [:pointer], :int
+    attach_function :Tcl_WaitForEvent, [:pointer], :int, blocking: true
     attach_function :Tcl_SetMaxBlockTime, [:pointer], :void
     attach_function :Tcl_DictObjGet, %i[pointer pointer pointer pointer], :int
     attach_function :Tcl_DictObjPut, %i[pointer pointer pointer pointer], :int

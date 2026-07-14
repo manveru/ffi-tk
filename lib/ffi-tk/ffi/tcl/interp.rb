@@ -91,20 +91,18 @@ module FFI
         Tcl.do_one_event(flag)
       end
 
+      # Drain every pending event without blocking, then wait up to 100ms for
+      # new OS events, until the condition holds. Never blocks indefinitely,
+      # so condition-polling callers (the specs) survive an idle display.
       def do_events_until(flag = 0)
-        loop do
+        until yield
+          nil while Tcl.do_one_event(flag | ::Tk::DONT_WAIT) == 1
           wait_for_event(0.1)
-          Tcl.do_one_event(flag)
-          break if yield
         end
       end
 
       def do_events_while(flag = 0)
-        loop do
-          wait_for_event(0.1)
-          Tcl.do_one_event(flag)
-          break unless yield
-        end
+        do_events_until(flag) { !yield }
       end
 
       def eval(string)

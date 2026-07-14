@@ -53,10 +53,26 @@ module Tk
     @root
   end
 
-  def mainloop
+  # Self-rearming Tcl timer. It never crosses into Ruby; its sole purpose is
+  # to guarantee Tcl_DoOneEvent returns at least once per interval so
+  # #mainloop can recheck @running even on an otherwise idle display.
+  HEARTBEAT_PROC = <<~TCL
+    proc ::RubyFFI::heartbeat {ms} {
+      set ::RubyFFI::heartbeat_id [after $ms [list ::RubyFFI::heartbeat $ms]]
+    }
+  TCL
+
+  # Block in Tcl_DoOneEvent (GVL released, events serviced back-to-back)
+  # until Tk.stop clears @running; the heartbeat bounds stop latency.
+  def mainloop(heartbeat: 0.1)
     @running = true
 
-    interp.do_one_event(0) while @running && interp.wait_for_event(0.05)
+    interp.eval(HEARTBEAT_PROC)
+    interp.eval(format('::RubyFFI::heartbeat %d', (heartbeat * 1000).round))
+
+    interp.do_one_event(0) while @running
+  ensure
+    interp.eval('catch { after cancel $::RubyFFI::heartbeat_id }')
   end
 
   def stop
