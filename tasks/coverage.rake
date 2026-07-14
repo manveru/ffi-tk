@@ -6,6 +6,15 @@ task :coverage do
   require_relative 'support/headless_display'
 
   ENV['COVERAGE'] = '1'
+
+  # Start from a clean slate. SimpleCov merges each process's result into
+  # coverage/.resultset.json and keeps prior runs' entries for merge_timeout
+  # (24h, set in spec/helper.rb). Left uncleared, the file accumulates hundreds
+  # of command_names and grows to ~100MB, and every one of the ~72 spec
+  # processes re-parses and rewrites it at exit (~1.3s each, ~95s total waste).
+  require 'fileutils'
+  FileUtils.rm_rf('coverage')
+
   specs = PROJECT_SPECS
   failed = []
 

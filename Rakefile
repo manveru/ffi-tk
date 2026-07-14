@@ -46,4 +46,4 @@ Dir['tasks/*.rake'].each { |f| import(f) }
 
 task default: [:bacon]
 
-CLEAN.include('')
+CLEAN.include('coverage')
