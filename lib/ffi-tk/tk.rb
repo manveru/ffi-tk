@@ -64,15 +64,33 @@ module Tk
 
   # Block in Tcl_DoOneEvent (GVL released, events serviced back-to-back)
   # until Tk.stop clears @running; the heartbeat bounds stop latency.
-  def mainloop(heartbeat: 0.1)
+  #
+  # With background: true the loop runs on a dedicated thread and the caller
+  # gets that Thread back immediately, leaving the calling thread free for
+  # non-GUI work. Because Tcl_DoOneEvent releases the GVL, other Ruby threads
+  # stay responsive either way; background only matters when you need the
+  # *calling* thread itself free. Unavailable where the event loop is pinned
+  # to the main thread (macOS/Cocoa), which raises rather than misbehaving.
+  # @running and the heartbeat are armed synchronously before the thread
+  # starts, so an immediate Tk.stop cannot race the loop's startup.
+  def mainloop(heartbeat: 0.1, background: false)
+    if background && RUN_EVENTLOOP_ON_MAIN_THREAD
+      raise 'Tk.mainloop(background: true) is unavailable on this platform: ' \
+            'the event loop must run on the main thread here'
+    end
+
     @running = true
 
     interp.eval(HEARTBEAT_PROC)
     interp.eval(format('::RubyFFI::heartbeat %d', (heartbeat * 1000).round))
 
-    interp.do_one_event(0) while @running
-  ensure
-    interp.eval('catch { after cancel $::RubyFFI::heartbeat_id }')
+    pump = lambda do
+      interp.do_one_event(0) while @running
+    ensure
+      interp.eval('catch { after cancel $::RubyFFI::heartbeat_id }')
+    end
+
+    background ? Thread.new(&pump) : pump.call
   end
 
   def stop

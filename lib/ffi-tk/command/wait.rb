@@ -14,6 +14,10 @@ module Tk
   # so the application will continue to respond to user interactions.
   # If an event handler invokes [Wait] methods again, the nested call must
   # complete before the outer call can complete.
+  #
+  # These calls block the calling thread, but because Tcl_EvalEx is attached
+  # with blocking: true the GVL is released while tkwait pumps events, so other
+  # Ruby threads stay responsive for the whole wait.
   module Wait
     module_function
 

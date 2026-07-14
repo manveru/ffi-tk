@@ -20,7 +20,11 @@ module FFI
     # blocking: true releases the GVL while these wait in C, so Ruby threads
     # and signal delivery stay alive during event-loop pauses.
     attach_function :Tcl_DoOneEvent, [:int], :int, blocking: true
-    attach_function :Tcl_EvalEx, %i[pointer string int int], :int
+    # blocking: true so event-pumping evals (tkwait, update, vwait) release the
+    # GVL while they wait, keeping other Ruby threads responsive. Free on the
+    # fast path: the release/reacquire is sub-microsecond, dwarfed by the
+    # ThreadSender hop every eval already pays; tkwait semantics are unchanged.
+    attach_function :Tcl_EvalEx, %i[pointer string int int], :int, blocking: true
     attach_function :Tcl_GetBoolean, %i[pointer string pointer], :int
     attach_function :Tcl_GetBooleanFromObj, %i[pointer pointer pointer], :int
     attach_function :Tcl_GetDoubleFromObj, %i[pointer pointer pointer], :int
