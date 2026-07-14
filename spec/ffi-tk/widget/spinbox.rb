@@ -128,4 +128,28 @@ describe Tk::Spinbox do
     sb.identify(width - 3, 3).should == :buttonup
     sb.identify(width + 500, height + 500).should.nil? # no element outside
   end
+
+  it 'drives the scan without raising' do
+    sb = Tk::Spinbox.new(from: 0, to: 100)
+    sb.pack
+    -> { sb.scan_mark(0); sb.scan_dragto(10) }.should.not.raise
+  end
+
+  it 'adjusts the selection and reports the selected element' do
+    sb = Tk::Spinbox.new(values: %w[alpha beta gamma])
+    sb.pack
+    -> { sb.selection_adjust(2) }.should.not.raise
+    # the element query returns which spin-button element is active
+    %w[none buttonup buttondown entry].should.include sb.selection_element
+  end
+
+  it 'scrolls the horizontal view via xview, xview_moveto and xview_scroll' do
+    sb = Tk::Spinbox.new(values: [('x' * 200)])
+    sb.pack
+    lambda do
+      sb.xview(50)
+      sb.xview_moveto(0.5)
+      sb.xview_scroll(1, :units)
+    end.should.not.raise
+  end
 end

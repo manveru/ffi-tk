@@ -37,4 +37,17 @@ describe Tk::Pack do
     info[:side].should == :left
     b.pack_forget
   end
+
+  it 'lists the packed slaves and toggles propagation via the delegators' do
+    f = Tk::Frame.new('.')
+    b = Tk::Button.new(f)
+    b.pack
+
+    f.pack_slaves.should == [b.tk_pathname]
+
+    f.pack_propagate(false)
+    f.pack_propagate.should == 0
+    f.pack_propagate(true)
+    f.pack_propagate.should == 1
+  end
 end

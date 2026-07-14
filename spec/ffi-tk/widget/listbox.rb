@@ -145,4 +145,23 @@ describe Tk::Listbox do
     mid[0].should > 0.0
     mid[0].should > top[0]
   end
+
+  it 'replaces and clears the whole contents via value= and clear' do
+    list = Tk::Listbox.new
+    list.value = %w[one two three]
+    list.value.should == %w[one two three]
+    list.clear
+    list.value.should == []
+  end
+
+  it 'drives the scan and scrolls to an element without raising' do
+    list = Tk::Listbox.new
+    list.pack
+    list.value = (1..50).map(&:to_s)
+    lambda do
+      list.scan_mark(0, 0)
+      list.scan_dragto(0, 20)
+      list.see(40)
+    end.should.not.raise
+  end
 end

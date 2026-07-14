@@ -151,4 +151,34 @@ describe Tk::Menu do
     Tk.execute('update')
     menu.unpost.should.nil?
   end
+
+  it 'inserts an entry by index and type without an options hash' do
+    menu = Tk::Menu.new(tearoff: false)
+    menu.add(:command, label: 'last')
+    menu.insert(0, :separator)
+    menu.type(0).should == 'separator'
+    menu.type(1).should == 'command'
+  end
+
+  it 'reports the x/y pixel position of an entry' do
+    menu = Tk::Menu.new(tearoff: false)
+    menu.add(:command, label: 'entry')
+    menu.xposition(0).should.be.is_a? Integer
+    menu.yposition(0).should.be.is_a? Integer
+  end
+
+  it 'unposts a cascade submenu via postcascade' do
+    menu = Tk::Menu.new(tearoff: false)
+    sub = Tk::Menu.new(menu, tearoff: false)
+    sub.add(:command, label: 'child')
+    menu.add(:cascade, label: 'parent', menu: sub)
+    -> { menu.postcascade(0) }.should.not.raise
+  end
+
+  it 'clones a menu' do
+    menu = Tk::Menu.new(tearoff: false)
+    menu.add(:command, label: 'orig')
+    -> { menu.clone('.menuclone', :normal) }.should.not.raise
+    Tk.execute('winfo', 'exists', '.menuclone').to_i.should == 1
+  end
 end

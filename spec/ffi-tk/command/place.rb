@@ -40,4 +40,22 @@ describe Tk::Place do
     descriptions[:x].value.should == '24'
     descriptions[:anchor].value.should == :nw
   end
+
+  # Widget includes Place, so the instance delegators forward self.
+  describe 'Widget#place_* delegators forward self' do
+    it 'places, reports info, lists slaves and forgets through the widget' do
+      root = Tk.root
+      b = Tk::Button.new(root, text: 'delegated')
+
+      b.place_configure(x: 5, y: 6)
+      info = b.place_info
+      info[:x].should == 5
+      info[:y].should == 6
+
+      root.place_slaves.should.include b.tk_pathname
+
+      b.place_forget
+      root.place_slaves.should.not.include b.tk_pathname
+    end
+  end
 end
