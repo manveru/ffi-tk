@@ -1,3 +1,154 @@
+[8269a44 | 2026-11-24 19:01:20 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Read Git history when generating AUTHORS
+
+[8e58a92 | 2026-11-24 19:01:19 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Preserve text and list results from Text#get
+
+[0c9162d | 2026-11-24 19:01:17 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Check the None sentinel by identity
+
+[621525e | 2026-11-24 19:01:16 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Propagate Tcl thread errors to callers
+
+[56ee11f | 2026-07-14 22:19:09 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Drop inconvertible callback return values instead of erroring
+
+    A Tk -command/bind block's return value is coincidental -- Tk ignores
+    the result of an ordinary callback script. But tcl_callback fed that
+    return value straight into obj_result=, so a block whose tail expression
+    was an arbitrary Ruby object (a dialog, a Thread from a spawn helper)
+    hit ruby_to_tcl_obj's raise and surfaced as a spurious Tcl error every
+    time the callback fired.
+
+    Add Interp#callback_result=, which sets the result only when the value
+    has a Tcl representation (new Interp#tcl_convertible? predicate) and
+    drops anything else to empty. obj_result= stays strict for its internal
+    callers; convertible values (validation booleans, scrollbar fractions)
+    still round-trip.
+
+[277d33d | 2026-07-14 17:45:42 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Make blocking evals GVL-friendly; add background mainloop
+
+    Two follow-ups to the event-loop rework, both measured under the Xvfb
+    harness.
+
+    Tcl_EvalEx blocking: true. Event-pumping evals (tkwait, update, and any
+    future vwait) ran their internal event loop inside Tcl_EvalEx while
+    holding the GVL, freezing every other Ruby thread for the entire wait. A
+    modal `tkwait window` open for 1.5s let a background worker thread wake
+    exactly ONCE (frozen 1495ms); with blocking: true the worker woke 296
+    times at 0.06ms median. Tks own tkwait semantics are untouched -- only
+    the GVL is released. The fast path is unaffected: the release/reacquire
+    is sub-microsecond and dwarfed by the ~17us ThreadSender hop every eval
+    already pays (set: 58.7k/s vs 57.0k/s; widget build: indistinguishable).
+
+    Tk.mainloop(background: true). Runs the loop on a dedicated thread and
+    returns it to the caller, leaving the calling thread free for non-GUI
+    work. @running and the heartbeat are armed synchronously before the
+    thread starts so an immediate Tk.stop cannot race startup; raises on
+    platforms where the loop is pinned to the main thread (macOS/Cocoa)
+    rather than misbehaving. Other Ruby threads were already responsive via
+    the GVL fix; this only frees the *calling* thread.
+
+    Adds spec/ffi-tk/command/wait.rb (Tk::Wait had zero coverage): the three
+    waits plus a regression guard asserting a background thread keeps running
+    during a blocking wait -- verified to fail when EvalEx is non-blocking.
+
+[f8539c0 | 2026-07-14 17:09:27 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Rework event loop: blocking event waits, heartbeat mainloop
+
+    Tk.mainloop was wait-then-service-one:
+
+      interp.do_one_event(0) while @running && interp.wait_for_event(0.05)
+
+    Three defects:
+
+    - The wait_for_event guard is dead code. Tcl_WaitForEvent returns a C
+      int; 0 (timeout) is truthy in Ruby, so the condition is effectively
+      `while @running`.
+    - Serialized queue drain. Tcl_WaitForEvent only polls OS sources, not
+      Tcls event queue. After X delivers a burst the fd goes quiet and each
+      iteration blocks the full timeout before servicing ONE queued event ->
+      N*50ms to drain N events. A 2009 unit bug (feeding milliseconds into a
+      microseconds field) made the wait ~50us and hid this for 16 years;
+      commit 33f5614 fixed the conversion and exposed the sluggishness.
+    - The waits held the GVL, freezing all Ruby threads and signal delivery.
+
+    Fixes:
+
+    - Mark Tcl_DoOneEvent / Tcl_WaitForEvent blocking: true so C-side waits
+      release the GVL.
+    - mainloop now blocks in do_one_event(0) until Tk.stop clears @running,
+      paced by a self-rearming pure-Tcl ::RubyFFI::heartbeat proc (never
+      crosses into Ruby) that bounds stop latency; cancelled in ensure so
+      re-entry leaks no timers. Events now drain back-to-back at full speed.
+    - do_events_until (the spec pump) is now drain-then-wait: chew the whole
+      pending queue with DONT_WAIT, then wait <=100ms; it can no longer block
+      indefinitely on an idle display. do_events_while folded into it.
+
+    Suite unchanged at 869/2461 green; event.rb 12.8s -> 1.0s, wm.rb
+    4.9s -> 0.4s.
+
+[b13f4c3 | 2026-07-14 15:03:03 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Curate gem file manifest; install rwish as an executable
+
+    Replace `s.files = git ls-files` with explicit Dir globs. git ls-files
+    swept dev/CI infra into the gem (flake.nix, gemset.nix, .rubocop.yml,
+    tasks/, spec/, Gemfile, MANIFEST, CONTEXT.md, docs/) and yields an empty
+    list when building from a tarball with no .git. Ship only lib/, bin/,
+    doc/ licenses, and the top-level docs.
+
+    Register bin/rwish (the interactive Tk REPL) via s.executables/s.bindir
+    so `gem install` puts it on PATH; it was previously shipped as an inert
+    file.
+
+    Regenerate ffi-tk.gemspec/MANIFEST/CHANGELOG: drops the stale
+    .rubocop_todo.yml reference and picks up lib files the old manifest had
+    gone stale on (option/*.rb, ffi/tcl/dict_search.rb).
+
+[63a5627 | 2026-07-14 15:02:53 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Enforce rubocop via rake lint and a pre-commit hook
+
+    Nothing ran rubocop in the everyday workflow (rake -> bacon only); it
+    only ran via `nix flake check`, which nobody invoked -- that is how the
+    tree rotted. Add two local gates:
+
+    - tasks/lint.rake: `rake lint` (treefmt --fail-on-change) and `rake
+      check` (lint + bacon). Wrapped in Bundler.with_unbundled_env: the
+      bundler-wrapped rake leaks RUBYOPT/BUNDLE_GEMFILE that make treefmt's
+      ruby-3.4 rubocop auto-load bundler against the ruby-4.0 Gemfile.lock
+      and crash on native-ext gems.
+    - flake.nix: git-hooks.nix pre-commit hook running treefmt, installed
+      into .git/hooks via the devShell shellHook.
+    - Widen treefmt's rubocop includes to *.rake/Rakefile/Gemfile/*.gemspec
+      (it defaulted to *.rb only, leaving tasks/*.rake unguarded -- exactly
+      where the rot happened) and add --force-exclusion so per-file runs
+      honour AllCops/Exclude like a bare `rubocop` run.
+    - gitignore the generated .pre-commit-config.yaml (machine-specific
+      store paths); nixfmt-reformat the pre-existing gemset.nix.
+
+[d51a2fc | 2026-07-14 15:02:40 UTC] Michael Fellinger <michael.fellinger@iohk.io>
+
+  * Restore rubocop to green after post-coverage rot
+
+    23 offenses had crept into 6 files since the burndown, mostly the
+    never-linted tasks/coverage.rake. Fixes:
+    - coverage.rake: annotated -> unannotated format tokens (project style),
+      inline disable for Marshal.load of our own trusted Coverage dumps,
+      plus indentation/quote autocorrects
+    - kroc_demo_small.rb: inline-disable MutableConstant on TOOLBARS
+      (accumulated via <<, so it cannot be frozen)
+    - grid.rb / tk_cmd.rb / canvas + spinbox specs: mechanical autocorrects
+
 [20af097 | 2026-07-14 12:44:57 UTC] Michael Fellinger <michael.fellinger@iohk.io>
 
   * Cover ttk::panedwindow forget/insert/identify/sashpos

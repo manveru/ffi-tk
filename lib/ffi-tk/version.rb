@@ -2,6 +2,6 @@
 
 module FFI
   module Tk
-    VERSION = '2018.02.20'
+    VERSION = '2026.07.14'
   end
 end
