@@ -395,8 +395,10 @@ module Tk
     #
     # @see get_displaychars
     def get(index, *indices)
+      return execute_string('get', index, *indices) if indices.size <= 1
+
       result = execute('get', index, *indices)
-      result.is_a?(Array) ? result.map(&:to_s) : result.to_s
+      result.nil? ? [] : result.map(&:to_s)
     end
 
     # Same as [get], but within each range, only those characters which are not

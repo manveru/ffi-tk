@@ -342,12 +342,18 @@ describe Tk::Text do
       t = Tk::Text.new
       t.insert :end, 'hello world'
       t.get('1.0', '1.5').should == 'hello'
+      t.get('end').frozen?.should == false
     end
 
     it 'returns a list of Strings for multiple ranges' do
       t = Tk::Text.new
       t.insert :end, 'hello world'
       t.get('1.0', '1.5', '1.6', '1.11').should == %w[hello world]
+    end
+
+    it 'returns an empty list when no ranges contain text' do
+      t = Tk::Text.new
+      t.get('end', 'end', 'end', 'end').should == []
     end
 
     it 'returns only non-elided text via get_displaychars' do
