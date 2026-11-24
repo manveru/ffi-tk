@@ -416,9 +416,9 @@ module Tk
       # the specified value.
       # See also COLUMN IDENTIFIERS.
       def set(item, column = None, value = None)
-        if column == None
+        if None.equal?(column)
           execute(:set, item)
-        elsif value == None
+        elsif None.equal?(value)
           execute(:set, item, column).to_s
         else
           execute_only(:set, item, column, value)
@@ -441,7 +441,7 @@ module Tk
       # bind(n) for details.
       def tag_bind(tag_name, sequence = None, &script)
         unless script
-          return execute(:tag, :bind, tag_name) if sequence == None
+          return execute(:tag, :bind, tag_name) if None.equal?(sequence)
 
           return execute(:tag, :bind, tag_name, sequence)
         end

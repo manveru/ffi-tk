@@ -6,7 +6,7 @@ module Tk
     module_function
 
     def focus(window = None, option = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute('focus').to_s
       else
         case option

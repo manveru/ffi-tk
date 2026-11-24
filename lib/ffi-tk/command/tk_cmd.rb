@@ -82,7 +82,7 @@ module Tk
     # height of the current cursor location, or the height of the specified
     # window if none is given.
     def caret(window, options = None)
-      if options == None
+      if None.equal?(options)
         Configure.read_flat(Tk, [:tk, :caret, window], CARET_SCHEMA)
       else
         Tk.execute_only(:tk, :caret, window, options.to_tcl_options)
@@ -116,7 +116,7 @@ module Tk
     # scaling factor, but it is undefined whether existing widgets will resize
     # themselves dynamically to accommodate the new scaling factor.
     def scaling(number = None, window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:tk, :scaling, number)
       else
         Tk.execute(:tk, :scaling, '-displayof', window, number)
@@ -135,7 +135,7 @@ module Tk
     # Resetting the inactivity time is forbidden in safe interpreters and will
     # throw and error if tried.
     def inactive(reset = None, window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:tk, :inactive, reset)
       else
         Tk.execute(:tk, :inactive, '-displayof', window, reset)
@@ -154,8 +154,8 @@ module Tk
     # This is turned on by default for the main display.
     def useinputmethods(boolean = None, window = None)
       args = %i[tk useinputmethods]
-      args.push('-displayof', window) unless window == None
-      return Tk.boolean(Tk.execute(*args)) if boolean == None
+      args.push('-displayof', window) unless None.equal?(window)
+      return Tk.boolean(Tk.execute(*args)) if None.equal?(boolean)
 
       Tk.execute(*args, boolean ? true : false)
     end

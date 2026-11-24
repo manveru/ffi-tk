@@ -59,7 +59,7 @@ module Tk
       # the index of the current value in the list of -values or -1 if
       # the current value does not appear in the list.
       def current(newindex = None)
-        if newindex == None
+        if None.equal?(newindex)
           execute(:current)
         else
           execute_only(:current, newindex)

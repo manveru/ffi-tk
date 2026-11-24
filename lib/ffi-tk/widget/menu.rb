@@ -205,7 +205,7 @@ module Tk
     # currently-selected entry to deselect itself.
     # The add widget command returns an empty string.
     def add(type, options = None)
-      if options == None
+      if None.equal?(options)
         execute(:add, type)
       else
         execute(:add, type, option_hash_to_tcl(options, ENTRY_SCHEMA))
@@ -266,7 +266,7 @@ module Tk
     # It is not possible to insert new menu entries before the tear-off entry,
     # if the menu has one.
     def insert(index, type, options = None)
-      if options == None
+      if None.equal?(options)
         execute(:insert, index, type)
       else
         execute(:insert, index, type, option_hash_to_tcl(options, ENTRY_SCHEMA))

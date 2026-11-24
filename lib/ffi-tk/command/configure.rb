@@ -43,7 +43,7 @@ module Tk
     #                 INCLUDING synonym (alias) entries;
     #   one option -> that option's single OptionDescription.
     def self.read_descriptions(receiver, invocation, schema, option = None)
-      if option == None
+      if None.equal?(option)
         rows = Option::Coercer.split_list(receiver.execute_string(*invocation))
         rows.each_with_object({}) do |row, descriptions|
           description = describe_row(Option::Coercer.split_list(row), schema)
@@ -75,7 +75,7 @@ module Tk
     # panedwindow pane) and coerce every value by the surface's declared Option
     # type. Reads the raw Tcl string (never EvalResult.guess), so it is immune
     # to shimmering:
-    #   bulk (option == None) -> Hash{name => coerced value}, INCLUDING
+    #   bulk (None.equal?(option)) -> Hash{name => coerced value}, INCLUDING
     #                            empty-valued options (empty-value rule);
     #   one option            -> that option's coerced bare value.
     # The caller places the queried option token into +invocation+ itself, so a
@@ -83,7 +83,7 @@ module Tk
     # stays faithful; +option+ only names the type to coerce the single value.
     def self.read_flat(receiver, invocation, schema, option = None)
       raw = receiver.execute_string(*invocation)
-      return Option::Coercer.coerce(schema.type_for(option), raw) unless option == None
+      return Option::Coercer.coerce(schema.type_for(option), raw) unless None.equal?(option)
 
       Option::Coercer.split_list(raw).each_slice(2).with_object({}) do |(name, value), flat|
         key = Option::Schema.normalize(name)
@@ -97,7 +97,7 @@ module Tk
     # an option Hash sets them. Reads route through read_descriptions
     # (type-directed coercion of value/default); sets stay a plain execute_only.
     def self.describe(receiver, invocation, schema, argument)
-      if argument == None
+      if None.equal?(argument)
         read_descriptions(receiver, invocation, schema)
       elsif argument.respond_to?(:to_tcl_options)
         receiver.execute_only(*invocation, argument.to_tcl_options)
@@ -113,7 +113,7 @@ module Tk
     # them. Reads route through read_flat (type-directed coercion by the surface's
     # Option schema); sets stay a plain execute_only.
     def self.flat(receiver, invocation, schema, argument)
-      if argument == None
+      if None.equal?(argument)
         read_flat(receiver, invocation, schema)
       elsif argument.respond_to?(:to_tcl_options)
         receiver.execute_only(*invocation, argument.to_tcl_options)

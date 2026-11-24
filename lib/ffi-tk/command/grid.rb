@@ -76,7 +76,7 @@ module Tk
     def self.columnconfigure(master, index, options = None)
       # A single option name queries its current value, which grid returns as
       # a bare scalar; None queries all settings; a Hash sets them.
-      if options != None && options.respond_to?(:to_tcl_option)
+      if !None.equal?(options) && options.respond_to?(:to_tcl_option)
         Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_option)
       else
         Tk.execute('grid', 'columnconfigure', master, index, options.to_tcl_options?)
@@ -171,7 +171,7 @@ module Tk
     def self.rowconfigure(master, index, options = None)
       # A single option name queries its current value, which grid returns as
       # a bare scalar; None queries all settings; a Hash sets them.
-      if options != None && options.respond_to?(:to_tcl_option)
+      if !None.equal?(options) && options.respond_to?(:to_tcl_option)
         Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_option)
       else
         Tk.execute('grid', 'rowconfigure', master, index, options.to_tcl_options?)

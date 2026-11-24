@@ -32,7 +32,7 @@ module Tk
         tk_parent = Tk.root
       end
 
-      options = if !options || options == None
+      options = if !options || None.equal?(options)
                   {}
                 else
                   options.dup

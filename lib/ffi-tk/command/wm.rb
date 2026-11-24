@@ -298,7 +298,7 @@ module Tk
     # current values of minNumer, minDenom, maxNumer, and maxDenom (if no aspect
     # restrictions are in effect, then nil is returned).
     def aspect(window, min_numer = None, min_denom = None, max_numer = None, max_denom = None)
-      if min_numer == None
+      if None.equal?(min_numer)
         result = Tk.execute(:wm, :aspect, window)
         result.to_s == '' ? nil : result.to_a(&:to_i)
       elsif min_numer.nil?
@@ -419,7 +419,7 @@ module Tk
     # If name is specified as nil, the command deletes the
     # WM_CLIENT_MACHINE property from window.
     def client(window, name = None)
-      if name == None
+      if None.equal?(name)
         Tk.execute(:wm, :client, window)
       else
         Tk.execute_only(:wm, :client, window, name)
@@ -468,7 +468,7 @@ module Tk
     # If value is specified as nil, the command deletes the
     # WM_COMMAND property from window.
     def command(window, value = None)
-      if value == None
+      if None.equal?(value)
         Tk.execute(:wm, :command, window)&.split
       else
         Tk.execute_only(:wm, :command, window, value)
@@ -502,7 +502,7 @@ module Tk
     # The focus model defaults to passive, and Tk's focus command assumes a
     # passive model of focusing.
     def focusmodel(window, model = None)
-      if model == None
+      if None.equal?(model)
         Tk.execute(:wm, :focusmodel, window).to_sym
       else
         Tk.execute_only(:wm, :focusmodel, window, model)
@@ -555,7 +555,7 @@ module Tk
     # user-specified geometry for window is cancelled, and the window will
     # revert to the size requested internally by its widgets.
     def geometry(window, new_geometry = None)
-      if new_geometry == None
+      if None.equal?(new_geometry)
         TkGeometry.new(Tk.execute(:wm, :geometry, window))
       else
         Tk.execute_only(:wm, :geometry, window, new_geometry)
@@ -591,7 +591,7 @@ module Tk
     # library procedure and the setGrid option provide easier access to the same
     # functionality.
     def grid(window, base_width = None, base_height = None, width_inc = None, height_inc = None)
-      if base_width == None
+      if None.equal?(base_width)
         Tk.execute(:wm, :grid, window)
       else
         Tk.execute_only(:wm, :grid, window, base_width, base_height, width_inc, height_inc)
@@ -608,7 +608,7 @@ module Tk
     # otherwise it returns the path name of window's current group leader, or nil
     # if window is not part of any group.
     def group(window, pathname = None)
-      if pathname == None
+      if None.equal?(pathname)
         Tk.execute(:wm, :group, window)
       else
         Tk.execute_only(:wm, :group, window, pathname)
@@ -627,7 +627,7 @@ module Tk
     # window, or nil if window has no icon bitmap.
     # On the Windows operating system, an additional flag is supported:
     def iconbitmap(window, bitmap = None)
-      if bitmap == None
+      if None.equal?(bitmap)
         Tk.execute(:wm, :iconbitmap, window)
       else
         Tk.execute_only(:wm, :iconbitmap, window, bitmap)
@@ -666,7 +666,7 @@ module Tk
     # Otherwise it returns the name of the current icon mask associated with
     # window, or nil if no mask is in effect.
     def iconmask(window, bitmap = None)
-      if bitmap == None
+      if None.equal?(bitmap)
         Tk.execute(:wm, :iconmask, window)
       else
         Tk.execute_only(:wm, :iconmask, window, bitmap)
@@ -681,7 +681,7 @@ module Tk
     # case the window manager will normally display the window's title, as
     # specified with the wm title command).
     def iconname(window, new_name = None)
-      if new_name == None
+      if None.equal?(new_name)
         Tk.execute(:wm, :iconname, window)
       else
         Tk.execute_only(:wm, :iconname, window, new_name)
@@ -729,7 +729,7 @@ module Tk
     # containing two values, which are the current icon position hints (if no
     # hints are in effect then an empty string is returned).
     def iconposition(window, y = None, x = None)
-      if y == None || x == None
+      if None.equal?(y) || None.equal?(x)
         Tk.execute(:wm, :iconposition, window)
       else
         Tk.execute_only(:wm, :iconposition, window, y, x)
@@ -750,7 +750,7 @@ module Tk
     # events. Note: not all window managers support the notion of an icon
     # window.
     def iconwindow(window, pathname = None)
-      if pathname == None
+      if None.equal?(pathname)
         Tk.execute(:wm, :iconwindow, window)
       else
         Tk.execute_only(:wm, :iconwindow, window, pathname)
@@ -779,7 +779,7 @@ module Tk
     # The maximum size defaults to the size of the screen.
     # See the sections on geometry management below for more information.
     def maxsize(window, width = None, height = None)
-      if width == None || height == None
+      if None.equal?(width) || None.equal?(height)
         Tk.execute(:wm, :maxsize, window)
       else
         Tk.execute_only(:wm, :maxsize, window, width, height)
@@ -798,7 +798,7 @@ module Tk
     # The minimum size defaults to one pixel in each dimension.
     # See the sections on geometry management below for more information.
     def minsize(window, width = None, height = None)
-      if width == None || height == None
+      if None.equal?(width) || None.equal?(height)
         Tk.execute(:wm, :minsize, window)
       else
         Tk.execute_only(:wm, :minsize, window, width, height)
@@ -815,7 +815,7 @@ module Tk
     # user will not be able to manipulate the window using the normal window
     # manager mechanisms.
     def overrideredirect(window, boolean = None)
-      if boolean == None
+      if None.equal?(boolean)
         Tk.boolean(Tk.execute(:wm, :overrideredirect, window))
       else
         Tk.execute(:wm, :overrideredirect, window, boolean ? true : false)
@@ -840,7 +840,7 @@ module Tk
     # Tk will automatically set the position source to user when a wm geometry
     # command is invoked, unless the source has been set explicitly to program.
     def positionfrom(window, who = None)
-      if who == None
+      if None.equal?(who)
         Tk.execute(:wm, :positionfrom, window)
       else
         Tk.execute_only(:wm, :positionfrom, window, who)
@@ -888,18 +888,18 @@ module Tk
       @commands ||= {}
       key = [window, name]
 
-      if name == None
+      if None.equal?(name)
         Tk.execute(:wm, :protocol, window).to_a
-      elsif name != None && command == None
+      elsif !None.equal?(name) && None.equal?(command)
         Tk.execute(:wm, :protocol, window, name)
-      elsif name != None && command.nil?
+      elsif !None.equal?(name) && command.nil?
         if (id = @commands[key])
           Tk.unregister_proc(id)
           @commands.delete(key)
         end
 
         Tk.execute_only(:wm, :protocol, window, name, '')
-      elsif name != None && command
+      elsif !None.equal?(name) && command
         if (id = @commands[key])
           Tk.unregister_proc(id)
         end
@@ -927,7 +927,7 @@ module Tk
     # If there has been no such operation then the window's natural size will be
     # used.
     def resizable(window, width = None, height = None)
-      if width == None || height == None
+      if None.equal?(width) || None.equal?(height)
         Tk.execute(:wm, :resizable, window)
       else
         Tk.execute_only(:wm, :resizable, window, width, height)
@@ -948,7 +948,7 @@ module Tk
     # current size, or an empty string if no source has been specified yet.
     # Most window managers interpret ?no source? as equivalent to program.
     def sizefrom(window, who = None)
-      if who == None
+      if None.equal?(who)
         Tk.execute(:wm, :sizefrom, window)
       else
         Tk.execute_only(:wm, :sizefrom, window, who)
@@ -966,7 +966,7 @@ module Tk
     # passed, a boolean result indicates whether or not the first window is
     # currently above or below the second window in the stacking order.
     def stackorder(window, order = None, other_window = None)
-      if order == None || other_window == None
+      if None.equal?(order) || None.equal?(other_window)
         Tk.execute(:wm, :stackorder, window)
       else
         Tk.boolean(Tk.execute(:wm, :stackorder, window, order, other_window))
@@ -982,7 +982,7 @@ module Tk
     # other window (via the wm iconwindow command).
     # The icon state cannot be set.
     def state(window, new_state = None)
-      if new_state == None
+      if None.equal?(new_state)
         Tk.execute(:wm, :state, window)
       else
         Tk.execute_only(:wm, :state, window, new_state)
@@ -997,7 +997,7 @@ module Tk
     # the window.
     # The title for a window defaults to its name.
     def title(window, string = None)
-      if string == None
+      if None.equal?(string)
         Tk.execute(:wm, :title, window)
       else
         Tk.execute_only(:wm, :title, window, string)

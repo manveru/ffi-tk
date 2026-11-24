@@ -16,7 +16,7 @@ module Tk
     # These are the same values passed to scrollbars via the -xscrollcommand
     # option.
     def xview(index = None)
-      if index == None
+      if None.equal?(index)
         execute(:xview).to_a(&:to_f)
       else
         execute_only(:xview, index)
@@ -64,7 +64,7 @@ module Tk
     # Number must be an integer.
     # This command used to be used for scrolling, but now it is obsolete.
     def yview(index = None)
-      if index == None
+      if None.equal?(index)
         execute(:yview).to_a(&:to_f)
       else
         execute_only(:yview, index)

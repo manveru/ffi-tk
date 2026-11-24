@@ -301,6 +301,11 @@ describe Tk::Text do
       text.search('labore', '1.0', :end).should == ['20.17']
     end
 
+    it 'stops at the end for an omitted or explicit None bound' do
+      text.search('labore', '20.18').should == []
+      text.search('labore', '20.18', Tk::None).should == []
+    end
+
     it 'searches by regular expression' do
       text.search(/et/,          '1.0', :end).should == ['1.13']
       text.search(/ET/i,         '1.0', :end).should == ['1.13']

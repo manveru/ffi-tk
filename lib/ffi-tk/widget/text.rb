@@ -241,7 +241,7 @@ module Tk
     # indices that are redrawn.
     # The values of these variables are tested by Tk's test suite.
     def debug(boolean = None)
-      if boolean == None
+      if None.equal?(boolean)
         execute('debug') == 1
       else
         execute_only('debug', boolean ? true : false)
@@ -336,7 +336,7 @@ module Tk
     # or clear the modified flag.
     # If boolean is specified, sets the modified flag of the widget to boolean.
     def edit_modified(boolean = None)
-      if boolean == None
+      if None.equal?(boolean)
         execute('edit', 'modified')
       else
         execute_only('edit', 'modified', boolean ? true : false)
@@ -478,7 +478,7 @@ module Tk
     # If direction is specified, it must be left or right; the gravity of
     # markName is set to the given value.
     def mark_gravity(name, direction = None)
-      if direction == None
+      if None.equal?(direction)
         execute('mark', 'gravity', name)&.to_sym
       else
         execute_only('mark', 'gravity', name, direction)
@@ -705,8 +705,8 @@ module Tk
     #        matches using the core regexp methods, but doesn't give any way to
     #        call the tcl/tk search function, this is new land!
     def search(pattern, from, to = None, *switches)
-      switches << :regexp if pattern.class < CoreExtensions::Regexp
-      to = :end if to == None
+      switches << :regexp if pattern.is_a?(CoreExtensions::Regexp)
+      to = :end if None.equal?(to)
 
       switches.map! { |switch| switch.to_s.to_tcl_option }
       switches.uniq!
@@ -813,7 +813,7 @@ module Tk
     # The tag bindings will be invoked first, followed by bindings for the
     # window as a whole.
     def tag_bind(tag_name, sequence = None, &script)
-      if !script && sequence == None
+      if !script && None.equal?(sequence)
         return execute(:tag, :bind, tag_name)
       elsif !script
         return execute(:tag, :bind, tag_name, sequence)
@@ -992,7 +992,7 @@ module Tk
     # annotation. See EMBEDDED WINDOWS for information on the options that are
     # supported. Returns an empty string.
     def window_create(index, options = None)
-      if options == None
+      if None.equal?(options)
         execute(:window, :create, index)
       else
         execute(:window, :create, index, options.to_tcl_options)

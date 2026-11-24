@@ -25,7 +25,7 @@ module Tk
     # Query or set the scrollbar orientation (:horizontal or :vertical).
     # Orientation is a configure option, so route through configure/cget.
     def orient(orientation = None)
-      if orientation == None
+      if None.equal?(orientation)
         cget(:orient)
       else
         configure(orient: orientation)

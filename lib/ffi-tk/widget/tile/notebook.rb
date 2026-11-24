@@ -72,7 +72,7 @@ module Tk
       # (if different) is unmapped. If tabid is omitted, returns
       # the widget name of the currently selected pane.
       def select(window = None)
-        if window == None
+        if None.equal?(window)
           execute(:select)
         else
           execute_only(:select, window)

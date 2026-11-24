@@ -84,9 +84,9 @@ module Tk
       # The option token must precede the `-- char` terminator, so it is placed
       # in the invocation here rather than appended by read_flat.
       invocation = [:font, :actual, font]
-      invocation << '-displayof' << window unless window == None
-      invocation << option.to_tcl_option unless option == None
-      invocation << '--' << char.to_tcl unless char == None
+      invocation << '-displayof' << window unless None.equal?(window)
+      invocation << option.to_tcl_option unless None.equal?(option)
+      invocation << '--' << char.to_tcl unless None.equal?(char)
 
       Configure.read_flat(Tk, invocation, OPTION_SCHEMA, option)
     end

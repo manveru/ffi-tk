@@ -202,7 +202,7 @@ module Tk
     # These are the same values passed to scrollbars via the :xscrollcommand
     # option.
     def xview(index = None)
-      if index == None
+      if None.equal?(index)
         execute(:xview)
       else
         execute_only(:xview, index)

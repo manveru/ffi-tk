@@ -44,7 +44,7 @@ module Tk
     # Shared behaviour mixed into every Tile widget (themed state and style access).
     module TileWidget
       def ttk_state(new_state = None)
-        if new_state == None
+        if None.equal?(new_state)
           execute(:state)&.split
         else
           execute_only(:state, new_state)

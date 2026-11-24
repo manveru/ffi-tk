@@ -115,7 +115,7 @@ module Tk
     # an empty string if no window in this application owns the selection.
     # Selection defaults to PRIMARY and window defaults to ".".
     def own(window = None, options = {}, &command)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:selection, :own)
       elsif window.is_a?(Hash)
         options = window

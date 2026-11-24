@@ -111,7 +111,7 @@ module Tk
     # of the windows grabbed by this application for all displays, or an empty
     # string if the application has no grabs.
     def current(window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:grab, :current).to_a
       else
         Tk.execute(:grab, :current, window).to_s

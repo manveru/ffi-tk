@@ -258,7 +258,7 @@ module Tk
     # display of +window+; otherwise it is looked up on the display of the
     # application's main window.
     def atom(name, window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:winfo, :atom, name)
       else
         Tk.execute(:winfo, :atom, '-displayof', window, name)
@@ -272,7 +272,7 @@ module Tk
     # This command is the inverse of the [atom] method.
     # It generates an error if no such atom exists.
     def atomname(id, window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:winfo, :atomname, id).to_s
       else
         Tk.execute(:winfo, :atomname, '-displayof', window, id).to_s
@@ -325,7 +325,7 @@ module Tk
     # than parents and among siblings the highest one in the stacking order is
     # chosen.
     def containing(root_x, root_y, window = None)
-      if window == None
+      if None.equal?(window)
         value = Tk.execute(:winfo, :containing, root_x, root_y).to_s
         value.empty? ? nil : value
       else
@@ -387,7 +387,7 @@ module Tk
     # display of window; otherwise it refers to the display of the
     # application's main window.
     def interps(window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:winfo, :interps).to_a
       else
         Tk.execute(:winfo, :interps, '-displayof', window).to_a
@@ -429,7 +429,7 @@ module Tk
     # the display of window; otherwise it is looked up on the display of the
     # application's main window.
     def pathname(id, window = None)
-      if window == None
+      if None.equal?(window)
         Tk.execute(:winfo, :pathname, id).to_s
       else
         Tk.execute(:winfo, :pathname, '-displayof', window, id).to_s
@@ -605,7 +605,7 @@ module Tk
     # In addition, if the includeids argument is provided, then the depth is
     # followed by the X identifier for the visual.
     def visualsavailable(window, includeids = None)
-      if includeids == None
+      if None.equal?(includeids)
         list = Tk.execute(:winfo, :visualsavailable, window).to_a
         list.uniq.map do |string|
           klass, depth = string.split

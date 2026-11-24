@@ -189,7 +189,7 @@ module Tk
     # the window as a whole.
     def bind(tag_or_id, sequence = None, &script)
       unless script
-        return Tk.execute(tk_pathname, :bind, tag_or_id) if sequence == None
+        return Tk.execute(tk_pathname, :bind, tag_or_id) if None.equal?(sequence)
 
         return Tk.execute(tk_pathname, :bind, tag_or_id, sequence)
 
@@ -410,7 +410,7 @@ module Tk
     # focus command to set the focus window to the canvas (if it was not there
     # already).
     def focus(tag_or_id = None)
-      if tag_or_id == None
+      if None.equal?(tag_or_id)
         execute(:focus)
       else
         execute_only(:focus, tag_or_id)

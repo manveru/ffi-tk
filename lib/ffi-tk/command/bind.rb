@@ -5,7 +5,7 @@ module Tk
   # Wraps Tk's `bind` command.
   module Bind
     def self.bind(tag, sequence = None, &block)
-      if sequence == None
+      if None.equal?(sequence)
         Tk.execute(:bind, tag).to_a
       elsif block
         Event::Handler.register(tag, sequence, &block)
