@@ -8,8 +8,17 @@ desc 'Update AUTHORS'
 task :authors do
   authors = Hash.new(0)
 
-  `git shortlog -nse`.scan(/(\d+)\s(.+)\s<(.*)>$/) do |count, name, email|
-    email = 'm.fellinger@gmail.com' if email == 'michael.fellinger@xing.com'
+  # Michael's historical commit addresses, folded into the canonical one below.
+  michael_emails = %w[
+    michael.fellinger@xing.com
+    michael.fellinger@iohk.io
+  ].freeze
+
+  # `git shortlog` reads its commit list from stdin when given no revision, so
+  # in a non-tty subprocess (rake) it sees EOF and prints nothing, wiping
+  # AUTHORS. Passing HEAD makes it walk history instead.
+  `git shortlog -nse HEAD`.scan(/(\d+)\s(.+)\s<(.*)>$/) do |count, name, email|
+    email = 'm.fellinger@gmail.com' if michael_emails.include?(email)
     authors[[name, email]] += count.to_i
   end
 
